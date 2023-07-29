@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "Tab Renamer",
+    "version": "1.0",
+    "permissions": ["activeTab", "scripting", "activeTab", "contextMenus", "storage"],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    }
+  }
