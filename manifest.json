@@ -3,10 +3,21 @@
     "name": "Tab Renamer",
     "version": "1.0",
     "permissions": ["activeTab", "scripting", "activeTab", "contextMenus", "storage"],
+
     "action": {
       "default_popup": "popup.html"
     },
+
     "background": {
         "service_worker": "background.js"
+    },
+    "commands": {
+        "rename_tab": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Y",
+                "mac": "Command+Shift+Y"
+            },
+            "description": "Rename Tab"
+        }
     }
   }
