@@ -1,10 +1,17 @@
-console.log('content script run');
 const EXTENSION_PREFIX = "tab_renamer_prefix"
+const prefixedIdInputBox = `${EXTENSION_PREFIX}_inputBox`;
+const prefixedIdOverlay = `${EXTENSION_PREFIX}_overlay`;
+
+function setUIVisibility(visible) {
+    const newDisplay = visible? "block": "none";
+    document.getElementById(prefixedIdInputBox).style.display = newDisplay;
+    document.getElementById(prefixedIdOverlay).style.display = newDisplay
+}
+
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
         if (message === "open_rename_dialog") {
-            const prefixedIdInputBox = `${EXTENSION_PREFIX}_inputBox`;
-            const prefixedIdOverlay = `${EXTENSION_PREFIX}_overlay`;
+
             if (!document.getElementById(prefixedIdInputBox)) {
                 let htmlContent = `
                     <div id="${prefixedIdOverlay}" class="tab-renamer-extension-overlay"></div>
@@ -13,16 +20,18 @@ chrome.runtime.onMessage.addListener(
                     <div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
+
+                // Add Enter key listener
+                const inputBox = document.getElementById(prefixedIdInputBox);
+                inputBox.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        document.title = inputBox.value;
+                        setUIVisibility(false);
+                    }
+                });
             }
-            document.getElementById(prefixedIdInputBox).style.display = "block";
-            document.getElementById(prefixedIdOverlay).style.display = "block";
+            setUIVisibility(true);
         }
     }
 );
-
-
-// // Insert my css:
-// const link = document.createElement('link');
-// link.rel = 'stylesheet';
-// link.href = chrome.runtime.getURL('rename-dialog/rename.css');
-// document.head.appendChild(link);
