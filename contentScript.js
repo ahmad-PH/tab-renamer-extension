@@ -5,7 +5,10 @@ const prefixedIdOverlay = `${EXTENSION_PREFIX}_overlay`;
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
     document.getElementById(prefixedIdInputBox).style.display = newDisplay;
-    document.getElementById(prefixedIdOverlay).style.display = newDisplay
+    document.getElementById(prefixedIdOverlay).style.display = newDisplay;
+    if (visible) {
+        document.getElementById(prefixedIdInputBox).focus();
+    }
 }
 
 chrome.runtime.onMessage.addListener(

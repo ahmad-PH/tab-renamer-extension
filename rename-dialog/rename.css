@@ -32,7 +32,7 @@
     z-index: 9999;
     background-color: white;
     transform: translate(-50%, -50%);
-    border: 2px solid #ccc;
+    border: none;
     border-radius: 12px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
     padding: 10px 20px; /* Padding for text inside */
@@ -41,6 +41,7 @@
 
 /* Style for input box when it gets focus */
 .tab-renamer-extension-input-box:focus {
-    border-color: #007bff;
+    border: none;
+    outline: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Slightly darker shadow when focused */
 }
