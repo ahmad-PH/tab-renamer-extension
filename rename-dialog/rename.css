@@ -8,7 +8,7 @@
     z-index: 9998; /* Just below the input box */
 }
 
-.tab-renamer-extension-input-box {
+.tab-renamer-extension-input-boxxxx {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -20,4 +20,27 @@
     background-color: white;
     border: none;
     transform: translate(-50%, -50%); /* Center the box */
+}
+
+.tab-renamer-extension-input-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 350px; /* Increased width */
+    height: 50px; /* Increased height */
+    font-size: 26px; /* Slightly larger font */
+    z-index: 9999;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    border: 2px solid #ccc;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+    padding: 10px 20px; /* Padding for text inside */
+    transition: all 0.3s ease; /* Smooth transition effects */
+}
+
+/* Style for input box when it gets focus */
+.tab-renamer-extension-input-box:focus {
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Slightly darker shadow when focused */
 }
