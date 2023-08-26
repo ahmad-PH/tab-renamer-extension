@@ -2,12 +2,22 @@ chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             console.log('tabs returned:', tabs);
-            chrome.tabs.sendMessage(tabs[0].id, 'open_rename_dialog');
+            chrome.tabs.sendMessage(tabs[0].id, {
+                command: 'open_rename_dialog',
+                tabId: tabs[0].id
+            });
         }).catch(error => 
             {console.log('query error', error);}
         );
     }
 });
+
+// Listen for any messages from content scripts.
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.command === "get_tabId") {
+      sendResponse({ tabId: sender.tab.id });
+    }
+  });
 
 
 // Might be needed later, for making sure the contentScript gets injected when
