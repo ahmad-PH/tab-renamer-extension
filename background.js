@@ -19,6 +19,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   });
 
+// Remove the tab's name information once it is closed
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    chrome.storage.sync.remove(String(tabId));
+});
 
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension it is installed or updated:
