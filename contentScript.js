@@ -19,7 +19,6 @@ chrome.runtime.onMessage.addListener(
                     <div id="${prefixedIdOverlay}" class="tab-renamer-extension-overlay"></div>
                     <div>
                         <input type="text" id="${prefixedIdInputBox}" class="tab-renamer-extension-input-box" placeholder="New tab name" autocomplete="off" autofocus/>
-                    <div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
 
