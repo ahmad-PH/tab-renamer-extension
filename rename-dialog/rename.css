@@ -43,5 +43,5 @@
 .tab-renamer-extension-input-box:focus {
     border: none;
     outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Slightly darker shadow when focused */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */
 }
