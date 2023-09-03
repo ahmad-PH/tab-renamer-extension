@@ -25,21 +25,27 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 });
 
 // Might be needed later, for making sure the contentScript gets injected when
-// the extension it is installed or updated:
+// the extension is installed or updated:
 
-// chrome.runtime.onInstalled.addListener(async () => {
-//     const allTabs = await chrome.tabs.query({});
-//     allTabs.forEach((tab) => {
-//         if (tab.url.startsWith('http://') || tab.url.startsWith('https://')) {
-//             try {
-//                 chrome.scripting.executeScript({
-//                     target: {tabId: tab.id},
-//                     files: ['contentScript.js']
-//                 });
-//                 // console.log('success:', tab.url);
-//             } catch (error) {
-//                 console.log('error:', error);
-//             }
-//         }
-//     });
-// });
+chrome.runtime.onInstalled.addListener(async () => {
+    console.log('onInstalled started');
+    const allTabs = await chrome.tabs.query({});
+    console.log('after query:', allTabs);
+    allTabs.forEach(async (tab) => {
+        if (!tab.url.startsWith('chrome://')) { // These urls are browser-protected
+            try {
+                await chrome.scripting.executeScript({
+                    target: {tabId: tab.id},
+                    files: ['contentScript.js']
+                });
+                await chrome.scripting.insertCSS({
+                    target: {tabId: tab.id},
+                    files: ['styles.css']
+                });
+            } catch (e) {
+                console.log('error while processing', tab.url);
+                console.log(e);
+            }
+        }
+    });
+});
