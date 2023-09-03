@@ -1,46 +1,60 @@
-.tab-renamer-extension-overlay {
+#tab-renamer-extension-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.4); /* black with 40% opacity */
+    background-color: rgba(0,0,0,0.4);
     z-index: 9998; /* Just below the input box */
 }
 
-.tab-renamer-extension-input-boxxxx {
+#tab-renamer-extension-input-box {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 300px;
-    height: 40px;
-    font-size: 24px;
-    z-index: 9999; /* Above the overlay */
-    padding: 5px;
-    background-color: white;
-    border: none;
-    transform: translate(-50%, -50%); /* Center the box */
-}
-
-.tab-renamer-extension-input-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 350px; /* Increased width */
-    height: 50px; /* Increased height */
-    font-size: 26px; /* Slightly larger font */
-    z-index: 9999;
-    background-color: white;
     transform: translate(-50%, -50%);
+    width: 350px;
+    height: 50px;
+    box-sizing: content-box;
+
+    /*==================== Font ==================== */
+    font-family: 'Arial', sans-serif !important;
+    font-size: 26px !important;
+    font-weight: bold !important;
+    font-style: normal !important;
+    text-transform: none;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #606060 !important; /* Dark gray */
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    z-index: 9999;
+
     border: none;
     border-radius: 12px; /* Rounded corners */
+
+    background-color: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+
     padding: 10px 20px; /* Padding for text inside */
+    margin: 0;
+
     transition: all 0.3s ease; /* Smooth transition effects */
 }
 
+
+/* Styling for the placeholder text */
+#tab-renamer-extension-input-box::placeholder {
+  color: rgb(199, 199, 199) !important;
+  font-weight: bold;
+}
+
 /* Style for input box when it gets focus */
-.tab-renamer-extension-input-box:focus {
+#tab-renamer-extension-input-box:focus {
     border: none;
     outline: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */

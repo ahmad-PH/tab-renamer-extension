@@ -1,6 +1,7 @@
-const EXTENSION_PREFIX = "tab_renamer_prefix"
-const prefixedIdInputBox = `${EXTENSION_PREFIX}_inputBox`;
-const prefixedIdOverlay = `${EXTENSION_PREFIX}_overlay`;
+// const EXTENSION_PREFIX = "tab_renamer_prefix"
+const rootElementId = 'tab-renamer-extension-root';
+const inputBoxId = 'tab-renamer-extension-input-box';
+const overlayId = 'tab-renamer-extension-overlay';
 let tabMutationObserver = null;
 
 function setTabTitle(newTabTitle, tabId) {
@@ -36,10 +37,9 @@ function preserveTabTitle(desiredTitle) {
 
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
-    document.getElementById(prefixedIdInputBox).style.display = newDisplay;
-    document.getElementById(prefixedIdOverlay).style.display = newDisplay;
+    document.getElementById(rootElementId).style.display = newDisplay;
     if (visible) {
-        document.getElementById(prefixedIdInputBox).focus();
+        document.getElementById(inputBoxId).focus();
     }
 }
 
@@ -47,15 +47,17 @@ function setUIVisibility(visible) {
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
         if (message.command === "open_rename_dialog") {
-            if (!document.getElementById(prefixedIdInputBox)) {
+            if (!document.getElementById(inputBoxId)) {
                 let htmlContent = `
-                    <div id="${prefixedIdOverlay}" class="tab-renamer-extension-overlay"></div>
-                        <input type="text" id="${prefixedIdInputBox}" class="tab-renamer-extension-input-box" placeholder="New tab name" autocomplete="off" autofocus/>
+                    <div id="${rootElementId}">
+                        <div id="${overlayId}"></div>
+                        <input type="text" id="${inputBoxId}" placeholder="New tab name" autocomplete="off" autofocus/>
+                    </div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
 
                 // Add Enter key listener to change the tab name
-                const inputBox = document.getElementById(prefixedIdInputBox);
+                const inputBox = document.getElementById(inputBoxId);
                 inputBox.addEventListener("keydown", function(event) {
                     if (event.key === "Enter") {
                         event.preventDefault();
@@ -74,7 +76,7 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 // Add click event listener to close the UI if clicked outside inputBox
-                const overlay = document.getElementById(prefixedIdOverlay);
+                const overlay = document.getElementById(overlayId);
                 overlay.addEventListener("click", function(event) {
                     setUIVisibility(false);
                 });
