@@ -30,9 +30,17 @@
         }
     ],
 
+    "web_accessible_resources": [
+        {
+            "resources": ["emoji_picker_icon.png", "emojis.json"],
+            "matches": ["<all_urls>"],
+            "use_dynamic_url": false
+        }
+    ],
+
     "icons": {
         "16": "assets/icon16.png",
         "48": "assets/icon48.png",
         "128": "assets/icon128.png"
     }
-  }
+}

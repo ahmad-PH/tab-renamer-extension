@@ -16,35 +16,71 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 350px;
-    height: 70px;
 
     z-index: 9999;
 }
 
 #tab-renamer-extension-favicon-picker {
-    width: 10%;
-    height: 100%;
-    position: absolute;
+    width: 60px;
+    height: 60px;
     box-sizing: border-box;
+    position: relative;
 
     border: 2px solid #ccc;
     cursor: pointer;
-    background-color: blue;
+    background-color: white;
     /* background: url('some-icon.png') center no-repeat; */
     background-size: cover;
 
     padding: 5px;
     margin: 0;
     border: none;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+
+    color: gray;
+}
+
+#emoji-picker-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(2); /* To make it a similar gray color as the text */
+}
+
+#emoji-picker {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
+    height: 300px;
+    padding: 10px;
+
+    overflow-y: auto; 
+
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    border-radius: 12px;
+}
+
+#emoji-picker .emoji-category-emojis {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
+    grid-gap: 4px; 
+    padding: 8px;
 }
 
 #tab-renamer-extension-input-box {
-    width: 80%;
-    height: 100%;
-    position: absolute;
-    left: 20%;
+    /*==================== Dimensions ==================== */
+    width: 300px;
+    height: 60px;
     box-sizing: border-box;
+    margin-left: 15px !important;
 
     /*==================== Font ==================== */
     font-family: 'Arial', sans-serif !important;
@@ -66,7 +102,7 @@
     border-radius: 12px; /* Rounded corners */
 
     background-color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 
     padding: 10px 20px; /* Padding for text inside */
     margin: 0;

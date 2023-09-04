@@ -1,0 +1,7422 @@
+{
+    "smileys_and_people": [
+        {
+            "shortcode": ":grinning_face:",
+            "unicode": "U+1F600"
+        },
+        {
+            "shortcode": ":grinning_face_with_big_eyes:",
+            "unicode": "U+1F603"
+        },
+        {
+            "shortcode": ":grinning_face_with_smiling_eyes:",
+            "unicode": "U+1F604"
+        },
+        {
+            "shortcode": ":beaming_face_with_smiling_eyes:",
+            "unicode": "U+1F601"
+        },
+        {
+            "shortcode": ":grinning_squinting_face:",
+            "unicode": "U+1F606"
+        },
+        {
+            "shortcode": ":grinning_face_with_sweat:",
+            "unicode": "U+1F605"
+        },
+        {
+            "shortcode": ":rolling_on_the_floor_laughing:",
+            "unicode": "U+1F923"
+        },
+        {
+            "shortcode": ":face_with_tears_of_joy:",
+            "unicode": "U+1F602"
+        },
+        {
+            "shortcode": ":slightly_smiling_face:",
+            "unicode": "U+1F642"
+        },
+        {
+            "shortcode": ":upside_down_face:",
+            "unicode": "U+1F643"
+        },
+        {
+            "shortcode": ":melting_face:",
+            "unicode": "U+1FAE0"
+        },
+        {
+            "shortcode": ":winking_face:",
+            "unicode": "U+1F609"
+        },
+        {
+            "shortcode": ":smiling_face_with_smiling_eyes:",
+            "unicode": "U+1F60A"
+        },
+        {
+            "shortcode": ":smiling_face_with_halo:",
+            "unicode": "U+1F607"
+        },
+        {
+            "shortcode": ":smiling_face_with_hearts:",
+            "unicode": "U+1F970"
+        },
+        {
+            "shortcode": ":smiling_face_with_heart_eyes:",
+            "unicode": "U+1F60D"
+        },
+        {
+            "shortcode": ":star_struck:",
+            "unicode": "U+1F929"
+        },
+        {
+            "shortcode": ":face_blowing_a_kiss:",
+            "unicode": "U+1F618"
+        },
+        {
+            "shortcode": ":kissing_face:",
+            "unicode": "U+1F617"
+        },
+        {
+            "shortcode": ":smiling_face:",
+            "unicode": "U+263A"
+        },
+        {
+            "shortcode": ":kissing_face_with_closed_eyes:",
+            "unicode": "U+1F61A"
+        },
+        {
+            "shortcode": ":kissing_face_with_smiling_eyes:",
+            "unicode": "U+1F619"
+        },
+        {
+            "shortcode": ":smiling_face_with_tear:",
+            "unicode": "U+1F972"
+        },
+        {
+            "shortcode": ":face_savoring_food:",
+            "unicode": "U+1F60B"
+        },
+        {
+            "shortcode": ":face_with_tongue:",
+            "unicode": "U+1F61B"
+        },
+        {
+            "shortcode": ":winking_face_with_tongue:",
+            "unicode": "U+1F61C"
+        },
+        {
+            "shortcode": ":zany_face:",
+            "unicode": "U+1F92A"
+        },
+        {
+            "shortcode": ":squinting_face_with_tongue:",
+            "unicode": "U+1F61D"
+        },
+        {
+            "shortcode": ":money_mouth_face:",
+            "unicode": "U+1F911"
+        },
+        {
+            "shortcode": ":smiling_face_with_open_hands:",
+            "unicode": "U+1F917"
+        },
+        {
+            "shortcode": ":face_with_hand_over_mouth:",
+            "unicode": "U+1F92D"
+        },
+        {
+            "shortcode": ":face_with_open_eyes_and_hand_over_mouth:",
+            "unicode": "U+1FAE2"
+        },
+        {
+            "shortcode": ":face_with_peeking_eye:",
+            "unicode": "U+1FAE3"
+        },
+        {
+            "shortcode": ":shushing_face:",
+            "unicode": "U+1F92B"
+        },
+        {
+            "shortcode": ":thinking_face:",
+            "unicode": "U+1F914"
+        },
+        {
+            "shortcode": ":saluting_face:",
+            "unicode": "U+1FAE1"
+        },
+        {
+            "shortcode": ":zipper_mouth_face:",
+            "unicode": "U+1F910"
+        },
+        {
+            "shortcode": ":face_with_raised_eyebrow:",
+            "unicode": "U+1F928"
+        },
+        {
+            "shortcode": ":neutral_face:",
+            "unicode": "U+1F610"
+        },
+        {
+            "shortcode": ":expressionless_face:",
+            "unicode": "U+1F611"
+        },
+        {
+            "shortcode": ":face_without_mouth:",
+            "unicode": "U+1F636"
+        },
+        {
+            "shortcode": ":dotted_line_face:",
+            "unicode": "U+1FAE5"
+        },
+        {
+            "shortcode": ":face_in_clouds:",
+            "unicode": "U+1F636 U+200D U+1F32B U+FE0F"
+        },
+        {
+            "shortcode": ":smirking_face:",
+            "unicode": "U+1F60F"
+        },
+        {
+            "shortcode": ":unamused_face:",
+            "unicode": "U+1F612"
+        },
+        {
+            "shortcode": ":face_with_rolling_eyes:",
+            "unicode": "U+1F644"
+        },
+        {
+            "shortcode": ":grimacing_face:",
+            "unicode": "U+1F62C"
+        },
+        {
+            "shortcode": ":face_exhaling:",
+            "unicode": "U+1F62E U+200D U+1F4A8"
+        },
+        {
+            "shortcode": ":⊛_shaking_face:",
+            "unicode": "U+1F925"
+        },
+        {
+            "shortcode": ":relieved_face:",
+            "unicode": "U+1F60C"
+        },
+        {
+            "shortcode": ":pensive_face:",
+            "unicode": "U+1F614"
+        },
+        {
+            "shortcode": ":sleepy_face:",
+            "unicode": "U+1F62A"
+        },
+        {
+            "shortcode": ":drooling_face:",
+            "unicode": "U+1F924"
+        },
+        {
+            "shortcode": ":sleeping_face:",
+            "unicode": "U+1F634"
+        },
+        {
+            "shortcode": ":face_with_medical_mask:",
+            "unicode": "U+1F637"
+        },
+        {
+            "shortcode": ":face_with_thermometer:",
+            "unicode": "U+1F912"
+        },
+        {
+            "shortcode": ":face_with_head_bandage:",
+            "unicode": "U+1F915"
+        },
+        {
+            "shortcode": ":nauseated_face:",
+            "unicode": "U+1F922"
+        },
+        {
+            "shortcode": ":face_vomiting:",
+            "unicode": "U+1F92E"
+        },
+        {
+            "shortcode": ":sneezing_face:",
+            "unicode": "U+1F927"
+        },
+        {
+            "shortcode": ":hot_face:",
+            "unicode": "U+1F975"
+        },
+        {
+            "shortcode": ":cold_face:",
+            "unicode": "U+1F976"
+        },
+        {
+            "shortcode": ":woozy_face:",
+            "unicode": "U+1F974"
+        },
+        {
+            "shortcode": ":face_with_crossed_out_eyes:",
+            "unicode": "U+1F635"
+        },
+        {
+            "shortcode": ":face_with_spiral_eyes:",
+            "unicode": "U+1F635 U+200D U+1F4AB"
+        },
+        {
+            "shortcode": ":exploding_head:",
+            "unicode": "U+1F92F"
+        },
+        {
+            "shortcode": ":cowboy_hat_face:",
+            "unicode": "U+1F920"
+        },
+        {
+            "shortcode": ":partying_face:",
+            "unicode": "U+1F973"
+        },
+        {
+            "shortcode": ":disguised_face:",
+            "unicode": "U+1F978"
+        },
+        {
+            "shortcode": ":smiling_face_with_sunglasses:",
+            "unicode": "U+1F60E"
+        },
+        {
+            "shortcode": ":nerd_face:",
+            "unicode": "U+1F913"
+        },
+        {
+            "shortcode": ":face_with_monocle:",
+            "unicode": "U+1F9D0"
+        },
+        {
+            "shortcode": ":confused_face:",
+            "unicode": "U+1F615"
+        },
+        {
+            "shortcode": ":face_with_diagonal_mouth:",
+            "unicode": "U+1FAE4"
+        },
+        {
+            "shortcode": ":worried_face:",
+            "unicode": "U+1F61F"
+        },
+        {
+            "shortcode": ":slightly_frowning_face:",
+            "unicode": "U+1F641"
+        },
+        {
+            "shortcode": ":frowning_face:",
+            "unicode": "U+2639"
+        },
+        {
+            "shortcode": ":face_with_open_mouth:",
+            "unicode": "U+1F62E"
+        },
+        {
+            "shortcode": ":hushed_face:",
+            "unicode": "U+1F62F"
+        },
+        {
+            "shortcode": ":astonished_face:",
+            "unicode": "U+1F632"
+        },
+        {
+            "shortcode": ":flushed_face:",
+            "unicode": "U+1F633"
+        },
+        {
+            "shortcode": ":pleading_face:",
+            "unicode": "U+1F97A"
+        },
+        {
+            "shortcode": ":face_holding_back_tears:",
+            "unicode": "U+1F979"
+        },
+        {
+            "shortcode": ":frowning_face_with_open_mouth:",
+            "unicode": "U+1F626"
+        },
+        {
+            "shortcode": ":anguished_face:",
+            "unicode": "U+1F627"
+        },
+        {
+            "shortcode": ":fearful_face:",
+            "unicode": "U+1F628"
+        },
+        {
+            "shortcode": ":anxious_face_with_sweat:",
+            "unicode": "U+1F630"
+        },
+        {
+            "shortcode": ":sad_but_relieved_face:",
+            "unicode": "U+1F625"
+        },
+        {
+            "shortcode": ":crying_face:",
+            "unicode": "U+1F622"
+        },
+        {
+            "shortcode": ":loudly_crying_face:",
+            "unicode": "U+1F62D"
+        },
+        {
+            "shortcode": ":face_screaming_in_fear:",
+            "unicode": "U+1F631"
+        },
+        {
+            "shortcode": ":confounded_face:",
+            "unicode": "U+1F616"
+        },
+        {
+            "shortcode": ":persevering_face:",
+            "unicode": "U+1F623"
+        },
+        {
+            "shortcode": ":disappointed_face:",
+            "unicode": "U+1F61E"
+        },
+        {
+            "shortcode": ":downcast_face_with_sweat:",
+            "unicode": "U+1F613"
+        },
+        {
+            "shortcode": ":weary_face:",
+            "unicode": "U+1F629"
+        },
+        {
+            "shortcode": ":tired_face:",
+            "unicode": "U+1F62B"
+        },
+        {
+            "shortcode": ":yawning_face:",
+            "unicode": "U+1F971"
+        },
+        {
+            "shortcode": ":face_with_steam_from_nose:",
+            "unicode": "U+1F624"
+        },
+        {
+            "shortcode": ":enraged_face:",
+            "unicode": "U+1F621"
+        },
+        {
+            "shortcode": ":angry_face:",
+            "unicode": "U+1F620"
+        },
+        {
+            "shortcode": ":face_with_symbols_on_mouth:",
+            "unicode": "U+1F92C"
+        },
+        {
+            "shortcode": ":smiling_face_with_horns:",
+            "unicode": "U+1F608"
+        },
+        {
+            "shortcode": ":angry_face_with_horns:",
+            "unicode": "U+1F47F"
+        },
+        {
+            "shortcode": ":skull:",
+            "unicode": "U+1F480"
+        },
+        {
+            "shortcode": ":skull_and_crossbones:",
+            "unicode": "U+2620"
+        },
+        {
+            "shortcode": ":pile_of_poo:",
+            "unicode": "U+1F4A9"
+        },
+        {
+            "shortcode": ":clown_face:",
+            "unicode": "U+1F921"
+        },
+        {
+            "shortcode": ":ogre:",
+            "unicode": "U+1F479"
+        },
+        {
+            "shortcode": ":goblin:",
+            "unicode": "U+1F47A"
+        },
+        {
+            "shortcode": ":ghost:",
+            "unicode": "U+1F47B"
+        },
+        {
+            "shortcode": ":alien:",
+            "unicode": "U+1F47D"
+        },
+        {
+            "shortcode": ":alien_monster:",
+            "unicode": "U+1F47E"
+        },
+        {
+            "shortcode": ":robot:",
+            "unicode": "U+1F916"
+        },
+        {
+            "shortcode": ":grinning_cat:",
+            "unicode": "U+1F63A"
+        },
+        {
+            "shortcode": ":grinning_cat_with_smiling_eyes:",
+            "unicode": "U+1F638"
+        },
+        {
+            "shortcode": ":cat_with_tears_of_joy:",
+            "unicode": "U+1F639"
+        },
+        {
+            "shortcode": ":smiling_cat_with_heart_eyes:",
+            "unicode": "U+1F63B"
+        },
+        {
+            "shortcode": ":cat_with_wry_smile:",
+            "unicode": "U+1F63C"
+        },
+        {
+            "shortcode": ":kissing_cat:",
+            "unicode": "U+1F63D"
+        },
+        {
+            "shortcode": ":weary_cat:",
+            "unicode": "U+1F640"
+        },
+        {
+            "shortcode": ":crying_cat:",
+            "unicode": "U+1F63F"
+        },
+        {
+            "shortcode": ":pouting_cat:",
+            "unicode": "U+1F63E"
+        },
+        {
+            "shortcode": ":see_no_evil_monkey:",
+            "unicode": "U+1F648"
+        },
+        {
+            "shortcode": ":hear_no_evil_monkey:",
+            "unicode": "U+1F649"
+        },
+        {
+            "shortcode": ":speak_no_evil_monkey:",
+            "unicode": "U+1F64A"
+        },
+        {
+            "shortcode": ":love_letter:",
+            "unicode": "U+1F48C"
+        },
+        {
+            "shortcode": ":heart_with_arrow:",
+            "unicode": "U+1F498"
+        },
+        {
+            "shortcode": ":heart_with_ribbon:",
+            "unicode": "U+1F49D"
+        },
+        {
+            "shortcode": ":sparkling_heart:",
+            "unicode": "U+1F496"
+        },
+        {
+            "shortcode": ":growing_heart:",
+            "unicode": "U+1F497"
+        },
+        {
+            "shortcode": ":beating_heart:",
+            "unicode": "U+1F493"
+        },
+        {
+            "shortcode": ":revolving_hearts:",
+            "unicode": "U+1F49E"
+        },
+        {
+            "shortcode": ":two_hearts:",
+            "unicode": "U+1F495"
+        },
+        {
+            "shortcode": ":heart_decoration:",
+            "unicode": "U+1F49F"
+        },
+        {
+            "shortcode": ":heart_exclamation:",
+            "unicode": "U+2763"
+        },
+        {
+            "shortcode": ":broken_heart:",
+            "unicode": "U+1F494"
+        },
+        {
+            "shortcode": ":heart_on_fire:",
+            "unicode": "U+2764 U+FE0F U+200D U+1F525"
+        },
+        {
+            "shortcode": ":mending_heart:",
+            "unicode": "U+2764 U+FE0F U+200D U+1FA79"
+        },
+        {
+            "shortcode": ":⊛_pink_heart:",
+            "unicode": "U+2764"
+        },
+        {
+            "shortcode": ":orange_heart:",
+            "unicode": "U+1F9E1"
+        },
+        {
+            "shortcode": ":yellow_heart:",
+            "unicode": "U+1F49B"
+        },
+        {
+            "shortcode": ":green_heart:",
+            "unicode": "U+1F49A"
+        },
+        {
+            "shortcode": ":blue_heart:",
+            "unicode": "U+1F499"
+        },
+        {
+            "shortcode": ":purple_heart:",
+            "unicode": "U+1F49C"
+        },
+        {
+            "shortcode": ":brown_heart:",
+            "unicode": "U+1F90E"
+        },
+        {
+            "shortcode": ":⊛_grey_heart:",
+            "unicode": "U+1F5A4"
+        },
+        {
+            "shortcode": ":white_heart:",
+            "unicode": "U+1F90D"
+        },
+        {
+            "shortcode": ":kiss_mark:",
+            "unicode": "U+1F48B"
+        },
+        {
+            "shortcode": ":hundred_points:",
+            "unicode": "U+1F4AF"
+        },
+        {
+            "shortcode": ":anger_symbol:",
+            "unicode": "U+1F4A2"
+        },
+        {
+            "shortcode": ":collision:",
+            "unicode": "U+1F4A5"
+        },
+        {
+            "shortcode": ":dizzy:",
+            "unicode": "U+1F4AB"
+        },
+        {
+            "shortcode": ":sweat_droplets:",
+            "unicode": "U+1F4A6"
+        },
+        {
+            "shortcode": ":dashing_away:",
+            "unicode": "U+1F4A8"
+        },
+        {
+            "shortcode": ":hole:",
+            "unicode": "U+1F573"
+        },
+        {
+            "shortcode": ":speech_balloon:",
+            "unicode": "U+1F4AC"
+        },
+        {
+            "shortcode": ":eye_in_speech_bubble:",
+            "unicode": "U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F"
+        },
+        {
+            "shortcode": ":left_speech_bubble:",
+            "unicode": "U+1F5E8"
+        },
+        {
+            "shortcode": ":right_anger_bubble:",
+            "unicode": "U+1F5EF"
+        },
+        {
+            "shortcode": ":thought_balloon:",
+            "unicode": "U+1F4AD"
+        },
+        {
+            "shortcode": ":ZZZ:",
+            "unicode": "U+1F4A4"
+        },
+        {
+            "shortcode": ":waving_hand:",
+            "unicode": "U+1F44B"
+        },
+        {
+            "shortcode": ":raised_back_of_hand:",
+            "unicode": "U+1F91A"
+        },
+        {
+            "shortcode": ":hand_with_fingers_splayed:",
+            "unicode": "U+1F590"
+        },
+        {
+            "shortcode": ":raised_hand:",
+            "unicode": "U+270B"
+        },
+        {
+            "shortcode": ":vulcan_salute:",
+            "unicode": "U+1F596"
+        },
+        {
+            "shortcode": ":rightwards_hand:",
+            "unicode": "U+1FAF1"
+        },
+        {
+            "shortcode": ":leftwards_hand:",
+            "unicode": "U+1FAF2"
+        },
+        {
+            "shortcode": ":palm_down_hand:",
+            "unicode": "U+1FAF3"
+        },
+        {
+            "shortcode": ":⊛_rightwards_pushing_hand:",
+            "unicode": "U+1FAF4"
+        },
+        {
+            "shortcode": ":OK_hand:",
+            "unicode": "U+1F44C"
+        },
+        {
+            "shortcode": ":pinched_fingers:",
+            "unicode": "U+1F90C"
+        },
+        {
+            "shortcode": ":pinching_hand:",
+            "unicode": "U+1F90F"
+        },
+        {
+            "shortcode": ":victory_hand:",
+            "unicode": "U+270C"
+        },
+        {
+            "shortcode": ":crossed_fingers:",
+            "unicode": "U+1F91E"
+        },
+        {
+            "shortcode": ":hand_with_index_finger_and_thumb_crossed:",
+            "unicode": "U+1FAF0"
+        },
+        {
+            "shortcode": ":love_you_gesture:",
+            "unicode": "U+1F91F"
+        },
+        {
+            "shortcode": ":sign_of_the_horns:",
+            "unicode": "U+1F918"
+        },
+        {
+            "shortcode": ":call_me_hand:",
+            "unicode": "U+1F919"
+        },
+        {
+            "shortcode": ":backhand_index_pointing_left:",
+            "unicode": "U+1F448"
+        },
+        {
+            "shortcode": ":backhand_index_pointing_right:",
+            "unicode": "U+1F449"
+        },
+        {
+            "shortcode": ":backhand_index_pointing_up:",
+            "unicode": "U+1F446"
+        },
+        {
+            "shortcode": ":middle_finger:",
+            "unicode": "U+1F595"
+        },
+        {
+            "shortcode": ":backhand_index_pointing_down:",
+            "unicode": "U+1F447"
+        },
+        {
+            "shortcode": ":index_pointing_up:",
+            "unicode": "U+261D"
+        },
+        {
+            "shortcode": ":index_pointing_at_the_viewer:",
+            "unicode": "U+1FAF5"
+        },
+        {
+            "shortcode": ":thumbs_up:",
+            "unicode": "U+1F44D"
+        },
+        {
+            "shortcode": ":thumbs_down:",
+            "unicode": "U+1F44E"
+        },
+        {
+            "shortcode": ":raised_fist:",
+            "unicode": "U+270A"
+        },
+        {
+            "shortcode": ":oncoming_fist:",
+            "unicode": "U+1F44A"
+        },
+        {
+            "shortcode": ":left_facing_fist:",
+            "unicode": "U+1F91B"
+        },
+        {
+            "shortcode": ":right_facing_fist:",
+            "unicode": "U+1F91C"
+        },
+        {
+            "shortcode": ":clapping_hands:",
+            "unicode": "U+1F44F"
+        },
+        {
+            "shortcode": ":raising_hands:",
+            "unicode": "U+1F64C"
+        },
+        {
+            "shortcode": ":heart_hands:",
+            "unicode": "U+1FAF6"
+        },
+        {
+            "shortcode": ":open_hands:",
+            "unicode": "U+1F450"
+        },
+        {
+            "shortcode": ":palms_up_together:",
+            "unicode": "U+1F932"
+        },
+        {
+            "shortcode": ":handshake:",
+            "unicode": "U+1F91D"
+        },
+        {
+            "shortcode": ":folded_hands:",
+            "unicode": "U+1F64F"
+        },
+        {
+            "shortcode": ":writing_hand:",
+            "unicode": "U+270D"
+        },
+        {
+            "shortcode": ":nail_polish:",
+            "unicode": "U+1F485"
+        },
+        {
+            "shortcode": ":selfie:",
+            "unicode": "U+1F933"
+        },
+        {
+            "shortcode": ":flexed_biceps:",
+            "unicode": "U+1F4AA"
+        },
+        {
+            "shortcode": ":mechanical_arm:",
+            "unicode": "U+1F9BE"
+        },
+        {
+            "shortcode": ":mechanical_leg:",
+            "unicode": "U+1F9BF"
+        },
+        {
+            "shortcode": ":leg:",
+            "unicode": "U+1F9B5"
+        },
+        {
+            "shortcode": ":foot:",
+            "unicode": "U+1F9B6"
+        },
+        {
+            "shortcode": ":ear:",
+            "unicode": "U+1F442"
+        },
+        {
+            "shortcode": ":ear_with_hearing_aid:",
+            "unicode": "U+1F9BB"
+        },
+        {
+            "shortcode": ":nose:",
+            "unicode": "U+1F443"
+        },
+        {
+            "shortcode": ":brain:",
+            "unicode": "U+1F9E0"
+        },
+        {
+            "shortcode": ":anatomical_heart:",
+            "unicode": "U+1FAC0"
+        },
+        {
+            "shortcode": ":lungs:",
+            "unicode": "U+1FAC1"
+        },
+        {
+            "shortcode": ":tooth:",
+            "unicode": "U+1F9B7"
+        },
+        {
+            "shortcode": ":bone:",
+            "unicode": "U+1F9B4"
+        },
+        {
+            "shortcode": ":eyes:",
+            "unicode": "U+1F440"
+        },
+        {
+            "shortcode": ":eye:",
+            "unicode": "U+1F441"
+        },
+        {
+            "shortcode": ":tongue:",
+            "unicode": "U+1F445"
+        },
+        {
+            "shortcode": ":mouth:",
+            "unicode": "U+1F444"
+        },
+        {
+            "shortcode": ":biting_lip:",
+            "unicode": "U+1FAE6"
+        },
+        {
+            "shortcode": ":baby:",
+            "unicode": "U+1F476"
+        },
+        {
+            "shortcode": ":child:",
+            "unicode": "U+1F9D2"
+        },
+        {
+            "shortcode": ":boy:",
+            "unicode": "U+1F466"
+        },
+        {
+            "shortcode": ":girl:",
+            "unicode": "U+1F467"
+        },
+        {
+            "shortcode": ":person:",
+            "unicode": "U+1F9D1"
+        },
+        {
+            "shortcode": ":person_blond_hair:",
+            "unicode": "U+1F471"
+        },
+        {
+            "shortcode": ":man:",
+            "unicode": "U+1F468"
+        },
+        {
+            "shortcode": ":person_beard:",
+            "unicode": "U+1F9D4"
+        },
+        {
+            "shortcode": ":man_beard:",
+            "unicode": "U+1F9D4 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_beard:",
+            "unicode": "U+1F9D4 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":man_red_hair:",
+            "unicode": "U+1F468 U+200D U+1F9B0"
+        },
+        {
+            "shortcode": ":man_curly_hair:",
+            "unicode": "U+1F468 U+200D U+1F9B1"
+        },
+        {
+            "shortcode": ":man_white_hair:",
+            "unicode": "U+1F468 U+200D U+1F9B3"
+        },
+        {
+            "shortcode": ":man_bald:",
+            "unicode": "U+1F468 U+200D U+1F9B2"
+        },
+        {
+            "shortcode": ":woman:",
+            "unicode": "U+1F469"
+        },
+        {
+            "shortcode": ":woman_red_hair:",
+            "unicode": "U+1F469 U+200D U+1F9B0"
+        },
+        {
+            "shortcode": ":person_red_hair:",
+            "unicode": "U+1F9D1 U+200D U+1F9B0"
+        },
+        {
+            "shortcode": ":woman_curly_hair:",
+            "unicode": "U+1F469 U+200D U+1F9B1"
+        },
+        {
+            "shortcode": ":person_curly_hair:",
+            "unicode": "U+1F9D1 U+200D U+1F9B1"
+        },
+        {
+            "shortcode": ":woman_white_hair:",
+            "unicode": "U+1F469 U+200D U+1F9B3"
+        },
+        {
+            "shortcode": ":person_white_hair:",
+            "unicode": "U+1F9D1 U+200D U+1F9B3"
+        },
+        {
+            "shortcode": ":woman_bald:",
+            "unicode": "U+1F469 U+200D U+1F9B2"
+        },
+        {
+            "shortcode": ":person_bald:",
+            "unicode": "U+1F9D1 U+200D U+1F9B2"
+        },
+        {
+            "shortcode": ":woman_blond_hair:",
+            "unicode": "U+1F471 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":man_blond_hair:",
+            "unicode": "U+1F471 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":older_person:",
+            "unicode": "U+1F9D3"
+        },
+        {
+            "shortcode": ":old_man:",
+            "unicode": "U+1F474"
+        },
+        {
+            "shortcode": ":old_woman:",
+            "unicode": "U+1F475"
+        },
+        {
+            "shortcode": ":person_frowning:",
+            "unicode": "U+1F64D"
+        },
+        {
+            "shortcode": ":man_frowning:",
+            "unicode": "U+1F64D U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_frowning:",
+            "unicode": "U+1F64D U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_pouting:",
+            "unicode": "U+1F64E"
+        },
+        {
+            "shortcode": ":man_pouting:",
+            "unicode": "U+1F64E U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_pouting:",
+            "unicode": "U+1F64E U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_gesturing_NO:",
+            "unicode": "U+1F645"
+        },
+        {
+            "shortcode": ":man_gesturing_NO:",
+            "unicode": "U+1F645 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_gesturing_NO:",
+            "unicode": "U+1F645 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_gesturing_OK:",
+            "unicode": "U+1F646"
+        },
+        {
+            "shortcode": ":man_gesturing_OK:",
+            "unicode": "U+1F646 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_gesturing_OK:",
+            "unicode": "U+1F646 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_tipping_hand:",
+            "unicode": "U+1F481"
+        },
+        {
+            "shortcode": ":man_tipping_hand:",
+            "unicode": "U+1F481 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_tipping_hand:",
+            "unicode": "U+1F481 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_raising_hand:",
+            "unicode": "U+1F64B"
+        },
+        {
+            "shortcode": ":man_raising_hand:",
+            "unicode": "U+1F64B U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_raising_hand:",
+            "unicode": "U+1F64B U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":deaf_person:",
+            "unicode": "U+1F9CF"
+        },
+        {
+            "shortcode": ":deaf_man:",
+            "unicode": "U+1F9CF U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":deaf_woman:",
+            "unicode": "U+1F9CF U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_bowing:",
+            "unicode": "U+1F647"
+        },
+        {
+            "shortcode": ":man_bowing:",
+            "unicode": "U+1F647 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_bowing:",
+            "unicode": "U+1F647 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_facepalming:",
+            "unicode": "U+1F926"
+        },
+        {
+            "shortcode": ":man_facepalming:",
+            "unicode": "U+1F926 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_facepalming:",
+            "unicode": "U+1F926 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_shrugging:",
+            "unicode": "U+1F937"
+        },
+        {
+            "shortcode": ":man_shrugging:",
+            "unicode": "U+1F937 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_shrugging:",
+            "unicode": "U+1F937 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":health_worker:",
+            "unicode": "U+1F9D1 U+200D U+2695 U+FE0F"
+        },
+        {
+            "shortcode": ":man_health_worker:",
+            "unicode": "U+1F468 U+200D U+2695 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_health_worker:",
+            "unicode": "U+1F469 U+200D U+2695 U+FE0F"
+        },
+        {
+            "shortcode": ":student:",
+            "unicode": "U+1F9D1 U+200D U+1F393"
+        },
+        {
+            "shortcode": ":man_student:",
+            "unicode": "U+1F468 U+200D U+1F393"
+        },
+        {
+            "shortcode": ":woman_student:",
+            "unicode": "U+1F469 U+200D U+1F393"
+        },
+        {
+            "shortcode": ":teacher:",
+            "unicode": "U+1F9D1 U+200D U+1F3EB"
+        },
+        {
+            "shortcode": ":man_teacher:",
+            "unicode": "U+1F468 U+200D U+1F3EB"
+        },
+        {
+            "shortcode": ":woman_teacher:",
+            "unicode": "U+1F469 U+200D U+1F3EB"
+        },
+        {
+            "shortcode": ":judge:",
+            "unicode": "U+1F9D1 U+200D U+2696 U+FE0F"
+        },
+        {
+            "shortcode": ":man_judge:",
+            "unicode": "U+1F468 U+200D U+2696 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_judge:",
+            "unicode": "U+1F469 U+200D U+2696 U+FE0F"
+        },
+        {
+            "shortcode": ":farmer:",
+            "unicode": "U+1F9D1 U+200D U+1F33E"
+        },
+        {
+            "shortcode": ":man_farmer:",
+            "unicode": "U+1F468 U+200D U+1F33E"
+        },
+        {
+            "shortcode": ":woman_farmer:",
+            "unicode": "U+1F469 U+200D U+1F33E"
+        },
+        {
+            "shortcode": ":cook:",
+            "unicode": "U+1F9D1 U+200D U+1F373"
+        },
+        {
+            "shortcode": ":man_cook:",
+            "unicode": "U+1F468 U+200D U+1F373"
+        },
+        {
+            "shortcode": ":woman_cook:",
+            "unicode": "U+1F469 U+200D U+1F373"
+        },
+        {
+            "shortcode": ":mechanic:",
+            "unicode": "U+1F9D1 U+200D U+1F527"
+        },
+        {
+            "shortcode": ":man_mechanic:",
+            "unicode": "U+1F468 U+200D U+1F527"
+        },
+        {
+            "shortcode": ":woman_mechanic:",
+            "unicode": "U+1F469 U+200D U+1F527"
+        },
+        {
+            "shortcode": ":factory_worker:",
+            "unicode": "U+1F9D1 U+200D U+1F3ED"
+        },
+        {
+            "shortcode": ":man_factory_worker:",
+            "unicode": "U+1F468 U+200D U+1F3ED"
+        },
+        {
+            "shortcode": ":woman_factory_worker:",
+            "unicode": "U+1F469 U+200D U+1F3ED"
+        },
+        {
+            "shortcode": ":office_worker:",
+            "unicode": "U+1F9D1 U+200D U+1F4BC"
+        },
+        {
+            "shortcode": ":man_office_worker:",
+            "unicode": "U+1F468 U+200D U+1F4BC"
+        },
+        {
+            "shortcode": ":woman_office_worker:",
+            "unicode": "U+1F469 U+200D U+1F4BC"
+        },
+        {
+            "shortcode": ":scientist:",
+            "unicode": "U+1F9D1 U+200D U+1F52C"
+        },
+        {
+            "shortcode": ":man_scientist:",
+            "unicode": "U+1F468 U+200D U+1F52C"
+        },
+        {
+            "shortcode": ":woman_scientist:",
+            "unicode": "U+1F469 U+200D U+1F52C"
+        },
+        {
+            "shortcode": ":technologist:",
+            "unicode": "U+1F9D1 U+200D U+1F4BB"
+        },
+        {
+            "shortcode": ":man_technologist:",
+            "unicode": "U+1F468 U+200D U+1F4BB"
+        },
+        {
+            "shortcode": ":woman_technologist:",
+            "unicode": "U+1F469 U+200D U+1F4BB"
+        },
+        {
+            "shortcode": ":singer:",
+            "unicode": "U+1F9D1 U+200D U+1F3A4"
+        },
+        {
+            "shortcode": ":man_singer:",
+            "unicode": "U+1F468 U+200D U+1F3A4"
+        },
+        {
+            "shortcode": ":woman_singer:",
+            "unicode": "U+1F469 U+200D U+1F3A4"
+        },
+        {
+            "shortcode": ":artist:",
+            "unicode": "U+1F9D1 U+200D U+1F3A8"
+        },
+        {
+            "shortcode": ":man_artist:",
+            "unicode": "U+1F468 U+200D U+1F3A8"
+        },
+        {
+            "shortcode": ":woman_artist:",
+            "unicode": "U+1F469 U+200D U+1F3A8"
+        },
+        {
+            "shortcode": ":pilot:",
+            "unicode": "U+1F9D1 U+200D U+2708 U+FE0F"
+        },
+        {
+            "shortcode": ":man_pilot:",
+            "unicode": "U+1F468 U+200D U+2708 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_pilot:",
+            "unicode": "U+1F469 U+200D U+2708 U+FE0F"
+        },
+        {
+            "shortcode": ":astronaut:",
+            "unicode": "U+1F9D1 U+200D U+1F680"
+        },
+        {
+            "shortcode": ":man_astronaut:",
+            "unicode": "U+1F468 U+200D U+1F680"
+        },
+        {
+            "shortcode": ":woman_astronaut:",
+            "unicode": "U+1F469 U+200D U+1F680"
+        },
+        {
+            "shortcode": ":firefighter:",
+            "unicode": "U+1F9D1 U+200D U+1F692"
+        },
+        {
+            "shortcode": ":man_firefighter:",
+            "unicode": "U+1F468 U+200D U+1F692"
+        },
+        {
+            "shortcode": ":woman_firefighter:",
+            "unicode": "U+1F469 U+200D U+1F692"
+        },
+        {
+            "shortcode": ":police_officer:",
+            "unicode": "U+1F46E"
+        },
+        {
+            "shortcode": ":man_police_officer:",
+            "unicode": "U+1F46E U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_police_officer:",
+            "unicode": "U+1F46E U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":detective:",
+            "unicode": "U+1F575"
+        },
+        {
+            "shortcode": ":man_detective:",
+            "unicode": "U+1F575 U+FE0F U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_detective:",
+            "unicode": "U+1F575 U+FE0F U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":guard:",
+            "unicode": "U+1F482"
+        },
+        {
+            "shortcode": ":man_guard:",
+            "unicode": "U+1F482 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_guard:",
+            "unicode": "U+1F482 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":ninja:",
+            "unicode": "U+1F977"
+        },
+        {
+            "shortcode": ":construction_worker:",
+            "unicode": "U+1F477"
+        },
+        {
+            "shortcode": ":man:",
+            "unicode": "U+1F477 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_construction_worker:",
+            "unicode": "U+1F477 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_with_crown:",
+            "unicode": "U+1FAC5"
+        },
+        {
+            "shortcode": ":prince:",
+            "unicode": "U+1F934"
+        },
+        {
+            "shortcode": ":princess:",
+            "unicode": "U+1F478"
+        },
+        {
+            "shortcode": ":person_wearing_turban:",
+            "unicode": "U+1F473"
+        },
+        {
+            "shortcode": ":man_wearing_turban:",
+            "unicode": "U+1F473 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_wearing_turban:",
+            "unicode": "U+1F473 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_with_skullcap:",
+            "unicode": "U+1F472"
+        },
+        {
+            "shortcode": ":woman_with_headscarf:",
+            "unicode": "U+1F9D5"
+        },
+        {
+            "shortcode": ":person_in_tuxedo:",
+            "unicode": "U+1F935"
+        },
+        {
+            "shortcode": ":man_in_tuxedo:",
+            "unicode": "U+1F935 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_in_tuxedo:",
+            "unicode": "U+1F935 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_with_veil:",
+            "unicode": "U+1F470"
+        },
+        {
+            "shortcode": ":man_with_veil:",
+            "unicode": "U+1F470 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_with_veil:",
+            "unicode": "U+1F470 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":pregnant_woman:",
+            "unicode": "U+1F930"
+        },
+        {
+            "shortcode": ":pregnant_man:",
+            "unicode": "U+1FAC3"
+        },
+        {
+            "shortcode": ":pregnant_person:",
+            "unicode": "U+1FAC4"
+        },
+        {
+            "shortcode": ":breast_feeding:",
+            "unicode": "U+1F931"
+        },
+        {
+            "shortcode": ":woman_feeding_baby:",
+            "unicode": "U+1F469 U+200D U+1F37C"
+        },
+        {
+            "shortcode": ":man_feeding_baby:",
+            "unicode": "U+1F468 U+200D U+1F37C"
+        },
+        {
+            "shortcode": ":person_feeding_baby:",
+            "unicode": "U+1F9D1 U+200D U+1F37C"
+        },
+        {
+            "shortcode": ":baby_angel:",
+            "unicode": "U+1F47C"
+        },
+        {
+            "shortcode": ":Santa_Claus:",
+            "unicode": "U+1F385"
+        },
+        {
+            "shortcode": ":Mrs._Claus:",
+            "unicode": "U+1F936"
+        },
+        {
+            "shortcode": ":mx_claus:",
+            "unicode": "U+1F9D1 U+200D U+1F384"
+        },
+        {
+            "shortcode": ":superhero:",
+            "unicode": "U+1F9B8"
+        },
+        {
+            "shortcode": ":man_superhero:",
+            "unicode": "U+1F9B8 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_superhero:",
+            "unicode": "U+1F9B8 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":supervillain:",
+            "unicode": "U+1F9B9"
+        },
+        {
+            "shortcode": ":man_supervillain:",
+            "unicode": "U+1F9B9 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_supervillain:",
+            "unicode": "U+1F9B9 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":mage:",
+            "unicode": "U+1F9D9"
+        },
+        {
+            "shortcode": ":man_mage:",
+            "unicode": "U+1F9D9 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_mage:",
+            "unicode": "U+1F9D9 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":fairy:",
+            "unicode": "U+1F9DA"
+        },
+        {
+            "shortcode": ":man_fairy:",
+            "unicode": "U+1F9DA U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_fairy:",
+            "unicode": "U+1F9DA U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":vampire:",
+            "unicode": "U+1F9DB"
+        },
+        {
+            "shortcode": ":man_vampire:",
+            "unicode": "U+1F9DB U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_vampire:",
+            "unicode": "U+1F9DB U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":merperson:",
+            "unicode": "U+1F9DC"
+        },
+        {
+            "shortcode": ":merman:",
+            "unicode": "U+1F9DC U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":mermaid:",
+            "unicode": "U+1F9DC U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":elf:",
+            "unicode": "U+1F9DD"
+        },
+        {
+            "shortcode": ":man_elf:",
+            "unicode": "U+1F9DD U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_elf:",
+            "unicode": "U+1F9DD U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":genie:",
+            "unicode": "U+1F9DE"
+        },
+        {
+            "shortcode": ":man_genie:",
+            "unicode": "U+1F9DE U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_genie:",
+            "unicode": "U+1F9DE U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":zombie:",
+            "unicode": "U+1F9DF"
+        },
+        {
+            "shortcode": ":man_zombie:",
+            "unicode": "U+1F9DF U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_zombie:",
+            "unicode": "U+1F9DF U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":troll:",
+            "unicode": "U+1F9CC"
+        },
+        {
+            "shortcode": ":person_getting_massage:",
+            "unicode": "U+1F486"
+        },
+        {
+            "shortcode": ":man_getting_massage:",
+            "unicode": "U+1F486 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_getting_massage:",
+            "unicode": "U+1F486 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_getting_haircut:",
+            "unicode": "U+1F487"
+        },
+        {
+            "shortcode": ":man_getting_haircut:",
+            "unicode": "U+1F487 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_getting_haircut:",
+            "unicode": "U+1F487 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_walking:",
+            "unicode": "U+1F6B6"
+        },
+        {
+            "shortcode": ":man_walking:",
+            "unicode": "U+1F6B6 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_walking:",
+            "unicode": "U+1F6B6 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_standing:",
+            "unicode": "U+1F9CD"
+        },
+        {
+            "shortcode": ":man_standing:",
+            "unicode": "U+1F9CD U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_standing:",
+            "unicode": "U+1F9CD U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_kneeling:",
+            "unicode": "U+1F9CE"
+        },
+        {
+            "shortcode": ":man_kneeling:",
+            "unicode": "U+1F9CE U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_kneeling:",
+            "unicode": "U+1F9CE U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_with_white_cane:",
+            "unicode": "U+1F9D1 U+200D U+1F9AF"
+        },
+        {
+            "shortcode": ":man_with_white_cane:",
+            "unicode": "U+1F468 U+200D U+1F9AF"
+        },
+        {
+            "shortcode": ":woman_with_white_cane:",
+            "unicode": "U+1F469 U+200D U+1F9AF"
+        },
+        {
+            "shortcode": ":person_in_motorized_wheelchair:",
+            "unicode": "U+1F9D1 U+200D U+1F9BC"
+        },
+        {
+            "shortcode": ":man_in_motorized_wheelchair:",
+            "unicode": "U+1F468 U+200D U+1F9BC"
+        },
+        {
+            "shortcode": ":woman_in_motorized_wheelchair:",
+            "unicode": "U+1F469 U+200D U+1F9BC"
+        },
+        {
+            "shortcode": ":person_in_manual_wheelchair:",
+            "unicode": "U+1F9D1 U+200D U+1F9BD"
+        },
+        {
+            "shortcode": ":man_in_manual_wheelchair:",
+            "unicode": "U+1F468 U+200D U+1F9BD"
+        },
+        {
+            "shortcode": ":woman_in_manual_wheelchair:",
+            "unicode": "U+1F469 U+200D U+1F9BD"
+        },
+        {
+            "shortcode": ":person_running:",
+            "unicode": "U+1F3C3"
+        },
+        {
+            "shortcode": ":man_running:",
+            "unicode": "U+1F3C3 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_running:",
+            "unicode": "U+1F3C3 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_dancing:",
+            "unicode": "U+1F483"
+        },
+        {
+            "shortcode": ":man_dancing:",
+            "unicode": "U+1F57A"
+        },
+        {
+            "shortcode": ":person_in_suit_levitating:",
+            "unicode": "U+1F574"
+        },
+        {
+            "shortcode": ":people_with_bunny_ears:",
+            "unicode": "U+1F46F"
+        },
+        {
+            "shortcode": ":men_with_bunny_ears:",
+            "unicode": "U+1F46F U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":women_with_bunny_ears:",
+            "unicode": "U+1F46F U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_in_steamy_room:",
+            "unicode": "U+1F9D6"
+        },
+        {
+            "shortcode": ":man_in_steamy_room:",
+            "unicode": "U+1F9D6 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_in_steamy_room:",
+            "unicode": "U+1F9D6 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_climbing:",
+            "unicode": "U+1F9D7"
+        },
+        {
+            "shortcode": ":man_climbing:",
+            "unicode": "U+1F9D7 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_climbing:",
+            "unicode": "U+1F9D7 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_fencing:",
+            "unicode": "U+1F93A"
+        },
+        {
+            "shortcode": ":horse_racing:",
+            "unicode": "U+1F3C7"
+        },
+        {
+            "shortcode": ":skier:",
+            "unicode": "U+26F7"
+        },
+        {
+            "shortcode": ":snowboarder:",
+            "unicode": "U+1F3C2"
+        },
+        {
+            "shortcode": ":person_golfing:",
+            "unicode": "U+1F3CC"
+        },
+        {
+            "shortcode": ":man_golfing:",
+            "unicode": "U+1F3CC U+FE0F U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_golfing:",
+            "unicode": "U+1F3CC U+FE0F U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_surfing:",
+            "unicode": "U+1F3C4"
+        },
+        {
+            "shortcode": ":man_surfing:",
+            "unicode": "U+1F3C4 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_surfing:",
+            "unicode": "U+1F3C4 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_rowing_boat:",
+            "unicode": "U+1F6A3"
+        },
+        {
+            "shortcode": ":man_rowing_boat:",
+            "unicode": "U+1F6A3 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_rowing_boat:",
+            "unicode": "U+1F6A3 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_swimming:",
+            "unicode": "U+1F3CA"
+        },
+        {
+            "shortcode": ":man_swimming:",
+            "unicode": "U+1F3CA U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_swimming:",
+            "unicode": "U+1F3CA U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_bouncing_ball:",
+            "unicode": "U+26F9"
+        },
+        {
+            "shortcode": ":man_bouncing_ball:",
+            "unicode": "U+26F9 U+FE0F U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_bouncing_ball:",
+            "unicode": "U+26F9 U+FE0F U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_lifting_weights:",
+            "unicode": "U+1F3CB"
+        },
+        {
+            "shortcode": ":man_lifting_weights:",
+            "unicode": "U+1F3CB U+FE0F U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_lifting_weights:",
+            "unicode": "U+1F3CB U+FE0F U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_biking:",
+            "unicode": "U+1F6B4"
+        },
+        {
+            "shortcode": ":man_biking:",
+            "unicode": "U+1F6B4 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_biking:",
+            "unicode": "U+1F6B4 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_mountain_biking:",
+            "unicode": "U+1F6B5"
+        },
+        {
+            "shortcode": ":man_mountain_biking:",
+            "unicode": "U+1F6B5 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_mountain_biking:",
+            "unicode": "U+1F6B5 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_cartwheeling:",
+            "unicode": "U+1F938"
+        },
+        {
+            "shortcode": ":man_cartwheeling:",
+            "unicode": "U+1F938 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_cartwheeling:",
+            "unicode": "U+1F938 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":people_wrestling:",
+            "unicode": "U+1F93C"
+        },
+        {
+            "shortcode": ":men_wrestling:",
+            "unicode": "U+1F93C U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":women_wrestling:",
+            "unicode": "U+1F93C U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_playing_water_polo:",
+            "unicode": "U+1F93D"
+        },
+        {
+            "shortcode": ":man_playing_water_polo:",
+            "unicode": "U+1F93D U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_playing_water_polo:",
+            "unicode": "U+1F93D U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_playing_handball:",
+            "unicode": "U+1F93E"
+        },
+        {
+            "shortcode": ":man_playing_handball:",
+            "unicode": "U+1F93E U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman:",
+            "unicode": "U+1F93E U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_juggling:",
+            "unicode": "U+1F939"
+        },
+        {
+            "shortcode": ":man_juggling:",
+            "unicode": "U+1F939 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_juggling:",
+            "unicode": "U+1F939 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_in_lotus_position:",
+            "unicode": "U+1F9D8"
+        },
+        {
+            "shortcode": ":man_in_lotus_position:",
+            "unicode": "U+1F9D8 U+200D U+2642 U+FE0F"
+        },
+        {
+            "shortcode": ":woman_in_lotus_position:",
+            "unicode": "U+1F9D8 U+200D U+2640 U+FE0F"
+        },
+        {
+            "shortcode": ":person_taking_bath:",
+            "unicode": "U+1F6C0"
+        },
+        {
+            "shortcode": ":person_in_bed:",
+            "unicode": "U+1F6CC"
+        },
+        {
+            "shortcode": ":people_holding_hands:",
+            "unicode": "U+1F9D1 U+200D U+1F91D U+200D U+1F9D1"
+        },
+        {
+            "shortcode": ":women_holding_hands:",
+            "unicode": "U+1F46D"
+        },
+        {
+            "shortcode": ":woman_and_man_holding_hands:",
+            "unicode": "U+1F46B"
+        },
+        {
+            "shortcode": ":men_holding_hands:",
+            "unicode": "U+1F46C"
+        },
+        {
+            "shortcode": ":kiss:",
+            "unicode": "U+1F48F"
+        },
+        {
+            "shortcode": ":kiss_woman_man:",
+            "unicode": "U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468"
+        },
+        {
+            "shortcode": ":kiss_man_man:",
+            "unicode": "U+1F468 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468"
+        },
+        {
+            "shortcode": ":kiss_woman_woman:",
+            "unicode": "U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F469"
+        },
+        {
+            "shortcode": ":couple_with_heart:",
+            "unicode": "U+1F491"
+        },
+        {
+            "shortcode": ":couple_with_heart_woman_man:",
+            "unicode": "U+1F469 U+200D U+2764 U+FE0F U+200D U+1F468"
+        },
+        {
+            "shortcode": ":couple_with_heart_man_man:",
+            "unicode": "U+1F468 U+200D U+2764 U+FE0F U+200D U+1F468"
+        },
+        {
+            "shortcode": ":couple_with_heart_woman_woman:",
+            "unicode": "U+1F469 U+200D U+2764 U+FE0F U+200D U+1F469"
+        },
+        {
+            "shortcode": ":family:",
+            "unicode": "U+1F46A"
+        },
+        {
+            "shortcode": ":family_man_woman_boy:",
+            "unicode": "U+1F468 U+200D U+1F469 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_woman_girl:",
+            "unicode": "U+1F468 U+200D U+1F469 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_man_woman_girl_boy:",
+            "unicode": "U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_woman_boy_boy:",
+            "unicode": "U+1F468 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_woman_girl_girl:",
+            "unicode": "U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_man_man_boy:",
+            "unicode": "U+1F468 U+200D U+1F468 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man:",
+            "unicode": "U+1F468 U+200D U+1F468 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_man_man_girl_boy:",
+            "unicode": "U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_man_boy_boy:",
+            "unicode": "U+1F468 U+200D U+1F468 U+200D U+1F466 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_man_girl_girl:",
+            "unicode": "U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_woman_woman_boy:",
+            "unicode": "U+1F469 U+200D U+1F469 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_woman_girl:",
+            "unicode": "U+1F469 U+200D U+1F469 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_woman_woman_girl_boy:",
+            "unicode": "U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_woman_boy_boy:",
+            "unicode": "U+1F469 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_woman_girl_girl:",
+            "unicode": "U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_man_boy:",
+            "unicode": "U+1F468 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_boy_boy:",
+            "unicode": "U+1F468 U+200D U+1F466 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_girl:",
+            "unicode": "U+1F468 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_man_girl_boy:",
+            "unicode": "U+1F468 U+200D U+1F467 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_man_girl_girl:",
+            "unicode": "U+1F468 U+200D U+1F467 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_woman_boy:",
+            "unicode": "U+1F469 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_boy_boy:",
+            "unicode": "U+1F469 U+200D U+1F466 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_girl:",
+            "unicode": "U+1F469 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":family_woman_girl_boy:",
+            "unicode": "U+1F469 U+200D U+1F467 U+200D U+1F466"
+        },
+        {
+            "shortcode": ":family_woman_girl_girl:",
+            "unicode": "U+1F469 U+200D U+1F467 U+200D U+1F467"
+        },
+        {
+            "shortcode": ":speaking_head:",
+            "unicode": "U+1F5E3"
+        },
+        {
+            "shortcode": ":bust_in_silhouette:",
+            "unicode": "U+1F464"
+        },
+        {
+            "shortcode": ":busts_in_silhouette:",
+            "unicode": "U+1F465"
+        },
+        {
+            "shortcode": ":people_hugging:",
+            "unicode": "U+1FAC2"
+        },
+        {
+            "shortcode": ":footprints:",
+            "unicode": "U+1F463"
+        },
+        {
+            "shortcode": ":red_hair:",
+            "unicode": "U+1F9B0"
+        },
+        {
+            "shortcode": ":curly_hair:",
+            "unicode": "U+1F9B1"
+        },
+        {
+            "shortcode": ":white_hair:",
+            "unicode": "U+1F9B3"
+        },
+        {
+            "shortcode": ":bald:",
+            "unicode": "U+1F9B2"
+        }
+    ],
+    "animals_and_nature": [
+        {
+            "shortcode": ":monkey_face:",
+            "unicode": "U+1F435"
+        },
+        {
+            "shortcode": ":monkey:",
+            "unicode": "U+1F412"
+        },
+        {
+            "shortcode": ":gorilla:",
+            "unicode": "U+1F98D"
+        },
+        {
+            "shortcode": ":orangutan:",
+            "unicode": "U+1F9A7"
+        },
+        {
+            "shortcode": ":dog_face:",
+            "unicode": "U+1F436"
+        },
+        {
+            "shortcode": ":dog:",
+            "unicode": "U+1F415"
+        },
+        {
+            "shortcode": ":guide_dog:",
+            "unicode": "U+1F9AE"
+        },
+        {
+            "shortcode": ":service_dog:",
+            "unicode": "U+1F415 U+200D U+1F9BA"
+        },
+        {
+            "shortcode": ":poodle:",
+            "unicode": "U+1F429"
+        },
+        {
+            "shortcode": ":wolf:",
+            "unicode": "U+1F43A"
+        },
+        {
+            "shortcode": ":fox:",
+            "unicode": "U+1F98A"
+        },
+        {
+            "shortcode": ":raccoon:",
+            "unicode": "U+1F99D"
+        },
+        {
+            "shortcode": ":cat_face:",
+            "unicode": "U+1F431"
+        },
+        {
+            "shortcode": ":cat:",
+            "unicode": "U+1F408"
+        },
+        {
+            "shortcode": ":black_cat:",
+            "unicode": "U+1F408 U+200D U+2B1B"
+        },
+        {
+            "shortcode": ":lion:",
+            "unicode": "U+1F981"
+        },
+        {
+            "shortcode": ":tiger_face:",
+            "unicode": "U+1F42F"
+        },
+        {
+            "shortcode": ":tiger:",
+            "unicode": "U+1F405"
+        },
+        {
+            "shortcode": ":leopard:",
+            "unicode": "U+1F406"
+        },
+        {
+            "shortcode": ":horse_face:",
+            "unicode": "U+1F434"
+        },
+        {
+            "shortcode": ":horse:",
+            "unicode": "U+1F40E"
+        },
+        {
+            "shortcode": ":unicorn:",
+            "unicode": "U+1F984"
+        },
+        {
+            "shortcode": ":zebra:",
+            "unicode": "U+1F993"
+        },
+        {
+            "shortcode": ":deer:",
+            "unicode": "U+1F98C"
+        },
+        {
+            "shortcode": ":bison:",
+            "unicode": "U+1F9AC"
+        },
+        {
+            "shortcode": ":cow_face:",
+            "unicode": "U+1F42E"
+        },
+        {
+            "shortcode": ":ox:",
+            "unicode": "U+1F402"
+        },
+        {
+            "shortcode": ":water_buffalo:",
+            "unicode": "U+1F403"
+        },
+        {
+            "shortcode": ":cow:",
+            "unicode": "U+1F404"
+        },
+        {
+            "shortcode": ":pig_face:",
+            "unicode": "U+1F437"
+        },
+        {
+            "shortcode": ":pig:",
+            "unicode": "U+1F416"
+        },
+        {
+            "shortcode": ":boar:",
+            "unicode": "U+1F417"
+        },
+        {
+            "shortcode": ":pig_nose:",
+            "unicode": "U+1F43D"
+        },
+        {
+            "shortcode": ":ram:",
+            "unicode": "U+1F40F"
+        },
+        {
+            "shortcode": ":ewe:",
+            "unicode": "U+1F411"
+        },
+        {
+            "shortcode": ":goat:",
+            "unicode": "U+1F410"
+        },
+        {
+            "shortcode": ":camel:",
+            "unicode": "U+1F42A"
+        },
+        {
+            "shortcode": ":two_hump_camel:",
+            "unicode": "U+1F42B"
+        },
+        {
+            "shortcode": ":llama:",
+            "unicode": "U+1F999"
+        },
+        {
+            "shortcode": ":giraffe:",
+            "unicode": "U+1F992"
+        },
+        {
+            "shortcode": ":elephant:",
+            "unicode": "U+1F418"
+        },
+        {
+            "shortcode": ":mammoth:",
+            "unicode": "U+1F9A3"
+        },
+        {
+            "shortcode": ":rhinoceros:",
+            "unicode": "U+1F98F"
+        },
+        {
+            "shortcode": ":hippopotamus:",
+            "unicode": "U+1F99B"
+        },
+        {
+            "shortcode": ":mouse_face:",
+            "unicode": "U+1F42D"
+        },
+        {
+            "shortcode": ":mouse:",
+            "unicode": "U+1F401"
+        },
+        {
+            "shortcode": ":rat:",
+            "unicode": "U+1F400"
+        },
+        {
+            "shortcode": ":hamster:",
+            "unicode": "U+1F439"
+        },
+        {
+            "shortcode": ":rabbit_face:",
+            "unicode": "U+1F430"
+        },
+        {
+            "shortcode": ":rabbit:",
+            "unicode": "U+1F407"
+        },
+        {
+            "shortcode": ":chipmunk:",
+            "unicode": "U+1F43F"
+        },
+        {
+            "shortcode": ":beaver:",
+            "unicode": "U+1F9AB"
+        },
+        {
+            "shortcode": ":hedgehog:",
+            "unicode": "U+1F994"
+        },
+        {
+            "shortcode": ":bat:",
+            "unicode": "U+1F987"
+        },
+        {
+            "shortcode": ":bear:",
+            "unicode": "U+1F43B"
+        },
+        {
+            "shortcode": ":polar_bear:",
+            "unicode": "U+1F43B U+200D U+2744 U+FE0F"
+        },
+        {
+            "shortcode": ":koala:",
+            "unicode": "U+1F428"
+        },
+        {
+            "shortcode": ":panda:",
+            "unicode": "U+1F43C"
+        },
+        {
+            "shortcode": ":sloth:",
+            "unicode": "U+1F9A5"
+        },
+        {
+            "shortcode": ":otter:",
+            "unicode": "U+1F9A6"
+        },
+        {
+            "shortcode": ":skunk:",
+            "unicode": "U+1F9A8"
+        },
+        {
+            "shortcode": ":kangaroo:",
+            "unicode": "U+1F998"
+        },
+        {
+            "shortcode": ":badger:",
+            "unicode": "U+1F9A1"
+        },
+        {
+            "shortcode": ":paw_prints:",
+            "unicode": "U+1F43E"
+        },
+        {
+            "shortcode": ":turkey:",
+            "unicode": "U+1F983"
+        },
+        {
+            "shortcode": ":chicken:",
+            "unicode": "U+1F414"
+        },
+        {
+            "shortcode": ":rooster:",
+            "unicode": "U+1F413"
+        },
+        {
+            "shortcode": ":hatching_chick:",
+            "unicode": "U+1F423"
+        },
+        {
+            "shortcode": ":baby_chick:",
+            "unicode": "U+1F424"
+        },
+        {
+            "shortcode": ":front_facing_baby_chick:",
+            "unicode": "U+1F425"
+        },
+        {
+            "shortcode": ":bird:",
+            "unicode": "U+1F426"
+        },
+        {
+            "shortcode": ":penguin:",
+            "unicode": "U+1F427"
+        },
+        {
+            "shortcode": ":dove:",
+            "unicode": "U+1F54A"
+        },
+        {
+            "shortcode": ":eagle:",
+            "unicode": "U+1F985"
+        },
+        {
+            "shortcode": ":duck:",
+            "unicode": "U+1F986"
+        },
+        {
+            "shortcode": ":swan:",
+            "unicode": "U+1F9A2"
+        },
+        {
+            "shortcode": ":owl:",
+            "unicode": "U+1F989"
+        },
+        {
+            "shortcode": ":dodo:",
+            "unicode": "U+1F9A4"
+        },
+        {
+            "shortcode": ":feather:",
+            "unicode": "U+1FAB6"
+        },
+        {
+            "shortcode": ":flamingo:",
+            "unicode": "U+1F9A9"
+        },
+        {
+            "shortcode": ":peacock:",
+            "unicode": "U+1F99A"
+        },
+        {
+            "shortcode": ":parrot:",
+            "unicode": "U+1F99C"
+        },
+        {
+            "shortcode": ":frog:",
+            "unicode": "U+1F438"
+        },
+        {
+            "shortcode": ":crocodile:",
+            "unicode": "U+1F40A"
+        },
+        {
+            "shortcode": ":turtle:",
+            "unicode": "U+1F422"
+        },
+        {
+            "shortcode": ":lizard:",
+            "unicode": "U+1F98E"
+        },
+        {
+            "shortcode": ":snake:",
+            "unicode": "U+1F40D"
+        },
+        {
+            "shortcode": ":dragon_face:",
+            "unicode": "U+1F432"
+        },
+        {
+            "shortcode": ":dragon:",
+            "unicode": "U+1F409"
+        },
+        {
+            "shortcode": ":sauropod:",
+            "unicode": "U+1F995"
+        },
+        {
+            "shortcode": ":t_rex:",
+            "unicode": "U+1F996"
+        },
+        {
+            "shortcode": ":spouting_whale:",
+            "unicode": "U+1F433"
+        },
+        {
+            "shortcode": ":whale:",
+            "unicode": "U+1F40B"
+        },
+        {
+            "shortcode": ":dolphin:",
+            "unicode": "U+1F42C"
+        },
+        {
+            "shortcode": ":seal:",
+            "unicode": "U+1F9AD"
+        },
+        {
+            "shortcode": ":fish:",
+            "unicode": "U+1F41F"
+        },
+        {
+            "shortcode": ":tropical_fish:",
+            "unicode": "U+1F420"
+        },
+        {
+            "shortcode": ":blowfish:",
+            "unicode": "U+1F421"
+        },
+        {
+            "shortcode": ":shark:",
+            "unicode": "U+1F988"
+        },
+        {
+            "shortcode": ":octopus:",
+            "unicode": "U+1F419"
+        },
+        {
+            "shortcode": ":spiral_shell:",
+            "unicode": "U+1F41A"
+        },
+        {
+            "shortcode": ":snail:",
+            "unicode": "U+1F40C"
+        },
+        {
+            "shortcode": ":butterfly:",
+            "unicode": "U+1F98B"
+        },
+        {
+            "shortcode": ":bug:",
+            "unicode": "U+1F41B"
+        },
+        {
+            "shortcode": ":ant:",
+            "unicode": "U+1F41C"
+        },
+        {
+            "shortcode": ":honeybee:",
+            "unicode": "U+1F41D"
+        },
+        {
+            "shortcode": ":beetle:",
+            "unicode": "U+1FAB2"
+        },
+        {
+            "shortcode": ":lady_beetle:",
+            "unicode": "U+1F41E"
+        },
+        {
+            "shortcode": ":cricket:",
+            "unicode": "U+1F997"
+        },
+        {
+            "shortcode": ":cockroach:",
+            "unicode": "U+1FAB3"
+        },
+        {
+            "shortcode": ":spider:",
+            "unicode": "U+1F577"
+        },
+        {
+            "shortcode": ":spider_web:",
+            "unicode": "U+1F578"
+        },
+        {
+            "shortcode": ":scorpion:",
+            "unicode": "U+1F982"
+        },
+        {
+            "shortcode": ":mosquito:",
+            "unicode": "U+1F99F"
+        },
+        {
+            "shortcode": ":fly:",
+            "unicode": "U+1FAB0"
+        },
+        {
+            "shortcode": ":worm:",
+            "unicode": "U+1FAB1"
+        },
+        {
+            "shortcode": ":microbe:",
+            "unicode": "U+1F9A0"
+        },
+        {
+            "shortcode": ":bouquet:",
+            "unicode": "U+1F490"
+        },
+        {
+            "shortcode": ":cherry_blossom:",
+            "unicode": "U+1F338"
+        },
+        {
+            "shortcode": ":white_flower:",
+            "unicode": "U+1F4AE"
+        },
+        {
+            "shortcode": ":lotus:",
+            "unicode": "U+1FAB7"
+        },
+        {
+            "shortcode": ":rosette:",
+            "unicode": "U+1F3F5"
+        },
+        {
+            "shortcode": ":rose:",
+            "unicode": "U+1F339"
+        },
+        {
+            "shortcode": ":wilted_flower:",
+            "unicode": "U+1F940"
+        },
+        {
+            "shortcode": ":hibiscus:",
+            "unicode": "U+1F33A"
+        },
+        {
+            "shortcode": ":sunflower:",
+            "unicode": "U+1F33B"
+        },
+        {
+            "shortcode": ":blossom:",
+            "unicode": "U+1F33C"
+        },
+        {
+            "shortcode": ":tulip:",
+            "unicode": "U+1F337"
+        },
+        {
+            "shortcode": ":seedling:",
+            "unicode": "U+1F331"
+        },
+        {
+            "shortcode": ":potted_plant:",
+            "unicode": "U+1FAB4"
+        },
+        {
+            "shortcode": ":evergreen_tree:",
+            "unicode": "U+1F332"
+        },
+        {
+            "shortcode": ":deciduous_tree:",
+            "unicode": "U+1F333"
+        },
+        {
+            "shortcode": ":palm_tree:",
+            "unicode": "U+1F334"
+        },
+        {
+            "shortcode": ":cactus:",
+            "unicode": "U+1F335"
+        },
+        {
+            "shortcode": ":sheaf_of_rice:",
+            "unicode": "U+1F33E"
+        },
+        {
+            "shortcode": ":herb:",
+            "unicode": "U+1F33F"
+        },
+        {
+            "shortcode": ":shamrock:",
+            "unicode": "U+2618"
+        },
+        {
+            "shortcode": ":four_leaf_clover:",
+            "unicode": "U+1F340"
+        },
+        {
+            "shortcode": ":maple_leaf:",
+            "unicode": "U+1F341"
+        },
+        {
+            "shortcode": ":fallen_leaf:",
+            "unicode": "U+1F342"
+        },
+        {
+            "shortcode": ":leaf_fluttering_in_wind:",
+            "unicode": "U+1F343"
+        },
+        {
+            "shortcode": ":empty_nest:",
+            "unicode": "U+1FAB9"
+        },
+        {
+            "shortcode": ":nest_with_eggs:",
+            "unicode": "U+1FABA"
+        },
+        {
+            "shortcode": ":mushroom:",
+            "unicode": "U+1F344"
+        }
+    ],
+    "food_and_drink": [
+        {
+            "shortcode": ":grapes:",
+            "unicode": "U+1F347"
+        },
+        {
+            "shortcode": ":melon:",
+            "unicode": "U+1F348"
+        },
+        {
+            "shortcode": ":watermelon:",
+            "unicode": "U+1F349"
+        },
+        {
+            "shortcode": ":tangerine:",
+            "unicode": "U+1F34A"
+        },
+        {
+            "shortcode": ":lemon:",
+            "unicode": "U+1F34B"
+        },
+        {
+            "shortcode": ":banana:",
+            "unicode": "U+1F34C"
+        },
+        {
+            "shortcode": ":pineapple:",
+            "unicode": "U+1F34D"
+        },
+        {
+            "shortcode": ":mango:",
+            "unicode": "U+1F96D"
+        },
+        {
+            "shortcode": ":red_apple:",
+            "unicode": "U+1F34E"
+        },
+        {
+            "shortcode": ":green_apple:",
+            "unicode": "U+1F34F"
+        },
+        {
+            "shortcode": ":pear:",
+            "unicode": "U+1F350"
+        },
+        {
+            "shortcode": ":peach:",
+            "unicode": "U+1F351"
+        },
+        {
+            "shortcode": ":cherries:",
+            "unicode": "U+1F352"
+        },
+        {
+            "shortcode": ":strawberry:",
+            "unicode": "U+1F353"
+        },
+        {
+            "shortcode": ":blueberries:",
+            "unicode": "U+1FAD0"
+        },
+        {
+            "shortcode": ":kiwi_fruit:",
+            "unicode": "U+1F95D"
+        },
+        {
+            "shortcode": ":tomato:",
+            "unicode": "U+1F345"
+        },
+        {
+            "shortcode": ":olive:",
+            "unicode": "U+1FAD2"
+        },
+        {
+            "shortcode": ":coconut:",
+            "unicode": "U+1F965"
+        },
+        {
+            "shortcode": ":avocado:",
+            "unicode": "U+1F951"
+        },
+        {
+            "shortcode": ":eggplant:",
+            "unicode": "U+1F346"
+        },
+        {
+            "shortcode": ":potato:",
+            "unicode": "U+1F954"
+        },
+        {
+            "shortcode": ":carrot:",
+            "unicode": "U+1F955"
+        },
+        {
+            "shortcode": ":ear_of_corn:",
+            "unicode": "U+1F33D"
+        },
+        {
+            "shortcode": ":hot_pepper:",
+            "unicode": "U+1F336"
+        },
+        {
+            "shortcode": ":bell_pepper:",
+            "unicode": "U+1FAD1"
+        },
+        {
+            "shortcode": ":cucumber:",
+            "unicode": "U+1F952"
+        },
+        {
+            "shortcode": ":leafy_green:",
+            "unicode": "U+1F96C"
+        },
+        {
+            "shortcode": ":broccoli:",
+            "unicode": "U+1F966"
+        },
+        {
+            "shortcode": ":garlic:",
+            "unicode": "U+1F9C4"
+        },
+        {
+            "shortcode": ":onion:",
+            "unicode": "U+1F9C5"
+        },
+        {
+            "shortcode": ":peanuts:",
+            "unicode": "U+1F95C"
+        },
+        {
+            "shortcode": ":beans:",
+            "unicode": "U+1FAD8"
+        },
+        {
+            "shortcode": ":chestnut:",
+            "unicode": "U+1F330"
+        },
+        {
+            "shortcode": ":bread:",
+            "unicode": "U+1F35E"
+        },
+        {
+            "shortcode": ":croissant:",
+            "unicode": "U+1F950"
+        },
+        {
+            "shortcode": ":baguette_bread:",
+            "unicode": "U+1F956"
+        },
+        {
+            "shortcode": ":flatbread:",
+            "unicode": "U+1FAD3"
+        },
+        {
+            "shortcode": ":pretzel:",
+            "unicode": "U+1F968"
+        },
+        {
+            "shortcode": ":bagel:",
+            "unicode": "U+1F96F"
+        },
+        {
+            "shortcode": ":pancakes:",
+            "unicode": "U+1F95E"
+        },
+        {
+            "shortcode": ":waffle:",
+            "unicode": "U+1F9C7"
+        },
+        {
+            "shortcode": ":cheese_wedge:",
+            "unicode": "U+1F9C0"
+        },
+        {
+            "shortcode": ":meat_on_bone:",
+            "unicode": "U+1F356"
+        },
+        {
+            "shortcode": ":poultry_leg:",
+            "unicode": "U+1F357"
+        },
+        {
+            "shortcode": ":cut_of_meat:",
+            "unicode": "U+1F969"
+        },
+        {
+            "shortcode": ":bacon:",
+            "unicode": "U+1F953"
+        },
+        {
+            "shortcode": ":hamburger:",
+            "unicode": "U+1F354"
+        },
+        {
+            "shortcode": ":french_fries:",
+            "unicode": "U+1F35F"
+        },
+        {
+            "shortcode": ":pizza:",
+            "unicode": "U+1F355"
+        },
+        {
+            "shortcode": ":hot_dog:",
+            "unicode": "U+1F32D"
+        },
+        {
+            "shortcode": ":sandwich:",
+            "unicode": "U+1F96A"
+        },
+        {
+            "shortcode": ":taco:",
+            "unicode": "U+1F32E"
+        },
+        {
+            "shortcode": ":burrito:",
+            "unicode": "U+1F32F"
+        },
+        {
+            "shortcode": ":tamale:",
+            "unicode": "U+1FAD4"
+        },
+        {
+            "shortcode": ":stuffed_flatbread:",
+            "unicode": "U+1F959"
+        },
+        {
+            "shortcode": ":falafel:",
+            "unicode": "U+1F9C6"
+        },
+        {
+            "shortcode": ":egg:",
+            "unicode": "U+1F95A"
+        },
+        {
+            "shortcode": ":cooking:",
+            "unicode": "U+1F373"
+        },
+        {
+            "shortcode": ":shallow_pan_of_food:",
+            "unicode": "U+1F958"
+        },
+        {
+            "shortcode": ":pot_of_food:",
+            "unicode": "U+1F372"
+        },
+        {
+            "shortcode": ":fondue:",
+            "unicode": "U+1FAD5"
+        },
+        {
+            "shortcode": ":bowl_with_spoon:",
+            "unicode": "U+1F963"
+        },
+        {
+            "shortcode": ":green_salad:",
+            "unicode": "U+1F957"
+        },
+        {
+            "shortcode": ":popcorn:",
+            "unicode": "U+1F37F"
+        },
+        {
+            "shortcode": ":butter:",
+            "unicode": "U+1F9C8"
+        },
+        {
+            "shortcode": ":salt:",
+            "unicode": "U+1F9C2"
+        },
+        {
+            "shortcode": ":canned_food:",
+            "unicode": "U+1F96B"
+        },
+        {
+            "shortcode": ":bento_box:",
+            "unicode": "U+1F371"
+        },
+        {
+            "shortcode": ":rice_cracker:",
+            "unicode": "U+1F358"
+        },
+        {
+            "shortcode": ":rice_ball:",
+            "unicode": "U+1F359"
+        },
+        {
+            "shortcode": ":cooked_rice:",
+            "unicode": "U+1F35A"
+        },
+        {
+            "shortcode": ":curry_rice:",
+            "unicode": "U+1F35B"
+        },
+        {
+            "shortcode": ":steaming_bowl:",
+            "unicode": "U+1F35C"
+        },
+        {
+            "shortcode": ":spaghetti:",
+            "unicode": "U+1F35D"
+        },
+        {
+            "shortcode": ":roasted_sweet_potato:",
+            "unicode": "U+1F360"
+        },
+        {
+            "shortcode": ":oden:",
+            "unicode": "U+1F362"
+        },
+        {
+            "shortcode": ":sushi:",
+            "unicode": "U+1F363"
+        },
+        {
+            "shortcode": ":fried_shrimp:",
+            "unicode": "U+1F364"
+        },
+        {
+            "shortcode": ":fish_cake_with_swirl:",
+            "unicode": "U+1F365"
+        },
+        {
+            "shortcode": ":moon_cake:",
+            "unicode": "U+1F96E"
+        },
+        {
+            "shortcode": ":dango:",
+            "unicode": "U+1F361"
+        },
+        {
+            "shortcode": ":dumpling:",
+            "unicode": "U+1F95F"
+        },
+        {
+            "shortcode": ":fortune_cookie:",
+            "unicode": "U+1F960"
+        },
+        {
+            "shortcode": ":takeout_box:",
+            "unicode": "U+1F961"
+        },
+        {
+            "shortcode": ":crab:",
+            "unicode": "U+1F980"
+        },
+        {
+            "shortcode": ":lobster:",
+            "unicode": "U+1F99E"
+        },
+        {
+            "shortcode": ":shrimp:",
+            "unicode": "U+1F990"
+        },
+        {
+            "shortcode": ":squid:",
+            "unicode": "U+1F991"
+        },
+        {
+            "shortcode": ":oyster:",
+            "unicode": "U+1F9AA"
+        },
+        {
+            "shortcode": ":soft_ice_cream:",
+            "unicode": "U+1F366"
+        },
+        {
+            "shortcode": ":shaved_ice:",
+            "unicode": "U+1F367"
+        },
+        {
+            "shortcode": ":ice_cream:",
+            "unicode": "U+1F368"
+        },
+        {
+            "shortcode": ":doughnut:",
+            "unicode": "U+1F369"
+        },
+        {
+            "shortcode": ":cookie:",
+            "unicode": "U+1F36A"
+        },
+        {
+            "shortcode": ":birthday_cake:",
+            "unicode": "U+1F382"
+        },
+        {
+            "shortcode": ":shortcake:",
+            "unicode": "U+1F370"
+        },
+        {
+            "shortcode": ":cupcake:",
+            "unicode": "U+1F9C1"
+        },
+        {
+            "shortcode": ":pie:",
+            "unicode": "U+1F967"
+        },
+        {
+            "shortcode": ":chocolate_bar:",
+            "unicode": "U+1F36B"
+        },
+        {
+            "shortcode": ":candy:",
+            "unicode": "U+1F36C"
+        },
+        {
+            "shortcode": ":lollipop:",
+            "unicode": "U+1F36D"
+        },
+        {
+            "shortcode": ":custard:",
+            "unicode": "U+1F36E"
+        },
+        {
+            "shortcode": ":honey_pot:",
+            "unicode": "U+1F36F"
+        },
+        {
+            "shortcode": ":baby_bottle:",
+            "unicode": "U+1F37C"
+        },
+        {
+            "shortcode": ":glass_of_milk:",
+            "unicode": "U+1F95B"
+        },
+        {
+            "shortcode": ":hot_beverage:",
+            "unicode": "U+2615"
+        },
+        {
+            "shortcode": ":teapot:",
+            "unicode": "U+1FAD6"
+        },
+        {
+            "shortcode": ":teacup_without_handle:",
+            "unicode": "U+1F375"
+        },
+        {
+            "shortcode": ":sake:",
+            "unicode": "U+1F376"
+        },
+        {
+            "shortcode": ":bottle_with_popping_cork:",
+            "unicode": "U+1F37E"
+        },
+        {
+            "shortcode": ":wine_glass:",
+            "unicode": "U+1F377"
+        },
+        {
+            "shortcode": ":cocktail_glass:",
+            "unicode": "U+1F378"
+        },
+        {
+            "shortcode": ":tropical_drink:",
+            "unicode": "U+1F379"
+        },
+        {
+            "shortcode": ":beer_mug:",
+            "unicode": "U+1F37A"
+        },
+        {
+            "shortcode": ":clinking_beer_mugs:",
+            "unicode": "U+1F37B"
+        },
+        {
+            "shortcode": ":clinking_glasses:",
+            "unicode": "U+1F942"
+        },
+        {
+            "shortcode": ":tumbler_glass:",
+            "unicode": "U+1F943"
+        },
+        {
+            "shortcode": ":pouring_liquid:",
+            "unicode": "U+1FAD7"
+        },
+        {
+            "shortcode": ":cup_with_straw:",
+            "unicode": "U+1F964"
+        },
+        {
+            "shortcode": ":bubble_tea:",
+            "unicode": "U+1F9CB"
+        },
+        {
+            "shortcode": ":beverage_box:",
+            "unicode": "U+1F9C3"
+        },
+        {
+            "shortcode": ":mate:",
+            "unicode": "U+1F9C9"
+        },
+        {
+            "shortcode": ":ice:",
+            "unicode": "U+1F9CA"
+        },
+        {
+            "shortcode": ":chopsticks:",
+            "unicode": "U+1F962"
+        },
+        {
+            "shortcode": ":fork_and_knife_with_plate:",
+            "unicode": "U+1F37D"
+        },
+        {
+            "shortcode": ":fork_and_knife:",
+            "unicode": "U+1F374"
+        },
+        {
+            "shortcode": ":spoon:",
+            "unicode": "U+1F944"
+        },
+        {
+            "shortcode": ":kitchen_knife:",
+            "unicode": "U+1F52A"
+        },
+        {
+            "shortcode": ":jar:",
+            "unicode": "U+1FAD9"
+        },
+        {
+            "shortcode": ":amphora:",
+            "unicode": "U+1F3FA"
+        }
+    ],
+    "travel_and_places": [
+        {
+            "shortcode": ":globe_showing_europe_africa:",
+            "unicode": "U+1F30D"
+        },
+        {
+            "shortcode": ":globe_showing_americas:",
+            "unicode": "U+1F30E"
+        },
+        {
+            "shortcode": ":globe_showing_asia_australia:",
+            "unicode": "U+1F30F"
+        },
+        {
+            "shortcode": ":globe_with_meridians:",
+            "unicode": "U+1F310"
+        },
+        {
+            "shortcode": ":world_map:",
+            "unicode": "U+1F5FA"
+        },
+        {
+            "shortcode": ":map_of_japan:",
+            "unicode": "U+1F5FE"
+        },
+        {
+            "shortcode": ":compass:",
+            "unicode": "U+1F9ED"
+        },
+        {
+            "shortcode": ":snow_capped_mountain:",
+            "unicode": "U+1F3D4"
+        },
+        {
+            "shortcode": ":mountain:",
+            "unicode": "U+26F0"
+        },
+        {
+            "shortcode": ":volcano:",
+            "unicode": "U+1F30B"
+        },
+        {
+            "shortcode": ":mount_fuji:",
+            "unicode": "U+1F5FB"
+        },
+        {
+            "shortcode": ":camping:",
+            "unicode": "U+1F3D5"
+        },
+        {
+            "shortcode": ":beach_with_umbrella:",
+            "unicode": "U+1F3D6"
+        },
+        {
+            "shortcode": ":desert:",
+            "unicode": "U+1F3DC"
+        },
+        {
+            "shortcode": ":desert_island:",
+            "unicode": "U+1F3DD"
+        },
+        {
+            "shortcode": ":national_park:",
+            "unicode": "U+1F3DE"
+        },
+        {
+            "shortcode": ":stadium:",
+            "unicode": "U+1F3DF"
+        },
+        {
+            "shortcode": ":classical_building:",
+            "unicode": "U+1F3DB"
+        },
+        {
+            "shortcode": ":building_construction:",
+            "unicode": "U+1F3D7"
+        },
+        {
+            "shortcode": ":brick:",
+            "unicode": "U+1F9F1"
+        },
+        {
+            "shortcode": ":rock:",
+            "unicode": "U+1FAA8"
+        },
+        {
+            "shortcode": ":wood:",
+            "unicode": "U+1FAB5"
+        },
+        {
+            "shortcode": ":hut:",
+            "unicode": "U+1F6D6"
+        },
+        {
+            "shortcode": ":houses:",
+            "unicode": "U+1F3D8"
+        },
+        {
+            "shortcode": ":derelict_house:",
+            "unicode": "U+1F3DA"
+        },
+        {
+            "shortcode": ":house:",
+            "unicode": "U+1F3E0"
+        },
+        {
+            "shortcode": ":house_with_garden:",
+            "unicode": "U+1F3E1"
+        },
+        {
+            "shortcode": ":office_building:",
+            "unicode": "U+1F3E2"
+        },
+        {
+            "shortcode": ":japanese_post_office:",
+            "unicode": "U+1F3E3"
+        },
+        {
+            "shortcode": ":post_office:",
+            "unicode": "U+1F3E4"
+        },
+        {
+            "shortcode": ":hospital:",
+            "unicode": "U+1F3E5"
+        },
+        {
+            "shortcode": ":bank:",
+            "unicode": "U+1F3E6"
+        },
+        {
+            "shortcode": ":hotel:",
+            "unicode": "U+1F3E8"
+        },
+        {
+            "shortcode": ":love_hotel:",
+            "unicode": "U+1F3E9"
+        },
+        {
+            "shortcode": ":convenience_store:",
+            "unicode": "U+1F3EA"
+        },
+        {
+            "shortcode": ":school:",
+            "unicode": "U+1F3EB"
+        },
+        {
+            "shortcode": ":department_store:",
+            "unicode": "U+1F3EC"
+        },
+        {
+            "shortcode": ":factory:",
+            "unicode": "U+1F3ED"
+        },
+        {
+            "shortcode": ":japanese_castle:",
+            "unicode": "U+1F3EF"
+        },
+        {
+            "shortcode": ":castle:",
+            "unicode": "U+1F3F0"
+        },
+        {
+            "shortcode": ":wedding:",
+            "unicode": "U+1F492"
+        },
+        {
+            "shortcode": ":tokyo_tower:",
+            "unicode": "U+1F5FC"
+        },
+        {
+            "shortcode": ":statue_of_liberty:",
+            "unicode": "U+1F5FD"
+        },
+        {
+            "shortcode": ":church:",
+            "unicode": "U+26EA"
+        },
+        {
+            "shortcode": ":mosque:",
+            "unicode": "U+1F54C"
+        },
+        {
+            "shortcode": ":hindu_temple:",
+            "unicode": "U+1F6D5"
+        },
+        {
+            "shortcode": ":synagogue:",
+            "unicode": "U+1F54D"
+        },
+        {
+            "shortcode": ":shinto_shrine:",
+            "unicode": "U+26E9"
+        },
+        {
+            "shortcode": ":kaaba:",
+            "unicode": "U+1F54B"
+        },
+        {
+            "shortcode": ":fountain:",
+            "unicode": "U+26F2"
+        },
+        {
+            "shortcode": ":tent:",
+            "unicode": "U+26FA"
+        },
+        {
+            "shortcode": ":foggy:",
+            "unicode": "U+1F301"
+        },
+        {
+            "shortcode": ":night_with_stars:",
+            "unicode": "U+1F303"
+        },
+        {
+            "shortcode": ":cityscape:",
+            "unicode": "U+1F3D9"
+        },
+        {
+            "shortcode": ":sunrise_over_mountains:",
+            "unicode": "U+1F304"
+        },
+        {
+            "shortcode": ":sunrise:",
+            "unicode": "U+1F305"
+        },
+        {
+            "shortcode": ":cityscape_at_dusk:",
+            "unicode": "U+1F306"
+        },
+        {
+            "shortcode": ":sunset:",
+            "unicode": "U+1F307"
+        },
+        {
+            "shortcode": ":bridge_at_night:",
+            "unicode": "U+1F309"
+        },
+        {
+            "shortcode": ":hot_springs:",
+            "unicode": "U+2668"
+        },
+        {
+            "shortcode": ":carousel_horse:",
+            "unicode": "U+1F3A0"
+        },
+        {
+            "shortcode": ":playground_slide:",
+            "unicode": "U+1F6DD"
+        },
+        {
+            "shortcode": ":ferris_wheel:",
+            "unicode": "U+1F3A1"
+        },
+        {
+            "shortcode": ":roller_coaster:",
+            "unicode": "U+1F3A2"
+        },
+        {
+            "shortcode": ":barber_pole:",
+            "unicode": "U+1F488"
+        },
+        {
+            "shortcode": ":circus_tent:",
+            "unicode": "U+1F3AA"
+        },
+        {
+            "shortcode": ":locomotive:",
+            "unicode": "U+1F682"
+        },
+        {
+            "shortcode": ":railway_car:",
+            "unicode": "U+1F683"
+        },
+        {
+            "shortcode": ":high_speed_train:",
+            "unicode": "U+1F684"
+        },
+        {
+            "shortcode": ":bullet_train:",
+            "unicode": "U+1F685"
+        },
+        {
+            "shortcode": ":train:",
+            "unicode": "U+1F686"
+        },
+        {
+            "shortcode": ":metro:",
+            "unicode": "U+1F687"
+        },
+        {
+            "shortcode": ":light_rail:",
+            "unicode": "U+1F688"
+        },
+        {
+            "shortcode": ":station:",
+            "unicode": "U+1F689"
+        },
+        {
+            "shortcode": ":tram:",
+            "unicode": "U+1F68A"
+        },
+        {
+            "shortcode": ":monorail:",
+            "unicode": "U+1F69D"
+        },
+        {
+            "shortcode": ":mountain_railway:",
+            "unicode": "U+1F69E"
+        },
+        {
+            "shortcode": ":tram_car:",
+            "unicode": "U+1F68B"
+        },
+        {
+            "shortcode": ":bus:",
+            "unicode": "U+1F68C"
+        },
+        {
+            "shortcode": ":oncoming_bus:",
+            "unicode": "U+1F68D"
+        },
+        {
+            "shortcode": ":trolleybus:",
+            "unicode": "U+1F68E"
+        },
+        {
+            "shortcode": ":minibus:",
+            "unicode": "U+1F690"
+        },
+        {
+            "shortcode": ":ambulance:",
+            "unicode": "U+1F691"
+        },
+        {
+            "shortcode": ":fire_engine:",
+            "unicode": "U+1F692"
+        },
+        {
+            "shortcode": ":police_car:",
+            "unicode": "U+1F693"
+        },
+        {
+            "shortcode": ":oncoming_police_car:",
+            "unicode": "U+1F694"
+        },
+        {
+            "shortcode": ":taxi:",
+            "unicode": "U+1F695"
+        },
+        {
+            "shortcode": ":oncoming_taxi:",
+            "unicode": "U+1F696"
+        },
+        {
+            "shortcode": ":automobile:",
+            "unicode": "U+1F697"
+        },
+        {
+            "shortcode": ":oncoming_automobile:",
+            "unicode": "U+1F698"
+        },
+        {
+            "shortcode": ":sport_utility_vehicle:",
+            "unicode": "U+1F699"
+        },
+        {
+            "shortcode": ":pickup_truck:",
+            "unicode": "U+1F6FB"
+        },
+        {
+            "shortcode": ":delivery_truck:",
+            "unicode": "U+1F69A"
+        },
+        {
+            "shortcode": ":articulated_lorry:",
+            "unicode": "U+1F69B"
+        },
+        {
+            "shortcode": ":tractor:",
+            "unicode": "U+1F69C"
+        },
+        {
+            "shortcode": ":racing_car:",
+            "unicode": "U+1F3CE"
+        },
+        {
+            "shortcode": ":motorcycle:",
+            "unicode": "U+1F3CD"
+        },
+        {
+            "shortcode": ":motor_scooter:",
+            "unicode": "U+1F6F5"
+        },
+        {
+            "shortcode": ":manual_wheelchair:",
+            "unicode": "U+1F9BD"
+        },
+        {
+            "shortcode": ":motorized_wheelchair:",
+            "unicode": "U+1F9BC"
+        },
+        {
+            "shortcode": ":auto_rickshaw:",
+            "unicode": "U+1F6FA"
+        },
+        {
+            "shortcode": ":bicycle:",
+            "unicode": "U+1F6B2"
+        },
+        {
+            "shortcode": ":kick_scooter:",
+            "unicode": "U+1F6F4"
+        },
+        {
+            "shortcode": ":skateboard:",
+            "unicode": "U+1F6F9"
+        },
+        {
+            "shortcode": ":roller_skate:",
+            "unicode": "U+1F6FC"
+        },
+        {
+            "shortcode": ":bus_stop:",
+            "unicode": "U+1F68F"
+        },
+        {
+            "shortcode": ":motorway:",
+            "unicode": "U+1F6E3"
+        },
+        {
+            "shortcode": ":railway_track:",
+            "unicode": "U+1F6E4"
+        },
+        {
+            "shortcode": ":oil_drum:",
+            "unicode": "U+1F6E2"
+        },
+        {
+            "shortcode": ":fuel_pump:",
+            "unicode": "U+26FD"
+        },
+        {
+            "shortcode": ":wheel:",
+            "unicode": "U+1F6DE"
+        },
+        {
+            "shortcode": ":police_car_light:",
+            "unicode": "U+1F6A8"
+        },
+        {
+            "shortcode": ":horizontal_traffic_light:",
+            "unicode": "U+1F6A5"
+        },
+        {
+            "shortcode": ":vertical_traffic_light:",
+            "unicode": "U+1F6A6"
+        },
+        {
+            "shortcode": ":stop_sign:",
+            "unicode": "U+1F6D1"
+        },
+        {
+            "shortcode": ":construction:",
+            "unicode": "U+1F6A7"
+        },
+        {
+            "shortcode": ":anchor:",
+            "unicode": "U+2693"
+        },
+        {
+            "shortcode": ":ring_buoy:",
+            "unicode": "U+1F6DF"
+        },
+        {
+            "shortcode": ":sailboat:",
+            "unicode": "U+26F5"
+        },
+        {
+            "shortcode": ":canoe:",
+            "unicode": "U+1F6F6"
+        },
+        {
+            "shortcode": ":speedboat:",
+            "unicode": "U+1F6A4"
+        },
+        {
+            "shortcode": ":passenger_ship:",
+            "unicode": "U+1F6F3"
+        },
+        {
+            "shortcode": ":ferry:",
+            "unicode": "U+26F4"
+        },
+        {
+            "shortcode": ":motor_boat:",
+            "unicode": "U+1F6E5"
+        },
+        {
+            "shortcode": ":ship:",
+            "unicode": "U+1F6A2"
+        },
+        {
+            "shortcode": ":airplane:",
+            "unicode": "U+2708"
+        },
+        {
+            "shortcode": ":small_airplane:",
+            "unicode": "U+1F6E9"
+        },
+        {
+            "shortcode": ":airplane_departure:",
+            "unicode": "U+1F6EB"
+        },
+        {
+            "shortcode": ":airplane_arrival:",
+            "unicode": "U+1F6EC"
+        },
+        {
+            "shortcode": ":parachute:",
+            "unicode": "U+1FA82"
+        },
+        {
+            "shortcode": ":seat:",
+            "unicode": "U+1F4BA"
+        },
+        {
+            "shortcode": ":helicopter:",
+            "unicode": "U+1F681"
+        },
+        {
+            "shortcode": ":suspension_railway:",
+            "unicode": "U+1F69F"
+        },
+        {
+            "shortcode": ":mountain_cableway:",
+            "unicode": "U+1F6A0"
+        },
+        {
+            "shortcode": ":aerial_tramway:",
+            "unicode": "U+1F6A1"
+        },
+        {
+            "shortcode": ":satellite:",
+            "unicode": "U+1F6F0"
+        },
+        {
+            "shortcode": ":rocket:",
+            "unicode": "U+1F680"
+        },
+        {
+            "shortcode": ":flying_saucer:",
+            "unicode": "U+1F6F8"
+        },
+        {
+            "shortcode": ":luggage:",
+            "unicode": "U+1F9F3"
+        },
+        {
+            "shortcode": ":hourglass_done:",
+            "unicode": "U+231B"
+        },
+        {
+            "shortcode": ":hourglass_not_done:",
+            "unicode": "U+23F3"
+        },
+        {
+            "shortcode": ":watch:",
+            "unicode": "U+231A"
+        },
+        {
+            "shortcode": ":alarm_clock:",
+            "unicode": "U+23F0"
+        },
+        {
+            "shortcode": ":stopwatch:",
+            "unicode": "U+23F1"
+        },
+        {
+            "shortcode": ":timer_clock:",
+            "unicode": "U+23F2"
+        },
+        {
+            "shortcode": ":mantelpiece_clock:",
+            "unicode": "U+1F570"
+        },
+        {
+            "shortcode": ":twelve_oclock:",
+            "unicode": "U+1F55B"
+        },
+        {
+            "shortcode": ":twelve_thirty:",
+            "unicode": "U+1F567"
+        },
+        {
+            "shortcode": ":one_oclock:",
+            "unicode": "U+1F550"
+        },
+        {
+            "shortcode": ":one_thirty:",
+            "unicode": "U+1F55C"
+        },
+        {
+            "shortcode": ":two_oclock:",
+            "unicode": "U+1F551"
+        },
+        {
+            "shortcode": ":two_thirty:",
+            "unicode": "U+1F55D"
+        },
+        {
+            "shortcode": ":three_oclock:",
+            "unicode": "U+1F552"
+        },
+        {
+            "shortcode": ":three_thirty:",
+            "unicode": "U+1F55E"
+        },
+        {
+            "shortcode": ":four_oclock:",
+            "unicode": "U+1F553"
+        },
+        {
+            "shortcode": ":four_thirty:",
+            "unicode": "U+1F55F"
+        },
+        {
+            "shortcode": ":five_oclock:",
+            "unicode": "U+1F554"
+        },
+        {
+            "shortcode": ":five_thirty:",
+            "unicode": "U+1F560"
+        },
+        {
+            "shortcode": ":six_oclock:",
+            "unicode": "U+1F555"
+        },
+        {
+            "shortcode": ":six_thirty:",
+            "unicode": "U+1F561"
+        },
+        {
+            "shortcode": ":seven_oclock:",
+            "unicode": "U+1F556"
+        },
+        {
+            "shortcode": ":seven_thirty:",
+            "unicode": "U+1F562"
+        },
+        {
+            "shortcode": ":eight_oclock:",
+            "unicode": "U+1F557"
+        },
+        {
+            "shortcode": ":eight_thirty:",
+            "unicode": "U+1F563"
+        },
+        {
+            "shortcode": ":nine_oclock:",
+            "unicode": "U+1F558"
+        },
+        {
+            "shortcode": ":nine_thirty:",
+            "unicode": "U+1F564"
+        },
+        {
+            "shortcode": ":ten_oclock:",
+            "unicode": "U+1F559"
+        },
+        {
+            "shortcode": ":ten_thirty:",
+            "unicode": "U+1F565"
+        },
+        {
+            "shortcode": ":eleven_oclock:",
+            "unicode": "U+1F55A"
+        },
+        {
+            "shortcode": ":eleven_thirty:",
+            "unicode": "U+1F566"
+        },
+        {
+            "shortcode": ":new_moon:",
+            "unicode": "U+1F311"
+        },
+        {
+            "shortcode": ":waxing_crescent_moon:",
+            "unicode": "U+1F312"
+        },
+        {
+            "shortcode": ":first_quarter_moon:",
+            "unicode": "U+1F313"
+        },
+        {
+            "shortcode": ":waxing_gibbous_moon:",
+            "unicode": "U+1F314"
+        },
+        {
+            "shortcode": ":full_moon:",
+            "unicode": "U+1F315"
+        },
+        {
+            "shortcode": ":waning_gibbous_moon:",
+            "unicode": "U+1F316"
+        },
+        {
+            "shortcode": ":last_quarter_moon:",
+            "unicode": "U+1F317"
+        },
+        {
+            "shortcode": ":waning_crescent_moon:",
+            "unicode": "U+1F318"
+        },
+        {
+            "shortcode": ":crescent_moon:",
+            "unicode": "U+1F319"
+        },
+        {
+            "shortcode": ":new_moon_face:",
+            "unicode": "U+1F31A"
+        },
+        {
+            "shortcode": ":first_quarter_moon_face:",
+            "unicode": "U+1F31B"
+        },
+        {
+            "shortcode": ":last_quarter_moon_face:",
+            "unicode": "U+1F31C"
+        },
+        {
+            "shortcode": ":thermometer:",
+            "unicode": "U+1F321"
+        },
+        {
+            "shortcode": ":sun:",
+            "unicode": "U+2600"
+        },
+        {
+            "shortcode": ":full_moon_face:",
+            "unicode": "U+1F31D"
+        },
+        {
+            "shortcode": ":sun_with_face:",
+            "unicode": "U+1F31E"
+        },
+        {
+            "shortcode": ":ringed_planet:",
+            "unicode": "U+1FA90"
+        },
+        {
+            "shortcode": ":star:",
+            "unicode": "U+2B50"
+        },
+        {
+            "shortcode": ":glowing_star:",
+            "unicode": "U+1F31F"
+        },
+        {
+            "shortcode": ":shooting_star:",
+            "unicode": "U+1F320"
+        },
+        {
+            "shortcode": ":milky_way:",
+            "unicode": "U+1F30C"
+        },
+        {
+            "shortcode": ":cloud:",
+            "unicode": "U+2601"
+        },
+        {
+            "shortcode": ":sun_behind_cloud:",
+            "unicode": "U+26C5"
+        },
+        {
+            "shortcode": ":cloud_with_lightning_and_rain:",
+            "unicode": "U+26C8"
+        },
+        {
+            "shortcode": ":sun_behind_small_cloud:",
+            "unicode": "U+1F324"
+        },
+        {
+            "shortcode": ":sun_behind_large_cloud:",
+            "unicode": "U+1F325"
+        },
+        {
+            "shortcode": ":sun_behind_rain_cloud:",
+            "unicode": "U+1F326"
+        },
+        {
+            "shortcode": ":cloud_with_rain:",
+            "unicode": "U+1F327"
+        },
+        {
+            "shortcode": ":cloud_with_snow:",
+            "unicode": "U+1F328"
+        },
+        {
+            "shortcode": ":cloud_with_lightning:",
+            "unicode": "U+1F329"
+        },
+        {
+            "shortcode": ":tornado:",
+            "unicode": "U+1F32A"
+        },
+        {
+            "shortcode": ":fog:",
+            "unicode": "U+1F32B"
+        },
+        {
+            "shortcode": ":wind_face:",
+            "unicode": "U+1F32C"
+        },
+        {
+            "shortcode": ":cyclone:",
+            "unicode": "U+1F300"
+        },
+        {
+            "shortcode": ":rainbow:",
+            "unicode": "U+1F308"
+        },
+        {
+            "shortcode": ":closed_umbrella:",
+            "unicode": "U+1F302"
+        },
+        {
+            "shortcode": ":umbrella:",
+            "unicode": "U+2602"
+        },
+        {
+            "shortcode": ":umbrella_with_rain_drops:",
+            "unicode": "U+2614"
+        },
+        {
+            "shortcode": ":umbrella_on_ground:",
+            "unicode": "U+26F1"
+        },
+        {
+            "shortcode": ":high_voltage:",
+            "unicode": "U+26A1"
+        },
+        {
+            "shortcode": ":snowflake:",
+            "unicode": "U+2744"
+        },
+        {
+            "shortcode": ":snowman:",
+            "unicode": "U+2603"
+        },
+        {
+            "shortcode": ":snowman_without_snow:",
+            "unicode": "U+26C4"
+        },
+        {
+            "shortcode": ":comet:",
+            "unicode": "U+2604"
+        },
+        {
+            "shortcode": ":fire:",
+            "unicode": "U+1F525"
+        },
+        {
+            "shortcode": ":droplet:",
+            "unicode": "U+1F4A7"
+        },
+        {
+            "shortcode": ":water_wave:",
+            "unicode": "U+1F30A"
+        }
+    ],
+    "activities": [
+        {
+            "shortcode": ":jack_o_lantern:",
+            "unicode": "U+1F383"
+        },
+        {
+            "shortcode": ":christmas_tree:",
+            "unicode": "U+1F384"
+        },
+        {
+            "shortcode": ":fireworks:",
+            "unicode": "U+1F386"
+        },
+        {
+            "shortcode": ":sparkler:",
+            "unicode": "U+1F387"
+        },
+        {
+            "shortcode": ":firecracker:",
+            "unicode": "U+1F9E8"
+        },
+        {
+            "shortcode": ":sparkles:",
+            "unicode": "U+2728"
+        },
+        {
+            "shortcode": ":balloon:",
+            "unicode": "U+1F388"
+        },
+        {
+            "shortcode": ":party_popper:",
+            "unicode": "U+1F389"
+        },
+        {
+            "shortcode": ":confetti_ball:",
+            "unicode": "U+1F38A"
+        },
+        {
+            "shortcode": ":tanabata_tree:",
+            "unicode": "U+1F38B"
+        },
+        {
+            "shortcode": ":pine_decoration:",
+            "unicode": "U+1F38D"
+        },
+        {
+            "shortcode": ":japanese_dolls:",
+            "unicode": "U+1F38E"
+        },
+        {
+            "shortcode": ":carp_streamer:",
+            "unicode": "U+1F38F"
+        },
+        {
+            "shortcode": ":wind_chime:",
+            "unicode": "U+1F390"
+        },
+        {
+            "shortcode": ":moon_viewing_ceremony:",
+            "unicode": "U+1F391"
+        },
+        {
+            "shortcode": ":red_envelope:",
+            "unicode": "U+1F9E7"
+        },
+        {
+            "shortcode": ":ribbon:",
+            "unicode": "U+1F380"
+        },
+        {
+            "shortcode": ":wrapped_gift:",
+            "unicode": "U+1F381"
+        },
+        {
+            "shortcode": ":reminder_ribbon:",
+            "unicode": "U+1F397"
+        },
+        {
+            "shortcode": ":admission_tickets:",
+            "unicode": "U+1F39F"
+        },
+        {
+            "shortcode": ":ticket:",
+            "unicode": "U+1F3AB"
+        },
+        {
+            "shortcode": ":military_medal:",
+            "unicode": "U+1F396"
+        },
+        {
+            "shortcode": ":trophy:",
+            "unicode": "U+1F3C6"
+        },
+        {
+            "shortcode": ":sports_medal:",
+            "unicode": "U+1F3C5"
+        },
+        {
+            "shortcode": ":1st_place_medal:",
+            "unicode": "U+1F947"
+        },
+        {
+            "shortcode": ":2nd_place_medal:",
+            "unicode": "U+1F948"
+        },
+        {
+            "shortcode": ":3rd_place_medal:",
+            "unicode": "U+1F949"
+        },
+        {
+            "shortcode": ":soccer_ball:",
+            "unicode": "U+26BD"
+        },
+        {
+            "shortcode": ":baseball:",
+            "unicode": "U+26BE"
+        },
+        {
+            "shortcode": ":softball:",
+            "unicode": "U+1F94E"
+        },
+        {
+            "shortcode": ":basketball:",
+            "unicode": "U+1F3C0"
+        },
+        {
+            "shortcode": ":volleyball:",
+            "unicode": "U+1F3D0"
+        },
+        {
+            "shortcode": ":american_football:",
+            "unicode": "U+1F3C8"
+        },
+        {
+            "shortcode": ":rugby_football:",
+            "unicode": "U+1F3C9"
+        },
+        {
+            "shortcode": ":tennis:",
+            "unicode": "U+1F3BE"
+        },
+        {
+            "shortcode": ":flying_disc:",
+            "unicode": "U+1F94F"
+        },
+        {
+            "shortcode": ":bowling:",
+            "unicode": "U+1F3B3"
+        },
+        {
+            "shortcode": ":cricket_game:",
+            "unicode": "U+1F3CF"
+        },
+        {
+            "shortcode": ":field_hockey:",
+            "unicode": "U+1F3D1"
+        },
+        {
+            "shortcode": ":ice_hockey:",
+            "unicode": "U+1F3D2"
+        },
+        {
+            "shortcode": ":lacrosse:",
+            "unicode": "U+1F94D"
+        },
+        {
+            "shortcode": ":ping_pong:",
+            "unicode": "U+1F3D3"
+        },
+        {
+            "shortcode": ":badminton:",
+            "unicode": "U+1F3F8"
+        },
+        {
+            "shortcode": ":boxing_glove:",
+            "unicode": "U+1F94A"
+        },
+        {
+            "shortcode": ":martial_arts_uniform:",
+            "unicode": "U+1F94B"
+        },
+        {
+            "shortcode": ":goal_net:",
+            "unicode": "U+1F945"
+        },
+        {
+            "shortcode": ":flag_in_hole:",
+            "unicode": "U+26F3"
+        },
+        {
+            "shortcode": ":ice_skate:",
+            "unicode": "U+26F8"
+        },
+        {
+            "shortcode": ":fishing_pole:",
+            "unicode": "U+1F3A3"
+        },
+        {
+            "shortcode": ":diving_mask:",
+            "unicode": "U+1F93F"
+        },
+        {
+            "shortcode": ":running_shirt:",
+            "unicode": "U+1F3BD"
+        },
+        {
+            "shortcode": ":skis:",
+            "unicode": "U+1F3BF"
+        },
+        {
+            "shortcode": ":sled:",
+            "unicode": "U+1F6F7"
+        },
+        {
+            "shortcode": ":curling_stone:",
+            "unicode": "U+1F94C"
+        },
+        {
+            "shortcode": ":bullseye:",
+            "unicode": "U+1F3AF"
+        },
+        {
+            "shortcode": ":yo_yo:",
+            "unicode": "U+1FA80"
+        },
+        {
+            "shortcode": ":kite:",
+            "unicode": "U+1FA81"
+        },
+        {
+            "shortcode": ":water_pistol:",
+            "unicode": "U+1F52B"
+        },
+        {
+            "shortcode": ":pool_8_ball:",
+            "unicode": "U+1F3B1"
+        },
+        {
+            "shortcode": ":crystal_ball:",
+            "unicode": "U+1F52E"
+        },
+        {
+            "shortcode": ":magic_wand:",
+            "unicode": "U+1FA84"
+        },
+        {
+            "shortcode": ":video_game:",
+            "unicode": "U+1F3AE"
+        },
+        {
+            "shortcode": ":joystick:",
+            "unicode": "U+1F579"
+        },
+        {
+            "shortcode": ":slot_machine:",
+            "unicode": "U+1F3B0"
+        },
+        {
+            "shortcode": ":game_die:",
+            "unicode": "U+1F3B2"
+        },
+        {
+            "shortcode": ":puzzle_piece:",
+            "unicode": "U+1F9E9"
+        },
+        {
+            "shortcode": ":teddy_bear:",
+            "unicode": "U+1F9F8"
+        },
+        {
+            "shortcode": ":piñata:",
+            "unicode": "U+1FA85"
+        },
+        {
+            "shortcode": ":mirror_ball:",
+            "unicode": "U+1FAA9"
+        },
+        {
+            "shortcode": ":nesting_dolls:",
+            "unicode": "U+1FA86"
+        },
+        {
+            "shortcode": ":spade_suit:",
+            "unicode": "U+2660"
+        },
+        {
+            "shortcode": ":heart_suit:",
+            "unicode": "U+2665"
+        },
+        {
+            "shortcode": ":diamond_suit:",
+            "unicode": "U+2666"
+        },
+        {
+            "shortcode": ":club_suit:",
+            "unicode": "U+2663"
+        },
+        {
+            "shortcode": ":chess_pawn:",
+            "unicode": "U+265F"
+        },
+        {
+            "shortcode": ":joker:",
+            "unicode": "U+1F0CF"
+        },
+        {
+            "shortcode": ":mahjong_red_dragon:",
+            "unicode": "U+1F004"
+        },
+        {
+            "shortcode": ":flower_playing_cards:",
+            "unicode": "U+1F3B4"
+        },
+        {
+            "shortcode": ":performing_arts:",
+            "unicode": "U+1F3AD"
+        },
+        {
+            "shortcode": ":framed_picture:",
+            "unicode": "U+1F5BC"
+        },
+        {
+            "shortcode": ":artist_palette:",
+            "unicode": "U+1F3A8"
+        },
+        {
+            "shortcode": ":thread:",
+            "unicode": "U+1F9F5"
+        },
+        {
+            "shortcode": ":sewing_needle:",
+            "unicode": "U+1FAA1"
+        },
+        {
+            "shortcode": ":yarn:",
+            "unicode": "U+1F9F6"
+        },
+        {
+            "shortcode": ":knot:",
+            "unicode": "U+1FAA2"
+        }
+    ],
+    "objects": [
+        {
+            "shortcode": ":glasses:",
+            "unicode": "U+1F453"
+        },
+        {
+            "shortcode": ":sunglasses:",
+            "unicode": "U+1F576"
+        },
+        {
+            "shortcode": ":goggles:",
+            "unicode": "U+1F97D"
+        },
+        {
+            "shortcode": ":lab_coat:",
+            "unicode": "U+1F97C"
+        },
+        {
+            "shortcode": ":safety_vest:",
+            "unicode": "U+1F9BA"
+        },
+        {
+            "shortcode": ":necktie:",
+            "unicode": "U+1F454"
+        },
+        {
+            "shortcode": ":t_shirt:",
+            "unicode": "U+1F455"
+        },
+        {
+            "shortcode": ":jeans:",
+            "unicode": "U+1F456"
+        },
+        {
+            "shortcode": ":scarf:",
+            "unicode": "U+1F9E3"
+        },
+        {
+            "shortcode": ":gloves:",
+            "unicode": "U+1F9E4"
+        },
+        {
+            "shortcode": ":coat:",
+            "unicode": "U+1F9E5"
+        },
+        {
+            "shortcode": ":socks:",
+            "unicode": "U+1F9E6"
+        },
+        {
+            "shortcode": ":dress:",
+            "unicode": "U+1F457"
+        },
+        {
+            "shortcode": ":kimono:",
+            "unicode": "U+1F458"
+        },
+        {
+            "shortcode": ":sari:",
+            "unicode": "U+1F97B"
+        },
+        {
+            "shortcode": ":one_piece_swimsuit:",
+            "unicode": "U+1FA71"
+        },
+        {
+            "shortcode": ":briefs:",
+            "unicode": "U+1FA72"
+        },
+        {
+            "shortcode": ":shorts:",
+            "unicode": "U+1FA73"
+        },
+        {
+            "shortcode": ":bikini:",
+            "unicode": "U+1F459"
+        },
+        {
+            "shortcode": ":womans_clothes:",
+            "unicode": "U+1F45A"
+        },
+        {
+            "shortcode": ":purse:",
+            "unicode": "U+1F45B"
+        },
+        {
+            "shortcode": ":handbag:",
+            "unicode": "U+1F45C"
+        },
+        {
+            "shortcode": ":clutch_bag:",
+            "unicode": "U+1F45D"
+        },
+        {
+            "shortcode": ":shopping_bags:",
+            "unicode": "U+1F6CD"
+        },
+        {
+            "shortcode": ":backpack:",
+            "unicode": "U+1F392"
+        },
+        {
+            "shortcode": ":thong_sandal:",
+            "unicode": "U+1FA74"
+        },
+        {
+            "shortcode": ":mans_shoe:",
+            "unicode": "U+1F45E"
+        },
+        {
+            "shortcode": ":running_shoe:",
+            "unicode": "U+1F45F"
+        },
+        {
+            "shortcode": ":hiking_boot:",
+            "unicode": "U+1F97E"
+        },
+        {
+            "shortcode": ":flat_shoe:",
+            "unicode": "U+1F97F"
+        },
+        {
+            "shortcode": ":high_heeled_shoe:",
+            "unicode": "U+1F460"
+        },
+        {
+            "shortcode": ":womans_sandal:",
+            "unicode": "U+1F461"
+        },
+        {
+            "shortcode": ":ballet_shoes:",
+            "unicode": "U+1FA70"
+        },
+        {
+            "shortcode": ":womans_boot:",
+            "unicode": "U+1F462"
+        },
+        {
+            "shortcode": ":crown:",
+            "unicode": "U+1F451"
+        },
+        {
+            "shortcode": ":womans_hat:",
+            "unicode": "U+1F452"
+        },
+        {
+            "shortcode": ":top_hat:",
+            "unicode": "U+1F3A9"
+        },
+        {
+            "shortcode": ":graduation_cap:",
+            "unicode": "U+1F393"
+        },
+        {
+            "shortcode": ":billed_cap:",
+            "unicode": "U+1F9E2"
+        },
+        {
+            "shortcode": ":military_helmet:",
+            "unicode": "U+1FA96"
+        },
+        {
+            "shortcode": ":rescue_workers_helmet:",
+            "unicode": "U+26D1"
+        },
+        {
+            "shortcode": ":prayer_beads:",
+            "unicode": "U+1F4FF"
+        },
+        {
+            "shortcode": ":lipstick:",
+            "unicode": "U+1F484"
+        },
+        {
+            "shortcode": ":ring:",
+            "unicode": "U+1F48D"
+        },
+        {
+            "shortcode": ":gem_stone:",
+            "unicode": "U+1F48E"
+        },
+        {
+            "shortcode": ":muted_speaker:",
+            "unicode": "U+1F507"
+        },
+        {
+            "shortcode": ":speaker_low_volume:",
+            "unicode": "U+1F508"
+        },
+        {
+            "shortcode": ":speaker_medium_volume:",
+            "unicode": "U+1F509"
+        },
+        {
+            "shortcode": ":speaker_high_volume:",
+            "unicode": "U+1F50A"
+        },
+        {
+            "shortcode": ":loudspeaker:",
+            "unicode": "U+1F4E2"
+        },
+        {
+            "shortcode": ":megaphone:",
+            "unicode": "U+1F4E3"
+        },
+        {
+            "shortcode": ":postal_horn:",
+            "unicode": "U+1F4EF"
+        },
+        {
+            "shortcode": ":bell:",
+            "unicode": "U+1F514"
+        },
+        {
+            "shortcode": ":bell_with_slash:",
+            "unicode": "U+1F515"
+        },
+        {
+            "shortcode": ":musical_score:",
+            "unicode": "U+1F3BC"
+        },
+        {
+            "shortcode": ":musical_note:",
+            "unicode": "U+1F3B5"
+        },
+        {
+            "shortcode": ":musical_notes:",
+            "unicode": "U+1F3B6"
+        },
+        {
+            "shortcode": ":studio_microphone:",
+            "unicode": "U+1F399"
+        },
+        {
+            "shortcode": ":level_slider:",
+            "unicode": "U+1F39A"
+        },
+        {
+            "shortcode": ":control_knobs:",
+            "unicode": "U+1F39B"
+        },
+        {
+            "shortcode": ":microphone:",
+            "unicode": "U+1F3A4"
+        },
+        {
+            "shortcode": ":headphone:",
+            "unicode": "U+1F3A7"
+        },
+        {
+            "shortcode": ":radio:",
+            "unicode": "U+1F4FB"
+        },
+        {
+            "shortcode": ":saxophone:",
+            "unicode": "U+1F3B7"
+        },
+        {
+            "shortcode": ":accordion:",
+            "unicode": "U+1FA97"
+        },
+        {
+            "shortcode": ":guitar:",
+            "unicode": "U+1F3B8"
+        },
+        {
+            "shortcode": ":musical_keyboard:",
+            "unicode": "U+1F3B9"
+        },
+        {
+            "shortcode": ":trumpet:",
+            "unicode": "U+1F3BA"
+        },
+        {
+            "shortcode": ":violin:",
+            "unicode": "U+1F3BB"
+        },
+        {
+            "shortcode": ":banjo:",
+            "unicode": "U+1FA95"
+        },
+        {
+            "shortcode": ":drum:",
+            "unicode": "U+1F941"
+        },
+        {
+            "shortcode": ":long_drum:",
+            "unicode": "U+1FA98"
+        },
+        {
+            "shortcode": ":mobile_phone:",
+            "unicode": "U+1F4F1"
+        },
+        {
+            "shortcode": ":mobile_phone_with_arrow:",
+            "unicode": "U+1F4F2"
+        },
+        {
+            "shortcode": ":telephone:",
+            "unicode": "U+260E"
+        },
+        {
+            "shortcode": ":telephone_receiver:",
+            "unicode": "U+1F4DE"
+        },
+        {
+            "shortcode": ":pager:",
+            "unicode": "U+1F4DF"
+        },
+        {
+            "shortcode": ":fax_machine:",
+            "unicode": "U+1F4E0"
+        },
+        {
+            "shortcode": ":battery:",
+            "unicode": "U+1F50B"
+        },
+        {
+            "shortcode": ":low_battery:",
+            "unicode": "U+1FAAB"
+        },
+        {
+            "shortcode": ":electric_plug:",
+            "unicode": "U+1F50C"
+        },
+        {
+            "shortcode": ":laptop:",
+            "unicode": "U+1F4BB"
+        },
+        {
+            "shortcode": ":desktop_computer:",
+            "unicode": "U+1F5A5"
+        },
+        {
+            "shortcode": ":printer:",
+            "unicode": "U+1F5A8"
+        },
+        {
+            "shortcode": ":keyboard:",
+            "unicode": "U+2328"
+        },
+        {
+            "shortcode": ":computer_mouse:",
+            "unicode": "U+1F5B1"
+        },
+        {
+            "shortcode": ":trackball:",
+            "unicode": "U+1F5B2"
+        },
+        {
+            "shortcode": ":computer_disk:",
+            "unicode": "U+1F4BD"
+        },
+        {
+            "shortcode": ":floppy_disk:",
+            "unicode": "U+1F4BE"
+        },
+        {
+            "shortcode": ":optical_disk:",
+            "unicode": "U+1F4BF"
+        },
+        {
+            "shortcode": ":dvd:",
+            "unicode": "U+1F4C0"
+        },
+        {
+            "shortcode": ":abacus:",
+            "unicode": "U+1F9EE"
+        },
+        {
+            "shortcode": ":movie_camera:",
+            "unicode": "U+1F3A5"
+        },
+        {
+            "shortcode": ":film_frames:",
+            "unicode": "U+1F39E"
+        },
+        {
+            "shortcode": ":film_projector:",
+            "unicode": "U+1F4FD"
+        },
+        {
+            "shortcode": ":clapper_board:",
+            "unicode": "U+1F3AC"
+        },
+        {
+            "shortcode": ":television:",
+            "unicode": "U+1F4FA"
+        },
+        {
+            "shortcode": ":camera:",
+            "unicode": "U+1F4F7"
+        },
+        {
+            "shortcode": ":camera_with_flash:",
+            "unicode": "U+1F4F8"
+        },
+        {
+            "shortcode": ":video_camera:",
+            "unicode": "U+1F4F9"
+        },
+        {
+            "shortcode": ":videocassette:",
+            "unicode": "U+1F4FC"
+        },
+        {
+            "shortcode": ":magnifying_glass_tilted_left:",
+            "unicode": "U+1F50D"
+        },
+        {
+            "shortcode": ":magnifying_glass_tilted_right:",
+            "unicode": "U+1F50E"
+        },
+        {
+            "shortcode": ":candle:",
+            "unicode": "U+1F56F"
+        },
+        {
+            "shortcode": ":light_bulb:",
+            "unicode": "U+1F4A1"
+        },
+        {
+            "shortcode": ":flashlight:",
+            "unicode": "U+1F526"
+        },
+        {
+            "shortcode": ":red_paper_lantern:",
+            "unicode": "U+1F3EE"
+        },
+        {
+            "shortcode": ":diya_lamp:",
+            "unicode": "U+1FA94"
+        },
+        {
+            "shortcode": ":notebook_with_decorative_cover:",
+            "unicode": "U+1F4D4"
+        },
+        {
+            "shortcode": ":closed_book:",
+            "unicode": "U+1F4D5"
+        },
+        {
+            "shortcode": ":open_book:",
+            "unicode": "U+1F4D6"
+        },
+        {
+            "shortcode": ":green_book:",
+            "unicode": "U+1F4D7"
+        },
+        {
+            "shortcode": ":blue_book:",
+            "unicode": "U+1F4D8"
+        },
+        {
+            "shortcode": ":orange_book:",
+            "unicode": "U+1F4D9"
+        },
+        {
+            "shortcode": ":books:",
+            "unicode": "U+1F4DA"
+        },
+        {
+            "shortcode": ":notebook:",
+            "unicode": "U+1F4D3"
+        },
+        {
+            "shortcode": ":ledger:",
+            "unicode": "U+1F4D2"
+        },
+        {
+            "shortcode": ":page_with_curl:",
+            "unicode": "U+1F4C3"
+        },
+        {
+            "shortcode": ":scroll:",
+            "unicode": "U+1F4DC"
+        },
+        {
+            "shortcode": ":page_facing_up:",
+            "unicode": "U+1F4C4"
+        },
+        {
+            "shortcode": ":newspaper:",
+            "unicode": "U+1F4F0"
+        },
+        {
+            "shortcode": ":rolled_up_newspaper:",
+            "unicode": "U+1F5DE"
+        },
+        {
+            "shortcode": ":bookmark_tabs:",
+            "unicode": "U+1F4D1"
+        },
+        {
+            "shortcode": ":bookmark:",
+            "unicode": "U+1F516"
+        },
+        {
+            "shortcode": ":label:",
+            "unicode": "U+1F3F7"
+        },
+        {
+            "shortcode": ":money_bag:",
+            "unicode": "U+1F4B0"
+        },
+        {
+            "shortcode": ":coin:",
+            "unicode": "U+1FA99"
+        },
+        {
+            "shortcode": ":yen_banknote:",
+            "unicode": "U+1F4B4"
+        },
+        {
+            "shortcode": ":dollar_banknote:",
+            "unicode": "U+1F4B5"
+        },
+        {
+            "shortcode": ":euro_banknote:",
+            "unicode": "U+1F4B6"
+        },
+        {
+            "shortcode": ":pound_banknote:",
+            "unicode": "U+1F4B7"
+        },
+        {
+            "shortcode": ":money_with_wings:",
+            "unicode": "U+1F4B8"
+        },
+        {
+            "shortcode": ":credit_card:",
+            "unicode": "U+1F4B3"
+        },
+        {
+            "shortcode": ":receipt:",
+            "unicode": "U+1F9FE"
+        },
+        {
+            "shortcode": ":chart_increasing_with_yen:",
+            "unicode": "U+1F4B9"
+        },
+        {
+            "shortcode": ":envelope:",
+            "unicode": "U+2709"
+        },
+        {
+            "shortcode": ":e_mail:",
+            "unicode": "U+1F4E7"
+        },
+        {
+            "shortcode": ":incoming_envelope:",
+            "unicode": "U+1F4E8"
+        },
+        {
+            "shortcode": ":envelope_with_arrow:",
+            "unicode": "U+1F4E9"
+        },
+        {
+            "shortcode": ":outbox_tray:",
+            "unicode": "U+1F4E4"
+        },
+        {
+            "shortcode": ":inbox_tray:",
+            "unicode": "U+1F4E5"
+        },
+        {
+            "shortcode": ":package:",
+            "unicode": "U+1F4E6"
+        },
+        {
+            "shortcode": ":closed_mailbox_with_raised_flag:",
+            "unicode": "U+1F4EB"
+        },
+        {
+            "shortcode": ":closed_mailbox_with_lowered_flag:",
+            "unicode": "U+1F4EA"
+        },
+        {
+            "shortcode": ":open_mailbox_with_raised_flag:",
+            "unicode": "U+1F4EC"
+        },
+        {
+            "shortcode": ":open_mailbox_with_lowered_flag:",
+            "unicode": "U+1F4ED"
+        },
+        {
+            "shortcode": ":postbox:",
+            "unicode": "U+1F4EE"
+        },
+        {
+            "shortcode": ":ballot_box_with_ballot:",
+            "unicode": "U+1F5F3"
+        },
+        {
+            "shortcode": ":pencil:",
+            "unicode": "U+270F"
+        },
+        {
+            "shortcode": ":black_nib:",
+            "unicode": "U+2712"
+        },
+        {
+            "shortcode": ":fountain_pen:",
+            "unicode": "U+1F58B"
+        },
+        {
+            "shortcode": ":pen:",
+            "unicode": "U+1F58A"
+        },
+        {
+            "shortcode": ":paintbrush:",
+            "unicode": "U+1F58C"
+        },
+        {
+            "shortcode": ":crayon:",
+            "unicode": "U+1F58D"
+        },
+        {
+            "shortcode": ":memo:",
+            "unicode": "U+1F4DD"
+        },
+        {
+            "shortcode": ":briefcase:",
+            "unicode": "U+1F4BC"
+        },
+        {
+            "shortcode": ":file_folder:",
+            "unicode": "U+1F4C1"
+        },
+        {
+            "shortcode": ":open_file_folder:",
+            "unicode": "U+1F4C2"
+        },
+        {
+            "shortcode": ":card_index_dividers:",
+            "unicode": "U+1F5C2"
+        },
+        {
+            "shortcode": ":calendar:",
+            "unicode": "U+1F4C5"
+        },
+        {
+            "shortcode": ":tear_off_calendar:",
+            "unicode": "U+1F4C6"
+        },
+        {
+            "shortcode": ":spiral_notepad:",
+            "unicode": "U+1F5D2"
+        },
+        {
+            "shortcode": ":spiral_calendar:",
+            "unicode": "U+1F5D3"
+        },
+        {
+            "shortcode": ":card_index:",
+            "unicode": "U+1F4C7"
+        },
+        {
+            "shortcode": ":chart_increasing:",
+            "unicode": "U+1F4C8"
+        },
+        {
+            "shortcode": ":chart_decreasing:",
+            "unicode": "U+1F4C9"
+        },
+        {
+            "shortcode": ":bar_chart:",
+            "unicode": "U+1F4CA"
+        },
+        {
+            "shortcode": ":clipboard:",
+            "unicode": "U+1F4CB"
+        },
+        {
+            "shortcode": ":pushpin:",
+            "unicode": "U+1F4CC"
+        },
+        {
+            "shortcode": ":round_pushpin:",
+            "unicode": "U+1F4CD"
+        },
+        {
+            "shortcode": ":paperclip:",
+            "unicode": "U+1F4CE"
+        },
+        {
+            "shortcode": ":linked_paperclips:",
+            "unicode": "U+1F587"
+        },
+        {
+            "shortcode": ":straight_ruler:",
+            "unicode": "U+1F4CF"
+        },
+        {
+            "shortcode": ":triangular_ruler:",
+            "unicode": "U+1F4D0"
+        },
+        {
+            "shortcode": ":scissors:",
+            "unicode": "U+2702"
+        },
+        {
+            "shortcode": ":card_file_box:",
+            "unicode": "U+1F5C3"
+        },
+        {
+            "shortcode": ":file_cabinet:",
+            "unicode": "U+1F5C4"
+        },
+        {
+            "shortcode": ":wastebasket:",
+            "unicode": "U+1F5D1"
+        },
+        {
+            "shortcode": ":locked:",
+            "unicode": "U+1F512"
+        },
+        {
+            "shortcode": ":unlocked:",
+            "unicode": "U+1F513"
+        },
+        {
+            "shortcode": ":locked_with_pen:",
+            "unicode": "U+1F50F"
+        },
+        {
+            "shortcode": ":locked_with_key:",
+            "unicode": "U+1F510"
+        },
+        {
+            "shortcode": ":key:",
+            "unicode": "U+1F511"
+        },
+        {
+            "shortcode": ":old_key:",
+            "unicode": "U+1F5DD"
+        },
+        {
+            "shortcode": ":hammer:",
+            "unicode": "U+1F528"
+        },
+        {
+            "shortcode": ":axe:",
+            "unicode": "U+1FA93"
+        },
+        {
+            "shortcode": ":pick:",
+            "unicode": "U+26CF"
+        },
+        {
+            "shortcode": ":hammer_and_pick:",
+            "unicode": "U+2692"
+        },
+        {
+            "shortcode": ":hammer_and_wrench:",
+            "unicode": "U+1F6E0"
+        },
+        {
+            "shortcode": ":dagger:",
+            "unicode": "U+1F5E1"
+        },
+        {
+            "shortcode": ":crossed_swords:",
+            "unicode": "U+2694"
+        },
+        {
+            "shortcode": ":bomb:",
+            "unicode": "U+1F4A3"
+        },
+        {
+            "shortcode": ":boomerang:",
+            "unicode": "U+1FA83"
+        },
+        {
+            "shortcode": ":bow_and_arrow:",
+            "unicode": "U+1F3F9"
+        },
+        {
+            "shortcode": ":shield:",
+            "unicode": "U+1F6E1"
+        },
+        {
+            "shortcode": ":carpentry_saw:",
+            "unicode": "U+1FA9A"
+        },
+        {
+            "shortcode": ":wrench:",
+            "unicode": "U+1F527"
+        },
+        {
+            "shortcode": ":screwdriver:",
+            "unicode": "U+1FA9B"
+        },
+        {
+            "shortcode": ":nut_and_bolt:",
+            "unicode": "U+1F529"
+        },
+        {
+            "shortcode": ":gear:",
+            "unicode": "U+2699"
+        },
+        {
+            "shortcode": ":clamp:",
+            "unicode": "U+1F5DC"
+        },
+        {
+            "shortcode": ":balance_scale:",
+            "unicode": "U+2696"
+        },
+        {
+            "shortcode": ":white_cane:",
+            "unicode": "U+1F9AF"
+        },
+        {
+            "shortcode": ":link:",
+            "unicode": "U+1F517"
+        },
+        {
+            "shortcode": ":chains:",
+            "unicode": "U+26D3"
+        },
+        {
+            "shortcode": ":hook:",
+            "unicode": "U+1FA9D"
+        },
+        {
+            "shortcode": ":toolbox:",
+            "unicode": "U+1F9F0"
+        },
+        {
+            "shortcode": ":magnet:",
+            "unicode": "U+1F9F2"
+        },
+        {
+            "shortcode": ":ladder:",
+            "unicode": "U+1FA9C"
+        },
+        {
+            "shortcode": ":alembic:",
+            "unicode": "U+2697"
+        },
+        {
+            "shortcode": ":test_tube:",
+            "unicode": "U+1F9EA"
+        },
+        {
+            "shortcode": ":petri_dish:",
+            "unicode": "U+1F9EB"
+        },
+        {
+            "shortcode": ":dna:",
+            "unicode": "U+1F9EC"
+        },
+        {
+            "shortcode": ":microscope:",
+            "unicode": "U+1F52C"
+        },
+        {
+            "shortcode": ":telescope:",
+            "unicode": "U+1F52D"
+        },
+        {
+            "shortcode": ":satellite_antenna:",
+            "unicode": "U+1F4E1"
+        },
+        {
+            "shortcode": ":syringe:",
+            "unicode": "U+1F489"
+        },
+        {
+            "shortcode": ":drop_of_blood:",
+            "unicode": "U+1FA78"
+        },
+        {
+            "shortcode": ":pill:",
+            "unicode": "U+1F48A"
+        },
+        {
+            "shortcode": ":adhesive_bandage:",
+            "unicode": "U+1FA79"
+        },
+        {
+            "shortcode": ":crutch:",
+            "unicode": "U+1FA7C"
+        },
+        {
+            "shortcode": ":stethoscope:",
+            "unicode": "U+1FA7A"
+        },
+        {
+            "shortcode": ":x_ray:",
+            "unicode": "U+1FA7B"
+        },
+        {
+            "shortcode": ":door:",
+            "unicode": "U+1F6AA"
+        },
+        {
+            "shortcode": ":elevator:",
+            "unicode": "U+1F6D7"
+        },
+        {
+            "shortcode": ":mirror:",
+            "unicode": "U+1FA9E"
+        },
+        {
+            "shortcode": ":window:",
+            "unicode": "U+1FA9F"
+        },
+        {
+            "shortcode": ":bed:",
+            "unicode": "U+1F6CF"
+        },
+        {
+            "shortcode": ":couch_and_lamp:",
+            "unicode": "U+1F6CB"
+        },
+        {
+            "shortcode": ":chair:",
+            "unicode": "U+1FA91"
+        },
+        {
+            "shortcode": ":toilet:",
+            "unicode": "U+1F6BD"
+        },
+        {
+            "shortcode": ":plunger:",
+            "unicode": "U+1FAA0"
+        },
+        {
+            "shortcode": ":shower:",
+            "unicode": "U+1F6BF"
+        },
+        {
+            "shortcode": ":bathtub:",
+            "unicode": "U+1F6C1"
+        },
+        {
+            "shortcode": ":mouse_trap:",
+            "unicode": "U+1FAA4"
+        },
+        {
+            "shortcode": ":razor:",
+            "unicode": "U+1FA92"
+        },
+        {
+            "shortcode": ":lotion_bottle:",
+            "unicode": "U+1F9F4"
+        },
+        {
+            "shortcode": ":safety_pin:",
+            "unicode": "U+1F9F7"
+        },
+        {
+            "shortcode": ":broom:",
+            "unicode": "U+1F9F9"
+        },
+        {
+            "shortcode": ":basket:",
+            "unicode": "U+1F9FA"
+        },
+        {
+            "shortcode": ":roll_of_paper:",
+            "unicode": "U+1F9FB"
+        },
+        {
+            "shortcode": ":bucket:",
+            "unicode": "U+1FAA3"
+        },
+        {
+            "shortcode": ":soap:",
+            "unicode": "U+1F9FC"
+        },
+        {
+            "shortcode": ":bubbles:",
+            "unicode": "U+1FAE7"
+        },
+        {
+            "shortcode": ":toothbrush:",
+            "unicode": "U+1FAA5"
+        },
+        {
+            "shortcode": ":sponge:",
+            "unicode": "U+1F9FD"
+        },
+        {
+            "shortcode": ":fire_extinguisher:",
+            "unicode": "U+1F9EF"
+        },
+        {
+            "shortcode": ":shopping_cart:",
+            "unicode": "U+1F6D2"
+        },
+        {
+            "shortcode": ":cigarette:",
+            "unicode": "U+1F6AC"
+        },
+        {
+            "shortcode": ":coffin:",
+            "unicode": "U+26B0"
+        },
+        {
+            "shortcode": ":headstone:",
+            "unicode": "U+1FAA6"
+        },
+        {
+            "shortcode": ":funeral_urn:",
+            "unicode": "U+26B1"
+        },
+        {
+            "shortcode": ":nazar_amulet:",
+            "unicode": "U+1F9FF"
+        },
+        {
+            "shortcode": ":hamsa:",
+            "unicode": "U+1FAAC"
+        },
+        {
+            "shortcode": ":moai:",
+            "unicode": "U+1F5FF"
+        },
+        {
+            "shortcode": ":placard:",
+            "unicode": "U+1FAA7"
+        },
+        {
+            "shortcode": ":identification_card:",
+            "unicode": "U+1FAAA"
+        }
+    ],
+    "symbols": [
+        {
+            "shortcode": ":atm_sign:",
+            "unicode": "U+1F3E7"
+        },
+        {
+            "shortcode": ":litter_in_bin_sign:",
+            "unicode": "U+1F6AE"
+        },
+        {
+            "shortcode": ":potable_water:",
+            "unicode": "U+1F6B0"
+        },
+        {
+            "shortcode": ":wheelchair_symbol:",
+            "unicode": "U+267F"
+        },
+        {
+            "shortcode": ":mens_room:",
+            "unicode": "U+1F6B9"
+        },
+        {
+            "shortcode": ":womens_room:",
+            "unicode": "U+1F6BA"
+        },
+        {
+            "shortcode": ":restroom:",
+            "unicode": "U+1F6BB"
+        },
+        {
+            "shortcode": ":baby_symbol:",
+            "unicode": "U+1F6BC"
+        },
+        {
+            "shortcode": ":water_closet:",
+            "unicode": "U+1F6BE"
+        },
+        {
+            "shortcode": ":passport_control:",
+            "unicode": "U+1F6C2"
+        },
+        {
+            "shortcode": ":customs:",
+            "unicode": "U+1F6C3"
+        },
+        {
+            "shortcode": ":baggage_claim:",
+            "unicode": "U+1F6C4"
+        },
+        {
+            "shortcode": ":left_luggage:",
+            "unicode": "U+1F6C5"
+        },
+        {
+            "shortcode": ":warning:",
+            "unicode": "U+26A0"
+        },
+        {
+            "shortcode": ":children_crossing:",
+            "unicode": "U+1F6B8"
+        },
+        {
+            "shortcode": ":no_entry:",
+            "unicode": "U+26D4"
+        },
+        {
+            "shortcode": ":prohibited:",
+            "unicode": "U+1F6AB"
+        },
+        {
+            "shortcode": ":no_bicycles:",
+            "unicode": "U+1F6B3"
+        },
+        {
+            "shortcode": ":no_smoking:",
+            "unicode": "U+1F6AD"
+        },
+        {
+            "shortcode": ":no_littering:",
+            "unicode": "U+1F6AF"
+        },
+        {
+            "shortcode": ":non_potable_water:",
+            "unicode": "U+1F6B1"
+        },
+        {
+            "shortcode": ":no_pedestrians:",
+            "unicode": "U+1F6B7"
+        },
+        {
+            "shortcode": ":no_mobile_phones:",
+            "unicode": "U+1F4F5"
+        },
+        {
+            "shortcode": ":no_one_under_eighteen:",
+            "unicode": "U+1F51E"
+        },
+        {
+            "shortcode": ":radioactive:",
+            "unicode": "U+2622"
+        },
+        {
+            "shortcode": ":biohazard:",
+            "unicode": "U+2623"
+        },
+        {
+            "shortcode": ":up_arrow:",
+            "unicode": "U+2B06"
+        },
+        {
+            "shortcode": ":up_right_arrow:",
+            "unicode": "U+2197"
+        },
+        {
+            "shortcode": ":right_arrow:",
+            "unicode": "U+27A1"
+        },
+        {
+            "shortcode": ":down_right_arrow:",
+            "unicode": "U+2198"
+        },
+        {
+            "shortcode": ":down_arrow:",
+            "unicode": "U+2B07"
+        },
+        {
+            "shortcode": ":down_left_arrow:",
+            "unicode": "U+2199"
+        },
+        {
+            "shortcode": ":left_arrow:",
+            "unicode": "U+2B05"
+        },
+        {
+            "shortcode": ":up_left_arrow:",
+            "unicode": "U+2196"
+        },
+        {
+            "shortcode": ":up_down_arrow:",
+            "unicode": "U+2195"
+        },
+        {
+            "shortcode": ":left_right_arrow:",
+            "unicode": "U+2194"
+        },
+        {
+            "shortcode": ":right_arrow_curving_left:",
+            "unicode": "U+21A9"
+        },
+        {
+            "shortcode": ":left_arrow_curving_right:",
+            "unicode": "U+21AA"
+        },
+        {
+            "shortcode": ":right_arrow_curving_up:",
+            "unicode": "U+2934"
+        },
+        {
+            "shortcode": ":right_arrow_curving_down:",
+            "unicode": "U+2935"
+        },
+        {
+            "shortcode": ":clockwise_vertical_arrows:",
+            "unicode": "U+1F503"
+        },
+        {
+            "shortcode": ":counterclockwise_arrows_button:",
+            "unicode": "U+1F504"
+        },
+        {
+            "shortcode": ":back_arrow:",
+            "unicode": "U+1F519"
+        },
+        {
+            "shortcode": ":end_arrow:",
+            "unicode": "U+1F51A"
+        },
+        {
+            "shortcode": ":on_arrow:",
+            "unicode": "U+1F51B"
+        },
+        {
+            "shortcode": ":soon_arrow:",
+            "unicode": "U+1F51C"
+        },
+        {
+            "shortcode": ":top_arrow:",
+            "unicode": "U+1F51D"
+        },
+        {
+            "shortcode": ":place_of_worship:",
+            "unicode": "U+1F6D0"
+        },
+        {
+            "shortcode": ":atom_symbol:",
+            "unicode": "U+269B"
+        },
+        {
+            "shortcode": ":om:",
+            "unicode": "U+1F549"
+        },
+        {
+            "shortcode": ":star_of_david:",
+            "unicode": "U+2721"
+        },
+        {
+            "shortcode": ":wheel_of_dharma:",
+            "unicode": "U+2638"
+        },
+        {
+            "shortcode": ":yin_yang:",
+            "unicode": "U+262F"
+        },
+        {
+            "shortcode": ":latin_cross:",
+            "unicode": "U+271D"
+        },
+        {
+            "shortcode": ":orthodox_cross:",
+            "unicode": "U+2626"
+        },
+        {
+            "shortcode": ":star_and_crescent:",
+            "unicode": "U+262A"
+        },
+        {
+            "shortcode": ":peace_symbol:",
+            "unicode": "U+262E"
+        },
+        {
+            "shortcode": ":menorah:",
+            "unicode": "U+1F54E"
+        },
+        {
+            "shortcode": ":dotted_six_pointed_star:",
+            "unicode": "U+1F52F"
+        },
+        {
+            "shortcode": ":aries:",
+            "unicode": "U+2648"
+        },
+        {
+            "shortcode": ":taurus:",
+            "unicode": "U+2649"
+        },
+        {
+            "shortcode": ":gemini:",
+            "unicode": "U+264A"
+        },
+        {
+            "shortcode": ":cancer:",
+            "unicode": "U+264B"
+        },
+        {
+            "shortcode": ":leo:",
+            "unicode": "U+264C"
+        },
+        {
+            "shortcode": ":virgo:",
+            "unicode": "U+264D"
+        },
+        {
+            "shortcode": ":libra:",
+            "unicode": "U+264E"
+        },
+        {
+            "shortcode": ":scorpio:",
+            "unicode": "U+264F"
+        },
+        {
+            "shortcode": ":sagittarius:",
+            "unicode": "U+2650"
+        },
+        {
+            "shortcode": ":capricorn:",
+            "unicode": "U+2651"
+        },
+        {
+            "shortcode": ":aquarius:",
+            "unicode": "U+2652"
+        },
+        {
+            "shortcode": ":pisces:",
+            "unicode": "U+2653"
+        },
+        {
+            "shortcode": ":ophiuchus:",
+            "unicode": "U+26CE"
+        },
+        {
+            "shortcode": ":shuffle_tracks_button:",
+            "unicode": "U+1F500"
+        },
+        {
+            "shortcode": ":repeat_button:",
+            "unicode": "U+1F501"
+        },
+        {
+            "shortcode": ":repeat_single_button:",
+            "unicode": "U+1F502"
+        },
+        {
+            "shortcode": ":play_button:",
+            "unicode": "U+25B6"
+        },
+        {
+            "shortcode": ":fast_forward_button:",
+            "unicode": "U+23E9"
+        },
+        {
+            "shortcode": ":next_track_button:",
+            "unicode": "U+23ED"
+        },
+        {
+            "shortcode": ":play_or_pause_button:",
+            "unicode": "U+23EF"
+        },
+        {
+            "shortcode": ":reverse_button:",
+            "unicode": "U+25C0"
+        },
+        {
+            "shortcode": ":fast_reverse_button:",
+            "unicode": "U+23EA"
+        },
+        {
+            "shortcode": ":last_track_button:",
+            "unicode": "U+23EE"
+        },
+        {
+            "shortcode": ":upwards_button:",
+            "unicode": "U+1F53C"
+        },
+        {
+            "shortcode": ":fast_up_button:",
+            "unicode": "U+23EB"
+        },
+        {
+            "shortcode": ":downwards_button:",
+            "unicode": "U+1F53D"
+        },
+        {
+            "shortcode": ":fast_down_button:",
+            "unicode": "U+23EC"
+        },
+        {
+            "shortcode": ":pause_button:",
+            "unicode": "U+23F8"
+        },
+        {
+            "shortcode": ":stop_button:",
+            "unicode": "U+23F9"
+        },
+        {
+            "shortcode": ":record_button:",
+            "unicode": "U+23FA"
+        },
+        {
+            "shortcode": ":eject_button:",
+            "unicode": "U+23CF"
+        },
+        {
+            "shortcode": ":cinema:",
+            "unicode": "U+1F3A6"
+        },
+        {
+            "shortcode": ":dim_button:",
+            "unicode": "U+1F505"
+        },
+        {
+            "shortcode": ":bright_button:",
+            "unicode": "U+1F506"
+        },
+        {
+            "shortcode": ":antenna_bars:",
+            "unicode": "U+1F4F6"
+        },
+        {
+            "shortcode": ":vibration_mode:",
+            "unicode": "U+1F4F3"
+        },
+        {
+            "shortcode": ":mobile_phone_off:",
+            "unicode": "U+1F4F4"
+        },
+        {
+            "shortcode": ":female_sign:",
+            "unicode": "U+2640"
+        },
+        {
+            "shortcode": ":male_sign:",
+            "unicode": "U+2642"
+        },
+        {
+            "shortcode": ":transgender_symbol:",
+            "unicode": "U+26A7"
+        },
+        {
+            "shortcode": ":multiply:",
+            "unicode": "U+2716"
+        },
+        {
+            "shortcode": ":plus:",
+            "unicode": "U+2795"
+        },
+        {
+            "shortcode": ":minus:",
+            "unicode": "U+2796"
+        },
+        {
+            "shortcode": ":divide:",
+            "unicode": "U+2797"
+        },
+        {
+            "shortcode": ":heavy_equals_sign:",
+            "unicode": "U+1F7F0"
+        },
+        {
+            "shortcode": ":infinity:",
+            "unicode": "U+267E"
+        },
+        {
+            "shortcode": ":double_exclamation_mark:",
+            "unicode": "U+203C"
+        },
+        {
+            "shortcode": ":exclamation_question_mark:",
+            "unicode": "U+2049"
+        },
+        {
+            "shortcode": ":red_question_mark:",
+            "unicode": "U+2753"
+        },
+        {
+            "shortcode": ":white_question_mark:",
+            "unicode": "U+2754"
+        },
+        {
+            "shortcode": ":white_exclamation_mark:",
+            "unicode": "U+2755"
+        },
+        {
+            "shortcode": ":red_exclamation_mark:",
+            "unicode": "U+2757"
+        },
+        {
+            "shortcode": ":wavy_dash:",
+            "unicode": "U+3030"
+        },
+        {
+            "shortcode": ":currency_exchange:",
+            "unicode": "U+1F4B1"
+        },
+        {
+            "shortcode": ":heavy_dollar_sign:",
+            "unicode": "U+1F4B2"
+        },
+        {
+            "shortcode": ":medical_symbol:",
+            "unicode": "U+2695"
+        },
+        {
+            "shortcode": ":recycling_symbol:",
+            "unicode": "U+267B"
+        },
+        {
+            "shortcode": ":fleur_de_lis:",
+            "unicode": "U+269C"
+        },
+        {
+            "shortcode": ":trident_emblem:",
+            "unicode": "U+1F531"
+        },
+        {
+            "shortcode": ":name_badge:",
+            "unicode": "U+1F4DB"
+        },
+        {
+            "shortcode": ":japanese_symbol_for_beginner:",
+            "unicode": "U+1F530"
+        },
+        {
+            "shortcode": ":hollow_red_circle:",
+            "unicode": "U+2B55"
+        },
+        {
+            "shortcode": ":check_mark_button:",
+            "unicode": "U+2705"
+        },
+        {
+            "shortcode": ":check_box_with_check:",
+            "unicode": "U+2611"
+        },
+        {
+            "shortcode": ":check_mark:",
+            "unicode": "U+2714"
+        },
+        {
+            "shortcode": ":cross_mark:",
+            "unicode": "U+274C"
+        },
+        {
+            "shortcode": ":cross_mark_button:",
+            "unicode": "U+274E"
+        },
+        {
+            "shortcode": ":curly_loop:",
+            "unicode": "U+27B0"
+        },
+        {
+            "shortcode": ":double_curly_loop:",
+            "unicode": "U+27BF"
+        },
+        {
+            "shortcode": ":part_alternation_mark:",
+            "unicode": "U+303D"
+        },
+        {
+            "shortcode": ":eight_spoked_asterisk:",
+            "unicode": "U+2733"
+        },
+        {
+            "shortcode": ":eight_pointed_star:",
+            "unicode": "U+2734"
+        },
+        {
+            "shortcode": ":sparkle:",
+            "unicode": "U+2747"
+        },
+        {
+            "shortcode": ":copyright:",
+            "unicode": "U+00A9"
+        },
+        {
+            "shortcode": ":registered:",
+            "unicode": "U+00AE"
+        },
+        {
+            "shortcode": ":trade_mark:",
+            "unicode": "U+2122"
+        },
+        {
+            "shortcode": "::hash::",
+            "unicode": "U+0023 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::asterisk::",
+            "unicode": "U+002A U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::zero::",
+            "unicode": "U+0030 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::one::",
+            "unicode": "U+0031 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::two::",
+            "unicode": "U+0032 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::three::",
+            "unicode": "U+0033 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::four::",
+            "unicode": "U+0034 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::five::",
+            "unicode": "U+0035 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::six::",
+            "unicode": "U+0036 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::seven::",
+            "unicode": "U+0037 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::eight::",
+            "unicode": "U+0038 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::nine::",
+            "unicode": "U+0039 U+FE0F U+20E3"
+        },
+        {
+            "shortcode": "::ten::",
+            "unicode": "U+1F51F"
+        },
+        {
+            "shortcode": ":input_latin_uppercase:",
+            "unicode": "U+1F520"
+        },
+        {
+            "shortcode": ":input_latin_lowercase:",
+            "unicode": "U+1F521"
+        },
+        {
+            "shortcode": ":input_numbers:",
+            "unicode": "U+1F522"
+        },
+        {
+            "shortcode": ":input_symbols:",
+            "unicode": "U+1F523"
+        },
+        {
+            "shortcode": ":input_latin_letters:",
+            "unicode": "U+1F524"
+        },
+        {
+            "shortcode": ":a_button_blood_type:",
+            "unicode": "U+1F170"
+        },
+        {
+            "shortcode": ":ab_button_blood_type:",
+            "unicode": "U+1F18E"
+        },
+        {
+            "shortcode": ":b_button_blood_type:",
+            "unicode": "U+1F171"
+        },
+        {
+            "shortcode": ":cl_button:",
+            "unicode": "U+1F191"
+        },
+        {
+            "shortcode": ":cool_button:",
+            "unicode": "U+1F192"
+        },
+        {
+            "shortcode": ":free_button:",
+            "unicode": "U+1F193"
+        },
+        {
+            "shortcode": ":information:",
+            "unicode": "U+2139"
+        },
+        {
+            "shortcode": ":id_button:",
+            "unicode": "U+1F194"
+        },
+        {
+            "shortcode": ":circled_m:",
+            "unicode": "U+24C2"
+        },
+        {
+            "shortcode": ":new_button:",
+            "unicode": "U+1F195"
+        },
+        {
+            "shortcode": ":ng_button:",
+            "unicode": "U+1F196"
+        },
+        {
+            "shortcode": ":o_button_blood_type:",
+            "unicode": "U+1F17E"
+        },
+        {
+            "shortcode": ":ok_button:",
+            "unicode": "U+1F197"
+        },
+        {
+            "shortcode": ":p_button:",
+            "unicode": "U+1F17F"
+        },
+        {
+            "shortcode": ":sos_button:",
+            "unicode": "U+1F198"
+        },
+        {
+            "shortcode": ":up_button:",
+            "unicode": "U+1F199"
+        },
+        {
+            "shortcode": ":vs_button:",
+            "unicode": "U+1F19A"
+        },
+        {
+            "shortcode": ":japanese_here_button:",
+            "unicode": "U+1F201"
+        },
+        {
+            "shortcode": ":japanese_service_charge_button:",
+            "unicode": "U+1F202"
+        },
+        {
+            "shortcode": ":japanese_monthly_amount_button:",
+            "unicode": "U+1F237"
+        },
+        {
+            "shortcode": ":japanese_not_free_of_charge_button:",
+            "unicode": "U+1F236"
+        },
+        {
+            "shortcode": ":japanese_reserved_button:",
+            "unicode": "U+1F22F"
+        },
+        {
+            "shortcode": ":japanese_bargain_button:",
+            "unicode": "U+1F250"
+        },
+        {
+            "shortcode": ":japanese_discount_button:",
+            "unicode": "U+1F239"
+        },
+        {
+            "shortcode": ":japanese_free_of_charge_button:",
+            "unicode": "U+1F21A"
+        },
+        {
+            "shortcode": ":japanese_prohibited_button:",
+            "unicode": "U+1F232"
+        },
+        {
+            "shortcode": ":japanese_acceptable_button:",
+            "unicode": "U+1F251"
+        },
+        {
+            "shortcode": ":japanese_application_button:",
+            "unicode": "U+1F238"
+        },
+        {
+            "shortcode": ":japanese_passing_grade_button:",
+            "unicode": "U+1F234"
+        },
+        {
+            "shortcode": ":japanese_vacancy_button:",
+            "unicode": "U+1F233"
+        },
+        {
+            "shortcode": ":japanese_congratulations_button:",
+            "unicode": "U+3297"
+        },
+        {
+            "shortcode": ":japanese_secret_button:",
+            "unicode": "U+3299"
+        },
+        {
+            "shortcode": ":japanese_open_for_business_button:",
+            "unicode": "U+1F23A"
+        },
+        {
+            "shortcode": ":japanese_no_vacancy_button:",
+            "unicode": "U+1F235"
+        },
+        {
+            "shortcode": ":red_circle:",
+            "unicode": "U+1F534"
+        },
+        {
+            "shortcode": ":orange_circle:",
+            "unicode": "U+1F7E0"
+        },
+        {
+            "shortcode": ":yellow_circle:",
+            "unicode": "U+1F7E1"
+        },
+        {
+            "shortcode": ":green_circle:",
+            "unicode": "U+1F7E2"
+        },
+        {
+            "shortcode": ":blue_circle:",
+            "unicode": "U+1F535"
+        },
+        {
+            "shortcode": ":purple_circle:",
+            "unicode": "U+1F7E3"
+        },
+        {
+            "shortcode": ":brown_circle:",
+            "unicode": "U+1F7E4"
+        },
+        {
+            "shortcode": ":black_circle:",
+            "unicode": "U+26AB"
+        },
+        {
+            "shortcode": ":white_circle:",
+            "unicode": "U+26AA"
+        },
+        {
+            "shortcode": ":red_square:",
+            "unicode": "U+1F7E5"
+        },
+        {
+            "shortcode": ":orange_square:",
+            "unicode": "U+1F7E7"
+        },
+        {
+            "shortcode": ":yellow_square:",
+            "unicode": "U+1F7E8"
+        },
+        {
+            "shortcode": ":green_square:",
+            "unicode": "U+1F7E9"
+        },
+        {
+            "shortcode": ":blue_square:",
+            "unicode": "U+1F7E6"
+        },
+        {
+            "shortcode": ":purple_square:",
+            "unicode": "U+1F7EA"
+        },
+        {
+            "shortcode": ":brown_square:",
+            "unicode": "U+1F7EB"
+        },
+        {
+            "shortcode": ":black_large_square:",
+            "unicode": "U+2B1B"
+        },
+        {
+            "shortcode": ":white_large_square:",
+            "unicode": "U+2B1C"
+        },
+        {
+            "shortcode": ":black_medium_square:",
+            "unicode": "U+25FC"
+        },
+        {
+            "shortcode": ":white_medium_square:",
+            "unicode": "U+25FB"
+        },
+        {
+            "shortcode": ":black_medium_small_square:",
+            "unicode": "U+25FE"
+        },
+        {
+            "shortcode": ":white_medium_small_square:",
+            "unicode": "U+25FD"
+        },
+        {
+            "shortcode": ":black_small_square:",
+            "unicode": "U+25AA"
+        },
+        {
+            "shortcode": ":white_small_square:",
+            "unicode": "U+25AB"
+        },
+        {
+            "shortcode": ":large_orange_diamond:",
+            "unicode": "U+1F536"
+        },
+        {
+            "shortcode": ":large_blue_diamond:",
+            "unicode": "U+1F537"
+        },
+        {
+            "shortcode": ":small_orange_diamond:",
+            "unicode": "U+1F538"
+        },
+        {
+            "shortcode": ":small_blue_diamond:",
+            "unicode": "U+1F539"
+        },
+        {
+            "shortcode": ":red_triangle_pointed_up:",
+            "unicode": "U+1F53A"
+        },
+        {
+            "shortcode": ":red_triangle_pointed_down:",
+            "unicode": "U+1F53B"
+        },
+        {
+            "shortcode": ":diamond_with_a_dot:",
+            "unicode": "U+1F4A0"
+        },
+        {
+            "shortcode": ":radio_button:",
+            "unicode": "U+1F518"
+        },
+        {
+            "shortcode": ":white_square_button:",
+            "unicode": "U+1F533"
+        },
+        {
+            "shortcode": ":black_square_button:",
+            "unicode": "U+1F532"
+        }
+    ],
+    "flags": [
+        {
+            "shortcode": ":chequered_flag:",
+            "unicode": "U+1F3C1"
+        },
+        {
+            "shortcode": ":triangular_flag:",
+            "unicode": "U+1F6A9"
+        },
+        {
+            "shortcode": ":crossed_flags:",
+            "unicode": "U+1F38C"
+        },
+        {
+            "shortcode": ":black_flag:",
+            "unicode": "U+1F3F4"
+        },
+        {
+            "shortcode": ":white_flag:",
+            "unicode": "U+1F3F3"
+        },
+        {
+            "shortcode": ":rainbow_flag:",
+            "unicode": "U+1F3F3 U+FE0F U+200D U+1F308"
+        },
+        {
+            "shortcode": ":transgender_flag:",
+            "unicode": "U+1F3F3 U+FE0F U+200D U+26A7 U+FE0F"
+        },
+        {
+            "shortcode": ":pirate_flag:",
+            "unicode": "U+1F3F4 U+200D U+2620 U+FE0F"
+        },
+        {
+            "shortcode": ":flag_ascension_island:",
+            "unicode": "U+1F1E6 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_andorra:",
+            "unicode": "U+1F1E6 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_united_arab_emirates:",
+            "unicode": "U+1F1E6 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_afghanistan:",
+            "unicode": "U+1F1E6 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_antigua_barbuda:",
+            "unicode": "U+1F1E6 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_anguilla:",
+            "unicode": "U+1F1E6 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_albania:",
+            "unicode": "U+1F1E6 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_armenia:",
+            "unicode": "U+1F1E6 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_angola:",
+            "unicode": "U+1F1E6 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_antarctica:",
+            "unicode": "U+1F1E6 U+1F1F6"
+        },
+        {
+            "shortcode": ":flag_argentina:",
+            "unicode": "U+1F1E6 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_american_samoa:",
+            "unicode": "U+1F1E6 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_austria:",
+            "unicode": "U+1F1E6 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_australia:",
+            "unicode": "U+1F1E6 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_aruba:",
+            "unicode": "U+1F1E6 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_åland_islands:",
+            "unicode": "U+1F1E6 U+1F1FD"
+        },
+        {
+            "shortcode": ":flag_azerbaijan:",
+            "unicode": "U+1F1E6 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_bosnia_herzegovina:",
+            "unicode": "U+1F1E7 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_barbados:",
+            "unicode": "U+1F1E7 U+1F1E7"
+        },
+        {
+            "shortcode": ":flag_bangladesh:",
+            "unicode": "U+1F1E7 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_belgium:",
+            "unicode": "U+1F1E7 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_burkina_faso:",
+            "unicode": "U+1F1E7 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_bulgaria:",
+            "unicode": "U+1F1E7 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_bahrain:",
+            "unicode": "U+1F1E7 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_burundi:",
+            "unicode": "U+1F1E7 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_benin:",
+            "unicode": "U+1F1E7 U+1F1EF"
+        },
+        {
+            "shortcode": ":flag_st._barthélemy:",
+            "unicode": "U+1F1E7 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_bermuda:",
+            "unicode": "U+1F1E7 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_brunei:",
+            "unicode": "U+1F1E7 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_bolivia:",
+            "unicode": "U+1F1E7 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_caribbean_netherlands:",
+            "unicode": "U+1F1E7 U+1F1F6"
+        },
+        {
+            "shortcode": ":flag_brazil:",
+            "unicode": "U+1F1E7 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_bahamas:",
+            "unicode": "U+1F1E7 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_bhutan:",
+            "unicode": "U+1F1E7 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_bouvet_island:",
+            "unicode": "U+1F1E7 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_botswana:",
+            "unicode": "U+1F1E7 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_belarus:",
+            "unicode": "U+1F1E7 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_belize:",
+            "unicode": "U+1F1E7 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_canada:",
+            "unicode": "U+1F1E8 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_cocos_keeling_islands:",
+            "unicode": "U+1F1E8 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_congo_kinshasa:",
+            "unicode": "U+1F1E8 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_central_african_republic:",
+            "unicode": "U+1F1E8 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_congo_brazzaville:",
+            "unicode": "U+1F1E8 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_switzerland:",
+            "unicode": "U+1F1E8 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_côte_divoire:",
+            "unicode": "U+1F1E8 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_cook_islands:",
+            "unicode": "U+1F1E8 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_chile:",
+            "unicode": "U+1F1E8 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_cameroon:",
+            "unicode": "U+1F1E8 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_china:",
+            "unicode": "U+1F1E8 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_colombia:",
+            "unicode": "U+1F1E8 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_clipperton_island:",
+            "unicode": "U+1F1E8 U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_costa_rica:",
+            "unicode": "U+1F1E8 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_cuba:",
+            "unicode": "U+1F1E8 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_cape_verde:",
+            "unicode": "U+1F1E8 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_curaçao:",
+            "unicode": "U+1F1E8 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_christmas_island:",
+            "unicode": "U+1F1E8 U+1F1FD"
+        },
+        {
+            "shortcode": ":flag_cyprus:",
+            "unicode": "U+1F1E8 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_czechia:",
+            "unicode": "U+1F1E8 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_germany:",
+            "unicode": "U+1F1E9 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_diego_garcia:",
+            "unicode": "U+1F1E9 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_djibouti:",
+            "unicode": "U+1F1E9 U+1F1EF"
+        },
+        {
+            "shortcode": ":flag_denmark:",
+            "unicode": "U+1F1E9 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_dominica:",
+            "unicode": "U+1F1E9 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_dominican_republic:",
+            "unicode": "U+1F1E9 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_algeria:",
+            "unicode": "U+1F1E9 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_ceuta_melilla:",
+            "unicode": "U+1F1EA U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_ecuador:",
+            "unicode": "U+1F1EA U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_estonia:",
+            "unicode": "U+1F1EA U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_egypt:",
+            "unicode": "U+1F1EA U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_western_sahara:",
+            "unicode": "U+1F1EA U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_eritrea:",
+            "unicode": "U+1F1EA U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_spain:",
+            "unicode": "U+1F1EA U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_ethiopia:",
+            "unicode": "U+1F1EA U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_european_union:",
+            "unicode": "U+1F1EA U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_finland:",
+            "unicode": "U+1F1EB U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_fiji:",
+            "unicode": "U+1F1EB U+1F1EF"
+        },
+        {
+            "shortcode": ":flag_falkland_islands:",
+            "unicode": "U+1F1EB U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_micronesia:",
+            "unicode": "U+1F1EB U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_faroe_islands:",
+            "unicode": "U+1F1EB U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_france:",
+            "unicode": "U+1F1EB U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_gabon:",
+            "unicode": "U+1F1EC U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_united_kingdom:",
+            "unicode": "U+1F1EC U+1F1E7"
+        },
+        {
+            "shortcode": ":flag_grenada:",
+            "unicode": "U+1F1EC U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_georgia:",
+            "unicode": "U+1F1EC U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_french_guiana:",
+            "unicode": "U+1F1EC U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_guernsey:",
+            "unicode": "U+1F1EC U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_ghana:",
+            "unicode": "U+1F1EC U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_gibraltar:",
+            "unicode": "U+1F1EC U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_greenland:",
+            "unicode": "U+1F1EC U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_gambia:",
+            "unicode": "U+1F1EC U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_guinea:",
+            "unicode": "U+1F1EC U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_guadeloupe:",
+            "unicode": "U+1F1EC U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_equatorial_guinea:",
+            "unicode": "U+1F1EC U+1F1F6"
+        },
+        {
+            "shortcode": ":flag_greece:",
+            "unicode": "U+1F1EC U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_south_georgia_south_sandwich_islands:",
+            "unicode": "U+1F1EC U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_guatemala:",
+            "unicode": "U+1F1EC U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_guam:",
+            "unicode": "U+1F1EC U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_guinea_bissau:",
+            "unicode": "U+1F1EC U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_guyana:",
+            "unicode": "U+1F1EC U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_hong_kong_sar_china:",
+            "unicode": "U+1F1ED U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_heard_mcdonald_islands:",
+            "unicode": "U+1F1ED U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_honduras:",
+            "unicode": "U+1F1ED U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_croatia:",
+            "unicode": "U+1F1ED U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_haiti:",
+            "unicode": "U+1F1ED U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_hungary:",
+            "unicode": "U+1F1ED U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_canary_islands:",
+            "unicode": "U+1F1EE U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_indonesia:",
+            "unicode": "U+1F1EE U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_ireland:",
+            "unicode": "U+1F1EE U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_israel:",
+            "unicode": "U+1F1EE U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_isle_of_man:",
+            "unicode": "U+1F1EE U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_india:",
+            "unicode": "U+1F1EE U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_british_indian_ocean_territory:",
+            "unicode": "U+1F1EE U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_iraq:",
+            "unicode": "U+1F1EE U+1F1F6"
+        },
+        {
+            "shortcode": ":flag_iran:",
+            "unicode": "U+1F1EE U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_iceland:",
+            "unicode": "U+1F1EE U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_italy:",
+            "unicode": "U+1F1EE U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_jersey:",
+            "unicode": "U+1F1EF U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_jamaica:",
+            "unicode": "U+1F1EF U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_jordan:",
+            "unicode": "U+1F1EF U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_japan:",
+            "unicode": "U+1F1EF U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_kenya:",
+            "unicode": "U+1F1F0 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_kyrgyzstan:",
+            "unicode": "U+1F1F0 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_cambodia:",
+            "unicode": "U+1F1F0 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_kiribati:",
+            "unicode": "U+1F1F0 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_comoros:",
+            "unicode": "U+1F1F0 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_st._kitts_nevis:",
+            "unicode": "U+1F1F0 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_north_korea:",
+            "unicode": "U+1F1F0 U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_south_korea:",
+            "unicode": "U+1F1F0 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_kuwait:",
+            "unicode": "U+1F1F0 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_cayman_islands:",
+            "unicode": "U+1F1F0 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_kazakhstan:",
+            "unicode": "U+1F1F0 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_laos:",
+            "unicode": "U+1F1F1 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_lebanon:",
+            "unicode": "U+1F1F1 U+1F1E7"
+        },
+        {
+            "shortcode": ":flag_st._lucia:",
+            "unicode": "U+1F1F1 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_liechtenstein:",
+            "unicode": "U+1F1F1 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_sri_lanka:",
+            "unicode": "U+1F1F1 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_liberia:",
+            "unicode": "U+1F1F1 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_lesotho:",
+            "unicode": "U+1F1F1 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_lithuania:",
+            "unicode": "U+1F1F1 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_luxembourg:",
+            "unicode": "U+1F1F1 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_latvia:",
+            "unicode": "U+1F1F1 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_libya:",
+            "unicode": "U+1F1F1 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_morocco:",
+            "unicode": "U+1F1F2 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_monaco:",
+            "unicode": "U+1F1F2 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_moldova:",
+            "unicode": "U+1F1F2 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_montenegro:",
+            "unicode": "U+1F1F2 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_st._martin:",
+            "unicode": "U+1F1F2 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_madagascar:",
+            "unicode": "U+1F1F2 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_marshall_islands:",
+            "unicode": "U+1F1F2 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_north_macedonia:",
+            "unicode": "U+1F1F2 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_mali:",
+            "unicode": "U+1F1F2 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_myanmar_burma_:",
+            "unicode": "U+1F1F2 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_mongolia:",
+            "unicode": "U+1F1F2 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_macao_sar_china:",
+            "unicode": "U+1F1F2 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_northern_mariana_islands:",
+            "unicode": "U+1F1F2 U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_martinique:",
+            "unicode": "U+1F1F2 U+1F1F6"
+        },
+        {
+            "shortcode": ":flag_mauritania:",
+            "unicode": "U+1F1F2 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_montserrat:",
+            "unicode": "U+1F1F2 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_malta:",
+            "unicode": "U+1F1F2 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_mauritius:",
+            "unicode": "U+1F1F2 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_maldives:",
+            "unicode": "U+1F1F2 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_malawi:",
+            "unicode": "U+1F1F2 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_mexico:",
+            "unicode": "U+1F1F2 U+1F1FD"
+        },
+        {
+            "shortcode": ":flag_malaysia:",
+            "unicode": "U+1F1F2 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_mozambique:",
+            "unicode": "U+1F1F2 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_namibia:",
+            "unicode": "U+1F1F3 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_new_caledonia:",
+            "unicode": "U+1F1F3 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_niger:",
+            "unicode": "U+1F1F3 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_norfolk_island:",
+            "unicode": "U+1F1F3 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_nigeria:",
+            "unicode": "U+1F1F3 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_nicaragua:",
+            "unicode": "U+1F1F3 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_netherlands:",
+            "unicode": "U+1F1F3 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_norway:",
+            "unicode": "U+1F1F3 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_nepal:",
+            "unicode": "U+1F1F3 U+1F1F5"
+        },
+        {
+            "shortcode": ":flag_nauru:",
+            "unicode": "U+1F1F3 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_niue:",
+            "unicode": "U+1F1F3 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_new_zealand:",
+            "unicode": "U+1F1F3 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_oman:",
+            "unicode": "U+1F1F4 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_panama:",
+            "unicode": "U+1F1F5 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_peru:",
+            "unicode": "U+1F1F5 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_french_polynesia:",
+            "unicode": "U+1F1F5 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_papua_new_guinea:",
+            "unicode": "U+1F1F5 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_philippines:",
+            "unicode": "U+1F1F5 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_pakistan:",
+            "unicode": "U+1F1F5 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_poland:",
+            "unicode": "U+1F1F5 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_st._pierre_miquelon:",
+            "unicode": "U+1F1F5 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_pitcairn_islands:",
+            "unicode": "U+1F1F5 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_puerto_rico:",
+            "unicode": "U+1F1F5 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_palestinian_territories:",
+            "unicode": "U+1F1F5 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_portugal:",
+            "unicode": "U+1F1F5 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_palau:",
+            "unicode": "U+1F1F5 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_paraguay:",
+            "unicode": "U+1F1F5 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_qatar:",
+            "unicode": "U+1F1F6 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_réunion:",
+            "unicode": "U+1F1F7 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_romania:",
+            "unicode": "U+1F1F7 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_serbia:",
+            "unicode": "U+1F1F7 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_russia:",
+            "unicode": "U+1F1F7 U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_rwanda:",
+            "unicode": "U+1F1F7 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_saudi_arabia:",
+            "unicode": "U+1F1F8 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_solomon_islands:",
+            "unicode": "U+1F1F8 U+1F1E7"
+        },
+        {
+            "shortcode": ":flag_seychelles:",
+            "unicode": "U+1F1F8 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_sudan:",
+            "unicode": "U+1F1F8 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_sweden:",
+            "unicode": "U+1F1F8 U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_singapore:",
+            "unicode": "U+1F1F8 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_st._helena:",
+            "unicode": "U+1F1F8 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_slovenia:",
+            "unicode": "U+1F1F8 U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_svalbard_jan_mayen:",
+            "unicode": "U+1F1F8 U+1F1EF"
+        },
+        {
+            "shortcode": ":flag_slovakia:",
+            "unicode": "U+1F1F8 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_sierra_leone:",
+            "unicode": "U+1F1F8 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_san_marino:",
+            "unicode": "U+1F1F8 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_senegal:",
+            "unicode": "U+1F1F8 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_somalia:",
+            "unicode": "U+1F1F8 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_suriname:",
+            "unicode": "U+1F1F8 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_south_sudan:",
+            "unicode": "U+1F1F8 U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_são_tomé_príncipe:",
+            "unicode": "U+1F1F8 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_el_salvador:",
+            "unicode": "U+1F1F8 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_sint_maarten:",
+            "unicode": "U+1F1F8 U+1F1FD"
+        },
+        {
+            "shortcode": ":flag_syria:",
+            "unicode": "U+1F1F8 U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_eswatini:",
+            "unicode": "U+1F1F8 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_tristan_da_cunha:",
+            "unicode": "U+1F1F9 U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_turks_caicos_islands:",
+            "unicode": "U+1F1F9 U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_chad:",
+            "unicode": "U+1F1F9 U+1F1E9"
+        },
+        {
+            "shortcode": ":flag_french_southern_territories:",
+            "unicode": "U+1F1F9 U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_togo:",
+            "unicode": "U+1F1F9 U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_thailand:",
+            "unicode": "U+1F1F9 U+1F1ED"
+        },
+        {
+            "shortcode": ":flag_tajikistan:",
+            "unicode": "U+1F1F9 U+1F1EF"
+        },
+        {
+            "shortcode": ":flag_tokelau:",
+            "unicode": "U+1F1F9 U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_timor_leste:",
+            "unicode": "U+1F1F9 U+1F1F1"
+        },
+        {
+            "shortcode": ":flag_turkmenistan:",
+            "unicode": "U+1F1F9 U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_tunisia:",
+            "unicode": "U+1F1F9 U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_tonga:",
+            "unicode": "U+1F1F9 U+1F1F4"
+        },
+        {
+            "shortcode": ":flag_turkey:",
+            "unicode": "U+1F1F9 U+1F1F7"
+        },
+        {
+            "shortcode": ":flag_trinidad_tobago:",
+            "unicode": "U+1F1F9 U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_tuvalu:",
+            "unicode": "U+1F1F9 U+1F1FB"
+        },
+        {
+            "shortcode": ":flag_taiwan:",
+            "unicode": "U+1F1F9 U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_tanzania:",
+            "unicode": "U+1F1F9 U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_ukraine:",
+            "unicode": "U+1F1FA U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_uganda:",
+            "unicode": "U+1F1FA U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_u.s._outlying_islands:",
+            "unicode": "U+1F1FA U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_united_nations:",
+            "unicode": "U+1F1FA U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_united_states:",
+            "unicode": "U+1F1FA U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_uruguay:",
+            "unicode": "U+1F1FA U+1F1FE"
+        },
+        {
+            "shortcode": ":flag_uzbekistan:",
+            "unicode": "U+1F1FA U+1F1FF"
+        },
+        {
+            "shortcode": ":flag_vatican_city:",
+            "unicode": "U+1F1FB U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_st._vincent_grenadines:",
+            "unicode": "U+1F1FB U+1F1E8"
+        },
+        {
+            "shortcode": ":flag_venezuela:",
+            "unicode": "U+1F1FB U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_british_virgin_islands:",
+            "unicode": "U+1F1FB U+1F1EC"
+        },
+        {
+            "shortcode": ":flag_u.s._virgin_islands:",
+            "unicode": "U+1F1FB U+1F1EE"
+        },
+        {
+            "shortcode": ":flag_vietnam:",
+            "unicode": "U+1F1FB U+1F1F3"
+        },
+        {
+            "shortcode": ":flag_vanuatu:",
+            "unicode": "U+1F1FB U+1F1FA"
+        },
+        {
+            "shortcode": ":flag_wallis_futuna:",
+            "unicode": "U+1F1FC U+1F1EB"
+        },
+        {
+            "shortcode": ":flag_samoa:",
+            "unicode": "U+1F1FC U+1F1F8"
+        },
+        {
+            "shortcode": ":flag_kosovo:",
+            "unicode": "U+1F1FD U+1F1F0"
+        },
+        {
+            "shortcode": ":flag_yemen:",
+            "unicode": "U+1F1FE U+1F1EA"
+        },
+        {
+            "shortcode": ":flag_mayotte:",
+            "unicode": "U+1F1FE U+1F1F9"
+        },
+        {
+            "shortcode": ":flag_south_africa:",
+            "unicode": "U+1F1FF U+1F1E6"
+        },
+        {
+            "shortcode": ":flag_zambia:",
+            "unicode": "U+1F1FF U+1F1F2"
+        },
+        {
+            "shortcode": ":flag_zimbabwe:",
+            "unicode": "U+1F1FF U+1F1FC"
+        },
+        {
+            "shortcode": ":flag_england:",
+            "unicode": "U+1F3F4 U+E0067 U+E0062 U+E0065 U+E006E U+E0067 U+E007F"
+        },
+        {
+            "shortcode": ":flag_scotland:",
+            "unicode": "U+1F3F4 U+E0067 U+E0062 U+E0073 U+E0063 U+E0074 U+E007F"
+        },
+        {
+            "shortcode": ":flag_wales:",
+            "unicode": "U+1F3F4 U+E0067 U+E0062 U+E0077 U+E006C U+E0073 U+E007F"
+        }
+    ]
+}
