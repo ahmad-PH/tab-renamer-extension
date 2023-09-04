@@ -51,7 +51,10 @@ chrome.runtime.onMessage.addListener(
                 let htmlContent = `
                     <div id="${rootElementId}">
                         <div id="${overlayId}"></div>
-                        <input type="text" id="${inputBoxId}" placeholder="New tab name" autocomplete="off" autofocus/>
+                        <div id="tab-renamer-extension-input-container">
+                            <div id="tab-renamer-extension-favicon-picker"></div>
+                            <input type="text" id="${inputBoxId}" placeholder="New tab name" autocomplete="off" autofocus/>
+                        </div>
                     </div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);

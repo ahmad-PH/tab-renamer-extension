@@ -8,14 +8,43 @@
     z-index: 9998; /* Just below the input box */
 }
 
-#tab-renamer-extension-input-box {
+#tab-renamer-extension-input-container {
+    display: flex;
+    align-items: center;
+
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 350px;
-    height: 50px;
-    box-sizing: content-box;
+    height: 70px;
+
+    z-index: 9999;
+}
+
+#tab-renamer-extension-favicon-picker {
+    width: 10%;
+    height: 100%;
+    position: absolute;
+    box-sizing: border-box;
+
+    border: 2px solid #ccc;
+    cursor: pointer;
+    background-color: blue;
+    /* background: url('some-icon.png') center no-repeat; */
+    background-size: cover;
+
+    padding: 5px;
+    margin: 0;
+    border: none;
+}
+
+#tab-renamer-extension-input-box {
+    width: 80%;
+    height: 100%;
+    position: absolute;
+    left: 20%;
+    box-sizing: border-box;
 
     /*==================== Font ==================== */
     font-family: 'Arial', sans-serif !important;
@@ -32,7 +61,6 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 
-    z-index: 9999;
 
     border: none;
     border-radius: 12px; /* Rounded corners */
@@ -45,7 +73,6 @@
 
     transition: all 0.3s ease; /* Smooth transition effects */
 }
-
 
 /* Styling for the placeholder text */
 #tab-renamer-extension-input-box::placeholder {
