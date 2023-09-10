@@ -25,14 +25,14 @@
         {
           "matches": ["<all_urls>"],
           "js": ["contentScript.js"],
-          "css": ["styles.css"],
+          "css": ["assets/styles.css"],
           "run_at": "document_start"
         }
     ],
 
     "web_accessible_resources": [
         {
-            "resources": ["emoji_picker_icon.png", "emojis.json"],
+            "resources": ["assets/emoji_picker_icon.png", "assets/emojis.json"],
             "matches": ["<all_urls>"],
             "use_dynamic_url": false
         }

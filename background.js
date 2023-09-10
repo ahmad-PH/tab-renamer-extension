@@ -40,7 +40,7 @@ chrome.runtime.onInstalled.addListener(async () => {
                 });
                 await chrome.scripting.insertCSS({
                     target: {tabId: tab.id},
-                    files: ['styles.css']
+                    files: ['assets/styles.css']
                 });
             } catch (e) {
                 console.log('error while processing', tab.url);
