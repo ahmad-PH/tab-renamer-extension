@@ -51,7 +51,6 @@
 
 #emoji-picker {
     background-color: white;
-    display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -66,6 +65,8 @@
     left: 0;
 
     border-radius: 12px;
+
+    display: none; /* Hidden by default */
 }
 
 #emoji-picker .emoji-category-emojis {
@@ -73,6 +74,12 @@
     grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
     grid-gap: 4px; 
     padding: 8px;
+}
+
+.emoji-category-title {
+    color: #6f6f6f;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 #tab-renamer-extension-input-box {

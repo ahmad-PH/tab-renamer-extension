@@ -77,6 +77,23 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
 
+                document.getElementById("emoji-picker-image").addEventListener("click", () => {
+                    const emojiPicker = document.getElementById("emoji-picker");
+                    if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
+                      emojiPicker.style.display = "flex";
+                    } else {
+                      emojiPicker.style.display = "none";
+                    }
+                });
+
+                emojiPickerImage.addEventListener("click", () => {
+                    if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
+                      emojiPicker.style.display = "flex";
+                    } else {
+                      emojiPicker.style.display = "none";
+                    }
+                });
+
                 // Add Escape key listener to close the UI
                 document.addEventListener("keydown", function(event) {
                     if (event.key === "Escape") {
@@ -85,8 +102,7 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 // Add click event listener to close the UI if clicked outside inputBox
-                const overlay = document.getElementById(overlayId);
-                overlay.addEventListener("click", function(event) {
+                document.getElementById(overlayId).addEventListener("click", function(event) {
                     setUIVisibility(false);
                 });
 

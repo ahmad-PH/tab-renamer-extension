@@ -1,3 +1,5 @@
+
+
 export async function populateEmojiPicker(emojiPickerId) {
     let emojis = null;
     try {
@@ -21,7 +23,7 @@ export async function populateEmojiPicker(emojiPickerId) {
       // You can also add a title for each category
       const categoryTitle = document.createElement('div');
       categoryTitle.className = 'emoji-category-title';
-      categoryTitle.innerText = category.replace(/_/g, ' '); // replace underscores with spaces
+      categoryTitle.innerText = formatEmojiCategoryTitle(category);
       categoryDiv.appendChild(categoryTitle);
         
       // Create emoji elements
@@ -51,4 +53,9 @@ export async function populateEmojiPicker(emojiPickerId) {
   }
   
 
-  
+  const formatEmojiCategoryTitle = (categoryTitle) => {
+    return categoryTitle
+      .replace(/_/g, ' ')  // Replace underscores with spaces
+      .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
+      .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
+  };
