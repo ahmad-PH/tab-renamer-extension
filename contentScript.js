@@ -1,9 +1,12 @@
 import { populateEmojiPicker } from "./emojiPicker";
 
-// const EXTENSION_PREFIX = "tab_renamer_prefix"
-const rootElementId = 'tab-renamer-extension-root';
-const inputBoxId = 'tab-renamer-extension-input-box';
-const overlayId = 'tab-renamer-extension-overlay';
+const EXTENSION_PREFIX = "tab-renamer-extension"
+const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
+const INPUT_BOX_ID = `${EXTENSION_PREFIX}-input-box`;
+const OVERLAY_ID = `${EXTENSION_PREFIX}-overlay`;
+const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
+const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
+
 let tabMutationObserver = null;
 
 function setTabTitle(newTabTitle, tabId) {
@@ -38,35 +41,36 @@ function preserveTabTitle(desiredTitle) {
 };
 
 function setUIVisibility(visible) {
+    console.log('set ui called:', visible);
     const newDisplay = visible? "block": "none";
-    document.getElementById(rootElementId).style.display = newDisplay;
+    document.getElementById(ROOT_ELEMENT_ID).style.display = newDisplay;
     if (visible) {
-        document.getElementById(inputBoxId).focus();
+        document.getElementById(INPUT_BOX_ID).focus();
     }
 }
 
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
         if (message.command === "open_rename_dialog") {
-            if (!document.getElementById(inputBoxId)) {
+            if (!document.getElementById(INPUT_BOX_ID)) {
                 let htmlContent = `
-                    <div id="${rootElementId}">
-                        <div id="${overlayId}"></div>
+                    <div id="${ROOT_ELEMENT_ID}">
+                        <div id="${OVERLAY_ID}"></div>
                         <div id="tab-renamer-extension-input-container">
                             <div id="tab-renamer-extension-favicon-picker">
-                                <img id="emoji-picker-image"/>
-                                <div id="emoji-picker"> </div>
+                                <img id="${EMOJI_PICKER_IMAGE_ID}"/>
+                                <div id="${EMOJI_PICKER_ID}"> </div>
                             </div>
-                            <input type="text" id="${inputBoxId}" placeholder="New tab name" autocomplete="off" autofocus/>
+                            <input type="text" id="${INPUT_BOX_ID}" placeholder="New tab name" autocomplete="off"/>
                         </div>
                     </div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
-                document.getElementById("emoji-picker-image").src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
-                populateEmojiPicker("emoji-picker");
+                document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
+                populateEmojiPicker(EMOJI_PICKER_ID);
 
                 // Add Enter key listener to change the tab name
-                const inputBox = document.getElementById(inputBoxId);
+                const inputBox = document.getElementById(INPUT_BOX_ID);
                 inputBox.addEventListener("keydown", function(event) {
                     if (event.key === "Enter") {
                         event.preventDefault();
@@ -77,16 +81,8 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
 
-                document.getElementById("emoji-picker-image").addEventListener("click", () => {
-                    const emojiPicker = document.getElementById("emoji-picker");
-                    if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
-                      emojiPicker.style.display = "flex";
-                    } else {
-                      emojiPicker.style.display = "none";
-                    }
-                });
-
-                emojiPickerImage.addEventListener("click", () => {
+                document.getElementById(EMOJI_PICKER_IMAGE_ID).addEventListener("click", () => {
+                    const emojiPicker = document.getElementById(EMOJI_PICKER_ID);
                     if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
                       emojiPicker.style.display = "flex";
                     } else {
@@ -102,7 +98,7 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 // Add click event listener to close the UI if clicked outside inputBox
-                document.getElementById(overlayId).addEventListener("click", function(event) {
+                document.getElementById(OVERLAY_ID).addEventListener("click", function(event) {
                     setUIVisibility(false);
                 });
 
