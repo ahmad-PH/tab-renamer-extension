@@ -75,7 +75,20 @@
     padding: 8px;
 }
 
-.emoji-category-title {
+#tab-renamer-extension-emoji-picker .emoji-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 2em;
+    height: 2em;
+}
+  
+#tab-renamer-extension-emoji-picker .emoji-item:hover {
+    background-color: rgba(169, 169, 255, 0.829);
+    border-radius: 6px;
+}
+
+#tab-renamer-extension-emoji-picker .emoji-category-title {
     color: #6f6f6f;
     margin-top: 3px;
     margin-bottom: 3px;
