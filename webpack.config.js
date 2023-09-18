@@ -3,8 +3,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    contentScript: './contentScript.js',
-    background: './background.js',
+    contentScript: './src/contentScript.js',
+    background: './src/background.js',
   },
 
   output: {

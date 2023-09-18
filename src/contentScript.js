@@ -1,4 +1,5 @@
 import { populateEmojiPicker } from "./emojiPicker";
+import { emojiToDataURL } from "./utils";
 
 const EXTENSION_PREFIX = "tab-renamer-extension"
 const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
@@ -6,8 +7,10 @@ const INPUT_BOX_ID = `${EXTENSION_PREFIX}-input-box`;
 const OVERLAY_ID = `${EXTENSION_PREFIX}-overlay`;
 const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
+const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 
 let tabMutationObserver = null;
+let selectedEmoji = null;
 
 function setTabTitle(newTabTitle, tabId) {
     document.title = newTabTitle;
@@ -41,7 +44,6 @@ function preserveTabTitle(desiredTitle) {
 };
 
 function setUIVisibility(visible) {
-    console.log('set ui called:', visible);
     const newDisplay = visible? "block": "none";
     document.getElementById(ROOT_ELEMENT_ID).style.display = newDisplay;
     if (visible) {
@@ -59,15 +61,16 @@ chrome.runtime.onMessage.addListener(
                         <div id="tab-renamer-extension-input-container">
                             <div id="tab-renamer-extension-favicon-picker">
                                 <img id="${EMOJI_PICKER_IMAGE_ID}"/>
+                                <img id="${PICKED_EMOJI_ID}" style="display:none"/>
                                 <div id="${EMOJI_PICKER_ID}"> </div>
                             </div>
-                            <input type="text" id="${INPUT_BOX_ID}" placeholder="New tab name" autocomplete="off"/>
+                            <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Name" autocomplete="off"/>
                         </div>
                     </div>
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
                 document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
-                populateEmojiPicker(EMOJI_PICKER_ID);
+                populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emojiPickCallback);
 
                 // Add Enter key listener to change the tab name
                 const inputBox = document.getElementById(INPUT_BOX_ID);
@@ -112,6 +115,22 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
+function emojiPickCallback(emoji) {
+    document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'none';
+    document.getElementById(EMOJI_PICKER_ID).style.display = 'none';
+
+    const emojiImg = document.getElementById(PICKED_EMOJI_ID);
+    emojiImg.src = emojiToDataURL(emoji, 50);
+    emojiImg.style.display = 'block';
+
+    selectedEmoji = emoji;
+}
+
+
+// selectedEmoji.subscribe((emoji) => {
+//     console.log('from content script listener, data:', emoji);
+// });
+
 // When content script is loaded, ask background script for tabId
 chrome.runtime.sendMessage({command: "get_tabId" }, function(response) {
     updateTitleFromStorage(response.tabId);
@@ -126,17 +145,6 @@ function updateTitleFromStorage(tabId) {
 }
 
 function setEmojiFavicon(emoji) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
-
-    // Get the canvas context and set the emoji
-    const ctx = canvas.getContext('2d');
-    ctx.font = '64px serif';
-    ctx.fillText(emoji, 0, 56);
-    const faviconURL = canvas.toDataURL();
-    console.log('The data URL:', faviconURL);
-
     // Check if a favicon link element already exists
     let link = document.querySelector("link[rel*='icon']");
 
@@ -149,6 +157,6 @@ function setEmojiFavicon(emoji) {
     }
 
     // Set the favicon
-    link.href = faviconURL;
+    link.href = emojiToDataURL(emoji, 64);
 }
 
