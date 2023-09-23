@@ -20,9 +20,13 @@
     z-index: 9999;
 }
 
-#tab-renamer-extension-favicon-picker {
+#tab-renamer-extension-favicon-picker-wrapper {
+    position: relative;
     width: 60px;
     height: 60px;
+}
+
+#tab-renamer-extension-favicon-picker {
     box-sizing: border-box;
     position: relative;
 

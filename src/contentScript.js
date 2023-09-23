@@ -5,6 +5,7 @@ const EXTENSION_PREFIX = "tab-renamer-extension"
 const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
 const INPUT_BOX_ID = `${EXTENSION_PREFIX}-input-box`;
 const OVERLAY_ID = `${EXTENSION_PREFIX}-overlay`;
+const FAVICON_PICKER_ID = "tab-renamer-extension-favicon-picker";
 const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
@@ -59,9 +60,11 @@ chrome.runtime.onMessage.addListener(
                     <div id="${ROOT_ELEMENT_ID}">
                         <div id="${OVERLAY_ID}"></div>
                         <div id="tab-renamer-extension-input-container">
-                            <div id="tab-renamer-extension-favicon-picker">
-                                <img id="${EMOJI_PICKER_IMAGE_ID}"/>
-                                <img id="${PICKED_EMOJI_ID}" style="display:none"/>
+                            <div id="tab-renamer-extension-favicon-picker-wrapper"/>
+                                <div id="${FAVICON_PICKER_ID}">
+                                    <img id="${EMOJI_PICKER_IMAGE_ID}"/>
+                                    <img id="${PICKED_EMOJI_ID}" style="display:none"/>
+                                </div>
                                 <div id="${EMOJI_PICKER_ID}"> </div>
                             </div>
                             <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Name" autocomplete="off"/>
@@ -84,7 +87,7 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
 
-                document.getElementById(EMOJI_PICKER_IMAGE_ID).addEventListener("click", () => {
+                document.getElementById(FAVICON_PICKER_ID).addEventListener("click", () => {
                     const emojiPicker = document.getElementById(EMOJI_PICKER_ID);
                     if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
                       emojiPicker.style.display = "flex";
@@ -126,10 +129,6 @@ function emojiPickCallback(emoji) {
     selectedEmoji = emoji;
 }
 
-
-// selectedEmoji.subscribe((emoji) => {
-//     console.log('from content script listener, data:', emoji);
-// });
 
 // When content script is loaded, ask background script for tabId
 chrome.runtime.sendMessage({command: "get_tabId" }, function(response) {
