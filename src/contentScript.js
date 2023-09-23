@@ -77,11 +77,16 @@ chrome.runtime.onMessage.addListener(
 
                 // Add Enter key listener to change the tab name
                 const inputBox = document.getElementById(INPUT_BOX_ID);
+                const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
                 inputBox.addEventListener("keydown", function(event) {
                     if (event.key === "Enter") {
                         event.preventDefault();
                         setTabTitle(inputBox.value, message.tabId);
-                        // setEmojiFavicon(inputBox.value);
+                        console.log('picked emoji attributes:');
+                        console.log(pickedEmoji.attributes);
+                        if (pickedEmoji.hasAttribute("data-emoji")) {
+                            setEmojiFavicon(pickedEmoji.getAttribute("data-emoji"));
+                        }
                         setUIVisibility(false);
                         inputBox.value = "";
                     }
@@ -125,6 +130,8 @@ function emojiPickCallback(emoji) {
     const emojiImg = document.getElementById(PICKED_EMOJI_ID);
     emojiImg.src = emojiToDataURL(emoji, 50);
     emojiImg.style.display = 'block';
+    console.log('about to set arrbitue');
+    emojiImg.setAttribute("data-emoji", emoji);
 
     selectedEmoji = emoji;
 }
