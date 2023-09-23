@@ -94,6 +94,7 @@
     text-align: center;
     width: 2em;
     height: 2em;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
   
 #tab-renamer-extension-emoji-picker .emoji-item:hover {

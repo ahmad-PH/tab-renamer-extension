@@ -35,19 +35,15 @@ async function populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emoji
             emojiElement.className = 'emoji-item';
             emojiElement.dataset.unicode = emoji.unicode;
             emojiElement.dataset.shortcode = emoji.shortcode;
-
-            // Display the emoji. Assuming "unicode" in JSON is in the format "U+1F600"
             emojiElement.textContent = String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16));
+            
             emojiElement.addEventListener('click', function() {
                 emojiPickCallback(this.textContent)
             });
-
-            // Append the emoji element to the category div
+            
             categoryEmojis.appendChild(emojiElement);
       }
       categoryDiv.appendChild(categoryEmojis);
-  
-      // Append the category div to the emoji picker
       emojiPickerElement.appendChild(categoryDiv);
     }
 }
