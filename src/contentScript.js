@@ -82,10 +82,9 @@ chrome.runtime.onMessage.addListener(
                     if (event.key === "Enter") {
                         event.preventDefault();
                         setTabTitle(inputBox.value, message.tabId);
-                        console.log('picked emoji attributes:');
                         console.log(pickedEmoji.attributes);
-                        if (pickedEmoji.hasAttribute("data-emoji")) {
-                            setEmojiFavicon(pickedEmoji.getAttribute("data-emoji"));
+                        if (pickedEmoji.dataset.emoji !== undefined) {
+                            setEmojiFavicon(pickedEmoji.dataset.emoji);
                         }
                         closeDialog();
                     }
@@ -130,7 +129,7 @@ function emojiPickCallback(emoji) {
     emojiImg.src = emojiToDataURL(emoji, 50);
     emojiImg.style.display = 'block';
     console.log('about to set arrbitue');
-    emojiImg.setAttribute("data-emoji", emoji);
+    emojiImg.dataset.emoji = emoji;
 
     selectedEmoji = emoji;
 }
