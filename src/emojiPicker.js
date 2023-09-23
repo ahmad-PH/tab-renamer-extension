@@ -49,10 +49,10 @@ async function populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emoji
 }
   
 const formatEmojiCategoryTitle = (categoryTitle) => {
-return categoryTitle
-    .replace(/_/g, ' ')  // Replace underscores with spaces
-    .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
-    .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
+    return categoryTitle
+        .replace(/_/g, ' ')  // Replace underscores with spaces
+        .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
+        .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
 };
 
 
