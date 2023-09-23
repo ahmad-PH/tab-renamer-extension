@@ -87,8 +87,7 @@ chrome.runtime.onMessage.addListener(
                         if (pickedEmoji.hasAttribute("data-emoji")) {
                             setEmojiFavicon(pickedEmoji.getAttribute("data-emoji"));
                         }
-                        setUIVisibility(false);
-                        inputBox.value = "";
+                        closeDialog();
                     }
                 });
 
@@ -104,13 +103,13 @@ chrome.runtime.onMessage.addListener(
                 // Add Escape key listener to close the UI
                 document.addEventListener("keydown", function(event) {
                     if (event.key === "Escape") {
-                        setUIVisibility(false);
+                        closeDialog();
                     }
                 });
 
                 // Add click event listener to close the UI if clicked outside inputBox
                 document.getElementById(OVERLAY_ID).addEventListener("click", function(event) {
-                    setUIVisibility(false);
+                    closeDialog();
                 });
 
                 // Prevent clicks on the input box from propagating to the overlay
@@ -118,7 +117,7 @@ chrome.runtime.onMessage.addListener(
                     event.stopPropagation();
                 });
             }
-            setUIVisibility(true);
+            openDialog();
         }
     }
 );
@@ -136,6 +135,28 @@ function emojiPickCallback(emoji) {
     selectedEmoji = emoji;
 }
 
+function clearInputs() {
+    clearInputTabTitle();
+    clearPickedEmoji();
+}
+
+function clearInputTabTitle() {
+    document.getElementById(INPUT_BOX_ID).value = "";
+}
+
+function clearPickedEmoji() {
+    document.getElementById(PICKED_EMOJI_ID).style.display = 'none';
+    document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'block';
+}
+
+function closeDialog() {
+    setUIVisibility(false);
+    clearInputs();
+}
+
+function openDialog() {
+    setUIVisibility(true);
+}
 
 // When content script is loaded, ask background script for tabId
 chrome.runtime.sendMessage({command: "get_tabId" }, function(response) {
