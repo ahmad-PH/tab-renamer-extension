@@ -2,7 +2,6 @@
 // const selectedEmoji = new Subject();
 
 async function populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emojiPickCallback) {
-    console.log("received ID:", EMOJI_PICKER_IMAGE_ID);
     let emojis = null;
     try {
         // TODO: Refactor this somewhere better that makes more sense:
@@ -13,6 +12,12 @@ async function populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emoji
     }
 
     const emojiPickerElement = document.getElementById(EMOJI_PICKER_ID);
+
+    const searchBarCallback = (searchValue) => {
+        console.log('Emoji search value:', searchValue);
+        // You can filter and display emojis based on the searchValue here
+    };
+    emojiPickerElement.appendChild(createSearchBar(searchBarCallback));
 
     for (const category in emojis) {
         // Create a div for each category
@@ -40,7 +45,7 @@ async function populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emoji
             emojiElement.addEventListener('click', function() {
                 emojiPickCallback(this.textContent)
             });
-            
+
             categoryEmojis.appendChild(emojiElement);
       }
       categoryDiv.appendChild(categoryEmojis);
@@ -54,6 +59,19 @@ const formatEmojiCategoryTitle = (categoryTitle) => {
         .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
         .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
 };
+
+function createSearchBar(callback) {
+    const searchBar = document.createElement('input');
+    searchBar.type = 'text';
+    searchBar.placeholder = 'Search for an emoji';
+    searchBar.id = 'tab-renamer-extension-emoji-search-bar';
+
+    searchBar.addEventListener('input', function() {
+        callback(this.value);
+    });
+
+    return searchBar;
+}
 
 
 export {populateEmojiPicker};
