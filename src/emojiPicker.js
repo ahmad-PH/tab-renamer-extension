@@ -16,6 +16,7 @@ class EmojiPicker {
     constructor(EMOJI_PICKER_ID, emojiPickCallback) {
         this.EMOJI_PICKER_ID = EMOJI_PICKER_ID;
         this.emojiPickCallback = emojiPickCallback;
+        this.isVisible = false;
     }
 
     insertIntoDOM() {
@@ -138,6 +139,20 @@ class EmojiPicker {
 
         const oldSearchResultsDiv = document.getElementById(SEARCH_RESULTS_ID);
         oldSearchResultsDiv.parentElement.replaceChild(newSearchResultsDiv, oldSearchResultsDiv);
+    }
+
+    focusTheSearchBar() {
+        document.getElementById()
+    }
+
+    setVisibility(visibility) {
+        const emojiPickerElement = document.getElementById(this.EMOJI_PICKER_ID);
+        if (visibility) {
+            emojiPickerElement.style.display = "flex";
+        } else {
+            emojiPickerElement.style.display = "none";
+        }
+        this.isVisible = visibility;
     }
 }
 

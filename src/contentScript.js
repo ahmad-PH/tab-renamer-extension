@@ -93,12 +93,7 @@ chrome.runtime.onMessage.addListener(
                 });
 
                 document.getElementById(FAVICON_PICKER_ID).addEventListener("click", () => {
-                    const emojiPicker = document.getElementById(EMOJI_PICKER_ID);
-                    if (emojiPicker.style.display === "none" || !emojiPicker.style.display) {
-                      emojiPicker.style.display = "flex";
-                    } else {
-                      emojiPicker.style.display = "none";
-                    }
+                    emojiPicker.setVisibility(!emojiPicker.isVisible);
                 });
 
                 // Add Escape key listener to close the UI
