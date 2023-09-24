@@ -96,6 +96,7 @@ class EmojiPicker {
         searchBar.type = 'text';
         searchBar.placeholder = 'Search for an emoji';
         searchBar.id = SEARCH_BAR_ID;
+        searchBar.autocomplete = 'off';
     
         searchBar.addEventListener('input', () => {
             this.onSearchBarChanged(searchBar.value);
