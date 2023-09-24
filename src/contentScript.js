@@ -94,6 +94,7 @@ chrome.runtime.onMessage.addListener(
 
                 document.getElementById(FAVICON_PICKER_ID).addEventListener("click", () => {
                     emojiPicker.setVisibility(!emojiPicker.isVisible);
+                    emojiPicker.focusTheSearchBar();
                 });
 
                 // Add Escape key listener to close the UI

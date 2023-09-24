@@ -2,6 +2,7 @@
 // const selectedEmoji = new Subject();
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
+const SEARCH_BAR_ID = 'tab-renamer-extension-emoji-search-bar';
 
 let emojis = await loadEmojis();
 async function loadEmojis() {
@@ -94,7 +95,7 @@ class EmojiPicker {
         const searchBar = document.createElement('input');
         searchBar.type = 'text';
         searchBar.placeholder = 'Search for an emoji';
-        searchBar.id = 'tab-renamer-extension-emoji-search-bar';
+        searchBar.id = SEARCH_BAR_ID;
     
         searchBar.addEventListener('input', () => {
             this.onSearchBarChanged(searchBar.value);
@@ -142,7 +143,7 @@ class EmojiPicker {
     }
 
     focusTheSearchBar() {
-        document.getElementById()
+        document.getElementById(SEARCH_BAR_ID).focus();
     }
 
     setVisibility(visibility) {
