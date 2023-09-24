@@ -75,7 +75,11 @@ class EmojiPicker {
         emojiElement.className = 'emoji-item';
         emojiElement.dataset.unicode = emoji.unicode;
         emojiElement.dataset.shortcode = emoji.shortcode;
-        emojiElement.textContent = String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16));
+
+        const emojiWrapper = document.createElement('span');
+        emojiWrapper.textContent = String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16));
+        emojiWrapper.className = 'emoji-wrapper';
+        emojiElement.appendChild(emojiWrapper);
         
         emojiElement.addEventListener('click', () => {
             this.emojiPickCallback(emojiElement.textContent);
