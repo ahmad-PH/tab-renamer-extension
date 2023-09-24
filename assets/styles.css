@@ -81,7 +81,7 @@
     display: none; /* Hidden by default */
 }
 
-#tab-renamer-extension-emoji-picker .emoji-category-emojis {
+#tab-renamer-extension-emoji-picker .emoji-grid {
     display: grid;
     grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
     grid-gap: 4px; 
@@ -172,5 +172,9 @@
 
 #tab-renamer-extension-emoji-search-bar:focus {
     border-color: #4da3ff;
-    box-shadow: 0 0 5px 3px rgba(31, 138, 252, 0.285); /* Light blue halo-like shadow */
+    box-shadow: 0 0 5px 4px rgba(31, 138, 252, 0.285); /* Light blue halo-like shadow */
+}
+
+#tab-renamer-extension-search-results-div {
+    width: 100%;
 }

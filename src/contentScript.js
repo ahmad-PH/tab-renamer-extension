@@ -1,4 +1,4 @@
-import { populateEmojiPicker } from "./emojiPicker";
+import { EmojiPicker } from "./emojiPicker";
 import { emojiToDataURL } from "./utils";
 
 const EXTENSION_PREFIX = "tab-renamer-extension"
@@ -73,7 +73,9 @@ chrome.runtime.onMessage.addListener(
                 `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
                 document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
-                populateEmojiPicker(EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, emojiPickCallback);
+
+                const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, emojiPickCallback);
+                emojiPicker.insertIntoDOM();
 
                 // Add Enter key listener to change the tab name
                 const inputBox = document.getElementById(INPUT_BOX_ID);
