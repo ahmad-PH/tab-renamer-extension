@@ -172,7 +172,7 @@ function emojiPickCallback(emoji) {
     document.getElementById(EMOJI_PICKER_ID).style.display = 'none';
 
     const emojiImg = document.getElementById(PICKED_EMOJI_ID);
-    emojiImg.src = emojiToDataURL(emoji, 50);
+    emojiImg.src = emojiToDataURL(emoji, 55);
     emojiImg.style.display = 'block';
     emojiImg.dataset.emoji = emoji;
 
