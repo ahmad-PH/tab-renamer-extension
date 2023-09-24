@@ -123,15 +123,12 @@ class EmojiPicker {
 
     filterEmojis(searchValue) {
         let filteredEmojis = [];
-        console.log('Looking at all emojis to filter');
         for (const category in emojis) {
             filteredEmojis = filteredEmojis.concat(emojis[category].filter(emoji =>
                 emoji.shortcode.includes(searchValue)
             ));
         }
 
-        console.log('matching emojis:', filteredEmojis);
-        
         const newSearchResultsDiv = this.createSearchResultsDiv(true);
         for (const emoji of filteredEmojis) {
             newSearchResultsDiv.appendChild(

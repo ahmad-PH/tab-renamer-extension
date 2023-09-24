@@ -12,15 +12,41 @@ const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 
 let tabMutationObserver = null;
 let selectedEmoji = null;
+let faviconMutationObserver = null;
+let currentFaviconLinkElement = null;
 
 function setTabTitle(newTabTitle, tabId) {
     document.title = newTabTitle;
-    chrome.storage.sync.set({[tabId]: newTabTitle}).then(() => {
-        console.log('Title set to ' + newTabTitle);
-    });
+    chrome.storage.sync.set({[`${tabId}_title`]: newTabTitle});
     preserveTabTitle(newTabTitle);
 }
 
+function setFavicon(emoji, tabId) {
+    // Check if a favicon link element already exists
+    let link = document.querySelector("link[rel*='icon']");
+
+    // Create the link element if it doesn't exist
+    if (!link) {
+        link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        document.getElementsByTagName('head')[0].appendChild(link);
+        currentFaviconLinkElement = link;
+    }
+
+    // Set the favicon
+    const emojiDataURL = emojiToDataURL(emoji, 64);
+    link.href = emojiDataURL;
+
+    chrome.storage.sync.set({[`${tabId}_favicon`]: emoji});
+    preserveFavicon(emojiDataURL);
+}
+
+
+/* This function seems to be only required when:
+ * 1- Clicking on a link that changes the tab
+ * 2- On websites like Facebook that keep enforing their own title
+ */
 function preserveTabTitle(desiredTitle) {
     // Disconnect the previous observer if it exists, to avoid an infinite loop.    
     if (tabMutationObserver) {
@@ -28,14 +54,14 @@ function preserveTabTitle(desiredTitle) {
     }
 
     tabMutationObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.target.nodeName === 'TITLE') {
-          const newTitle = document.title;
-          if (newTitle !== desiredTitle) {
-            document.title = desiredTitle;
-          }
-        }
-      });
+        mutations.forEach((mutation) => {
+            if (mutation.target.nodeName === 'TITLE') {
+                const newTitle = document.title;
+                if (newTitle !== desiredTitle) {
+                    document.title = desiredTitle;
+                }
+            }
+        });
     });
   
     const titleElement = document.querySelector('head > title');
@@ -43,6 +69,29 @@ function preserveTabTitle(desiredTitle) {
         tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
     }
 };
+
+function preserveFavicon(emojiDataURL) {
+    // Disconnect the previous observer if it exists, to avoid infinite loop.
+    if (faviconMutationObserver) {
+        faviconMutationObserver.disconnect();
+    }
+
+    faviconMutationObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            const target = mutation.target;
+            if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+                if (target.href !== emojiDataURL) {
+                    target.href = emojiDataURL;
+                }
+            }
+        });
+    });
+
+    const headElement = document.querySelector('head');
+    if (headElement) {
+        faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
+    }
+}
 
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
@@ -84,9 +133,8 @@ chrome.runtime.onMessage.addListener(
                     if (event.key === "Enter") {
                         event.preventDefault();
                         setTabTitle(inputBox.value, message.tabId);
-                        console.log(pickedEmoji.attributes);
                         if (pickedEmoji.dataset.emoji !== undefined) {
-                            setEmojiFavicon(pickedEmoji.dataset.emoji);
+                            setFavicon(pickedEmoji.dataset.emoji, message.tabId);
                         }
                         closeDialog();
                     }
@@ -126,7 +174,6 @@ function emojiPickCallback(emoji) {
     const emojiImg = document.getElementById(PICKED_EMOJI_ID);
     emojiImg.src = emojiToDataURL(emoji, 50);
     emojiImg.style.display = 'block';
-    console.log('about to set arrbitue');
     emojiImg.dataset.emoji = emoji;
 
     selectedEmoji = emoji;
@@ -157,30 +204,21 @@ function openDialog() {
 
 // When content script is loaded, ask background script for tabId
 chrome.runtime.sendMessage({command: "get_tabId" }, function(response) {
-    updateTitleFromStorage(response.tabId);
+    updateFromStorage(response.tabId);
 });
 
-function updateTitleFromStorage(tabId) {
-    chrome.storage.sync.get([`${tabId}`], function(result) {
-        if (result[`${tabId}`]) {
-            setTabTitle(result[`${tabId}`], tabId);
+function updateFromStorage(tabId) {
+    const titleKey = `${tabId}_title`;
+    chrome.storage.sync.get([titleKey], function(result) {
+        if (result[titleKey]) {
+            setTabTitle(result[titleKey], tabId);
+        }
+    });
+
+    const faviconKey = `${tabId}_favicon`;
+    chrome.storage.sync.get([faviconKey], function(result) {
+        if (result[faviconKey]) {
+            setFavicon(result[faviconKey], tabId);
         }
     });
 }
-
-function setEmojiFavicon(emoji) {
-    // Check if a favicon link element already exists
-    let link = document.querySelector("link[rel*='icon']");
-
-    // Create the link element if it doesn't exist
-    if (!link) {
-        link = document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        document.getElementsByTagName('head')[0].appendChild(link);
-    }
-
-    // Set the favicon
-    link.href = emojiToDataURL(emoji, 64);
-}
-
