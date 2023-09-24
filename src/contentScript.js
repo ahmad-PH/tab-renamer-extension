@@ -11,9 +11,7 @@ const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 
 let tabMutationObserver = null;
-let selectedEmoji = null;
 let faviconMutationObserver = null;
-let currentFaviconLinkElement = null;
 
 function setTabTitle(newTabTitle, tabId) {
     document.title = newTabTitle;
@@ -23,20 +21,17 @@ function setTabTitle(newTabTitle, tabId) {
 
 function setFavicon(emoji, tabId) {
     // Check if a favicon link element already exists
-    let link = document.querySelector("link[rel*='icon']");
+    const faviconLinks = document.querySelectorAll("link[rel*='icon']");
+    faviconLinks.forEach(link => {
+        link.parentNode.removeChild(link);
+    });
 
-    // Create the link element if it doesn't exist
-    if (!link) {
-        link = document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        document.getElementsByTagName('head')[0].appendChild(link);
-        currentFaviconLinkElement = link;
-    }
-
-    // Set the favicon
+    const link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
     const emojiDataURL = emojiToDataURL(emoji, 64);
     link.href = emojiDataURL;
+    document.getElementsByTagName('head')[0].appendChild(link);
 
     chrome.storage.sync.set({[`${tabId}_favicon`]: emoji});
     preserveFavicon(emojiDataURL);
@@ -175,8 +170,6 @@ function emojiPickCallback(emoji) {
     emojiImg.src = emojiToDataURL(emoji, 55);
     emojiImg.style.display = 'block';
     emojiImg.dataset.emoji = emoji;
-
-    selectedEmoji = emoji;
 }
 
 function clearInputs() {
