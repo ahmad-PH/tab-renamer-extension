@@ -13,6 +13,24 @@ const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 let tabMutationObserver = null;
 let faviconMutationObserver = null;
 
+
+const htmlContent = `
+    <div id="${ROOT_ELEMENT_ID}">
+        <div id="${OVERLAY_ID}"></div>
+        <div id="tab-renamer-extension-input-container">
+            <div id="tab-renamer-extension-favicon-picker-wrapper"/>
+                <div id="${FAVICON_PICKER_ID}">
+                    <img id="${EMOJI_PICKER_IMAGE_ID}"/>
+                    <img id="${PICKED_EMOJI_ID}" style="display:none"/>
+                </div>
+                <div id="${EMOJI_PICKER_ID}"> </div>
+            </div>
+            <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Name" autocomplete="off"/>
+        </div>
+    </div>
+`;
+
+
 function setTabTitle(newTabTitle, tabId) {
     document.title = newTabTitle;
     chrome.storage.sync.set({[`${tabId}_title`]: newTabTitle});
@@ -100,21 +118,6 @@ chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
         if (message.command === "open_rename_dialog") {
             if (!document.getElementById(INPUT_BOX_ID)) {
-                let htmlContent = `
-                    <div id="${ROOT_ELEMENT_ID}">
-                        <div id="${OVERLAY_ID}"></div>
-                        <div id="tab-renamer-extension-input-container">
-                            <div id="tab-renamer-extension-favicon-picker-wrapper"/>
-                                <div id="${FAVICON_PICKER_ID}">
-                                    <img id="${EMOJI_PICKER_IMAGE_ID}"/>
-                                    <img id="${PICKED_EMOJI_ID}" style="display:none"/>
-                                </div>
-                                <div id="${EMOJI_PICKER_ID}"> </div>
-                            </div>
-                            <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Name" autocomplete="off"/>
-                        </div>
-                    </div>
-                `;
                 document.body.insertAdjacentHTML('beforeend', htmlContent);
                 document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
