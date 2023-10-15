@@ -1,5 +1,6 @@
 import { EmojiPicker } from "./emojiPicker";
 import { storageSet, storageGet, emojiToDataURL } from "./utils";
+import { preserveTabTitle, preserveFavicon } from "./preservers";
 
 const EXTENSION_PREFIX = "tab-renamer-extension"
 const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
@@ -9,9 +10,6 @@ const FAVICON_PICKER_ID = "tab-renamer-extension-favicon-picker";
 const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
-
-let tabMutationObserver = null;
-let faviconMutationObserver = null;
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -28,57 +26,6 @@ const htmlContent = `
         </div>
     </div>
 `;
-
-
-/* This function seems to be only required when:
- * 1- Clicking on a link that changes the tab
- * 2- On websites like Facebook that keep enforing their own title
- */
-function preserveTabTitle(desiredTitle) {
-    // Disconnect the previous observer if it exists, to avoid an infinite loop.    
-    if (tabMutationObserver) {
-        tabMutationObserver.disconnect();
-    }
-
-    tabMutationObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.target.nodeName === 'TITLE') {
-                const newTitle = document.title;
-                if (newTitle !== desiredTitle) {
-                    document.title = desiredTitle;
-                }
-            }
-        });
-    });
-  
-    const titleElement = document.querySelector('head > title');
-    if (titleElement) {
-        tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
-    }
-};
-
-function preserveFavicon(emojiDataURL) {
-    // Disconnect the previous observer if it exists, to avoid infinite loop.
-    if (faviconMutationObserver) {
-        faviconMutationObserver.disconnect();
-    }
-
-    faviconMutationObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            const target = mutation.target;
-            if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
-                if (target.href !== emojiDataURL) {
-                    target.href = emojiDataURL;
-                }
-            }
-        });
-    });
-
-    const headElement = document.querySelector('head');
-    if (headElement) {
-        faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
-    }
-}
 
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
@@ -134,13 +81,6 @@ function openRenameDialogHandler(message, sender, sendResponse) {
     }
     openDialog();
 }
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.command === "open_rename_dialog") {
-        openRenameDialogHandler(message, sender, sendResponse);
-    }
-});
-
 
 function emojiPickCallback(emoji) {
     document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'none';
@@ -236,14 +176,18 @@ function updateTabSignatureFromStorage(tabId) {
 
 async function saveSignature(title, favicon) {
     const {id, url, index} = await getTabInfo();
-    let newSignature = {'title': title, 'favicon': favicon};
     const result = await storageGet([`${id}`]);
+    console.log('result retrieved:', result);
+    let newSignature = {};
     if (result[id]) {
+        console.log('result id:', result[id]);
         if (result[id].signature) {
             newSignature.title = result[id].signature.title;
             newSignature.favicon = result[id].signature.favicon;
         }
     }
+    newSignature.title = title || newSignature.title;
+    newSignature.favicon = favicon || newSignature.favicon;
 
     await storageSet({[id]: {
         'id': id,
@@ -268,6 +212,13 @@ const runtimePort = chrome.runtime.connect({ name: "content-script" });
 runtimePort.onDisconnect.addListener(() => {
     cleanUpOnDisconnectFromBackground();
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.command === "open_rename_dialog") {
+        openRenameDialogHandler(message, sender, sendResponse);
+    }
+});
+
 
 // Update tab signature when the contentScript loads:
 updateTabSignatureFromStorage(await getTabId());
