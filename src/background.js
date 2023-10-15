@@ -14,8 +14,8 @@ chrome.commands.onCommand.addListener((command) => {
 
 // Listen for any messages from content scripts.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.command === "get_tabId") {
-      sendResponse({ tabId: sender.tab.id });
+    if (message.command === "get_tab_info") {
+      sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
     }
   });
 
@@ -28,7 +28,6 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 // the extension is installed or updated:
 
 chrome.runtime.onInstalled.addListener(async () => {
-    console.log('onInstalled started');
     const allTabs = await chrome.tabs.query({});
     console.log('after query:', allTabs);
     allTabs.forEach(async (tab) => {
@@ -48,4 +47,9 @@ chrome.runtime.onInstalled.addListener(async () => {
             }
         }
     });
+});
+
+chrome.runtime.onConnect.addListener((port) => {
+    console.assert(port.name === "content-script");
+    console.log('Connection with content established successfully.');
 });
