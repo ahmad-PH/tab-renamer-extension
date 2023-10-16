@@ -1,6 +1,7 @@
 import { EmojiPicker } from "./emojiPicker";
 import { storageSet, storageGet, emojiToDataURL } from "./utils";
-import { preserveTabTitle, preserveFavicon } from "./preservers";
+import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
+import listenerManager from "./listenerManager";
 
 const EXTENSION_PREFIX = "tab-renamer-extension"
 const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
@@ -10,6 +11,8 @@ const FAVICON_PICKER_ID = "tab-renamer-extension-favicon-picker";
 const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
+
+const tabId = getTabId();
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -35,51 +38,49 @@ function setUIVisibility(visible) {
     }
 }
 
-function openRenameDialogHandler(message, sender, sendResponse) {
-    if (!document.getElementById(INPUT_BOX_ID)) {
-        document.body.insertAdjacentHTML('beforeend', htmlContent);
-        document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
+function insertUIIntoDOM() {
+    document.body.insertAdjacentHTML('beforeend', htmlContent);
+    document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
-        const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, emojiPickCallback);
-        emojiPicker.insertIntoDOM();
+    const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, emojiPickCallback);
+    emojiPicker.insertIntoDOM();
 
-        // Add Enter key listener to change the tab name
-        const inputBox = document.getElementById(INPUT_BOX_ID);
-        const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
-        inputBox.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                setTabTitle(inputBox.value, message.tabId);
-                if (pickedEmoji.dataset.emoji !== undefined) {
-                    setFavicon(pickedEmoji.dataset.emoji, message.tabId);
-                }
-                closeDialog();
+    // Add Enter key listener to change the tab name
+    const inputBox = document.getElementById(INPUT_BOX_ID);
+    const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
+    listenerManager.addDOMListener(inputBox, "keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            setTabTitle(inputBox.value);
+            if (pickedEmoji.dataset.emoji !== undefined) {
+                setFavicon(pickedEmoji.dataset.emoji);
             }
-        });
-
-        document.getElementById(FAVICON_PICKER_ID).addEventListener("click", () => {
-            emojiPicker.setVisibility(!emojiPicker.isVisible);
-            emojiPicker.focusTheSearchBar();
-        });
-
-        // Add Escape key listener to close the UI
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "Escape") {
-                closeDialog();
-            }
-        });
-
-        // Add click event listener to close the UI if clicked outside inputBox
-        document.getElementById(OVERLAY_ID).addEventListener("click", function(event) {
             closeDialog();
-        });
+        }
+    });
+    
+    listenerManager.addDOMListener(document.getElementById(FAVICON_PICKER_ID), "click", () => {
+        emojiPicker.setVisibility(!emojiPicker.isVisible);
+        emojiPicker.focusTheSearchBar();
+    });
 
-        // Prevent clicks on the input box from propagating to the overlay
-        inputBox.addEventListener("click", function(event) {
-            event.stopPropagation();
-        });
-    }
-    openDialog();
+    listenerManager.addDOMListener(document, "keydown", function(event) {
+        if (event.key === "Escape") {
+            closeDialog();
+        }
+    });
+
+    // Close the UI if clicked outside inputBox
+    listenerManager.addDOMListener(document.getElementById(OVERLAY_ID), "click", () => {
+        closeDialog();
+    });
+
+    // Prevent clicks on the input box from propagating to the overlay
+    listenerManager.addDOMListener(inputBox, "click", (event) => {
+        event.stopPropagation();
+    });
+
+    closeDialog();
 }
 
 function emojiPickCallback(emoji) {
@@ -108,7 +109,6 @@ function clearPickedEmoji() {
 
 function closeDialog() {
     setUIVisibility(false);
-    clearInputs();
 }
 
 function openDialog() {
@@ -130,16 +130,16 @@ async function getTabInfo() {
 }
 
 async function getTabId() {
-    return (await getTabInfo()).id;
+    (await getTabInfo()).id;
 }
 
-function setTabTitle(newTabTitle, tabId) {
+function setTabTitle(newTabTitle) {
     document.title = newTabTitle;
-    saveSignature(tabId, newTabTitle, null);
+    // saveSignature(newTabTitle, null);
     preserveTabTitle(newTabTitle);
 }
 
-function setFavicon(emoji, tabId) {
+function setFavicon(emoji) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
     faviconLinks.forEach(link => {
@@ -153,26 +153,25 @@ function setFavicon(emoji, tabId) {
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 
-    saveSignature(null, emoji);
+    // saveSignature(null, emoji);
     preserveFavicon(emojiDataURL);
 }
 
-function updateTabSignatureFromStorage(tabId) {
+async function updateTabSignatureFromStorage() {
     const titleKey = `${tabId}_title`;
     chrome.storage.sync.get([titleKey], function(result) {
         if (result[titleKey]) {
-            setTabTitle(result[titleKey], tabId);
+            setTabTitle(result[titleKey]);
         }
     });
 
     const faviconKey = `${tabId}_favicon`;
     chrome.storage.sync.get([faviconKey], function(result) {
         if (result[faviconKey]) {
-            setFavicon(result[faviconKey], tabId);
+            setFavicon(result[faviconKey]);
         }
     });
 }
-
 
 async function saveSignature(title, favicon) {
     const {id, url, index} = await getTabInfo();
@@ -203,32 +202,36 @@ async function getSignature() {
     const data = storageGet(null);
 }
 
-function cleanUpOnDisconnectFromBackground() {
-    document.body.removeEventListener('click', debugCodeOnClick);
-    chrome.runtime.onMessage.removeListener(openRenameDialogHandler);
-}
-
-const runtimePort = chrome.runtime.connect({ name: "content-script" });
-runtimePort.onDisconnect.addListener(() => {
-    cleanUpOnDisconnectFromBackground();
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+listenerManager.addRuntimeListener((message, sender, sendResponse) => {
     if (message.command === "open_rename_dialog") {
-        openRenameDialogHandler(message, sender, sendResponse);
+        openDialog();
     }
 });
 
-
 // Update tab signature when the contentScript loads:
-updateTabSignatureFromStorage(await getTabId());
+insertUIIntoDOM();
+updateTabSignatureFromStorage();
 
 // For debugging purposes:
-async function debugCodeOnClick() {
-    console.log('tab ID:', await getTabId());
+const debugFunction = async () => {
     chrome.storage.sync.get(null, (items) => {
         console.log('storage:');
         console.log(items);
     });
-}
-document.body.addEventListener('click', debugCodeOnClick);
+};
+listenerManager.addDOMListener(document.body, 'click', debugFunction);
+
+// Cleaning-up logic for when the extension unloads/reloads.
+const runtimePort = chrome.runtime.connect({ name: "content-script" });
+runtimePort.onDisconnect.addListener(() => {
+    listenerManager.removeAllListeners();
+    document.body.removeEventListener('click', debugFunction);
+
+    disconnectTabTitlePreserver();
+    disconnectFaviconPreserver();
+
+    const rootElement = document.getElementById(ROOT_ELEMENT_ID);
+    if (rootElement) {
+        rootElement.remove();
+    }
+});

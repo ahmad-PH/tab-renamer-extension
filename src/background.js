@@ -26,7 +26,6 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension is installed or updated:
-
 chrome.runtime.onInstalled.addListener(async () => {
     const allTabs = await chrome.tabs.query({});
     console.log('after query:', allTabs);
@@ -51,5 +50,5 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.runtime.onConnect.addListener((port) => {
     console.assert(port.name === "content-script");
-    console.log('Connection with content established successfully.');
+    console.log('Connection with content script established successfully.');
 });

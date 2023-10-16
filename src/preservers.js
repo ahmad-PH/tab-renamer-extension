@@ -8,9 +8,7 @@ let faviconMutationObserver = null;
  */
 export function preserveTabTitle(desiredTitle) {
     // Disconnect the previous observer if it exists, to avoid an infinite loop.    
-    if (tabMutationObserver) {
-        tabMutationObserver.disconnect();
-    }
+    disconnectTabTitlePreserver()
 
     tabMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -29,11 +27,15 @@ export function preserveTabTitle(desiredTitle) {
     }
 };
 
+export function disconnectTabTitlePreserver() {
+    if (tabMutationObserver) {
+        tabMutationObserver.disconnect();
+    }
+}
+
 export function preserveFavicon(emojiDataURL) {
     // Disconnect the previous observer if it exists, to avoid infinite loop.
-    if (faviconMutationObserver) {
-        faviconMutationObserver.disconnect();
-    }
+    disconnectFaviconPreserver();
 
     faviconMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -49,5 +51,11 @@ export function preserveFavicon(emojiDataURL) {
     const headElement = document.querySelector('head');
     if (headElement) {
         faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
+    }
+}
+
+export function disconnectFaviconPreserver() {
+    if (faviconMutationObserver) {
+        faviconMutationObserver.disconnect();
     }
 }

@@ -1,5 +1,5 @@
-// import Subject from './subject.js';
-// const selectedEmoji = new Subject();
+import listenerManager from "./listenerManager";
+
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 const SEARCH_BAR_ID = 'tab-renamer-extension-emoji-search-bar';
@@ -81,7 +81,7 @@ class EmojiPicker {
         emojiWrapper.className = 'emoji-wrapper';
         emojiElement.appendChild(emojiWrapper);
         
-        emojiElement.addEventListener('click', () => {
+        listenerManager.addDOMListener(emojiElement, 'click', () => {
             this.emojiPickCallback(emojiElement.textContent);
         });
 
@@ -101,8 +101,8 @@ class EmojiPicker {
         searchBar.placeholder = 'Search for an emoji';
         searchBar.id = SEARCH_BAR_ID;
         searchBar.autocomplete = 'off';
-    
-        searchBar.addEventListener('input', () => {
+        
+        listenerManager.addDOMListener(searchBar, 'input', () => {
             this.onSearchBarChanged(searchBar.value);
         });
     
