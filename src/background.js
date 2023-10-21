@@ -61,3 +61,48 @@ chrome.runtime.onConnect.addListener((port) => {
     console.assert(port.name === "content-script");
     console.log('Connection with content script established successfully.');
 });
+
+let debug = true;
+
+function logDebug(...args) {
+    if (debug) {
+        console.log(...args);
+    }
+}
+
+async function garbageCollector() {
+    logDebug('Garbage collector called at', new Date().toISOString());
+    const allTabInfo = await storageGet(null);  // Added await here
+    logDebug('Retrieved all tab info:', JSON.stringify(allTabInfo, null, 2));
+    let infoToKeep = {};
+    const currentTime = new Date();
+    logDebug('Current time:', currentTime);
+
+    for (const [tabId, tabInfo] of Object.entries(allTabInfo)) {
+        logDebug(`Processing tabId: ${tabId}`);
+        let keep = false;
+        if (tabInfo.closed === false) {
+            logDebug(`Tab ${tabId} is not closed, keeping...`);
+            keep = true;
+        } else {
+            const tabClosedAt = new Date(tabInfo.closedAt);
+            logDebug(`Tab ${tabId} closed at: ${tabClosedAt}`);
+            if ((currentTime - tabClosedAt) < 20000) {
+                logDebug(`Tab ${tabId} was closed less than 20 seconds ago, keeping...`);
+                keep = true;
+            } else {
+                logDebug(`Tab ${tabId} was closed more than 20 seconds ago, discarding...`);
+            }
+        }
+
+        if (keep) {
+            infoToKeep[tabId] = tabInfo;
+        }
+    }
+
+    logDebug('Info to keep:', JSON.stringify(infoToKeep, null, 2));
+    await storageSet(infoToKeep);
+    logDebug('Updated storage with info to keep at', new Date().toISOString());
+}
+
+setInterval(garbageCollector, 5000);

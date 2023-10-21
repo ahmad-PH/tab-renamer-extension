@@ -200,7 +200,8 @@ async function saveSignature(title, favicon) {
         'id': id,
         'url': url,
         'index': index,
-        'signature': newSignature
+        'signature': newSignature,
+        'closed': false,
     }});
 };
 
