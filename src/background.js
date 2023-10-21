@@ -1,3 +1,5 @@
+import { storageGet, storageSet } from "./utils";
+
 chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
@@ -15,13 +17,20 @@ chrome.commands.onCommand.addListener((command) => {
 // Listen for any messages from content scripts.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
-      sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
+        sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
     }
   });
 
-// Remove the tab's name information once it is closed
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-    chrome.storage.sync.remove(String(tabId));
+chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
+    console.log('onRemoved listener called');
+    console.log('tab closed:', tabId, removeInfo);
+
+    let tabInfo = await storageGet(tabId);
+    console.log('retrieved tab Info', tabInfo);
+
+    tabInfo.closedAt = new Date().toISOString();
+    console.log('Added closedAt to it:', tabInfo);
+    await storageSet({[tabId]: tabInfo});
 });
 
 // Might be needed later, for making sure the contentScript gets injected when
