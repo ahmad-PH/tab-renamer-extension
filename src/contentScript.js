@@ -12,7 +12,8 @@ const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 
-const tabId = getTabId();
+const tabId = await getTabId();
+console.log('tabId is:', tabId);
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -44,7 +45,7 @@ function insertUIIntoDOM() {
     document.body.insertAdjacentHTML('beforeend', htmlContent);
     document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
-    const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, emojiPickCallback);
+    const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, setSelectedEmoji);
     emojiPicker.insertIntoDOM();
 
     // Add Enter key listener to change the tab name
@@ -85,7 +86,7 @@ function insertUIIntoDOM() {
     closeDialog();
 }
 
-function emojiPickCallback(emoji) {
+function setSelectedEmoji(emoji) {
     document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'none';
     document.getElementById(EMOJI_PICKER_ID).style.display = 'none';
 
@@ -136,12 +137,13 @@ async function getTabInfo() {
 }
 
 async function getTabId() {
+    console.log('getTabID:');
     (await getTabInfo()).id;
 }
 
 function setTabTitle(newTabTitle) {
     document.title = newTabTitle;
-    // saveSignature(newTabTitle, null);
+    saveSignature(newTabTitle, null);
     preserveTabTitle(newTabTitle);
 }
 
@@ -159,36 +161,36 @@ function setFavicon(emoji) {
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 
-    // saveSignature(null, emoji);
+    saveSignature(null, emoji);
     preserveFavicon(emojiDataURL);
 }
 
 async function updateTabSignatureFromStorage() {
-    const titleKey = `${tabId}_title`;
-    chrome.storage.sync.get([titleKey], function(result) {
-        if (result[titleKey]) {
-            setTabTitle(result[titleKey]);
+    console.log('updateTabSignatureFromStorage called');
+    const signature = await getSignature();
+    if (signature) {
+        console.log('retrieved signature:', signature);
+        if (signature.title) {
+            setTabTitle(signature.title);
         }
-    });
-
-    const faviconKey = `${tabId}_favicon`;
-    chrome.storage.sync.get([faviconKey], function(result) {
-        if (result[faviconKey]) {
-            setFavicon(result[faviconKey]);
+        if (signature.favicon) {
+            setFavicon(signature.favicon);
         }
-    });
+    } else {
+        console.log('no signature found');
+    }
 }
 
 async function saveSignature(title, favicon) {
     const {id, url, index} = await getTabInfo();
-    const result = await storageGet([`${id}`]);
+    const result = await storageGet(id);
     console.log('result retrieved:', result);
     let newSignature = {};
-    if (result[id]) {
-        console.log('result id:', result[id]);
-        if (result[id].signature) {
-            newSignature.title = result[id].signature.title;
-            newSignature.favicon = result[id].signature.favicon;
+    if (result) {
+        console.log('result id:', result);
+        if (result.signature) {
+            newSignature.title = result.signature.title;
+            newSignature.favicon = result.signature.favicon;
         }
     }
     newSignature.title = title || newSignature.title;
@@ -198,21 +200,58 @@ async function saveSignature(title, favicon) {
         'id': id,
         'url': url,
         'index': index,
-        'closedAtTime': null,
         'signature': newSignature
     }});
 };
 
 async function getSignature() {
     const {id, url, index} = await getTabInfo();
-    const data = storageGet(null);
+    const storedTabInfo = await storageGet(null);
+    let foundSignature = null;
+    console.log('data:', storedTabInfo);
+    console.log('tabId', id);
+    if (storedTabInfo[id]) {
+        console.log('found data at current tab id:');
+        console.log(storedTabInfo[id]);
+        return storedTabInfo[id].signature;
+    } else {
+        const storedTabInfoValues = Object.values(storedTabInfo);
+        const tabsWithMatchingURLs = storedTabInfoValues.filter(
+            tabInfoValue => tabInfoValue.url === url
+        );
+        if (tabsWithMatchingURLs.length == 1) {
+            return tabsWithMatchingURLs[0].signature;
+        } else if (tabsWithMatchingURLs.length > 1) {
+            const tabMatchingURLAndIndex = tabsWithMatchingURLs.find(tabInfo => tabInfo.index === index);
+            if (tabMatchingURLAndIndex) {
+                return tabMatchingURLAndIndex.signature;
+            } else {
+                // find the most recent tab
+                tabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
+                    return new Date(tabInfo2.recordedAtISOString) - new Date(tabInfo1.recordedAtISOString) 
+                });
+                return tabsWithMatchingURLs[0].signature;
+            }
+        } else {
+            console.log('Found no matching tab at all');
+            return null;
+        }
+    }
+    if (foundSignature) {
+        // TODO: remove the matched object
+    }
+    return null;
 }
 
-listenerManager.addRuntimeListener((message, sender, sendResponse) => {
-    if (message.command === "open_rename_dialog") {
-        openDialog();
+
+
+listenerManager.addChromeListener(chrome.runtime.onMessage, 
+    (message, sender, sendResponse) => {
+        if (message.command === "open_rename_dialog") {
+            openDialog();
+        }
     }
-});
+);
 
 // Update tab signature when the contentScript loads:
 updateTabSignatureFromStorage();

@@ -1,17 +1,21 @@
 class ListenerManager {
     constructor() {
         this.domListeners = [];
-        this.runtimeListeners = [];
+        this.chromeListeners = [];
     }
 
     addDOMListener(element, type, handler) {
+        if (!element) {
+            console.log('found null element in addDOMListener', element, type, handler);
+            console.log(new Error().stack);
+        }
         element.addEventListener(type, handler);
         this.domListeners.push({ element, type, handler });
     }
 
-    addRuntimeListener(handler) {
-        chrome.runtime.onMessage.addListener(handler);
-        this.runtimeListeners.push(handler);
+    addChromeListener(listenerContext, handler) {
+        listenerContext.addListener(handler);
+        this.chromeListeners.push({listenerContext, handler});
     }
 
     removeAllListeners() {
@@ -21,10 +25,10 @@ class ListenerManager {
         // }
         this.domListeners = [];
 
-        for (const handler of this.runtimeListeners) {
-            chrome.runtime.onMessage.removeListener(handler);
+        for (const {listenerContext, handler} of this.chromeListeners) {
+            listenerContext.removeListener(handler);
         }
-        this.runtimeListeners = [];
+        this.chromeListeners = [];
     }
 }
 

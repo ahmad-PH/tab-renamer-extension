@@ -14,8 +14,6 @@ export function emojiToDataURL(emoji, sideLength) {
 /**
  * Promisified version of chrome.storage.sync.set.
  *
- * @param {Object} items - An object which gives each key/value pair to update storage with.
- * @returns {Promise<void>} - A promise that resolves when the storage has been set.
  */
 export function storageSet(items) {
     return new Promise((resolve, reject) => {
@@ -31,17 +29,27 @@ export function storageSet(items) {
 
 /**
  * Promisified version of chrome.storage.sync.get.
- *
- * @param {string|string[]} keys - A single key to get, list of keys to get, or a dictionary specifying default values.
- * @returns {Promise<Object>} - A promise that resolves with the storage items, or an empty object if the keys do not exist.
  */
 export function storageGet(keys) {
+    // Utility flexibility functionality:
+    if (keys !== null) {
+        // Make it a list if it is not already
+        if (!Array.isArray(keys))
+            keys = [keys];
+        // Stringify the list
+        keys = keys.map(key => key.toString());
+    }
+
     return new Promise((resolve, reject) => {
         chrome.storage.sync.get(keys, function(items) {
             if (chrome.runtime.lastError) {
                 reject(new Error(chrome.runtime.lastError));
             } else {
-                resolve(items);
+                if (keys !== null && keys.length == 1) {
+                    resolve(items[keys[0]]);
+                } else {
+                    resolve(items);
+                }
             }
         });
     });
