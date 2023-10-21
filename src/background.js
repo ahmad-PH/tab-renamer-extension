@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
     }
-  });
+});
 
 chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     console.log('onRemoved listener called');
@@ -28,10 +28,21 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     let tabInfo = await storageGet(tabId);
     console.log('retrieved tab Info', tabInfo);
 
+    tabInfo.closed = true;
     tabInfo.closedAt = new Date().toISOString();
     console.log('Added closedAt to it:', tabInfo);
     await storageSet({[tabId]: tabInfo});
 });
+
+chrome.tabs.onCreated.addListener(async (tab) => {
+    console.log('onCreated called:', tab);
+    const tabInfo = await storageGet(tab.id);
+    console.log('found this info:', tabInfo);
+    if (tabInfo) {
+        tabInfo.closed = false;
+    }
+});
+
 
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension is installed or updated:
