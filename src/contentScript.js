@@ -223,8 +223,11 @@ const debugFunction = async () => {
         console.log('storage:');
         console.log(items);
     });
+    console.log(getSignature());
 };
-listenerManager.addDOMListener(document.body, 'click', debugFunction);
+document.addEventListener('DOMContentLoaded', (event) => {
+    listenerManager.addDOMListener(document.body, 'click', debugFunction);
+});
 
 // Cleaning-up logic for when the extension unloads/reloads.
 const runtimePort = chrome.runtime.connect({ name: "content-script" });
