@@ -30,6 +30,8 @@ const htmlContent = `
     </div>
 `;
 
+let isUIInsertedIntoDOM = false;
+
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
     document.getElementById(ROOT_ELEMENT_ID).style.display = newDisplay;
@@ -112,6 +114,10 @@ function closeDialog() {
 }
 
 function openDialog() {
+    if (!isUIInsertedIntoDOM) {
+        insertUIIntoDOM();
+        isUIInsertedIntoDOM = true;
+    }
     setUIVisibility(true);
 }
 
@@ -209,7 +215,6 @@ listenerManager.addRuntimeListener((message, sender, sendResponse) => {
 });
 
 // Update tab signature when the contentScript loads:
-insertUIIntoDOM();
 updateTabSignatureFromStorage();
 
 // For debugging purposes:
