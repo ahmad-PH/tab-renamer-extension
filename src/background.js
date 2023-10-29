@@ -45,13 +45,13 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
 
 chrome.tabs.onCreated.addListener(async (tab) => {
     console.log('onCreated called:', tab);
-    const tabInfo = await storageGet(tab.id);
-    console.log('found this info:', tabInfo);
-    if (tabInfo) {
-        tabInfo.closed = false;
-    }
+    const signature = await loadSignature(tab.id, tab.url, tab.index, true);
+    console.log('found this info:', signature);
+    chrome.tabs.sendMessage(tab.id, {
+        command: 'set_tab_signature',
+        signature: signature,
+    });
 });
-
 
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension is installed or updated:

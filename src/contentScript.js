@@ -198,8 +198,12 @@ updateTabSignatureFromStorage();
 
 listenerManager.addChromeListener(chrome.runtime.onMessage, 
     (message, sender, sendResponse) => {
-        if (message.command === "open_rename_dialog") {
+        if (message.command === 'open_rename_dialog') {
             openDialog();
+        } else if (message.command === 'set_tab_signature') {
+            console.log('Receuved set_tab_signature command, with message:', message);
+            setTabTitle(message.signature.title);
+            setFavicon(message.signature.favicon);
         }
     }
 );
