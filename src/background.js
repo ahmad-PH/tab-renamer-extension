@@ -18,6 +18,15 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
+    } else if (message.command === "save_signature") {
+        saveSignature(sender, message.title, message.favicon);
+    } else if (message.command === "load_signature") {
+        loadSignature(sender.tab.id, sender.tab.url, sender.tab.index, false)
+        .then((resp) => {
+            console.log('load_signature response is:', resp);
+            sendResponse(resp);
+        });
+        return true; // To indicate that the response will be asynchronous
     }
 });
 
@@ -73,7 +82,7 @@ chrome.runtime.onConnect.addListener((port) => {
     console.log('Connection with content script established successfully.');
 });
 
-let debug = true;
+let debug = false;
 
 function logDebug(...args) {
     if (debug) {
@@ -114,6 +123,92 @@ async function garbageCollector() {
     logDebug('Info to keep:', JSON.stringify(infoToKeep, null, 2));
     await storageSet(infoToKeep);
     logDebug('Updated storage with info to keep at', new Date().toISOString());
+    console.debug();
 }
 
 setInterval(garbageCollector, 5000);
+async function saveSignature(sender, title, favicon) {
+    console.log('Function called: saveSignature');
+    const [id, url, index] = [sender.tab.id, sender.tab.url, sender.tab.index];
+    console.log('id, url, index:', id, url, index);
+    const result = await storageGet(id);
+    console.log('result retrieved:', result);
+    let newSignature = {};
+    let closed = false, closedAt = null;
+    if (result) {
+        console.log('result id:', result);
+        if (result.signature) {
+            newSignature.title = result.signature.title;
+            newSignature.favicon = result.signature.favicon;
+            console.log('newSignature after copying from result.signature:', newSignature);
+        }
+        closed = result.closed;
+        closedAt = result.closedAt;
+    }
+    newSignature.title = title || newSignature.title;
+    newSignature.favicon = favicon || newSignature.favicon;
+    console.log('newSignature after possible overwrite with title and favicon:', newSignature);
+
+    await storageSet({[id]: {
+        'id': id,
+        'url': url,
+        'index': index,
+        'signature': newSignature,
+        'closed': closed,
+        'closedAt': closedAt,
+    }});
+    console.log('Data saved to storage');
+};
+
+async function loadSignature(tabId, url, index, isBeingOpened) {
+    console.log('Function called: loadSignature');
+    const storedTabInfo = await storageGet(null);
+    console.log('storedTabInfo:', storedTabInfo);
+    let matchedTabInfo = null;
+    console.log('tabId', tabId);
+    if (storedTabInfo[tabId]) {
+        console.log('found data at current tab id:');
+        console.log(storedTabInfo[tabId]);
+        matchedTabInfo = storedTabInfo[tabId];
+    } else { // the tab has been closed
+        console.log('Tab has been closed, searching for matching data...');
+        const closedTabsWithMatchingURLs = Object.values(storedTabInfo).filter(
+            tabInfoValue => tabInfoValue.closed && tabInfoValue.url === url 
+        );
+        console.log('closedTabsWithMatchingURLs:', closedTabsWithMatchingURLs);
+        if (closedTabsWithMatchingURLs.length == 1) {
+            matchedTabInfo = closedTabsWithMatchingURLs[0];
+        } else if (closedTabsWithMatchingURLs.length > 1) {
+            console.log('Multiple closed tabs with matching URLs found');
+            const tabMatchingURLAndIndex = closedTabsWithMatchingURLs.find(tabInfo => tabInfo.index === index);
+            if (tabMatchingURLAndIndex) {
+                matchedTabInfo = tabMatchingURLAndIndex;
+            } else {
+                // find the most recent tab
+                console.log('Sorting to find the most recent tab');
+                closedTabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
+                    return new Date(tabInfo2.recordedAtISOString) - new Date(tabInfo1.recordedAtISOString) 
+                });
+                matchedTabInfo = closedTabsWithMatchingURLs[0];
+            }
+        } else {
+            console.log('Found no matching tab at all');
+        }
+    }
+
+    if (matchedTabInfo) {
+        console.log('matchedTabInfo:', matchedTabInfo);
+        matchedTabInfo.tabId = tabId;
+        if (isBeingOpened) {
+            matchedTabInfo.closed = false;
+            matchedTabInfo.closedAt = null;
+        }
+        await storageSet({[tabId]: matchedTabInfo});
+        console.log('Returning signature: ', matchedTabInfo.signature);
+        return matchedTabInfo.signature;
+    } else {
+        console.log('No matched tab info found');
+        return null;
+    }
+}
+       

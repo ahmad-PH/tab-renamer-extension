@@ -1,5 +1,5 @@
 import { EmojiPicker } from "./emojiPicker";
-import { storageSet, storageGet, emojiToDataURL } from "./utils";
+import { storageGet, emojiToDataURL } from "./utils";
 import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
 
@@ -124,14 +124,27 @@ function openDialog() {
 
 async function getTabInfo() {
     try {
-        const response = await chrome.runtime.sendMessage({ command: "get_tab_info" });
-        if (response) {
-            return response;
-        } else {
-            throw new Error('Invalid response from background script.');
-        }
+        return await chrome.runtime.sendMessage({ command: "get_tab_info" });
     } catch (error) {
         console.error('Failed to get tab Info:', error);
+        throw error;
+    }
+}
+
+async function saveSignature(title, favicon) {
+    try {
+        await chrome.runtime.sendMessage({command: "save_signature", title, favicon});
+    } catch (error) {
+        console.log('Failed to save signature:', error);
+        throw error;
+    }
+}
+
+async function loadSignature() {
+    try {
+        return await chrome.runtime.sendMessage({command: "load_signature"});
+    } catch (error) {
+        console.log('Failed to save signature:', error);
         throw error;
     }
 }
@@ -141,9 +154,9 @@ async function getTabId() {
     (await getTabInfo()).id;
 }
 
-function setTabTitle(newTabTitle) {
+async function setTabTitle(newTabTitle) {
     document.title = newTabTitle;
-    saveSignature(newTabTitle, null);
+    await saveSignature(newTabTitle, null);
     preserveTabTitle(newTabTitle);
 }
 
@@ -167,7 +180,7 @@ function setFavicon(emoji) {
 
 async function updateTabSignatureFromStorage() {
     console.log('updateTabSignatureFromStorage called');
-    const signature = await getSignature();
+    const signature = await loadSignature();
     if (signature) {
         console.log('retrieved signature:', signature);
         if (signature.title) {
@@ -180,71 +193,8 @@ async function updateTabSignatureFromStorage() {
         console.log('no signature found');
     }
 }
-
-async function saveSignature(title, favicon) {
-    const {id, url, index} = await getTabInfo();
-    const result = await storageGet(id);
-    console.log('result retrieved:', result);
-    let newSignature = {};
-    if (result) {
-        console.log('result id:', result);
-        if (result.signature) {
-            newSignature.title = result.signature.title;
-            newSignature.favicon = result.signature.favicon;
-        }
-    }
-    newSignature.title = title || newSignature.title;
-    newSignature.favicon = favicon || newSignature.favicon;
-
-    await storageSet({[id]: {
-        'id': id,
-        'url': url,
-        'index': index,
-        'signature': newSignature,
-        'closed': false,
-    }});
-};
-
-async function getSignature() {
-    const {id, url, index} = await getTabInfo();
-    const storedTabInfo = await storageGet(null);
-    let foundSignature = null;
-    console.log('data:', storedTabInfo);
-    console.log('tabId', id);
-    if (storedTabInfo[id]) {
-        console.log('found data at current tab id:');
-        console.log(storedTabInfo[id]);
-        return storedTabInfo[id].signature;
-    } else {
-        const storedTabInfoValues = Object.values(storedTabInfo);
-        const tabsWithMatchingURLs = storedTabInfoValues.filter(
-            tabInfoValue => tabInfoValue.url === url
-        );
-        if (tabsWithMatchingURLs.length == 1) {
-            return tabsWithMatchingURLs[0].signature;
-        } else if (tabsWithMatchingURLs.length > 1) {
-            const tabMatchingURLAndIndex = tabsWithMatchingURLs.find(tabInfo => tabInfo.index === index);
-            if (tabMatchingURLAndIndex) {
-                return tabMatchingURLAndIndex.signature;
-            } else {
-                // find the most recent tab
-                tabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
-                    return new Date(tabInfo2.recordedAtISOString) - new Date(tabInfo1.recordedAtISOString) 
-                });
-                return tabsWithMatchingURLs[0].signature;
-            }
-        } else {
-            console.log('Found no matching tab at all');
-            return null;
-        }
-    }
-    if (foundSignature) {
-        // TODO: remove the matched object
-    }
-    return null;
-}
-
-
+// Update tab signature when the contentScript loads:
+updateTabSignatureFromStorage();
 
 listenerManager.addChromeListener(chrome.runtime.onMessage, 
     (message, sender, sendResponse) => {
@@ -254,16 +204,13 @@ listenerManager.addChromeListener(chrome.runtime.onMessage,
     }
 );
 
-// Update tab signature when the contentScript loads:
-updateTabSignatureFromStorage();
-
 // For debugging purposes:
 const debugFunction = async () => {
     chrome.storage.sync.get(null, (items) => {
         console.log('storage:');
         console.log(items);
     });
-    console.log(getSignature());
+    console.log(loadSignature());
 };
 document.addEventListener('DOMContentLoaded', (event) => {
     listenerManager.addDOMListener(document.body, 'click', debugFunction);
