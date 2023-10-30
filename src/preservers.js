@@ -9,12 +9,13 @@ let faviconMutationObserver = null;
 export function preserveTabTitle(desiredTitle) {
     // Disconnect the previous observer if it exists, to avoid an infinite loop.    
     disconnectTabTitlePreserver()
-
+    console.log('preserbing title:', desiredTitle);
     tabMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.target.nodeName === 'TITLE') {
                 const newTitle = document.title;
                 if (newTitle !== desiredTitle) {
+                    console.log('resetting title to', desiredTitle, 'from', newTitle);
                     document.title = desiredTitle;
                 }
             }
