@@ -1,12 +1,7 @@
-
-
 import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
 import { openDialog, closeDialog, setTabTitleInUI, setFaviconInUI } from "./userInterface";
 import { INPUT_BOX_ID, PICKED_EMOJI_ID } from "./config";
-
-const tabId = await getTabId();
-console.log('tabId is:', tabId);
 
 async function getTabInfo() {
     try {
@@ -86,9 +81,9 @@ async function updateTabSignatureFromStorage() {
 updateTabSignatureFromStorage();
 
 listenerManager.addChromeListener(chrome.runtime.onMessage, 
-    (message, sender, sendResponse) => {
+    async (message, sender, sendResponse) => {
         if (message.command === 'open_rename_dialog') {
-            openDialog();
+            await openDialog();
         } else if (message.command === 'set_tab_signature') {
             console.log('Received set_tab_signature command, with message:', message);
             setTabTitle(message.signature.title);
@@ -97,8 +92,8 @@ listenerManager.addChromeListener(chrome.runtime.onMessage,
     }
 );
 
-listenerManager.addDOMListener(document, 'openRenameDialog', () => {
-    openDialog();
+listenerManager.addDOMListener(document, 'openRenameDialog', async () => {
+    await openDialog();
 });
 
 // For debugging purposes:

@@ -13,7 +13,6 @@ export function emojiToDataURL(emoji, sideLength) {
 
 /**
  * Promisified version of chrome.storage.sync.set.
- *
  */
 export function storageSet(items) {
     return new Promise((resolve, reject) => {

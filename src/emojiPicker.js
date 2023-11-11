@@ -4,23 +4,23 @@ const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 const SEARCH_BAR_ID = 'tab-renamer-extension-emoji-search-bar';
 
-let emojis = await loadEmojis();
-async function loadEmojis() {
-    try {
-        return await (await fetch(chrome.runtime.getURL('assets/emojis.json'))).json();
-    } catch (e) {
-        console.error('Error loading emojis:', e)
-    }
-}
-
 class EmojiPicker {
     constructor(EMOJI_PICKER_ID, emojiPickCallback) {
+        this.emojis = null;
         this.EMOJI_PICKER_ID = EMOJI_PICKER_ID;
         this.emojiPickCallback = emojiPickCallback;
         this.isVisible = false;
     }
 
-    insertIntoDOM() {
+    async initialize() {
+        try {
+            this.emojis = await (await fetch(chrome.runtime.getURL('assets/emojis.json'))).json();
+        } catch (e) {
+            console.error('Error loading emojis:', e);
+        }
+    }
+
+    async insertIntoDOM() {
         const emojiPickerElement = document.getElementById(this.EMOJI_PICKER_ID);
     
         emojiPickerElement.appendChild(this.createSearchBar());
@@ -28,7 +28,7 @@ class EmojiPicker {
         const searchResultsDiv = this.createSearchResultsDiv(false);
         emojiPickerElement.appendChild(searchResultsDiv);
     
-        const allEmojisDiv = this.createAllEmojisDiv();
+        const allEmojisDiv = await this.createAllEmojisDiv();
         allEmojisDiv.style.display = 'grid';
         emojiPickerElement.appendChild(allEmojisDiv);
     }
@@ -45,7 +45,7 @@ class EmojiPicker {
         const allEmojisDiv = document.createElement('div');
         allEmojisDiv.id = ALL_EMOJIS_ID;
     
-        for (const category in emojis) {
+        for (const category in this.emojis) {
             // Create a div for each category
             const categoryDiv = document.createElement('div');
             categoryDiv.className = 'emoji-category';
@@ -61,7 +61,7 @@ class EmojiPicker {
             const categoryEmojis = document.createElement('div'); 
             categoryEmojis.className = 'emoji-grid';
     
-            for (const emoji of emojis[category]) {
+            for (const emoji of this.emojis[category]) {
                 categoryEmojis.appendChild(this.createEmojiElement(emoji));
           }
           categoryDiv.appendChild(categoryEmojis);
@@ -127,8 +127,8 @@ class EmojiPicker {
 
     filterEmojis(searchValue) {
         let filteredEmojis = [];
-        for (const category in emojis) {
-            filteredEmojis = filteredEmojis.concat(emojis[category].filter(emoji =>
+        for (const category in this.emojis) {
+            filteredEmojis = filteredEmojis.concat(this.emojis[category].filter(emoji =>
                 emoji.shortcode.includes(searchValue)
             ));
         }

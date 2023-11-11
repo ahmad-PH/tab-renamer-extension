@@ -30,11 +30,12 @@ function setUIVisibility(visible) {
     }
 }
 
-function insertUIIntoDOM() {
+async function insertUIIntoDOM() {
     document.body.insertAdjacentHTML('beforeend', htmlContent);
     document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
     const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, setSelectedEmoji);
+    await emojiPicker.initialize();
     emojiPicker.insertIntoDOM();
     
     listenerManager.addDOMListener(document.getElementById(FAVICON_PICKER_ID), "click", () => {
@@ -114,9 +115,9 @@ export function closeDialog() {
     setUIVisibility(false);
 }
 
-export function openDialog() {
+export async function openDialog() {
     if (!isUIInsertedIntoDOM) {
-        insertUIIntoDOM();
+        await insertUIIntoDOM();
         isUIInsertedIntoDOM = true;
     }
     setUIVisibility(true);
