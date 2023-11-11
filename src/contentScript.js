@@ -97,6 +97,10 @@ listenerManager.addChromeListener(chrome.runtime.onMessage,
     }
 );
 
+listenerManager.addDOMListener(document, 'openRenameDialog', () => {
+    openDialog();
+});
+
 // For debugging purposes:
 const debugFunction = async () => {
     chrome.storage.sync.get(null, (items) => {
@@ -124,3 +128,6 @@ runtimePort.onDisconnect.addListener(() => {
         rootElement.remove();
     }
 });
+
+
+
