@@ -37,20 +37,24 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     let tabInfo = await storageGet(tabId);
     console.log('retrieved tab Info', tabInfo);
 
-    tabInfo.closed = true;
-    tabInfo.closedAt = new Date().toISOString();
-    console.log('Added closedAt to it:', tabInfo);
-    await storageSet({[tabId]: tabInfo});
+    if (tabInfo) {
+        tabInfo.closed = true;
+        tabInfo.closedAt = new Date().toISOString();
+        console.log('Added closedAt to it:', tabInfo);
+        await storageSet({[tabId]: tabInfo});
+    }
 });
 
 chrome.tabs.onCreated.addListener(async (tab) => {
     console.log('onCreated called:', tab);
     const signature = await loadSignature(tab.id, tab.url, tab.index, true);
     console.log('found this info:', signature);
-    chrome.tabs.sendMessage(tab.id, {
-        command: 'set_tab_signature',
-        signature: signature,
-    });
+    if (signature) {
+        chrome.tabs.sendMessage(tab.id, {
+            command: 'set_tab_signature',
+            signature: signature,
+        });
+    }
 });
 
 // Might be needed later, for making sure the contentScript gets injected when
