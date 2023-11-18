@@ -77,6 +77,7 @@ async function updateTabSignatureFromStorage() {
         console.log('no signature found');
     }
 }
+
 // Update tab signature when the contentScript loads:
 updateTabSignatureFromStorage();
 

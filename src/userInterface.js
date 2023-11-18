@@ -79,6 +79,8 @@ export function setTabTitleInUI(newTabTitle) {
     document.title = newTabTitle;
 }
 
+export const faviconSideLength = 64;
+
 export function setFaviconInUI(favicon) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
@@ -90,7 +92,7 @@ export function setFaviconInUI(favicon) {
     link.type = 'image/x-icon';
     link.rel = 'shortcut icon';
      // The only supported type of favicon is emojis, so the favicon is assumed to be one.
-    const emojiDataURL = emojiToDataURL(favicon, 64);
+    const emojiDataURL = emojiToDataURL(favicon, faviconSideLength);
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 

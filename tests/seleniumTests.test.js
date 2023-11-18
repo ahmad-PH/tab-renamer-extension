@@ -1,37 +1,12 @@
 const { Builder, Key, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const { openRenameDialog } = require('./helpers.js');
+const { openRenameDialog, getAttribute } = require('./helpers.js');
+// const { emojiToDataURL } = require('../src/utils.js');
+// const { faviconSideLength } = require('../src/userInterface.js');
 
 const {ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
 
 jest.setTimeout(10000);
-
-// test('template', async () => {
-//     let driver = await new Builder()
-//         .forBrowser('chrome')
-//         .setChromeOptions(new chrome.Options().addArguments(
-//             `--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist`
-//         ))
-//         .build();
-
-//     try {
-//         await driver.get('http://www.google.com');
-
-//         const body = await driver.findElement(By.css('body'));
-//         await body.click();
-
-//         console.log('about to click');
-//         await driver.executeScript("document.dispatchEvent(new Event('openRenameDialog'));");
-//         const renameBox = await driver.findElement(By.id('tab-renamer-extension-input-box'));
-//         await renameBox.sendKeys('Your Text Here');
-
-//         await driver.sleep(5000);
-
-//     } finally {
-//         await driver.quit();
-//     }
-// });
-
 
 describe('Selenium UI Tests', () => {
     let driver;
@@ -72,14 +47,21 @@ describe('Selenium UI Tests', () => {
         const emojiPicker = await driver.findElement(By.id(FAVICON_PICKER_ID));
         await emojiPicker.click();
 
-        await driver.sleep(5000);
+        const testEmoji = '😃';
+        const xpath = `//*[contains(text(),'${testEmoji}')]`;
+        const emojiElement = await driver.findElement(By.xpath(xpath));
+        await emojiElement.click();
 
-        const actualFaviconURL = await driver.executeScript("return document.querySelector('link[rel=\"icon\"]').getAttribute('href');");
+        const renameBox = await driver.findElement(By.id(INPUT_BOX_ID));
+        await renameBox.sendKeys(Key.ENTER);
 
+        const faviconElement = await driver.executeScript("return document.querySelector('link[rel*=\"icon\"]');");
+
+        expect(await getAttribute(driver, faviconElement, "rel")).toContain("icon");
+        expect(await getAttribute(driver, faviconElement, "href")).toMatch(/^data:image\/png;base64,/);
+        expect(await getAttribute(driver, faviconElement, "type")).toMatch('image/x-icon');
     });
-
 });
-
 
 
 // TODO NEXT: I will just create a function to be called by the test via (executeScript) either on window, or through chrome.sendMessage.
