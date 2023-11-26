@@ -1,4 +1,4 @@
-const { Builder, Key, By } = require('selenium-webdriver');
+const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const { DriverUtils } = require('./helpers.js');
 
@@ -7,7 +7,11 @@ const { ROOT_ELEMENT_ID } = require('../src/config.js');
 jest.setTimeout(10000);
 
 describe('Selenium UI Tests', () => {
-    let driver = null, driverUtils = null;
+    /** @type {WebDriver|null} */
+    let driver = null;
+
+    /** @type {DriverUtils|null} */
+    let driverUtils = null;
 
     beforeAll(async () => {
         driver = await new Builder()
@@ -61,6 +65,7 @@ describe('Selenium UI Tests', () => {
         await driver.executeScript(`window.open("${originalURL}", "_blank");`);
 
         // Assert the name and emoji that we set:
+        
 
         // await driver.sleep(10000);
 

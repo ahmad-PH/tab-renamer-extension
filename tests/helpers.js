@@ -6,7 +6,7 @@ class DriverUtils {
         this.driver = driver;
     }
 
-    async renameTab(newTabTitle) {
+        async renameTab(newTabTitle) {
         await this.openRenameDialog();
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         const newTitle = newTabTitle;
