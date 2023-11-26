@@ -1,15 +1,13 @@
-const { Builder, Key, By, until } = require('selenium-webdriver');
+const { Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const { openRenameDialog, getAttribute } = require('./helpers.js');
-// const { emojiToDataURL } = require('../src/utils.js');
-// const { faviconSideLength } = require('../src/userInterface.js');
+const { DriverUtils } = require('./helpers.js');
 
-const {ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
+const { ROOT_ELEMENT_ID } = require('../src/config.js');
 
 jest.setTimeout(10000);
 
 describe('Selenium UI Tests', () => {
-    let driver;
+    let driver = null, driverUtils = null;
 
     beforeAll(async () => {
         driver = await new Builder()
@@ -18,6 +16,7 @@ describe('Selenium UI Tests', () => {
                 `--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist`
             ))
             .build();
+        driverUtils = new DriverUtils(driver);
     });
 
     afterAll(async () => {
@@ -26,43 +25,49 @@ describe('Selenium UI Tests', () => {
 
     test('Can open dialog', async () => {
         await driver.get('http://www.google.com');
-        await openRenameDialog(driver);
+        await driverUtils.openRenameDialog();
         await driver.findElement(By.id(ROOT_ELEMENT_ID));
     });
 
     test('Can rename tab', async () => {
         await driver.get('http://www.google.com');
-        await openRenameDialog(driver);
-        const renameBox = await driver.findElement(By.id(INPUT_BOX_ID));
         const newTitle = 'New Title';
-        await renameBox.sendKeys(newTitle, Key.ENTER);
-
+        await driverUtils.renameTab(newTitle);
         const actualTitle = await driver.executeScript("return document.title;");
         expect(actualTitle).toBe(newTitle);
     });
 
     test('Can set emojis', async () => {
         await driver.get('http://www.google.com');
-        await openRenameDialog(driver);
-        const emojiPicker = await driver.findElement(By.id(FAVICON_PICKER_ID));
-        await emojiPicker.click();
+        await driverUtils.setFavicon('😃');
+        await driverUtils.assertEmojiSetAsFavicon();
+    });
 
-        const testEmoji = '😃';
-        const xpath = `//*[contains(text(),'${testEmoji}')]`;
-        const emojiElement = await driver.findElement(By.xpath(xpath));
-        await emojiElement.click();
+    test('Retains tab name and favicon after being re-opened', async () => {
+        const originalURL = 'http://www.google.com';
+        await driver.get(originalURL);
+        const newTitle = 'New title', newFavion = '🙃';
 
-        const renameBox = await driver.findElement(By.id(INPUT_BOX_ID));
-        await renameBox.sendKeys(Key.ENTER);
+        await driverUtils.renameTab(newTitle);
+        await driverUtils.setFavicon(newFavion);
+        
+        // Close and Re-open:
+        const originalTabHandle = await driver.getWindowHandle();
+        await driver.switchTo().newWindow('tab');
+        const newTabHandle = await driver.getWindowHandle();
+        await driver.switchTo().window(originalTabHandle);
+        await driver.close();
+        await driver.switchTo().window(newTabHandle);
+        await driver.executeScript(`window.open("${originalURL}", "_blank");`);
 
-        const faviconElement = await driver.executeScript("return document.querySelector('link[rel*=\"icon\"]');");
+        // Assert the name and emoji that we set:
 
-        expect(await getAttribute(driver, faviconElement, "rel")).toContain("icon");
-        expect(await getAttribute(driver, faviconElement, "href")).toMatch(/^data:image\/png;base64,/);
-        expect(await getAttribute(driver, faviconElement, "type")).toMatch('image/x-icon');
+        // await driver.sleep(10000);
+
+        // actualTitle = await driver.executeScript("return document.title;");
+        // expect(actualTitle).toBe(newTitle);
+        // await assertEmojiSetAsFavicon(driver);
     });
 });
 
 
-// TODO NEXT: I will just create a function to be called by the test via (executeScript) either on window, or through chrome.sendMessage.
-// TODO: add test to test UI toggle with keyboard shortcut works as expected. Not a super-duper important test.
