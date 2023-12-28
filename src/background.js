@@ -165,7 +165,7 @@ async function saveSignature(sender, title, favicon) {
 };
 
 async function loadSignature(tabId, url, index, isBeingOpened) {
-    console.log('Function called: loadSignature');
+    console.log('loadSignature called:', tabId, url, index, isBeingOpened);
     const storedTabInfo = await storageGet(null);
     console.log('storedTabInfo:', storedTabInfo);
     let matchedTabInfo = null;
@@ -215,4 +215,6 @@ async function loadSignature(tabId, url, index, isBeingOpened) {
         return null;
     }
 }
+
+
        

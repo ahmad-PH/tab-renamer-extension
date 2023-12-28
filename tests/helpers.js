@@ -1,4 +1,4 @@
-const { Key, By } = require('selenium-webdriver');
+const { Key, By, until } = require('selenium-webdriver');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
 
 class DriverUtils {
@@ -6,7 +6,11 @@ class DriverUtils {
         this.driver = driver;
     }
 
-        async renameTab(newTabTitle) {
+    async waitForExtensionToLoad() {
+        this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
+    }
+
+    async renameTab(newTabTitle) {
         await this.openRenameDialog();
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         const newTitle = newTabTitle;
@@ -25,6 +29,11 @@ class DriverUtils {
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         await renameBox.sendKeys(Key.ENTER);
     }
+
+    async setSignature(title, favicon) {
+        await this.renameTab(title);
+        await this.setFavicon(favicon);
+    }
     
     async assertEmojiSetAsFavicon() {
         const faviconElement = await this.driver.executeScript("return document.querySelector('link[rel*=\"icon\"]');");
@@ -40,6 +49,20 @@ class DriverUtils {
     async getAttribute(element, attribute) {
         return await this.driver.executeScript(`return arguments[0].getAttribute("${attribute}")`, element);
     }
+
+    async getTitle() {
+        return await this.driver.executeScript("return document.title;");
+    }
+
+    async openTabToURL(url) {
+        const originalHandles = await this.driver.getAllWindowHandles();
+        await this.driver.executeScript(`window.open("${url}", "_blank");`);
+        const newHandles = await this.driver.getAllWindowHandles();
+        const newTabHandle = newHandles.find(handle => !originalHandles.includes(handle));
+        await this.driver.switchTo().window(newTabHandle);
+        await this.waitForExtensionToLoad();
+    }
+
 }
 
 module.exports = {
