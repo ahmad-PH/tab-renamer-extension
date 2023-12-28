@@ -2,8 +2,7 @@ const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./helpers.js');
-
-const { ROOT_ELEMENT_ID } = require('../src/config.js');
+const { ROOT_ELEMENT_ID } = require('src/config.js');
 
 jest.setTimeout(60 * 60000);
 
@@ -104,7 +103,7 @@ describe('Selenium UI Tests', () => {
         await driver.get(googleURL);
         await driverUtils.openTabToURL('http://yahoo.com');
 
-        await driver.sleep(60 * 60000);
+        // await driver.sleep(60 * 60000);
 
         //TODO: debug: When the tabs are re-opened, only one of the tabs is 
     });
