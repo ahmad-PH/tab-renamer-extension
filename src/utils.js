@@ -18,7 +18,7 @@ export function storageSet(items) {
     return new Promise((resolve, reject) => {
         chrome.storage.sync.set(items, function() {
             if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
+                reject(new Error(chrome.runtime.lastError.message));
             } else {
                 resolve();
             }
@@ -42,7 +42,7 @@ export function storageGet(keys) {
     return new Promise((resolve, reject) => {
         chrome.storage.sync.get(keys, function(items) {
             if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
+                reject(new Error(chrome.runtime.lastError.message));
             } else {
                 if (keys !== null && keys.length == 1) {
                     resolve(items[keys[0]]);
