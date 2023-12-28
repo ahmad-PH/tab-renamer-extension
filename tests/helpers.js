@@ -1,8 +1,9 @@
-const { Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
+const { WebDriver, Key, By, until } = require('selenium-webdriver');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('src/config.js');
 
 class DriverUtils {
     constructor(driver) {
+        /** @type {WebDriver} */
         this.driver = driver;
     }
 
@@ -43,7 +44,8 @@ class DriverUtils {
     }
 
     async openRenameDialog() {
-        return await this.driver.executeScript("document.dispatchEvent(new Event('openRenameDialog'));");
+        await this.driver.executeScript("document.dispatchEvent(new Event('openRenameDialog'));");
+        await this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
     }
 
     async getAttribute(element, attribute) {
@@ -60,7 +62,6 @@ class DriverUtils {
         const newHandles = await this.driver.getAllWindowHandles();
         const newTabHandle = newHandles.find(handle => !originalHandles.includes(handle));
         await this.driver.switchTo().window(newTabHandle);
-        await this.waitForExtensionToLoad();
     }
 
 }

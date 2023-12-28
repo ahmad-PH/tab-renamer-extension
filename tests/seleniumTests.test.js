@@ -32,6 +32,7 @@ describe('Selenium UI Tests', () => {
 
     afterEach(async () => {
         await driver.quit();
+        driverUtils = null;
         await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
     });
 
