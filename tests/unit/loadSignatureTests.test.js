@@ -1,5 +1,5 @@
-const {findMatchingTab, loadSignature} = require('../src/loadSignature.js');
-const {Tab, TabSignature} = require('../src/types.js');
+const {findMatchingTab, loadSignature} = require('../../src/loadSignature.js');
+const {Tab, TabSignature} = require('../../src/types.js');
 
 
 describe('findMatchingTab', () => {

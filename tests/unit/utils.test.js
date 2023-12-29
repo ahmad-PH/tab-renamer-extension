@@ -1,4 +1,4 @@
-import { storageGet } from '../src/utils';
+import { storageGet } from '../../src/utils';
 
 // Mock chrome.storage.sync.get
 global.chrome = {

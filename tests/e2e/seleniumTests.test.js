@@ -1,8 +1,8 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
-const { DriverUtils } = require('./helpers.js');
-const { ROOT_ELEMENT_ID } = require('../src/config.js');
+const { DriverUtils } = require('../helpers.js');
+const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
 // jest.setTimeout(60 * 60 * 1000);
 jest.setTimeout(10 * 1000);
