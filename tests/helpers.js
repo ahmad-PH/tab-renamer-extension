@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
 
 class DriverUtils {
     constructor(driver) {

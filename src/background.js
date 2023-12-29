@@ -1,4 +1,5 @@
 import { storageGet, storageSet } from "./utils";
+import { Tab } from "./types";
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {
@@ -163,58 +164,3 @@ async function saveSignature(sender, title, favicon) {
     }});
     console.log('Data saved to storage');
 };
-
-async function loadSignature(tabId, url, index, isBeingOpened) {
-    console.log('loadSignature called:', tabId, url, index, isBeingOpened);
-    const storedTabInfo = await storageGet(null);
-    console.log('storedTabInfo:', storedTabInfo);
-    let matchedTabInfo = null;
-    console.log('tabId', tabId);
-    if (storedTabInfo[tabId]) {
-        console.log('found data at current tab id:');
-        console.log(storedTabInfo[tabId]);
-        matchedTabInfo = storedTabInfo[tabId];
-    } else { // the tab has been closed
-        console.log('Tab has been closed, searching for matching data...');
-        const closedTabsWithMatchingURLs = Object.values(storedTabInfo).filter(
-            tabInfoValue => tabInfoValue.closed && tabInfoValue.url === url 
-        );
-        console.log('closedTabsWithMatchingURLs:', closedTabsWithMatchingURLs);
-        if (closedTabsWithMatchingURLs.length == 1) {
-            matchedTabInfo = closedTabsWithMatchingURLs[0];
-        } else if (closedTabsWithMatchingURLs.length > 1) {
-            console.log('Multiple closed tabs with matching URLs found');
-            const tabMatchingURLAndIndex = closedTabsWithMatchingURLs.find(tabInfo => tabInfo.index === index);
-            if (tabMatchingURLAndIndex) {
-                matchedTabInfo = tabMatchingURLAndIndex;
-            } else {
-                // find the most recent tab
-                console.log('Sorting to find the most recent tab');
-                closedTabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
-                    return new Date(tabInfo2.recordedAtISOString) - new Date(tabInfo1.recordedAtISOString) 
-                });
-                matchedTabInfo = closedTabsWithMatchingURLs[0];
-            }
-        } else {
-            console.log('Found no matching tab at all');
-        }
-    }
-
-    if (matchedTabInfo) {
-        console.log('matchedTabInfo:', matchedTabInfo);
-        matchedTabInfo.tabId = tabId;
-        if (isBeingOpened) {
-            matchedTabInfo.closed = false;
-            matchedTabInfo.closedAt = null;
-        }
-        await storageSet({[tabId]: matchedTabInfo});
-        console.log('Returning signature: ', matchedTabInfo.signature);
-        return matchedTabInfo.signature;
-    } else {
-        console.log('No matched tab info found');
-        return null;
-    }
-}
-
-
-       
