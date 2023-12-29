@@ -1,6 +1,11 @@
+import { Tab } from "./types";
+import { storageGet, storageSet } from "./utils";
 
 /**
- * @param {Object.<number, Tab>} tabInfoList 
+ * @param {Object.<number, Tab>} storedTabInfo
+ * @param {number} tabId
+ * @param {string} url
+ * @param {number} index
  * @returns {Tab|null} The tab that matches the given information, or null if no match is found
  */
 function findMatchingTab(storedTabInfo, tabId, url, index) {
@@ -19,7 +24,7 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
             } else {
                 // find the most recent tab
                 closedTabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
-                    return new Date(tabInfo2.closedAt) - new Date(tabInfo1.closedAt) 
+                    return new Date(tabInfo2.closedAt).valueOf() - new Date(tabInfo1.closedAt).valueOf() 
                 });
                 return closedTabsWithMatchingURLs[0];
             }
@@ -33,13 +38,13 @@ async function loadSignature(tabId, url, index, isBeingOpened) {
     const storedTabInfo = await storageGet(null);
     console.log('storedTabInfo:', storedTabInfo);
 
-    let matchedTabInfo = findMatchingTab(storedTabInfo);
+    let matchedTabInfo = findMatchingTab(storedTabInfo, tabId, url, index);
 
     if (matchedTabInfo) {
         console.log('matchedTabInfo:', matchedTabInfo);
-        matchedTabInfo.tabId = tabId;
+        matchedTabInfo.id = tabId;
         if (isBeingOpened) {
-            matchedTabInfo.closed = false;
+            matchedTabInfo.isClosed = false;
             matchedTabInfo.closedAt = null;
         }
         await storageSet({[tabId]: matchedTabInfo});

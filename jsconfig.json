@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "checkJs": true,
         "noEmit": true,
         "target": "es6",
         "module": "commonjs",

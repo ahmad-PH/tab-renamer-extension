@@ -1,5 +1,6 @@
 import { storageGet, storageSet } from "./utils";
 import { Tab } from "./types";
+import { loadSignature } from "./loadSignature";
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {
@@ -112,7 +113,7 @@ async function garbageCollector() {
         } else {
             const tabClosedAt = new Date(tabInfo.closedAt);
             logDebug(`Tab ${tabId} closed at: ${tabClosedAt}`);
-            if ((currentTime - tabClosedAt) < 20000) {
+            if ((currentTime.valueOf() - tabClosedAt.valueOf()) < 20000) {
                 logDebug(`Tab ${tabId} was closed less than 20 seconds ago, keeping...`);
                 keep = true;
             } else {
@@ -139,7 +140,7 @@ async function saveSignature(sender, title, favicon) {
     const result = await storageGet(id);
     console.log('result retrieved:', result);
     let newSignature = {};
-    let closed = false, closedAt = null;
+    let isClosed = false, closedAt = null;
     if (result) {
         console.log('result id:', result);
         if (result.signature) {
@@ -147,20 +148,13 @@ async function saveSignature(sender, title, favicon) {
             newSignature.favicon = result.signature.favicon;
             console.log('newSignature after copying from result.signature:', newSignature);
         }
-        closed = result.closed;
+        isClosed = result.closed;
         closedAt = result.closedAt;
     }
     newSignature.title = title || newSignature.title;
     newSignature.favicon = favicon || newSignature.favicon;
     console.log('newSignature after possible overwrite with title and favicon:', newSignature);
 
-    await storageSet({[id]: {
-        'id': id,
-        'url': url,
-        'index': index,
-        'signature': newSignature,
-        'closed': closed,
-        'closedAt': closedAt,
-    }});
+    await storageSet({[id]: new Tab(id, url, index, isClosed, closedAt, newSignature)});
     console.log('Data saved to storage');
 };
