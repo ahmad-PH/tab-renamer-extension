@@ -1,5 +1,7 @@
-const {findMatchingTab, loadSignature} = require('../../src/loadSignature.js');
-const {Tab, TabSignature} = require('../../src/types.js');
+const { findMatchingTab, loadSignature, saveSignature } = require('../../src/signatureStorage.js');
+const { Tab, TabSignature } = require('../../src/types.js');
+const { storageSet, storageGet } = require('../../src/utils.js');
+const { chromeStorageMock } = require('../chromeStorageMock.js');
 
 
 describe('findMatchingTab', () => {
@@ -10,7 +12,7 @@ describe('findMatchingTab', () => {
     }
     const now = new Date().toISOString();
 
-    test('returns correct signature when matching tabId exists', () => {
+    it('returns correct signature when matching tabId exists', () => {
         const storedTabInfo = {
             [targetTab.id]: new Tab(targetTab.id, targetTab.url, targetTab.windowIndex, false, null,
                  new TabSignature('Google', '🔍'))
@@ -20,7 +22,7 @@ describe('findMatchingTab', () => {
             .toBe(storedTabInfo[targetTab.id]);
     });
 
-    test('returns null when no matching tabId and no closed tab with matching url', () => {
+    it('returns null when no matching tabId and no closed tab with matching url', () => {
         const storedTabInfo = {
             2: new Tab(2, targetTab.url, 0, false, null, new TabSignature('Title', '🔍'))
         }
@@ -28,7 +30,7 @@ describe('findMatchingTab', () => {
             .toBe(null);
     });
 
-    test('returns correct signature when no matching tabId and one closed tab with matching url', () => {
+    it('returns correct signature when no matching tabId and one closed tab with matching url', () => {
         const storedTabInfo = {
             2: new Tab(2, targetTab.url, 0, true, now, new TabSignature('Title', '🔍'))
         }
@@ -36,7 +38,7 @@ describe('findMatchingTab', () => {
             .toBe(storedTabInfo[2]);
     });
 
-    test('returns correct signature when no matching tabId, multiple closed tabs with matching url, ' + 
+    it('returns correct signature when no matching tabId, multiple closed tabs with matching url, ' + 
         'and one matching window index', () => {
         const storedTabInfo = {
             2: new Tab(2, targetTab.url, targetTab.windowIndex, true, now, new TabSignature('Title', '🔍')),
@@ -47,7 +49,7 @@ describe('findMatchingTab', () => {
             .toBe(storedTabInfo[2]);
     });
 
-    test('returns most recent signature when no matching tabId, multiple closed tabs with matching url, ' + 
+    it('returns most recent signature when no matching tabId, multiple closed tabs with matching url, ' + 
         'and no matching window index', () => {
         const storedTabInfo = {
             2: new Tab(2, targetTab.url, targetTab.windowIndex + 1, true, 
@@ -63,8 +65,28 @@ describe('findMatchingTab', () => {
 });
 
 
-describe('loadSignature', () => {
-    test('Updates closed / closedAt after matching', () => {
-
+describe('save/loadSignature', () => {
+    beforeEach(() => {
+        global.chrome = chromeStorageMock;
+        chromeStorageMock.storage.sync.set.mockClear();
+        chromeStorageMock.storage.sync.get.mockClear();
     });
+
+    afterEach(() => {
+        delete global.chrome;
+    });
+
+    it('loadSignature updates closed / closedAt after matching', async () => {
+        await storageSet({1: new Tab(1, 'https://www.google.com', 5, true, null, new TabSignature('Google', '🔍'))});
+        expect((await storageGet(1)).isClosed).toBe(true);
+        await loadSignature(1, null, null, true);
+        expect((await storageGet(1)).isClosed).toBe(false);
+    });
+
+    it('loadSignature can load signature saved with saveSignature', async () => {
+        await saveSignature(1, 'https://www.google.com', 5, 'Google', '🔍');
+        const signature = await loadSignature(1, null, null, false);
+        expect(signature.title).toBe('Google');
+        expect(signature.favicon).toBe('🔍');
+    })
 });

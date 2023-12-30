@@ -1,3 +1,5 @@
+import log from "./log";
+
 class ListenerManager {
     constructor() {
         this.domListeners = [];
@@ -6,8 +8,8 @@ class ListenerManager {
 
     addDOMListener(element, type, handler) {
         if (!element) {
-            console.log('found null element in addDOMListener', element, type, handler);
-            console.log(new Error().stack);
+            log.debug('found null element in addDOMListener', element, type, handler);
+            log.debug(new Error().stack);
         }
         element.addEventListener(type, handler);
         this.domListeners.push({ element, type, handler });
@@ -19,7 +21,6 @@ class ListenerManager {
     }
 
     removeAllListeners() {
-        console.log('REMOVE ALL LISTENERS CALLED');
         // for (const { element, type, handler } of this.domListeners) {
         //     element.removeEventListener(type, handler);
         // }

@@ -7,10 +7,6 @@ class DriverUtils {
         this.driver = driver;
     }
 
-    async waitForExtensionToLoad() {
-        this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
-    }
-
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));

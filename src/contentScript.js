@@ -1,7 +1,8 @@
 import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
 import { openDialog, closeDialog, setTabTitleInUI, setFaviconInUI } from "./userInterface";
-import { INPUT_BOX_ID, PICKED_EMOJI_ID } from "./config";
+import { INPUT_BOX_ID, PICKED_EMOJI_ID, ROOT_ELEMENT_ID } from "./config";
+import log from "./log";
 
 async function getTabInfo() {
     try {
@@ -16,7 +17,7 @@ async function saveSignature(title, favicon) {
     try {
         await chrome.runtime.sendMessage({command: "save_signature", title, favicon});
     } catch (error) {
-        console.log('Failed to save signature:', error);
+        log.error('Failed to save signature:', error);
         throw error;
     }
 }
@@ -25,7 +26,7 @@ async function loadSignature() {
     try {
         return await chrome.runtime.sendMessage({command: "load_signature"});
     } catch (error) {
-        console.log('Failed to save signature:', error);
+        log.error('Failed to save signature:', error);
         throw error;
     }
 }
@@ -46,13 +47,13 @@ function setFavicon(favicon) {
     preserveFavicon(emojiDataURL);
 }
 
+// ========================= Window events: ==========================
 window.addEventListener('uiInsertedIntoDOM', () => {
     const inputBox = document.getElementById(INPUT_BOX_ID);
     const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
     listenerManager.addDOMListener(inputBox, "keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
-            console.log('keydown thingy called');
             setTabTitle(inputBox.value);
             if (pickedEmoji.dataset.emoji !== undefined) {
                 setFavicon(pickedEmoji.dataset.emoji);
@@ -62,37 +63,19 @@ window.addEventListener('uiInsertedIntoDOM', () => {
     });
 });
 
-async function updateTabSignatureFromStorage() {
-    console.log('updateTabSignatureFromStorage called');
-    const signature = await loadSignature();
-    if (signature) {
-        console.log('retrieved signature:', signature);
-        if (signature.title) {
-            setTabTitle(signature.title);
-        }
-        if (signature.favicon) {
-            setFavicon(signature.favicon);
-        }
-    } else {
-        console.log('no signature found');
-    }
-}
-
-// Update tab signature when the contentScript loads:
-updateTabSignatureFromStorage();
-
+// ========================= Chrome.runtime events: ==========================
 listenerManager.addChromeListener(chrome.runtime.onMessage, 
     async (message, sender, sendResponse) => {
         if (message.command === 'open_rename_dialog') {
             await openDialog();
         } else if (message.command === 'set_tab_signature') {
-            console.log('Received set_tab_signature command, with message:', message);
             setTabTitle(message.signature.title);
             setFavicon(message.signature.favicon);
         }
     }
 );
 
+// ========================= DOM events: ==========================
 listenerManager.addDOMListener(document, 'openRenameDialog', async () => {
     await openDialog();
 });
@@ -100,10 +83,10 @@ listenerManager.addDOMListener(document, 'openRenameDialog', async () => {
 // For debugging purposes:
 const debugFunction = async () => {
     chrome.storage.sync.get(null, (items) => {
-        console.log('storage:');
-        console.log(items);
+        log.debug('storage:');
+        log.debug(items);
     });
-    console.log(loadSignature());
+    log.debug(loadSignature());
 };
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -124,6 +107,27 @@ runtimePort.onDisconnect.addListener(() => {
         rootElement.remove();
     }
 });
+
+
+
+/** Update tab signature when the contentScript loads:
+ *  This is an immediately invoked function expression (IIFE)
+ */ 
+(async function updateTabSignatureFromStorage() {
+    log.debug('updateTabSignatureFromStorage called');
+    const signature = await loadSignature();
+    if (signature) {
+        log.debug('retrieved signature:', signature);
+        if (signature.title) {
+            setTabTitle(signature.title);
+        }
+        if (signature.favicon) {
+            setFavicon(signature.favicon);
+        }
+    } else {
+        log.debug('no signature found');
+    }
+})();
 
 
 

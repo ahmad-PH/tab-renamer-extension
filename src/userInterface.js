@@ -75,7 +75,6 @@ function setSelectedEmoji(emoji) {
 }
 
 export function setTabTitleInUI(newTabTitle) {
-    console.log('setTabTitleinUI called', newTabTitle);
     document.title = newTabTitle;
 }
 

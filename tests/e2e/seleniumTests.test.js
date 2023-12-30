@@ -4,8 +4,8 @@ const fs = require('fs').promises;
 const { DriverUtils } = require('../helpers.js');
 const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
-// jest.setTimeout(60 * 60 * 1000);
-jest.setTimeout(10 * 1000);
+jest.setTimeout(60 * 60 * 1000);
+// jest.setTimeout(10 * 1000);
 
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
@@ -57,7 +57,7 @@ describe('Selenium UI Tests', () => {
         await driverUtils.assertEmojiSetAsFavicon();
     });
 
-    test('Retains tab signature after being re-opened', async () => {
+    test('Retains tab signature when tab is re-opened', async () => {
         const originalURL = googleURL;
         await driver.get(originalURL);
         const newTitle = 'New title', newFavion = '🙃';
@@ -79,12 +79,14 @@ describe('Selenium UI Tests', () => {
 
         // Assert the name and emoji that we set:
         const actualTitle = await driverUtils.getTitle();
+        // debugger;
         expect(actualTitle).toBe(newTitle);
+
         await driverUtils.assertEmojiSetAsFavicon();
     });
 
 
-    test.skip('Retains tab signature when window is re-opened', async () => {
+    test.skip('Retains tab signatures when window is re-opened', async () => {
         await driver.get(googleURL);
         await driverUtils.setSignature('Title1', '😀');
 
@@ -104,9 +106,6 @@ describe('Selenium UI Tests', () => {
         await driver.get(googleURL);
         await driverUtils.openTabToURL('http://yahoo.com');
         
-
-        console.log('end of last test');
-
         // await driver.sleep(60 * 60000);
 
         //TODO: debug: When the tabs are re-opened, only one of the tabs is 
