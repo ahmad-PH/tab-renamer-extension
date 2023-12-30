@@ -1,0 +1,1 @@
+declare var WEBPACK_MODE: string;

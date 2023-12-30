@@ -5,6 +5,7 @@ import { INPUT_BOX_ID, PICKED_EMOJI_ID, ROOT_ELEMENT_ID } from "./config";
 import { assertType } from "./utils";
 import log from "./log";
 
+// eslint-disable-next-line no-unused-vars
 async function getTabInfo() {
     try {
         return await chrome.runtime.sendMessage({ command: "get_tab_info" });
@@ -12,6 +13,11 @@ async function getTabInfo() {
         console.error('Failed to get tab Info:', error);
         throw error;
     }
+}
+
+// eslint-disable-next-line no-unused-vars
+async function getTabId() {
+    (await getTabInfo()).id;
 }
 
 async function saveSignature(title, favicon) {
@@ -30,10 +36,6 @@ async function loadSignature() {
         log.error('Failed to save signature:', error);
         throw error;
     }
-}
-
-async function getTabId() {
-    (await getTabInfo()).id;
 }
 
 async function setTabTitle(newTabTitle) {
@@ -68,7 +70,7 @@ window.addEventListener('uiInsertedIntoDOM', () => {
 
 // ========================= Chrome.runtime events: ==========================
 listenerManager.addChromeListener(chrome.runtime.onMessage, 
-    async (message, sender, sendResponse) => {
+    async (message, _sender, _sendResponse) => {
         if (message.command === 'open_rename_dialog') {
             await openDialog();
         } else if (message.command === 'set_tab_signature') {
@@ -92,7 +94,7 @@ const debugFunction = async () => {
     log.debug(loadSignature());
 };
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     listenerManager.addDOMListener(document.body, 'click', debugFunction);
 });
 

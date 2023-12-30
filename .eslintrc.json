@@ -1,0 +1,47 @@
+{
+    "env": {
+        "node": true,
+        "es2020": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "commonjs"
+    },
+    "rules": {
+        "no-unused-vars": ["error", {
+            /* 
+            * The \^[A-Z][a-z]+\ pattern is intended to allow the importing of constructor functions (a.k.a classes)
+            * for the sole purpose of using them in JSDoc type annotations. Without this, eslint
+            * would complain, because it doesn't recognize usage in JSDoc comments as actual usage.
+            */ 
+            "varsIgnorePattern": "^[A-Z][a-z]+|^_",
+            "argsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+        }]
+    },
+    "overrides": [
+        {
+            "files": ["src/**/*.js"],
+            "env": {
+                "browser": true
+            },
+            "parserOptions": {
+                "sourceType": "module"
+            },
+            "globals": {
+                "chrome": "readonly",
+                "WEBPACK_MODE": "readonly"
+            }
+        },
+        {
+            "files": ["tests/**/*.js"],
+            "env": {
+                "jest": true
+            },
+            "parserOptions": {
+                "sourceType": "commonjs"
+            }
+        }
+    ]
+}

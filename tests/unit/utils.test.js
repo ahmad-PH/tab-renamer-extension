@@ -1,20 +1,15 @@
-import { storageGet } from '../../src/utils';
-
-// Mock chrome.storage.sync.get
-global.chrome = {
-    runtime: {},
-    storage: {
-        sync: {
-            get: jest.fn((keys, callback) => {
-                callback({});
-            })
-        }
-    }
-};
+/* global chrome */
+const { storageGet } = require('../../src/utils');
+const { chromeStorageMock } = require('../chromeStorageMock');
 
 describe('storageGet', () => {
     beforeEach(() => {
+        global.chrome = chromeStorageMock;
         chrome.storage.sync.get.mockClear();
+    });
+
+    afterEach(() => {
+        delete global.chrome;
     });
 
     it('should pass null to chrome.storage.sync.get when called with null', async () => {

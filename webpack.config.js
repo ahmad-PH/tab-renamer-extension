@@ -1,7 +1,8 @@
+const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
-module.exports = {
+module.exports = (_env, argv) => ({
   entry: {
     contentScript: './src/contentScript.js',
     background: './src/background.js',
@@ -31,6 +32,9 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'WEBPACK_MODE': JSON.stringify(argv.mode)
+    }),
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
@@ -38,4 +42,4 @@ module.exports = {
       ],
     }),
   ],
-};
+});

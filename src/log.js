@@ -1,6 +1,6 @@
 import log from 'loglevel';
 
-if (process.env.NODE_ENV === 'production') {
+if (typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production') {
     log.setLevel('ERROR');
 } else {
     log.setLevel('WARN');

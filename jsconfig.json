@@ -4,10 +4,12 @@
         "noEmit": true,
         "target": "es6",
         "module": "commonjs",
-        "lib": ["es2016", "dom"],
-        "typeRoots": ["node_modules/@types"]
+        "lib": ["es2019", "dom"],
+        "typeRoots": ["node_modules/@types"],
+        "types": ["chrome"]
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "globals.d.ts"
     ]
 }

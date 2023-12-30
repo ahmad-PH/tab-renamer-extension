@@ -2,7 +2,7 @@ import {ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID,
     FAVICON_PICKER_ID, EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, PICKED_EMOJI_ID} from "./config";
 import { EmojiPicker } from "./emojiPicker";
 import listenerManager from "./listenerManager";
-import { storageGet, emojiToDataURL, assertType } from "./utils";
+import { emojiToDataURL, assertType } from "./utils";
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -44,7 +44,7 @@ async function insertUIIntoDOM() {
         emojiPicker.focusTheSearchBar();
     });
 
-    listenerManager.addDOMListener(document, "keydown", function(event) {
+    listenerManager.addDOMListener(document, "keydown", function(/** @type {{ key: string; }} */ event) {
         if (event.key === "Escape") {
             closeDialog();
         }
@@ -56,7 +56,7 @@ async function insertUIIntoDOM() {
     });
 
     // Prevent clicks on the input box from propagating to the overlay
-    listenerManager.addDOMListener(document.getElementById(INPUT_BOX_ID), "click", (event) => {
+    listenerManager.addDOMListener(document.getElementById(INPUT_BOX_ID), "click", (/** @type {{ stopPropagation: () => void; }} */ event) => {
         event.stopPropagation();
     });
 
@@ -65,6 +65,9 @@ async function insertUIIntoDOM() {
     window.dispatchEvent(new CustomEvent('uiInsertedIntoDOM'));
 }
 
+/**
+ * @param {string} emoji
+ */
 function setSelectedEmoji(emoji) {
     document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'none';
     document.getElementById(EMOJI_PICKER_ID).style.display = 'none';
@@ -75,12 +78,18 @@ function setSelectedEmoji(emoji) {
     emojiImg.dataset.emoji = emoji;
 }
 
+/**
+ * @param {string} newTabTitle
+ */
 export function setTabTitleInUI(newTabTitle) {
     document.title = newTabTitle;
 }
 
 export const faviconSideLength = 64;
 
+/**
+ * @param {any} favicon
+ */
 export function setFaviconInUI(favicon) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
@@ -99,6 +108,7 @@ export function setFaviconInUI(favicon) {
     return emojiDataURL;
 }
 
+// eslint-disable-next-line no-unused-vars
 function clearInputs() {
     clearInputTabTitle();
     clearPickedEmoji();

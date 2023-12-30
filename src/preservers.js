@@ -24,7 +24,7 @@ export function preserveTabTitle(desiredTitle) {
     if (titleElement) {
         tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
     }
-};
+}
 
 export function disconnectTabTitlePreserver() {
     if (tabMutationObserver) {

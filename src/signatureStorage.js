@@ -110,7 +110,7 @@ async function saveSignature(tabId, url, index, title, favicon) {
 
     await storageSet({[tabId]: new Tab(tabId, url, index, isClosed, closedAt, newSignature)});
     log.debug('Data saved to storage');
-};
+}
 
 
 export { findMatchingTab, loadSignature, saveSignature };       
