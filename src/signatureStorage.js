@@ -2,8 +2,8 @@ import { Tab, TabSignature } from "./types";
 import { storageGet, storageSet } from "./utils";
 import { getLogger } from "./log";
 
-const log = getLogger('signatureStorage')
-log.setLevel('ERROR');
+const log = getLogger('signatureStorage.js')
+// log.setLevel('DEBUG');
 
 /**
  * @param {Object.<number, Tab>} storedTabInfo
@@ -65,6 +65,7 @@ async function loadSignature(tabId, url, index, isBeingOpened) {
 
     if (matchedTabInfo) {
         log.debug('matchedTabInfo:', matchedTabInfo);
+        await chrome.storage.sync.remove(matchedTabInfo.id.toString());
         matchedTabInfo.id = tabId;
         if (isBeingOpened) {
             matchedTabInfo.isClosed = false;

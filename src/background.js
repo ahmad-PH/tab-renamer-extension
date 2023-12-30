@@ -1,7 +1,10 @@
 import { storageGet, storageSet } from "./utils";
 import { Tab } from "./types";
 import { loadSignature, saveSignature } from "./signatureStorage";
-import log from "./log";
+import { getLogger } from "./log";
+
+const log = getLogger('background.js');
+// log.setLevel('DEBUG');
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {

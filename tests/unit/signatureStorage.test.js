@@ -76,7 +76,7 @@ describe('save/loadSignature', () => {
         delete global.chrome;
     });
 
-    it('loadSignature updates closed / closedAt after matching', async () => {
+    it('loadSignature updates isClosed after matching', async () => {
         await storageSet({1: new Tab(1, 'https://www.google.com', 5, true, null, new TabSignature('Google', '🔍'))});
         expect((await storageGet(1)).isClosed).toBe(true);
         await loadSignature(1, null, null, true);
@@ -89,4 +89,19 @@ describe('save/loadSignature', () => {
         expect(signature.title).toBe('Google');
         expect(signature.favicon).toBe('🔍');
     })
+
+    it('loadSignature with isBeingOpened=true updates tabId and removes old tabId after matching', async () => {
+        const sharedURL = 'https://www.google.com';
+        const sharedIndex = 5;
+        await storageSet({1: new Tab(1, sharedURL, sharedIndex, true, new Date().toISOString,
+         new TabSignature('Google', '🔍'))});
+        await loadSignature(10, sharedURL, sharedIndex, true);
+
+        // Assert:
+        const newStoredTabInfo = await storageGet(null);
+        const keys = Object.keys(newStoredTabInfo);
+        expect(keys.length).toBe(1);
+        expect(keys[0]).toBe('10');
+        expect(newStoredTabInfo[keys[0]].id).toBe(10);
+    });
 });
