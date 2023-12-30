@@ -29,6 +29,6 @@ jobs:
       run: npm test -- tests/unit
 
     - name: Setup and run e2e tests
-      uses: GabrielBB/xvfb-action@v1
+      uses: coactions/setup-xvfb@v1
       with:
         run: npm test -- tests/e2e
