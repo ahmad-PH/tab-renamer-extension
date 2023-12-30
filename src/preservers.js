@@ -32,6 +32,9 @@ export function disconnectTabTitlePreserver() {
     }
 }
 
+/**
+ * @param {string} emojiDataURL
+ */
 export function preserveFavicon(emojiDataURL) {
     // Disconnect the previous observer if it exists, to avoid infinite loop.
     disconnectFaviconPreserver();
@@ -39,11 +42,14 @@ export function preserveFavicon(emojiDataURL) {
     faviconMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             const target = mutation.target;
-            if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
-                if (target.href !== emojiDataURL) {
-                    target.href = emojiDataURL;
+            if (target instanceof HTMLLinkElement) {
+                if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+                    if (target.href !== emojiDataURL) {
+                        target.href = emojiDataURL;
+                    }
                 }
             }
+
         });
     });
 

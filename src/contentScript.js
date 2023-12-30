@@ -2,6 +2,7 @@ import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconn
 import listenerManager from "./listenerManager";
 import { openDialog, closeDialog, setTabTitleInUI, setFaviconInUI } from "./userInterface";
 import { INPUT_BOX_ID, PICKED_EMOJI_ID, ROOT_ELEMENT_ID } from "./config";
+import { assertType } from "./utils";
 import log from "./log";
 
 async function getTabInfo() {
@@ -49,11 +50,13 @@ function setFavicon(favicon) {
 
 // ========================= Window events: ==========================
 window.addEventListener('uiInsertedIntoDOM', () => {
-    const inputBox = document.getElementById(INPUT_BOX_ID);
+    /** @type {HTMLInputElement} */
+    const inputBox = assertType(document.getElementById(INPUT_BOX_ID), HTMLInputElement);
     const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
     listenerManager.addDOMListener(inputBox, "keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
+            HTMLInputElement
             setTabTitle(inputBox.value);
             if (pickedEmoji.dataset.emoji !== undefined) {
                 setFavicon(pickedEmoji.dataset.emoji);

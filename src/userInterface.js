@@ -2,7 +2,7 @@ import {ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID,
     FAVICON_PICKER_ID, EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, PICKED_EMOJI_ID} from "./config";
 import { EmojiPicker } from "./emojiPicker";
 import listenerManager from "./listenerManager";
-import { storageGet, emojiToDataURL } from "./utils";
+import { storageGet, emojiToDataURL, assertType } from "./utils";
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -32,7 +32,8 @@ function setUIVisibility(visible) {
 
 async function insertUIIntoDOM() {
     document.body.insertAdjacentHTML('beforeend', htmlContent);
-    document.getElementById(EMOJI_PICKER_IMAGE_ID).src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
+    const emojiPickerImage = assertType(document.getElementById(EMOJI_PICKER_IMAGE_ID), HTMLImageElement);
+    emojiPickerImage.src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
     const emojiPicker = new EmojiPicker(EMOJI_PICKER_ID, setSelectedEmoji);
     await emojiPicker.initialize();
@@ -68,7 +69,7 @@ function setSelectedEmoji(emoji) {
     document.getElementById(EMOJI_PICKER_IMAGE_ID).style.display = 'none';
     document.getElementById(EMOJI_PICKER_ID).style.display = 'none';
 
-    const emojiImg = document.getElementById(PICKED_EMOJI_ID);
+    const emojiImg = assertType(document.getElementById(PICKED_EMOJI_ID), HTMLImageElement);
     emojiImg.src = emojiToDataURL(emoji, 55);
     emojiImg.style.display = 'block';
     emojiImg.dataset.emoji = emoji;
@@ -104,7 +105,7 @@ function clearInputs() {
 }
 
 function clearInputTabTitle() {
-    document.getElementById(INPUT_BOX_ID).value = "";
+   assertType(document.getElementById(INPUT_BOX_ID), HTMLInputElement).value = "";
 }
 
 function clearPickedEmoji() {

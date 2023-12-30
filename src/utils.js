@@ -1,3 +1,20 @@
+/**
+ * Asserts the type of a value.
+ * @template T
+ * @param {*} value The value to check.
+ * @param {new (...args: any[]) => T} type The constructor of the type to check against.
+ * @returns {T} The value, if it is of the correct type.
+ * @throws {TypeError} If the value is not of the correct type.
+ */
+export function assertType(value, type) {
+    if (!(value instanceof type)) {
+        throw new TypeError(`Expected value to be of type ${type.name}, but received ${typeof value}`);
+    }
+    if (value instanceof type) {
+        return value;
+    }
+}
+
 export function emojiToDataURL(emoji, sideLength) {
     const canvas = document.createElement('canvas');
     canvas.width = sideLength;
