@@ -58,6 +58,19 @@ class DriverUtils {
         const newHandles = await this.driver.getAllWindowHandles();
         const newTabHandle = newHandles.find(handle => !originalHandles.includes(handle));
         await this.driver.switchTo().window(newTabHandle);
+        await this.driver.wait(() => {
+            return this.driver.executeScript('return document.readyState').then((readyState) => {
+                return readyState === 'complete';
+            });
+        });
+    }
+
+    async closeAllTabs() {
+        let handles = await this.driver.getAllWindowHandles();
+        for(let i = handles.length - 1; i >= 0; i--) {
+            await this.driver.switchTo().window(handles[i]);
+            await this.driver.close();
+        }
     }
 
 }

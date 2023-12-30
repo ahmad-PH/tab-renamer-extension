@@ -15,6 +15,7 @@ describe('Selenium UI Tests', () => {
     let driverUtils = null;
 
     const googleURL = 'http://www.google.com';
+    const natGeoURL = 'https://www.nationalgeographic.com/';
 
     const createNewDriver = async () => {
         driver = await new Builder()
@@ -86,28 +87,38 @@ describe('Selenium UI Tests', () => {
     });
 
 
-    test.skip('Retains tab signatures when window is re-opened', async () => {
+    test('Retains tab signatures when window is re-opened', async () => {
+        /*
+            This is required because 1. driver.close() doesn't allow enough
+            breathing room for chrome.tabs.onRemoced triggers to fully take 
+            effect. Also, 2. if driver.close() is called on the last tab,
+            thus closing the entire window, it has a similar effect.
+            As a result, a dummy tab is created so that none of the 
+            important tabs are the last to be closed.
+        */
+        await driver.switchTo().newWindow('tab'); // dummy tab
+
         await driver.get(googleURL);
-        await driverUtils.setSignature('Title1', '😀');
+        const signature1 = { title: 'Title1', favicon: '😀' };
+        await driverUtils.setSignature(signature1.title, signature1.favicon);
 
-        await driverUtils.openTabToURL('http://yahoo.com');
+        await driverUtils.openTabToURL(natGeoURL);
 
-        await driverUtils.setSignature('Title2', '🌟');
+        const signature2 = { title: 'Title2', favicon: '🌟' };
+        await driverUtils.setSignature(signature2.title, signature2.favicon);
 
-        await driver.sleep(1000);
+        await driver.sleep(500);
 
-        await driver.close();
-
-        await driver.sleep(1000);
-
-        await driver.quit();
+        await driverUtils.closeAllTabs();
+        await driver.sleep(100);
         await createNewDriver();
 
         await driver.get(googleURL);
-        await driverUtils.openTabToURL('http://yahoo.com');
-        
-        // await driver.sleep(60 * 60000);
+        expect(await driverUtils.getTitle()).toBe(signature1.title);
+        await driverUtils.assertEmojiSetAsFavicon();
 
-        //TODO: debug: When the tabs are re-opened, only one of the tabs is 
+        await driverUtils.openTabToURL(natGeoURL);
+        expect(await driverUtils.getTitle()).toBe(signature2.title);
+        await driverUtils.assertEmojiSetAsFavicon();
     });
 });
