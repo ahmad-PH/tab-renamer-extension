@@ -80,7 +80,8 @@
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
+    /* width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
+    width: 375px;
     height: 300px;
     padding: 10px;
 
