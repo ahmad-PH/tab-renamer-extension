@@ -19,7 +19,7 @@ const htmlContent = `
                 </div>
                 <div id="${EMOJI_PICKER_ID}"> </div>
             </div>
-            <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Name" autocomplete="off"/>
+            <input type="text" id="${INPUT_BOX_ID}" placeholder="New Tab Title" autocomplete="off"/>
         </div>
     </div>
 `;
