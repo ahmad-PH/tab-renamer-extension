@@ -65,10 +65,13 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension is installed or updated:
 chrome.runtime.onInstalled.addListener(async () => {
-    const allTabs = await chrome.tabs.query({});
+    const allTabs = await chrome.tabs.query({status: 'complete'});
     log.debug('after query:', allTabs);
     allTabs.forEach(async (tab) => {
-        if (!tab.url.startsWith('chrome://')) { // These urls are browser-protected
+        if (
+            (tab.url.startsWith('http://') || tab.url.startsWith('https://')) &&
+            !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') // The extensions gallery cannot be scripted 
+        ) { 
             try {
                 await chrome.scripting.executeScript({
                     target: {tabId: tab.id},
@@ -79,8 +82,7 @@ chrome.runtime.onInstalled.addListener(async () => {
                     files: ['assets/styles.css']
                 });
             } catch (e) {
-                log.error('error while processing', tab.url);
-                log.error(e);
+                log.error('Error while injecting the extension into: ', tab.url, e);
             }
         }
     });
