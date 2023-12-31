@@ -1,7 +1,7 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
-const { DriverUtils } = require('../helpers.js');
+const { DriverUtils } = require('../driverUtils.js');
 const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
 jest.setTimeout(60 * 60 * 1000);
@@ -61,10 +61,10 @@ describe('Selenium UI Tests', () => {
     test('Retains tab signature when tab is re-opened', async () => {
         const originalURL = googleURL;
         await driver.get(originalURL);
-        const newTitle = 'New title', newFavion = '🙃';
+        const newTitle = 'New title', newFavicon = '🙃';
 
         await driverUtils.renameTab(newTitle);
-        await driverUtils.setFavicon(newFavion);
+        await driverUtils.setFavicon(newFavicon);
         
         // Close and Re-open:
         const originalTabHandle = await driver.getWindowHandle();
@@ -78,12 +78,14 @@ describe('Selenium UI Tests', () => {
         // Give the extension being tested time to load the title from storage:
         await driver.sleep(500);
 
-        // Assert the name and emoji that we set:
-        const actualTitle = await driverUtils.getTitle();
-        // debugger;
-        expect(actualTitle).toBe(newTitle);
-
+        // Assert the name and emoji that we set on the tab:
+        expect(await driverUtils.getTitle()).toBe(newTitle);
         await driverUtils.assertEmojiSetAsFavicon();
+            
+        // Assert the name and emoji that we set in the UI:
+        await driverUtils.openRenameDialog();
+        expect(await driverUtils.getTitleInUI()).toBe(newTitle);
+        expect(await driverUtils.getFaviconInUI()).toBe(newFavicon);
     });
 
 

@@ -3,11 +3,12 @@
         "node": true,
         "es2020": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:promise/recommended"],
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "commonjs"
     },
+    "plugins": ["promise"],
     "rules": {
         "no-unused-vars": ["error", {
             /* 

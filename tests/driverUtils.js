@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID} = require('../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID} = require('../src/config.js');
 
 class DriverUtils {
     /**
@@ -72,6 +72,22 @@ class DriverUtils {
         for(let i = handles.length - 1; i >= 0; i--) {
             await this.driver.switchTo().window(handles[i]);
             await this.driver.close();
+        }
+    }
+
+    async getTitleInUI() {
+        const input_box = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        return input_box.getAttribute('value');
+    }
+
+    async getFaviconInUI() {
+        try {
+            const picked_emoji = await this.driver.findElement(By.id(PICKED_EMOJI_ID));
+            return await picked_emoji.getAttribute('data-emoji');
+        } catch (error) {
+            if (error.name === 'NoSuchElementError') {
+                return null;
+            }
         }
     }
 

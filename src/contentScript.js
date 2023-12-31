@@ -1,6 +1,6 @@
 import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
-import { openDialog, closeDialog, setTabTitleInUI, setFaviconInUI } from "./userInterface";
+import { openDialog, closeDialog, setTabTitleInUI, setTabFaviconInUI } from "./userInterface";
 import { INPUT_BOX_ID, PICKED_EMOJI_ID, ROOT_ELEMENT_ID } from "./config";
 import { assertType } from "./utils";
 import log from "./log";
@@ -29,7 +29,7 @@ async function saveSignature(title, favicon) {
     }
 }
 
-async function loadSignature() {
+export async function loadSignature() {
     try {
         return await chrome.runtime.sendMessage({command: "load_signature"});
     } catch (error) {
@@ -44,8 +44,8 @@ async function setTabTitle(newTabTitle) {
     await saveSignature(newTabTitle, null);
 }
 
-function setFavicon(favicon) {
-    const emojiDataURL = setFaviconInUI(favicon);
+function setTabFavicon(favicon) {
+    const emojiDataURL = setTabFaviconInUI(favicon);
     saveSignature(null, favicon);
     preserveFavicon(emojiDataURL);
 }
@@ -61,7 +61,7 @@ window.addEventListener('uiInsertedIntoDOM', () => {
             HTMLInputElement
             setTabTitle(inputBox.value);
             if (pickedEmoji.dataset.emoji !== undefined) {
-                setFavicon(pickedEmoji.dataset.emoji);
+                setTabFavicon(pickedEmoji.dataset.emoji);
             }
             closeDialog();
         }
@@ -75,7 +75,7 @@ listenerManager.addChromeListener(chrome.runtime.onMessage,
             await openDialog();
         } else if (message.command === 'set_tab_signature') {
             setTabTitle(message.signature.title);
-            setFavicon(message.signature.favicon);
+            setTabFavicon(message.signature.favicon);
         }
     }
 );
@@ -127,7 +127,7 @@ runtimePort.onDisconnect.addListener(() => {
             setTabTitle(signature.title);
         }
         if (signature.favicon) {
-            setFavicon(signature.favicon);
+            setTabFavicon(signature.favicon);
         }
     } else {
         log.debug('no signature found');

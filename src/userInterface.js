@@ -2,7 +2,11 @@ import {ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID,
     FAVICON_PICKER_ID, EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, PICKED_EMOJI_ID, MAIN_BAR_ID} from "./config";
 import { EmojiPicker } from "./emojiPicker";
 import listenerManager from "./listenerManager";
+import { loadSignature } from "./contentScript";
 import { emojiToDataURL, assertType } from "./utils";
+
+export const FAVICON_SIDE_LENTH = 64;
+export let isUIInsertedIntoDOM = false;
 
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
@@ -20,7 +24,6 @@ const htmlContent = `
     </div>
 `;
 
-export let isUIInsertedIntoDOM = false;
 
 function setUIVisibility(visible) {
     const newDisplay = visible? "block": "none";
@@ -60,6 +63,18 @@ async function insertUIIntoDOM() {
         event.stopPropagation();
     });
 
+    // Initialize the values of the input box and the favicon picker based on storage
+    const signature = await loadSignature();
+    if (signature) {
+        if (signature.title) {
+            assertType(document.getElementById(INPUT_BOX_ID), HTMLInputElement).value = signature.title;
+        }
+        if (signature.favicon) {
+            setSelectedEmoji(signature.favicon);
+        }
+    }
+    console.log('Called for loadsignature after insertion of UI, got:', signature);
+
     closeDialog();
 
     window.dispatchEvent(new CustomEvent('uiInsertedIntoDOM'));
@@ -85,12 +100,10 @@ export function setTabTitleInUI(newTabTitle) {
     document.title = newTabTitle;
 }
 
-export const faviconSideLength = 64;
-
 /**
  * @param {any} favicon
  */
-export function setFaviconInUI(favicon) {
+export function setTabFaviconInUI(favicon) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
     faviconLinks.forEach(link => {
@@ -101,7 +114,7 @@ export function setFaviconInUI(favicon) {
     link.type = 'image/x-icon';
     link.rel = 'shortcut icon';
      // The only supported type of favicon is emojis, so the favicon is assumed to be one.
-    const emojiDataURL = emojiToDataURL(favicon, faviconSideLength);
+    const emojiDataURL = emojiToDataURL(favicon, FAVICON_SIDE_LENTH);
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 
