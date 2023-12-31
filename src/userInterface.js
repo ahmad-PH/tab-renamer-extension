@@ -1,5 +1,5 @@
 import {ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID,
-    FAVICON_PICKER_ID, EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, PICKED_EMOJI_ID} from "./config";
+    FAVICON_PICKER_ID, EMOJI_PICKER_ID, EMOJI_PICKER_IMAGE_ID, PICKED_EMOJI_ID, MAIN_BAR_ID} from "./config";
 import { EmojiPicker } from "./emojiPicker";
 import listenerManager from "./listenerManager";
 import { emojiToDataURL, assertType } from "./utils";
@@ -7,7 +7,7 @@ import { emojiToDataURL, assertType } from "./utils";
 const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
         <div id="${OVERLAY_ID}"></div>
-        <div id="tab-renamer-extension-input-container">
+        <div id="${MAIN_BAR_ID}">
             <div id="tab-renamer-extension-favicon-picker-wrapper"/>
                 <div id="${FAVICON_PICKER_ID}">
                     <img id="${EMOJI_PICKER_IMAGE_ID}"/>

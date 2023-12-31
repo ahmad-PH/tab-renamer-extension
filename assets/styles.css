@@ -1,3 +1,17 @@
+#tab-renamer-extension-root, #tab-renamer-extension-root * {
+    all: initial;
+    animation: none;
+    background: none;
+    border: none;
+    box-sizing: border-box;
+    color: black;
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: medium;
+    margin: 0;
+    padding: 0;
+}s
+
 #tab-renamer-extension-overlay {
     position: fixed;
     top: 0;
@@ -8,7 +22,7 @@
     z-index: 9998; /* Just below the input box */
 }
 
-#tab-renamer-extension-input-container {
+#tab-renamer-extension-main-bar {
     display: flex;
     align-items: center;
 
