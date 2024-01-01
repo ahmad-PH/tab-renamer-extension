@@ -21,7 +21,7 @@ describe('Selenium UI Tests', () => {
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(new chrome.Options()
-                .addArguments('--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist')
+                .addArguments('--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist/dev')
                 .addArguments('user-data-dir=/tmp/chrome-profile')
             )
         .build();
