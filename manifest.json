@@ -1,10 +1,11 @@
 {
     "manifest_version": 3,
     "name": "Tab Renamer",
-    "version": "1.0",
+    "version": "0.1",
     "permissions": ["tabs", "activeTab", "scripting", "storage"],
     "host_permissions": [
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
     ],
 
     "background": {
@@ -27,7 +28,7 @@
           "js": ["contentScript.js"],
           "css": ["assets/styles.css"],
           "run_at": "document_start"
-        }
+        } 
     ],
 
     "web_accessible_resources": [
