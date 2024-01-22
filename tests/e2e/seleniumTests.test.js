@@ -4,8 +4,10 @@ const fs = require('fs').promises;
 const { DriverUtils } = require('../driverUtils.js');
 const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
-jest.setTimeout(60 * 60 * 1000);
-// jest.setTimeout(10 * 1000);
+const SECONDS = 1000;
+// jest.setTimeout(60 * 60 * 1000);
+jest.setTimeout(30 * SECONDS);
+// jest.setTimeout(5 * SECONDS);
 
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
@@ -21,6 +23,7 @@ describe('Selenium UI Tests', () => {
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(new chrome.Options()
+                .addArguments('--headless=new')
                 .addArguments('--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist/dev')
                 .addArguments('user-data-dir=/tmp/chrome-profile')
             )
