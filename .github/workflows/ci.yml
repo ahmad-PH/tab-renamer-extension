@@ -28,5 +28,20 @@ jobs:
     - name: Run unit tests
       run: npm test -- tests/unit
 
+
+    - name: Install Chrome
+      uses: browser-actions/setup-chrome@latest
+      with:
+        chrome-version: stable
+
+    - name: Install ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome --version | grep -oE "[0-9\.]{2,}")
+        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+        curl -L -o chromedriver_linux64.zip "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/
+        rm chromedriver_linux64.zip
+
     - name: Run end-to-end tests
       run: npm test -- tests/e2e
