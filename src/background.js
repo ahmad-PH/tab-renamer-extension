@@ -2,6 +2,7 @@ import { storageGet, storageSet } from "./utils";
 import { Tab } from "./types";
 import { loadSignature, saveSignature } from "./signatureStorage";
 import { getLogger } from "./log";
+import { startTheGarbageCollector } from "./garbageCollector";
 
 const log = getLogger('background.js');
 // log.setLevel('DEBUG');
@@ -9,7 +10,7 @@ const log = getLogger('background.js');
 chrome.commands.onCommand.addListener((command) => {
     if (command === "open_rename_dialog") {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, {
+            return chrome.tabs.sendMessage(tabs[0].id, {
                 command: 'open_rename_dialog',
                 tabId: tabs[0].id
             });
@@ -93,44 +94,4 @@ chrome.runtime.onConnect.addListener((port) => {
     log.debug('Connection with content script established successfully.');
 });
 
-
-const gcLog = require("loglevel").getLogger("module-one")
-gcLog.setLevel("SILENT");
-
-async function garbageCollector() {
-    gcLog.debug('Garbage collector called at', new Date().toISOString());
-    const allTabInfo = await storageGet(null);  // Added await here
-    gcLog.debug('Retrieved all tab info:', JSON.stringify(allTabInfo, null, 2));
-    let infoToKeep = {};
-    const currentTime = new Date();
-    gcLog.debug('Current time:', currentTime);
-
-    for (const [tabId, tabInfo] of Object.entries(allTabInfo)) {
-        gcLog.debug(`Processing tabId: ${tabId}`);
-        let keep = false;
-        if (tabInfo.closed === false) {
-            gcLog.debug(`Tab ${tabId} is not closed, keeping...`);
-            keep = true;
-        } else {
-            const tabClosedAt = new Date(tabInfo.closedAt);
-            gcLog.debug(`Tab ${tabId} closed at: ${tabClosedAt}`);
-            if ((currentTime.valueOf() - tabClosedAt.valueOf()) < 20000) {
-                gcLog.debug(`Tab ${tabId} was closed less than 20 seconds ago, keeping...`);
-                keep = true;
-            } else {
-                gcLog.debug(`Tab ${tabId} was closed more than 20 seconds ago, discarding...`);
-            }
-        }
-
-        if (keep) {
-            infoToKeep[tabId] = tabInfo;
-        }
-    }
-
-    gcLog.debug('Info to keep:', JSON.stringify(infoToKeep, null, 2));
-    await storageSet(infoToKeep);
-    gcLog.debug('Updated storage with info to keep at', new Date().toISOString());
-    console.debug();
-}
-
-setInterval(garbageCollector, 5000);
+startTheGarbageCollector();
