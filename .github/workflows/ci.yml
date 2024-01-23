@@ -33,17 +33,13 @@ jobs:
       with:
         chrome-version: stable
     
-    - name: Install ChromeDriver
-      uses: nanasess/setup-chromedriver@v2
-      
-    - run: |
-        export DISPLAY=:99
-        chromedriver --url-base=/wd/hub &
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+    # - name: Install ChromeDriver
+      # uses: nanasess/setup-chromedriver@v2
+    
 
     - name: Install ChromeDriver
       run: |
-          curl -L -o chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chrome-linux64.zip"
+          curl -L -o chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chromedriver-linux64.zip"
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
           rm chromedriver_linux64.zip
