@@ -27,7 +27,6 @@ jobs:
     - name: Run unit tests
       run: npm test -- tests/unit
 
-
     - name: Install Chrome
       uses: browser-actions/setup-chrome@latest
       with:
@@ -46,5 +45,14 @@ jobs:
     #       sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
     #       rm chromedriver_linux64.zip
 
+    - name: Print file structure
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory structure:"
+        ls -R
+
     - name: Run end-to-end tests
       run: npm test -- tests/e2e
+      env:
+        EXTENSION_PATH: ./dist/prod

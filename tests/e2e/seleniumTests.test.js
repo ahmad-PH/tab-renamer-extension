@@ -6,7 +6,7 @@ const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
 // jest.setTimeout(60 * 60 * 1000);
-jest.setTimeout(30 * SECONDS);
+jest.setTimeout(8 * SECONDS);
 // jest.setTimeout(5 * SECONDS);
 
 describe('Selenium UI Tests', () => {
@@ -20,11 +20,18 @@ describe('Selenium UI Tests', () => {
     const natGeoURL = 'https://www.nationalgeographic.com/';
 
     const createNewDriver = async () => {
+        const extensionPath = process.env.EXTENSION_PATH;
+        if (!extensionPath) {
+            throw new Error('The EXTENSION_PATH environment variable is not set.');
+        } else {
+            console.log('Using extension at: ', extensionPath);
+        }
+
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(new chrome.Options()
                 .addArguments('--headless=new')
-                .addArguments('--load-extension=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist/dev')
+                .addArguments(`--load-extension=${extensionPath}`)
                 .addArguments('user-data-dir=/tmp/chrome-profile')
             )
         .build();
