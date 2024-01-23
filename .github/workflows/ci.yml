@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +26,33 @@ jobs:
 
     - name: Run unit tests
       run: npm test -- tests/unit
+
+    - name: Install Chrome
+      uses: browser-actions/setup-chrome@latest
+      with:
+        chrome-version: stable
+    
+    - uses: nanasess/setup-chromedriver@v2
+    - run: |
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
+    # - name: Install ChromeDriver
+    #   run: |
+    #       curl -L -o chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chromedriver-linux64.zip"
+    #       unzip chromedriver_linux64.zip
+    #       sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+    #       rm chromedriver_linux64.zip
+
+    - name: Print file structure
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory structure:"
+        ls -R
+
+    - name: Run end-to-end tests
+      run: npm test -- tests/e2e
+      env:
+        EXTENSION_PATH: ./dist/prod
