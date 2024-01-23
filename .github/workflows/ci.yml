@@ -41,7 +41,7 @@ jobs:
       run: |
           curl -L -o chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chromedriver-linux64.zip"
           unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
           rm chromedriver_linux64.zip
 
     - name: Run end-to-end tests
