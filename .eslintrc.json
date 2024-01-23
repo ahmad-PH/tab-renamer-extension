@@ -23,11 +23,16 @@
     },
     "overrides": [
         {
-            "files": ["src/**/*.js"],
+            "files": ["src/**/*.js", "src/**/*.jsx"],
+            "extends": ["plugin:react/recommended"],
+            "plugins": ["react"],
             "env": {
                 "browser": true
             },
             "parserOptions": {
+                "ecmaFeatures": {
+                    "jsx": true
+                },
                 "sourceType": "module"
             },
             "globals": {

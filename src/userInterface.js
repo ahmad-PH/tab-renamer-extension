@@ -4,6 +4,9 @@ import { EmojiPicker } from "./emojiPicker";
 import listenerManager from "./listenerManager";
 import { loadSignature } from "./contentScript";
 import { emojiToDataURL, assertType } from "./utils";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import MyComponent from "./MyComponent";
 
 export const FAVICON_SIDE_LENTH = 64;
 export let isUIInsertedIntoDOM = false;
@@ -12,6 +15,7 @@ const htmlContent = `
     <div id="${ROOT_ELEMENT_ID}">
         <div id="${OVERLAY_ID}"></div>
         <div id="${MAIN_BAR_ID}">
+            <div id="react-root"></div>
             <div id="tab-renamer-extension-favicon-picker-wrapper"/>
                 <div id="${FAVICON_PICKER_ID}">
                     <img id="${EMOJI_PICKER_IMAGE_ID}"/>
@@ -35,6 +39,10 @@ function setUIVisibility(visible) {
 
 async function insertUIIntoDOM() {
     document.body.insertAdjacentHTML('beforeend', htmlContent);
+
+    const app = document.getElementById('react-root');
+    createRoot(app).render(<MyComponent />);
+
     const emojiPickerImage = assertType(document.getElementById(EMOJI_PICKER_IMAGE_ID), HTMLImageElement);
     emojiPickerImage.src = chrome.runtime.getURL("assets/emoji_picker_icon.png");
 
