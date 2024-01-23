@@ -5,9 +5,7 @@ const { DriverUtils } = require('../driverUtils.js');
 const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
-// jest.setTimeout(60 * 60 * 1000);
-jest.setTimeout(8 * SECONDS);
-// jest.setTimeout(5 * SECONDS);
+jest.setTimeout(6 * SECONDS);
 
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
@@ -20,11 +18,9 @@ describe('Selenium UI Tests', () => {
     const natGeoURL = 'https://www.nationalgeographic.com/';
 
     const createNewDriver = async () => {
-        const extensionPath = process.env.EXTENSION_PATH;
-        if (!extensionPath) {
-            throw new Error('The EXTENSION_PATH environment variable is not set.');
-        } else {
-            console.log('Using extension at: ', extensionPath);
+        const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
+        if (!(await fs.lstat(extensionPath)).isDirectory()) {
+            throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
         }
 
         driver = await new Builder()
@@ -132,5 +128,6 @@ describe('Selenium UI Tests', () => {
         await driverUtils.openTabToURL(natGeoURL);
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
-    });
+
+    }, 12 * SECONDS); // The timeout
 });

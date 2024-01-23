@@ -4,7 +4,7 @@
     "description": "",
     "main": "background.js",
     "scripts": {
-        "test": "EXTENSION_PATH=/Users/ahmadph/Desktop/Projects/TabRenamer/tab-renamer-extension/dist/dev jest --detectOpenHandles",
+        "test": "jest --detectOpenHandles",
         "build": "webpack --mode production",
         "dev": "webpack --mode development --watch"
     },
