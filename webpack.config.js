@@ -22,7 +22,7 @@ module.exports = (_env, argv) => {
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -33,6 +33,10 @@ module.exports = (_env, argv) => {
           use: ['style-loader', 'css-loader'],
         },
       ],
+    },
+
+    resolve: {
+      extensions: ['.js', '.jsx'],
     },
 
     plugins: [

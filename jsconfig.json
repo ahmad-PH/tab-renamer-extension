@@ -6,7 +6,8 @@
         "module": "commonjs",
         "lib": ["es2019", "dom"],
         "typeRoots": ["node_modules/@types"],
-        "types": ["chrome"]
+        "types": ["chrome"],
+        "jsx": "react",
     },
     "include": [
         "src/**/*",
