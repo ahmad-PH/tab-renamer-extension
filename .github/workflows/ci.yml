@@ -1,10 +1,9 @@
 name: CI
 
 on:
+  # Run tests on every push and pull_request on any branch.
   push:
-    branches: [ main, test-ci ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
