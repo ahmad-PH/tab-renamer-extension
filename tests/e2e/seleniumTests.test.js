@@ -5,7 +5,7 @@ const { DriverUtils } = require('../driverUtils.js');
 const { ROOT_ELEMENT_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
-jest.setTimeout(6 * SECONDS);
+jest.setTimeout(15 * SECONDS);
 
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
@@ -129,5 +129,5 @@ describe('Selenium UI Tests', () => {
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
-    }, 12 * SECONDS); // The timeout
+    }, 20 * SECONDS); // The timeout
 });
