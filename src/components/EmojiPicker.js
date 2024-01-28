@@ -32,7 +32,7 @@ class EmojiPicker extends Component {
         }
     }
 
-    filterEmojis = (searchValue) => {
+    filterEmojis(searchValue) {
         let filteredEmojis = [];
         for (const category in this.state.emojis) {
             filteredEmojis = filteredEmojis.concat(this.state.emojis[category].filter(emoji =>
@@ -42,7 +42,7 @@ class EmojiPicker extends Component {
         return filteredEmojis;
     }
 
-    formatEmojiCategoryTitle = (categoryTitle) => {
+    formatEmojiCategoryTitle(categoryTitle) {
         return categoryTitle
             .replace(/_/g, ' ')  // Replace underscores with spaces
             .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
@@ -55,15 +55,19 @@ class EmojiPicker extends Component {
                 <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
 
                 {this.state.searchValue === "" ? (
-                    <div id={ALL_EMOJIS_ID} className='emoji-grid'>
+                    <div id={ALL_EMOJIS_ID}>
                         {this.state.allEmojis && Object.entries(this.state.allEmojis).map(([category, emojis]) => (
                             <div className='emoji-category' key={category}>
-                                <div className='emoji-category-title'>{category}</div>
-                                {emojis.map(emoji => (
-                                    <Emoji emoji={emoji} key={emoji.unicode} onClick={
-                                        this.props.onEmojiClick
-                                    }/>
-                                ))}
+                                <div className='emoji-category-title'>
+                                    {this.formatEmojiCategoryTitle(category)}
+                                </div>
+                                <div className='emoji-grid'>
+                                    {emojis.map(emoji => (
+                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={
+                                            () => this.props.onEmojiClick(emoji.emoji)
+                                        }/>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -114,10 +118,11 @@ const Emoji = ({ emoji, onClick }) => {
             className='emoji-item' 
             data-unicode={emoji.unicode} 
             data-shortcode={emoji.shortcode}
-            onClick={() => onClick(emoji)}
+            onClick={onClick}
         >
             <span className='emoji-wrapper'>
-                {String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16))}
+                {emoji.emoji}
+                {/* {String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16))} */}
             </span>
         </span>
     );

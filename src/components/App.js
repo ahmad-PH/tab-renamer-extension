@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import EmojiPicker from './EmojiPicker';
 import { setTabTitle, setTabFavicon } from '../contentScript';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, EMOJI_PICKER_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../backgroundScriptApi';
 import log from "../log";
@@ -83,12 +83,13 @@ export function App() {
         }
     });
 
-    const handleInputBoxKeydown = (event) => {
+    const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            setTabTitle(inputBoxValue);
-            if (selectedEmoji !== null) {
-                setTabFavicon(selectedEmoji);
+            log.debug('Setting the tab title to:', inputBoxValue);
+            await setTabTitle(inputBoxValue);
+            if (selectedEmoji) {
+                await setTabFavicon(selectedEmoji);
             }
             setIsVisible(false);
         }
@@ -98,6 +99,11 @@ export function App() {
         setEmojiPickerIsVisible(!emojiPickerIsVisible);
     }
 
+    const handleEmojiClick = (emoji) => {
+        setSelectedEmoji(emoji);
+        setEmojiPickerIsVisible(false);
+    }
+
     return (
         <div id={ROOT_ELEMENT_ID} style={{ display: isVisible ? 'block' : 'none' }}>
             <div id={OVERLAY_ID} onClick={() => {setIsVisible(false)}}></div>
@@ -105,7 +111,7 @@ export function App() {
                 <div id="tab-renamer-extension-favicon-picker-wrapper">
                     <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
                     {emojiPickerIsVisible && 
-                        <EmojiPicker onEmojiClick={setSelectedEmoji}/>
+                        <EmojiPicker onEmojiClick={handleEmojiClick}/>
                     }
                 </div>
                 <input 

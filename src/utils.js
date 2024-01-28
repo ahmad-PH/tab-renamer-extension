@@ -1,3 +1,5 @@
+import log from "./log";
+
 /**
  * Asserts the type of a value.
  * @template T
@@ -16,6 +18,10 @@ export function assertType(value, type) {
 }
 
 export function emojiToDataURL(emoji, sideLength) {
+    log.debug('emojiToDataURL called with emoji:', emoji);
+    if (!emoji) {
+        throw new Error(`emojiToDataURL called with ${emoji}`);
+    }
     const canvas = document.createElement('canvas');
     canvas.width = sideLength;
     canvas.height = sideLength;

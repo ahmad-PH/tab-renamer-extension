@@ -14,10 +14,12 @@ let root = null;
 
 // TODO: Separate your code into background and contentscript folders.
 // But maybe do that after React refactoring is finished.
+
 export async function setTabTitle(newTabTitle) {
+    log.debug('setTabTitle called with newTabTitle:', newTabTitle);
+    preserveTabTitle(newTabTitle);
     document.title = newTabTitle;
     await bgScriptApi.saveSignature(newTabTitle, null);
-    preserveTabTitle(newTabTitle);
 }
 
 export async function setTabFavicon(favicon) {
