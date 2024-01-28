@@ -15,7 +15,8 @@ describe('Selenium UI Tests', () => {
     let driverUtils = null;
 
     const googleURL = 'http://www.google.com';
-    const natGeoURL = 'https://www.nationalgeographic.com/';
+    const exampleURL = 'https://www.example.com';
+    // const natGeoURL = 'https://www.nationalgeographic.com/';
 
     const createNewDriver = async () => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
@@ -110,7 +111,7 @@ describe('Selenium UI Tests', () => {
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
 
-        await driverUtils.openTabToURL(natGeoURL);
+        await driverUtils.openTabToURL(exampleURL);
 
         const signature2 = { title: 'Title2', favicon: '🌟' };
         await driverUtils.setSignature(signature2.title, signature2.favicon);
@@ -125,7 +126,7 @@ describe('Selenium UI Tests', () => {
         expect(await driverUtils.getTitle()).toBe(signature1.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
-        await driverUtils.openTabToURL(natGeoURL);
+        await driverUtils.openTabToURL(exampleURL);
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
