@@ -1,19 +1,16 @@
 import { preserveFavicon, preserveTabTitle, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
-import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "./config";
+import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
 import { createRoot } from 'react-dom/client';
 import { App } from './components/App';
-import { emojiToDataURL } from './utils';
+import { emojiToDataURL } from '../utils';
 import bgScriptApi from "./backgroundScriptApi";
 import React from 'react';
-import log from "./log";
+import log from "../log";
 
 // Global variables:
 let uiInsertedIntoDOM = false;
 let root = null;
-
-// TODO: Separate your code into background and contentscript folders.
-// But maybe do that after React refactoring is finished.
 
 export async function setTabTitle(newTabTitle) {
     log.debug('setTabTitle called with newTabTitle:', newTabTitle);

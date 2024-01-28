@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { EMOJI_PICKER_ID } from '../config';
+import { EMOJI_PICKER_ID } from '../../config';
 
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';

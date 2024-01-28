@@ -1,4 +1,4 @@
-const { garabageCollectionFilter } = require('../../src/garbageCollector');
+const { garabageCollectionFilter } = require('../../src/background/garbageCollector');
 
 describe('garabageCollectionFilter', () => {
     test('should keep the tab if it is not closed', () => {

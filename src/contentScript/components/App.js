@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import EmojiPicker from './EmojiPicker';
 import { setTabTitle, setTabFavicon } from '../contentScript';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../backgroundScriptApi';
-import log from "../log";
+import log from "../../log";
 import SelectedEmoji from './SelectedEmoji';
 
 export function App() {

@@ -1,6 +1,6 @@
-import { Tab, TabSignature } from "./types";
-import { storageGet, storageSet } from "./utils";
-import { getLogger } from "./log";
+import { Tab, TabSignature } from "../types";
+import { storageGet, storageSet } from "../utils";
+import { getLogger } from "../log";
 
 const log = getLogger('signatureStorage.js')
 // log.setLevel('DEBUG');

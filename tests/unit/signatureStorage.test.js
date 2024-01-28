@@ -1,4 +1,4 @@
-const { findMatchingTab, loadSignature, saveSignature } = require('../../src/signatureStorage.js');
+const { findMatchingTab, loadSignature, saveSignature } = require('../../src/background/signatureStorage.js');
 const { Tab, TabSignature } = require('../../src/types.js');
 const { storageSet, storageGet } = require('../../src/utils.js');
 const { chromeStorageMock } = require('../chromeStorageMock.js');

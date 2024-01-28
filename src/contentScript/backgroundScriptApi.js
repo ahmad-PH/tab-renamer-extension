@@ -1,4 +1,4 @@
-import log from "./log";
+import log from "../log";
 
 class BackgroundScriptAPI {
     async saveSignature(title, favicon) {

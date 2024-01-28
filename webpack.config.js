@@ -8,8 +8,8 @@ module.exports = (_env, argv) => {
 
   return {
     entry: {
-      contentScript: './src/contentScript.js',
-      background: './src/background.js',
+      contentScript: './src/contentScript/contentScript.js',
+      background: './src/background/background.js',
     },
 
     output: {

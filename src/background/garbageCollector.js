@@ -1,5 +1,5 @@
-import { storageGet, storageSet } from "./utils.js";
-import { Tab } from "./types";
+import { storageGet, storageSet } from "../utils.js";
+import { Tab } from "../types.js";
 
 /** garbage collector (gc) logger */
 const gcLog = require("loglevel").getLogger("module-one")

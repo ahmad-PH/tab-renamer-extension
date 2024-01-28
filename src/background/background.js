@@ -1,9 +1,9 @@
-import { storageGet, storageSet } from "./utils";
-import { Tab } from "./types";
+import { storageGet, storageSet } from "../utils";
+import { Tab } from "../types";
 import { loadSignature, saveSignature } from "./signatureStorage";
-import { getLogger } from "./log";
+import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { EVENT_OPEN_RENAME_DIALOG } from "./config";
+import { EVENT_OPEN_RENAME_DIALOG } from "../config";
 
 const log = getLogger('background.js');
 log.setLevel('DEBUG');
@@ -30,7 +30,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.command === "load_signature") {
         loadSignature(sender.tab.id, sender.tab.url, sender.tab.index, false)
         .then((resp) => {
-            sendResponse(resp);
+            return sendResponse(resp);
+        }).catch(e => {
+            log.error('Error while loading signature:', e);
+            return sendResponse(null);
         });
         return true; // To indicate that the response will be asynchronous
     }
