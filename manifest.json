@@ -25,13 +25,15 @@
 
     "content_scripts": [
         {
-          "matches": [
-            "http://*/*",
-            "https://*/*"
-          ],
-          "js": ["contentScript.js"],
-          "run_at": "document_start"
-        } 
+            "matches": ["<all_urls>"],
+            "js": ["updateSignatureFromStorage.js"],
+            "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["contentScript.js"],
+            "run_at": "document_idle"
+        }
     ],
 
     "web_accessible_resources": [

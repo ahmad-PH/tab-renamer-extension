@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { setTabTitle, setTabFavicon } from '../../contentScript';
+import { setTabTitle, setTabFavicon } from "../../setters";
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
