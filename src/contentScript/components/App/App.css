@@ -1,0 +1,82 @@
+#tab-renamer-extension-root, #tab-renamer-extension-root * {
+    all: initial;
+    animation: none;
+    background: none;
+    border: none;
+    box-sizing: border-box;
+    color: black;
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: medium;
+    margin: 0;
+    padding: 0;
+}
+
+#tab-renamer-extension-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.5);
+    z-index: 9998; /* Just below the input box */
+}
+
+#tab-renamer-extension-main-bar {
+    display: flex;
+    align-items: center;
+
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: 9999;
+}
+
+#tab-renamer-extension-favicon-picker-wrapper {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+#tab-renamer-extension-input-box {
+    /*==================== Dimensions ==================== */
+    width: 300px;
+    height: 60px;
+    box-sizing: border-box;
+    margin-left: 15px !important;
+
+    /*==================== Font ==================== */
+    font-family: 'Arial', sans-serif !important;
+    font-size: 26px !important;
+    font-weight: bold !important;
+    font-style: normal !important;
+    text-transform: none;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #606060 !important; /* Dark gray */
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+
+    border: none;
+    border-radius: 12px; /* Rounded corners */
+
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    padding: 10px 20px; /* Padding for text inside */
+    margin: 0;
+
+    transition: all 0.3s ease; /* Smooth transition effects */
+}
+
+/* Styling for the placeholder text */
+#tab-renamer-extension-input-box::placeholder {
+  color: rgb(199, 199, 199) !important;
+  font-weight: bold;
+}

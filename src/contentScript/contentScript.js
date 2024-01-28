@@ -2,7 +2,7 @@ import { preserveFavicon, preserveTabTitle, disconnectTabTitlePreserver, disconn
 import listenerManager from "./listenerManager";
 import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
 import { createRoot } from 'react-dom/client';
-import { App } from './components/App';
+import App from './components/App';
 import { emojiToDataURL } from '../utils';
 import bgScriptApi from "./backgroundScriptApi";
 import React from 'react';

@@ -1,0 +1,87 @@
+#tab-renamer-extension-emoji-picker {
+    background-color: white;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
+    width: 375px;
+    height: 300px;
+    padding: 10px;
+
+    overflow-y: auto; 
+
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    border-radius: 12px;
+}
+
+#tab-renamer-extension-emoji-picker .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
+    grid-gap: 4px; 
+    padding: 8px;
+}
+
+#tab-renamer-extension-emoji-picker .emoji-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 2em;
+    height: 2em;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+    font-size: 16px;
+}
+
+#tab-renamer-extension-emoji-picker .emoji-item .emoji-wrapper {
+    transform: translateY(-1.5px);
+}
+  
+#tab-renamer-extension-emoji-picker .emoji-item:hover {
+    background-color: rgba(169, 169, 255, 0.829);
+    border-radius: 6px;
+}
+
+#tab-renamer-extension-emoji-picker .emoji-category-title {
+    font-family: 'Arial', sans-serif !important;
+    color: #6f6f6f;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Style for input box when it gets focus */
+#tab-renamer-extension-input-box:focus {
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */
+}
+
+#tab-renamer-extension-emoji-search-bar {
+    font-family: 'Arial', sans-serif !important;
+    background-color: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none; /* remove the default browser outline */
+    border: 1px solid #ababab; /* This will give a subtle border */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for the focus effect */
+}
+
+#tab-renamer-extension-emoji-search-bar:focus {
+    border-color: #4da3ff;
+    box-shadow: 0 0 5px 4px rgba(31, 138, 252, 0.285); /* Light blue halo-like shadow */
+}
+
+#tab-renamer-extension-search-results-div {
+    width: 100%;
+}
+
+

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import EmojiPicker from './EmojiPicker';
-import { setTabTitle, setTabFavicon } from '../contentScript';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../config';
+import './App.css';
+import { setTabTitle, setTabFavicon } from '../../contentScript';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
-import bgScriptApi from '../backgroundScriptApi';
-import log from "../../log";
-import SelectedEmoji from './SelectedEmoji';
+import bgScriptApi from '../../backgroundScriptApi';
+import log from "../../../log";
+import SelectedEmoji from '../SelectedEmoji';
+import EmojiPicker from '../EmojiPicker';
 
-export function App() {
+
+export default function App() {
     const [isVisible, setIsVisible] = useState(true);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');

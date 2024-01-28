@@ -82,10 +82,6 @@ chrome.runtime.onInstalled.addListener(async () => {
                     target: {tabId: tab.id},
                     files: ['contentScript.js']
                 });
-                await chrome.scripting.insertCSS({
-                    target: {tabId: tab.id},
-                    files: ['assets/styles.css']
-                });
             } catch (e) {
                 log.error('Error while injecting the extension into: ', tab.url, e);
             }
