@@ -1,126 +1,50 @@
-import { preserveTabTitle, preserveFavicon, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
+import { preserveFavicon, preserveTabTitle, disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
-import { openDialog, closeDialog, setTabTitleInUI, setTabFaviconInUI } from "./userInterface";
-import { INPUT_BOX_ID, PICKED_EMOJI_ID, ROOT_ELEMENT_ID } from "./config";
-import { assertType } from "./utils";
+import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "./config";
+import { createRoot } from 'react-dom/client';
+import { App } from './components/App';
+import { emojiToDataURL } from './utils';
+import bgScriptApi from "./backgroundScriptApi";
+import React from 'react';
 import log from "./log";
 
-// eslint-disable-next-line no-unused-vars
-async function getTabInfo() {
-    try {
-        return await chrome.runtime.sendMessage({ command: "get_tab_info" });
-    } catch (error) {
-        console.error('Failed to get tab Info:', error);
-        throw error;
-    }
-}
+// Global variables:
+let uiInsertedIntoDOM = false;
+let root = null;
 
-// eslint-disable-next-line no-unused-vars
-async function getTabId() {
-    (await getTabInfo()).id;
-}
-
-async function saveSignature(title, favicon) {
-    try {
-        await chrome.runtime.sendMessage({command: "save_signature", title, favicon});
-    } catch (error) {
-        log.error('Failed to save signature:', error);
-        throw error;
-    }
-}
-
-export async function loadSignature() {
-    try {
-        return await chrome.runtime.sendMessage({command: "load_signature"});
-    } catch (error) {
-        log.error('Failed to save signature:', error);
-        throw error;
-    }
-}
-
-async function setTabTitle(newTabTitle) {
+// TODO: Separate your code into background and contentscript folders.
+// But maybe do that after React refactoring is finished.
+export async function setTabTitle(newTabTitle) {
+    document.title = newTabTitle;
+    await bgScriptApi.saveSignature(newTabTitle, null);
     preserveTabTitle(newTabTitle);
-    setTabTitleInUI(newTabTitle);
-    await saveSignature(newTabTitle, null);
 }
 
-function setTabFavicon(favicon) {
-    const emojiDataURL = setTabFaviconInUI(favicon);
-    saveSignature(null, favicon);
+export async function setTabFavicon(favicon) {
+    // Check if a favicon link element already exists
+    const faviconLinks = document.querySelectorAll("link[rel*='icon']");
+    faviconLinks.forEach(link => {
+        link.parentNode.removeChild(link);
+    });
+
+    const link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    // The only supported type of favicon is emojis, so the favicon is assumed to be one.
+    const emojiDataURL = emojiToDataURL(favicon, 64);
+    link.href = emojiDataURL;
+    document.getElementsByTagName('head')[0].appendChild(link);
+
+    await bgScriptApi.saveSignature(null, favicon);
     preserveFavicon(emojiDataURL);
 }
-
-// ========================= Window events: ==========================
-window.addEventListener('uiInsertedIntoDOM', () => {
-    /** @type {HTMLInputElement} */
-    const inputBox = assertType(document.getElementById(INPUT_BOX_ID), HTMLInputElement);
-    const pickedEmoji = document.getElementById(PICKED_EMOJI_ID);
-    listenerManager.addDOMListener(inputBox, "keydown", (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            HTMLInputElement
-            setTabTitle(inputBox.value);
-            if (pickedEmoji.dataset.emoji !== undefined) {
-                setTabFavicon(pickedEmoji.dataset.emoji);
-            }
-            closeDialog();
-        }
-    });
-});
-
-// ========================= Chrome.runtime events: ==========================
-listenerManager.addChromeListener(chrome.runtime.onMessage, 
-    async (message, _sender, _sendResponse) => {
-        if (message.command === 'open_rename_dialog') {
-            await openDialog();
-        } else if (message.command === 'set_tab_signature') {
-            setTabTitle(message.signature.title);
-            setTabFavicon(message.signature.favicon);
-        }
-    }
-);
-
-// ========================= DOM events: ==========================
-listenerManager.addDOMListener(document, 'openRenameDialog', async () => {
-    await openDialog();
-});
-
-// For debugging purposes:
-const debugFunction = async () => {
-    chrome.storage.sync.get(null, (items) => {
-        log.debug('storage:');
-        log.debug(items);
-    });
-    log.debug(loadSignature());
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    listenerManager.addDOMListener(document.body, 'click', debugFunction);
-});
-
-// Cleaning-up logic for when the extension unloads/reloads.
-const runtimePort = chrome.runtime.connect({ name: "content-script" });
-runtimePort.onDisconnect.addListener(() => {
-    listenerManager.removeAllListeners();
-    document.body.removeEventListener('click', debugFunction);
-
-    disconnectTabTitlePreserver();
-    disconnectFaviconPreserver();
-
-    const rootElement = document.getElementById(ROOT_ELEMENT_ID);
-    if (rootElement) {
-        rootElement.remove();
-    }
-});
-
-
 
 /** Update tab signature when the contentScript loads:
  *  This is an immediately invoked function expression (IIFE)
  */ 
 (async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called');
-    const signature = await loadSignature();
+    const signature = await bgScriptApi.loadSignature();
     if (signature) {
         log.debug('retrieved signature:', signature);
         if (signature.title) {
@@ -135,4 +59,54 @@ runtimePort.onDisconnect.addListener(() => {
 })();
 
 
+function insertUIIntoDOM() {
+    if (uiInsertedIntoDOM === false) {
+        const rootElement = document.createElement(ROOT_TAG_NAME);
+        rootElement.id = ROOT_ELEMENT_ID;
+        document.body.appendChild(rootElement);
+        root = createRoot(rootElement);
+        root.render(<App />)
+        uiInsertedIntoDOM = true;
+    }
+}
 
+
+(function initializeUIListeners() {
+    function chromeListener(message, _sender, _sendResponse) {
+        if (message.command === EVENT_OPEN_RENAME_DIALOG) {
+            insertUIIntoDOM();
+            chrome.runtime.onMessage.removeListener(chromeListener);
+            document.removeEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+        }
+    }
+
+    function domListener(event) {
+        if (event.type === EVENT_OPEN_RENAME_DIALOG) {
+            insertUIIntoDOM();
+            chrome.runtime.onMessage.removeListener(chromeListener);
+            document.removeEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+        }
+    }
+
+    chrome.runtime.onMessage.addListener(chromeListener);
+    document.addEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+})();
+
+// Clean-up logic for when the extension unloads/reloads.
+const runtimePort = chrome.runtime.connect({ name: "content-script" });
+runtimePort.onDisconnect.addListener(() => {
+    listenerManager.removeAllListeners();
+
+    disconnectTabTitlePreserver();
+    disconnectFaviconPreserver();
+
+    if (uiInsertedIntoDOM) {
+        root.unmount();
+        uiInsertedIntoDOM = false;
+    }
+
+    const rootElement = document.getElementById(ROOT_ELEMENT_ID);
+    if (rootElement) {
+        rootElement.remove();
+    }
+});

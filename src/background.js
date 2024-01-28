@@ -3,15 +3,16 @@ import { Tab } from "./types";
 import { loadSignature, saveSignature } from "./signatureStorage";
 import { getLogger } from "./log";
 import { startTheGarbageCollector } from "./garbageCollector";
+import { EVENT_OPEN_RENAME_DIALOG } from "./config";
 
 const log = getLogger('background.js');
-// log.setLevel('DEBUG');
+log.setLevel('DEBUG');
 
 chrome.commands.onCommand.addListener((command) => {
-    if (command === "open_rename_dialog") {
+    if (command === EVENT_OPEN_RENAME_DIALOG) {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             return chrome.tabs.sendMessage(tabs[0].id, {
-                command: 'open_rename_dialog',
+                command: EVENT_OPEN_RENAME_DIALOG,
                 tabId: tabs[0].id
             });
         }).catch(error => 

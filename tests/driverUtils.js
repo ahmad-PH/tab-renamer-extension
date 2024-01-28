@@ -42,7 +42,7 @@ class DriverUtils {
     }
 
     async openRenameDialog() {
-        await this.driver.executeScript("document.dispatchEvent(new Event('openRenameDialog'));");
+        await this.driver.executeScript("document.dispatchEvent(new Event('open_rename_dialog'));");
         await this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
     }
 
