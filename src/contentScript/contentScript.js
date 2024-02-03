@@ -2,11 +2,11 @@ import { disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./prese
 import listenerManager from "./listenerManager";
 import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
 import { createRoot } from 'react-dom/client';
-import bgScriptApi from "./backgroundScriptApi";
 import App from './components/App';
 import React from 'react';
+import { updateTabSignatureFromStorage } from "./updateSignatureFromStorage";
+// eslint-disable-next-line no-unused-vars
 import log from "../log";
-import { setTabTitle, setTabFavicon } from "./setters";
 
 // Global variables:
 let uiInsertedIntoDOM = false;
@@ -15,21 +15,7 @@ let root = null;
 /** Update tab signature when the contentScript loads:
  *  This is an immediately invoked function expression (IIFE)
  */ 
-(async function updateTabSignatureFromStorage() {
-    log.debug('updateTabSignatureFromStorage called');
-    const signature = await bgScriptApi.loadSignature();
-    if (signature) {
-        log.debug('retrieved signature:', signature);
-        if (signature.title) {
-            setTabTitle(signature.title, true);
-        }
-        if (signature.favicon) {
-            setTabFavicon(signature.favicon, true);
-        }
-    } else {
-        log.debug('no signature found');
-    }
-})();
+updateTabSignatureFromStorage();
 
 function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {

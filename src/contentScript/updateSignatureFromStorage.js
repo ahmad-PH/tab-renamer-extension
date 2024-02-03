@@ -5,7 +5,7 @@ import { setTabTitle, setTabFavicon } from "./setters";
 /** Update tab signature when the contentScript loads:
  *  This is an immediately invoked function expression (IIFE)
  */ 
-(async function updateTabSignatureFromStorage() {
+export async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called');
     const signature = await bgScriptApi.loadSignature();
     if (signature) {
@@ -19,4 +19,4 @@ import { setTabTitle, setTabFavicon } from "./setters";
     } else {
         log.debug('no signature found');
     }
-})();
+}
