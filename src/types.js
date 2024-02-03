@@ -1,11 +1,11 @@
 export class Tab {
     /**
-     * @param {number} id - The id of the tab.
-     * @param {string} url - The URL of the tab.
+     * @param {number} id
+     * @param {string} url
      * @param {number} index - The index of the tab in the current window.
-     * @param {boolean} isClosed - Whether the tab is closed.
+     * @param {boolean} isClosed
      * @param {string} closedAt - ISO string representing the time the tab was closed.
-     * @param {TabSignature} signature - The signature of the tab.
+     * @param {TabSignature} signature
      */
     constructor(id, url, index, isClosed, closedAt, signature) {
         this.id = id;
@@ -24,9 +24,11 @@ export class TabSignature {
     /**
      * @param {string} title 
      * @param {string} favicon 
+     * @param {string} originalTitle
      */
-    constructor(title, favicon) {
+    constructor(title, favicon, originalTitle = null) {
         this.title = title;
         this.favicon = favicon;
+        this.originalTitle = originalTitle;
     }
 }

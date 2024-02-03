@@ -1,4 +1,5 @@
 import log from "../log";
+import { TabSignature } from "../types";
 import { emojiToDataURL } from "../utils";
 import bgScriptApi from "./backgroundScriptApi";
 import { preserveFavicon, preserveTabTitle } from "./preservers";
@@ -9,7 +10,7 @@ export async function setTabTitle(newTabTitle, preserve = true) {
         preserveTabTitle(newTabTitle);
     }
     document.title = newTabTitle;
-    await bgScriptApi.saveSignature(newTabTitle, null);
+    await bgScriptApi.saveSignature(new TabSignature(newTabTitle, null));
 }
 
 export async function setTabFavicon(favicon, preserve = true) {
@@ -27,7 +28,7 @@ export async function setTabFavicon(favicon, preserve = true) {
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 
-    await bgScriptApi.saveSignature(null, favicon);
+    await bgScriptApi.saveSignature(new TabSignature(null, favicon));
     if (preserve) {
         preserveFavicon(emojiDataURL);
     }

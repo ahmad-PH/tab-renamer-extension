@@ -1,4 +1,4 @@
-const { findMatchingTab, loadSignature, saveSignature } = require('../../src/background/signatureStorage.js');
+const { findMatchingTab, loadTab, saveTab } = require('../../src/background/signatureStorage.js');
 const { Tab, TabSignature } = require('../../src/types.js');
 const { storageSet, storageGet } = require('../../src/utils.js');
 const { chromeStorageMock } = require('../chromeStorageMock.js');
@@ -65,7 +65,7 @@ describe('findMatchingTab', () => {
 });
 
 
-describe('save/loadSignature', () => {
+describe('save/loadTab', () => {
     beforeEach(() => {
         global.chrome = chromeStorageMock;
         chromeStorageMock.storage.sync.set.mockClear();
@@ -76,26 +76,26 @@ describe('save/loadSignature', () => {
         delete global.chrome;
     });
 
-    it('loadSignature updates isClosed after matching', async () => {
+    it('loadTab updates isClosed after matching', async () => {
         await storageSet({1: new Tab(1, 'https://www.google.com', 5, true, null, new TabSignature('Google', '🔍'))});
         expect((await storageGet(1)).isClosed).toBe(true);
-        await loadSignature(1, null, null, true);
+        await loadTab(1, null, null, true);
         expect((await storageGet(1)).isClosed).toBe(false);
     });
 
-    it('loadSignature can load signature saved with saveSignature', async () => {
-        await saveSignature(1, 'https://www.google.com', 5, 'Google', '🔍');
-        const signature = await loadSignature(1, null, null, false);
+    it('loadTab can load signature saved with saveTab', async () => {
+        await saveTab(new Tab(1, 'https://www.google.com', 5, false, null, new TabSignature('Google', '🔍')));
+        const signature = (await loadTab(1, null, null, false)).signature;
         expect(signature.title).toBe('Google');
         expect(signature.favicon).toBe('🔍');
     })
 
-    it('loadSignature with isBeingOpened=true updates tabId and removes old tabId after matching', async () => {
+    it('loadTab with isBeingOpened=true updates tabId and removes old tabId after matching', async () => {
         const sharedURL = 'https://www.google.com';
         const sharedIndex = 5;
         await storageSet({1: new Tab(1, sharedURL, sharedIndex, true, new Date().toISOString,
          new TabSignature('Google', '🔍'))});
-        await loadSignature(10, sharedURL, sharedIndex, true);
+        await loadTab(10, sharedURL, sharedIndex, true);
 
         // Assert:
         const newStoredTabInfo = await storageGet(null);

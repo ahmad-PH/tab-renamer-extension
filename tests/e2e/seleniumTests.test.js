@@ -14,9 +14,10 @@ describe('Selenium UI Tests', () => {
     /** @type {DriverUtils|null} */
     let driverUtils = null;
 
-    const googleURL = 'http://www.google.com';
-    const exampleURL = 'https://www.example.com';
-    // const natGeoURL = 'https://www.nationalgeographic.com/';
+    const url1 = 'https://www.google.com/';
+    // const url2 = 'https://www.example.com/';
+    // const url2 = 'https://www.nationalgeographic.com/';
+    const url2 = 'https://www.ahmadphosseini.com/';
 
     const createNewDriver = async () => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
@@ -46,13 +47,13 @@ describe('Selenium UI Tests', () => {
     });
 
     test('Can open dialog', async () => {
-        await driver.get(googleURL);
+        await driver.get(url1);
         await driverUtils.openRenameDialog();
         await driver.findElement(By.id(ROOT_ELEMENT_ID));
     });
 
     test('Can rename tab', async () => {
-        await driver.get(googleURL);
+        await driver.get(url1);
         const newTitle = 'New Title';
         await driverUtils.renameTab(newTitle);
         const actualTitle = await driverUtils.getTitle();
@@ -60,13 +61,13 @@ describe('Selenium UI Tests', () => {
     });
 
     test('Can set emojis', async () => {
-        await driver.get(googleURL);
+        await driver.get(url1);
         await driverUtils.setFavicon('😃');
         await driverUtils.assertEmojiSetAsFavicon();
     });
 
     test('Retains tab signature when tab is re-opened', async () => {
-        const originalURL = googleURL;
+        const originalURL = url1;
         await driver.get(originalURL);
         const newTitle = 'New title', newFavicon = '🙃';
 
@@ -107,11 +108,11 @@ describe('Selenium UI Tests', () => {
         */
         await driver.switchTo().newWindow('tab'); // dummy tab
 
-        await driver.get(googleURL);
+        await driver.get(url1);
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
 
-        await driverUtils.openTabToURL(exampleURL);
+        await driverUtils.openTabToURL(url2);
 
         const signature2 = { title: 'Title2', favicon: '🌟' };
         await driverUtils.setSignature(signature2.title, signature2.favicon);
@@ -122,11 +123,11 @@ describe('Selenium UI Tests', () => {
         await driver.sleep(100);
         await createNewDriver();
 
-        await driver.get(googleURL);
+        await driver.get(url1);
         expect(await driverUtils.getTitle()).toBe(signature1.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
-        await driverUtils.openTabToURL(exampleURL);
+        await driverUtils.openTabToURL(url2);
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
 

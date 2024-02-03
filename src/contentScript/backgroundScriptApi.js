@@ -1,15 +1,22 @@
 import log from "../log";
+import { TabSignature } from "../types";
 
 class BackgroundScriptAPI {
-    async saveSignature(title, favicon) {
+    /**
+     * @param {TabSignature} signature 
+     */
+    async saveSignature(signature) {
         try {
-            await chrome.runtime.sendMessage({command: "save_signature", title, favicon});
+            await chrome.runtime.sendMessage({command: "save_signature", signature});
         } catch (error) {
             log.error('Failed to save signature:', error);
             throw error;
         }
     }
 
+    /**
+     * @returns {Promise<TabSignature>}
+     */
     async loadSignature() {
         try {
             return await chrome.runtime.sendMessage({command: "load_signature"});

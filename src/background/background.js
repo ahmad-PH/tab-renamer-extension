@@ -1,12 +1,12 @@
 import { storageGet, storageSet } from "../utils";
-import { Tab } from "../types";
-import { loadSignature, saveSignature } from "./signatureStorage";
+import { Tab, TabSignature } from "../types";
+import { loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { EVENT_OPEN_RENAME_DIALOG } from "../config";
 
 const log = getLogger('background.js');
-log.setLevel('DEBUG');
+log.setLevel('WARN');
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === EVENT_OPEN_RENAME_DIALOG) {
@@ -26,11 +26,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
     } else if (message.command === "save_signature") {
-        saveSignature(sender.tab.id, sender.tab.url, sender.tab.index, message.title, message.favicon);
+        const tab = new Tab(sender.tab.id, sender.tab.url, sender.tab.index, false, null, message.signature);
+        saveTab(tab);
     } else if (message.command === "load_signature") {
-        loadSignature(sender.tab.id, sender.tab.url, sender.tab.index, false)
-        .then((resp) => {
-            return sendResponse(resp);
+        loadTab(sender.tab.id, sender.tab.url, sender.tab.index, false)
+        .then((tab) => {
+            return sendResponse(tab.signature);
         }).catch(e => {
             log.error('Error while loading signature:', e);
             return sendResponse(null);
@@ -57,7 +58,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
 
 chrome.tabs.onCreated.addListener(async (tab) => {
     log.debug('onCreated called:', tab);
-    const signature = await loadSignature(tab.id, tab.url, tab.index, true);
+    const signature = (await loadTab(tab.id, tab.url, tab.index, true)).signature;
     log.debug('found this info:', signature);
     if (signature) {
         chrome.tabs.sendMessage(tab.id, {

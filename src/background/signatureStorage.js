@@ -2,7 +2,7 @@ import { Tab, TabSignature } from "../types";
 import { storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
-const log = getLogger('signatureStorage.js')
+const log = getLogger('signatureStorage.js');
 // log.setLevel('DEBUG');
 
 /**
@@ -54,8 +54,9 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
  * @param {string} url
  * @param {number} index
  * @param {boolean} isBeingOpened
+ * @returns {Promise<Tab|null>} The tab matching the given information.
  */
-async function loadSignature(tabId, url, index, isBeingOpened) {
+async function loadTab(tabId, url, index, isBeingOpened) {
     // Put a descriptive log logging everyhting with its name:
     log.debug('tabId:', tabId, 'url:', url, 'index:', index, 'isBeingOpened:', isBeingOpened);
     const storedTabInfo = await storageGet(null);
@@ -72,7 +73,7 @@ async function loadSignature(tabId, url, index, isBeingOpened) {
             matchedTabInfo.closedAt = null;
         }
         await storageSet({[tabId]: matchedTabInfo});
-        return matchedTabInfo.signature;
+        return matchedTabInfo;
     } else {
         log.debug('No matched tab info found');
         return null;
@@ -80,19 +81,15 @@ async function loadSignature(tabId, url, index, isBeingOpened) {
 }
 
 /**
- * @param {number} tabId
- * @param {string} url
- * @param {number} index
- * @param {string} title
- * @param {string} favicon
+ * @param {Tab} tab
  */
-async function saveSignature(tabId, url, index, title, favicon) {
+async function saveTab(tab) {
     log.debug('Function called: saveSignature');
-    log.debug('tabId, url, index, title, favicon:', tabId, url, index, title, favicon);
+    log.debug('tab:', tab);
     /** @type {Tab} */
-    const result = await storageGet(tabId);
+    const result = await storageGet(tab.id);
     log.debug('result retrieved:', result);
-    let newSignature = new TabSignature(null, null);
+    let newSignature = new TabSignature(null, null, null);
     let isClosed = false, closedAt = null;
     if (result) {
         log.debug('result id:', result);
@@ -104,13 +101,13 @@ async function saveSignature(tabId, url, index, title, favicon) {
         isClosed = result.isClosed;
         closedAt = result.closedAt;
     }
-    newSignature.title = title || newSignature.title;
-    newSignature.favicon = favicon || newSignature.favicon;
+    newSignature.title = tab.signature.title || newSignature.title;
+    newSignature.favicon = tab.signature.favicon || newSignature.favicon;
     log.debug('newSignature after possible overwrite with title and favicon:', newSignature);
 
-    await storageSet({[tabId]: new Tab(tabId, url, index, isClosed, closedAt, newSignature)});
+    await storageSet({[tab.id]: new Tab(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
     log.debug('Data saved to storage');
 }
 
 
-export { findMatchingTab, loadSignature, saveSignature };       
+export { findMatchingTab, loadTab, saveTab };       
