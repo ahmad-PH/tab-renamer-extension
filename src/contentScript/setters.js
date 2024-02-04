@@ -13,7 +13,8 @@ function setDocumentTitle(newTabTitle, preserve = true) {
 
 function setDocumentFavicon(favicon, preserve = true) {
     // Check if a favicon link element already exists
-    const faviconLinks = document.querySelectorAll("link[rel*='icon']");
+    let faviconLinks = document.querySelectorAll("html > head link[rel~='icon']");
+
     faviconLinks.forEach(link => {
         link.parentNode.removeChild(link);
     });
