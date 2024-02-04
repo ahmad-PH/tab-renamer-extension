@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { setDocumentTitle, setDocumentFavicon } from "../../setters";
+import { setDocumentSignature } from "../../setters";
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
 import log from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
 import EmojiPicker from '../EmojiPicker';
+import { TabSignature } from '../../../types';
 
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
+    const originalTitle = useRef(null);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -32,6 +34,7 @@ export default function App() {
     useEffect(() => {
         const loadInitialData = async () => {
             const signature = await bgScriptApi.loadSignature();
+            log.debug('retrieved signaturein loadInitialData:', signature);
             if (signature) {
                 if (signature.title) {
                     setInputBoxValue(signature.title);
@@ -39,7 +42,14 @@ export default function App() {
                 if (signature.favicon) {
                     setSelectedEmoji(signature.favicon);
                 }
+                log.debug('originalTitle:', originalTitle);
             }
+            if (signature && signature.originalTitle) {
+                originalTitle.current = signature.originalTitle;
+            } else {
+                originalTitle.current = document.title;
+            }
+            log.debug('originalTitle:', originalTitle.current);
         };
         loadInitialData();
     }, []);
@@ -48,10 +58,10 @@ export default function App() {
         function chromeListener(message, _sender, _sendResponse) {
             if (message.command === EVENT_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
-            } else if (message.command === 'set_tab_signature') {
-                setDocumentTitle(message.signature.title);
-                setDocumentFavicon(message.signature.favicon);
             }
+            // else if (message.command === 'set_tab_signature') {
+            //     setDocumentSignature(message.signature);
+            // }
         }
 
         chrome.runtime.onMessage.addListener(chromeListener);
@@ -88,11 +98,9 @@ export default function App() {
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            log.debug('Setting the tab title to:', inputBoxValue);
-            await setDocumentTitle(inputBoxValue);
-            if (selectedEmoji) {
-                await setDocumentFavicon(selectedEmoji);
-            }
+            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current);
+            const newDocumentTitle = inputBoxValue === '' ? originalTitle.current : inputBoxValue;
+            await setDocumentSignature(new TabSignature(newDocumentTitle, selectedEmoji, originalTitle.current));
             setIsVisible(false);
         }
     };

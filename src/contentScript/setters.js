@@ -4,16 +4,14 @@ import { emojiToDataURL } from "../utils";
 import bgScriptApi from "./backgroundScriptApi";
 import { preserveFavicon, preserveTabTitle } from "./preservers";
 
-export async function setDocumentTitle(newTabTitle, preserve = true) {
-    log.debug('setTabTitle called with newTabTitle:', newTabTitle);
+function setDocumentTitle(newTabTitle, preserve = true) {
     if (preserve) {
         preserveTabTitle(newTabTitle);
     }
     document.title = newTabTitle;
-    await bgScriptApi.saveSignature(new TabSignature(newTabTitle, null));
 }
 
-export async function setDocumentFavicon(favicon, preserve = true) {
+function setDocumentFavicon(favicon, preserve = true) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
     faviconLinks.forEach(link => {
@@ -28,8 +26,24 @@ export async function setDocumentFavicon(favicon, preserve = true) {
     link.href = emojiDataURL;
     document.getElementsByTagName('head')[0].appendChild(link);
 
-    await bgScriptApi.saveSignature(new TabSignature(null, favicon));
     if (preserve) {
         preserveFavicon(emojiDataURL);
+    }
+}
+
+/**
+ * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy, they will not be set.
+ */
+export async function setDocumentSignature(signature, preserve = true, save = true) {
+    log.debug('setDocumentSignature called with signature:', signature);
+    if (signature.title) {
+        setDocumentTitle(signature.title, preserve);
+    }
+    if (signature.favicon) {
+        setDocumentFavicon(signature.favicon, preserve);
+    }
+    if (save) {
+        // Even this call will know not to set the title or favicon if they are not truthy.
+        await bgScriptApi.saveSignature(signature);
     }
 }

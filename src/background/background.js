@@ -57,22 +57,22 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     }
 });
 
-chrome.tabs.onCreated.addListener(async (tab) => {
-    log.debug('onCreated called:', tab);
-    const signature = (await loadTab(tab.id, tab.url, tab.index, true)).signature;
-    log.debug('found this info:', signature);
-    if (signature) {
-        chrome.tabs.sendMessage(tab.id, {
-            command: 'set_tab_signature',
-            signature: signature,
-        });
-    }
-});
+// chrome.tabs.onCreated.addListener(async (tab) => {
+//     log.debug('onCreated called:', tab);
+//     const signature = (await loadTab(tab.id, tab.url, tab.index, true)).signature;
+//     log.debug('found this info:', signature);
+//     if (signature) {
+//         chrome.tabs.sendMessage(tab.id, {
+//             command: 'set_tab_signature',
+//             signature: signature,
+//         });
+//     }
+// });
 
 // Might be needed later, for making sure the contentScript gets injected when
 // the extension is installed or updated:
 chrome.runtime.onInstalled.addListener(async () => {
-    const allTabs = await chrome.tabs.query({status: 'complete'});
+    const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
     log.debug('after query:', allTabs);
     allTabs.forEach(async (tab) => {
         if (
@@ -85,7 +85,7 @@ chrome.runtime.onInstalled.addListener(async () => {
                     files: ['contentScript.js']
                 });
             } catch (e) {
-                log.error('Error while injecting the extension into: ', tab.url, e);
+                log.error('Error while injecting the extension into: ', tab.url, 'full tab info', JSON.stringify(tab), e);
             }
         }
     });

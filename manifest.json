@@ -26,13 +26,13 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["updateSignatureFromStorage.js"],
+            "js": ["initializationContentScript.js"],
             "run_at": "document_start"
         },
         {
             "matches": ["<all_urls>"],
             "js": ["contentScript.js"],
-            "run_at": "document_idle"
+            "run_at": "document_end"
         }
     ],
 
