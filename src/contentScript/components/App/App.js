@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { setTabTitle, setTabFavicon } from "../../setters";
+import { setDocumentTitle, setDocumentFavicon } from "../../setters";
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
@@ -49,8 +49,8 @@ export default function App() {
             if (message.command === EVENT_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
             } else if (message.command === 'set_tab_signature') {
-                setTabTitle(message.signature.title);
-                setTabFavicon(message.signature.favicon);
+                setDocumentTitle(message.signature.title);
+                setDocumentFavicon(message.signature.favicon);
             }
         }
 
@@ -89,9 +89,9 @@ export default function App() {
         if (event.key === 'Enter') {
             event.preventDefault();
             log.debug('Setting the tab title to:', inputBoxValue);
-            await setTabTitle(inputBoxValue);
+            await setDocumentTitle(inputBoxValue);
             if (selectedEmoji) {
-                await setTabFavicon(selectedEmoji);
+                await setDocumentFavicon(selectedEmoji);
             }
             setIsVisible(false);
         }
