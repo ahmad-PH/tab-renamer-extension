@@ -4,7 +4,7 @@ import { emojiToDataURL } from "../utils";
 import bgScriptApi from "./backgroundScriptApi";
 import { preserveFavicon, preserveTabTitle } from "./preservers";
 
-export async function setTabTitle(newTabTitle, preserve = true) {
+export async function setDocumentTitle(newTabTitle, preserve = true) {
     log.debug('setTabTitle called with newTabTitle:', newTabTitle);
     if (preserve) {
         preserveTabTitle(newTabTitle);
@@ -13,7 +13,7 @@ export async function setTabTitle(newTabTitle, preserve = true) {
     await bgScriptApi.saveSignature(new TabSignature(newTabTitle, null));
 }
 
-export async function setTabFavicon(favicon, preserve = true) {
+export async function setDocumentFavicon(favicon, preserve = true) {
     // Check if a favicon link element already exists
     const faviconLinks = document.querySelectorAll("link[rel*='icon']");
     faviconLinks.forEach(link => {
