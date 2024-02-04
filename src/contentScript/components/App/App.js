@@ -8,6 +8,7 @@ import log from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
 import EmojiPicker from '../EmojiPicker';
 import { TabSignature } from '../../../types';
+import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
 
 
 export default function App() {
@@ -15,8 +16,12 @@ export default function App() {
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
+
+    /** @type {React.MutableRefObject<string>} */
     const originalTitle = useRef(null);
-    // const originalFaviconUrl = useRef(null);
+    
+    /** @type {React.MutableRefObject<string>} */
+    const originalFavicon = useRef(null);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -41,7 +46,10 @@ export default function App() {
                     setInputBoxValue(signature.title);
                 }
                 if (signature.favicon) {
-                    setSelectedEmoji(signature.favicon);
+                    if (signature.favicon.type !== EmojiFavicon.type) {
+                        throw new Error('Only supporting emoji favicons at the moment.');
+                    }
+                    setSelectedEmoji(EmojiFavicon.fromDTO(signature.favicon).emoji);
                 }
             }
             if (signature && signature.originalTitle) {
@@ -49,12 +57,13 @@ export default function App() {
             } else {
                 originalTitle.current = document.title;
             }
-            // if (signature && signature.originalFaviconUrl) {
-            //     originalFaviconUrl.current = signature.originalFaviconUrl;
-            // } else {
-            //     originalFaviconUrl.current = await bgScriptApi.getFaviconUrl();
-            // }
+            if (signature && signature.originalFaviconUrl) {
+                originalFavicon.current = signature.originalFaviconUrl;
+            } else {
+                originalFavicon.current = await bgScriptApi.getFaviconUrl();
+            }
             log.debug('originalTitle:', originalTitle.current);
+            log.debug('originalFavicon:', originalFavicon.current);
         };
         loadInitialData();
     }, []);
@@ -87,12 +96,7 @@ export default function App() {
     // For debugging purposes:
     useEffect(() => {
         const debugFunction = async () => {
-            chrome.storage.sync.get(null, (items) => {
-                log.debug('storage:');
-                log.debug(items);
-            });
-            log.debug('loadsignature() output:', bgScriptApi.loadSignature());
-            log.debug('faviconUrl:', await bgScriptApi.getFaviconUrl());
+            log.debug('storage:', await chrome.storage.sync.get(null));
         };
         document.body.addEventListener('click', debugFunction);
 
@@ -104,9 +108,24 @@ export default function App() {
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current);
-            const newDocumentTitle = inputBoxValue === '' ? originalTitle.current : inputBoxValue;
-            await setDocumentSignature(new TabSignature(newDocumentTitle, selectedEmoji, originalTitle.current));
+            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current, originalFavicon.current);
+            const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
+            let newDocumentFavicon = null;
+            if (inputBoxValue === 'TRIGGER') {
+                newDocumentFavicon = null;
+            } else {
+                if (selectedEmoji) {
+                    newDocumentFavicon = new EmojiFavicon(selectedEmoji).toDTO()
+                } else {
+                    newDocumentFavicon = null;
+                }
+            }
+            await setDocumentSignature(new TabSignature(
+                newDocumentTitle,
+                newDocumentFavicon,
+                originalTitle.current,
+                originalFavicon.current
+            ));
             setIsVisible(false);
         }
     };

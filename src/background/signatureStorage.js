@@ -1,4 +1,4 @@
-import { Tab, TabSignature } from "../types";
+import { Tab } from "../types";
 import { storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
@@ -49,7 +49,7 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
 }
 
 /**
- * Load the signature of the tab with the given information, from chrome storage.
+ * Load the tab with the given information, from chrome storage.
  * @param {number} tabId
  * @param {string} url
  * @param {number} index
@@ -62,18 +62,18 @@ async function loadTab(tabId, url, index, isBeingOpened) {
     const storedTabInfo = await storageGet(null);
     log.debug('storedTabInfo:', storedTabInfo);
 
-    let matchedTabInfo = findMatchingTab(storedTabInfo, tabId, url, index);
+    let matchedTab = findMatchingTab(storedTabInfo, tabId, url, index);
 
-    if (matchedTabInfo) {
-        log.debug('matchedTabInfo:', matchedTabInfo);
-        await chrome.storage.sync.remove(matchedTabInfo.id.toString());
-        matchedTabInfo.id = tabId;
+    if (matchedTab) {
+        log.debug('matchedTabInfo:', matchedTab);
+        await chrome.storage.sync.remove(matchedTab.id.toString());
+        matchedTab.id = tabId;
         if (isBeingOpened) {
-            matchedTabInfo.isClosed = false;
-            matchedTabInfo.closedAt = null;
+            matchedTab.isClosed = false;
+            matchedTab.closedAt = null;
         }
-        await storageSet({[tabId]: matchedTabInfo});
-        return matchedTabInfo;
+        await storageSet({[tabId]: matchedTab});
+        return matchedTab;
     } else {
         log.debug('No matched tab info found');
         return null;
@@ -92,12 +92,6 @@ async function saveTab(tab) {
     let newSignature = Object.assign({}, tab.signature);
     let isClosed = false, closedAt = null;
     if (result) {
-        log.debug('result id:', result);
-        if (result.signature) {
-            newSignature.title = newSignature.title || result.signature.title;
-            newSignature.favicon = newSignature.favicon || result.signature.favicon;
-            log.debug('newSignature after copying from result.signature:', newSignature);
-        }
         isClosed = result.isClosed;
         closedAt = result.closedAt;
     }

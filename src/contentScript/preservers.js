@@ -1,3 +1,4 @@
+import log from "../log";
 
 let tabMutationObserver = null;
 let faviconMutationObserver = null;
@@ -8,6 +9,7 @@ let faviconMutationObserver = null;
  */
 export function preserveTabTitle(desiredTitle) {
     // Disconnect the previous observer if it exists, to avoid an infinite loop.    
+    log.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
     disconnectTabTitlePreserver()
     tabMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -27,6 +29,7 @@ export function preserveTabTitle(desiredTitle) {
 }
 
 export function disconnectTabTitlePreserver() {
+    log.debug('disconnectTabTitlePreserver called');
     if (tabMutationObserver) {
         tabMutationObserver.disconnect();
     }
