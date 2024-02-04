@@ -31,7 +31,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.command === "load_signature") {
         loadTab(sender.tab.id, sender.tab.url, sender.tab.index, false)
         .then((tab) => {
-            return sendResponse(tab.signature);
+            const signature = tab ? tab.signature : null;
+            return sendResponse(signature);
         }).catch(e => {
             log.error('Error while loading signature:', e);
             return sendResponse(null);
