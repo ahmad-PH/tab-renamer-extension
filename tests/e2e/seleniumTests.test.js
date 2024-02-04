@@ -74,14 +74,7 @@ describe('Selenium UI Tests', () => {
         await driverUtils.renameTab(newTitle);
         await driverUtils.setFavicon(newFavicon);
         
-        // Close and Re-open:
-        const originalTabHandle = await driver.getWindowHandle();
-        await driver.switchTo().newWindow('tab');
-        const newTabHandle = await driver.getWindowHandle();
-        await driver.switchTo().window(originalTabHandle);
-        await driver.close();
-        await driver.switchTo().window(newTabHandle);
-        await driverUtils.openTabToURL(originalURL);
+        await driverUtils.closeAndReopenCurrentTab();
 
         // Give the extension being tested time to load the title from storage:
         await driver.sleep(500);
@@ -132,4 +125,24 @@ describe('Selenium UI Tests', () => {
         await driverUtils.assertEmojiSetAsFavicon();
 
     }, 20 * SECONDS); // The timeout
+
+    test('Restores original title when empty title passed', async () => {
+        await driver.get(url1);
+        const originalTitle = await driverUtils.getTitle();
+        await driverUtils.renameTab('New title');
+        await driverUtils.renameTab('');
+        const actualTitle = await driverUtils.getTitle();
+        expect(actualTitle).toBe(originalTitle);
+    })
+
+    test('Restores original title when empty title passed, after being re-opened', async () => {
+        await driver.get(url1);
+        const originalTitle = await driverUtils.getTitle();
+        await driverUtils.renameTab('New title');
+        await driverUtils.closeAndReopenCurrentTab();
+        await driverUtils.renameTab('');
+        const actualTitle = await driverUtils.getTitle();
+        expect(actualTitle).toBe(originalTitle);
+    })
+
 });

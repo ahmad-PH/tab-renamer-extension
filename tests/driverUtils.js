@@ -12,8 +12,8 @@ class DriverUtils {
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
-        const newTitle = newTabTitle;
-        await renameBox.sendKeys(newTitle, Key.ENTER);
+        await renameBox.clear();
+        await renameBox.sendKeys(newTabTitle, Key.ENTER);
     }
     
     async setFavicon(emoji) {
@@ -89,6 +89,17 @@ class DriverUtils {
                 return null;
             }
         }
+    }
+
+    async closeAndReopenCurrentTab() {
+        const originalUrl = await this.driver.getCurrentUrl();
+        const originalTabHandle = await this.driver.getWindowHandle();
+        await this.driver.switchTo().newWindow('tab');
+        const newTabHandle = await this.driver.getWindowHandle();
+        await this.driver.switchTo().window(originalTabHandle);
+        await this.driver.close();
+        await this.driver.switchTo().window(newTabHandle);
+        await this.openTabToURL(originalUrl);
     }
 
 }

@@ -89,20 +89,18 @@ async function saveTab(tab) {
     /** @type {Tab} */
     const result = await storageGet(tab.id);
     log.debug('result retrieved:', result);
-    let newSignature = new TabSignature(null, null, null);
+    let newSignature = Object.assign({}, tab.signature);
     let isClosed = false, closedAt = null;
     if (result) {
         log.debug('result id:', result);
         if (result.signature) {
-            newSignature.title = result.signature.title;
-            newSignature.favicon = result.signature.favicon;
+            newSignature.title = newSignature.title || result.signature.title;
+            newSignature.favicon = newSignature.favicon || result.signature.favicon;
             log.debug('newSignature after copying from result.signature:', newSignature);
         }
         isClosed = result.isClosed;
         closedAt = result.closedAt;
     }
-    newSignature.title = tab.signature.title || newSignature.title;
-    newSignature.favicon = tab.signature.favicon || newSignature.favicon;
     log.debug('newSignature after possible overwrite with title and favicon:', newSignature);
 
     await storageSet({[tab.id]: new Tab(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});

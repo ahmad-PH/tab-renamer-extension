@@ -9,7 +9,7 @@ module.exports = (_env, argv) => {
   return {
     entry: {
       contentScript: './src/contentScript/contentScript.js',
-      updateSignatureFromStorage: './src/contentScript/updateSignatureFromStorage.js',
+      initializationContentScript: './src/contentScript/initializationContentScript.js',
       background: './src/background/background.js',
     },
 

@@ -4,18 +4,26 @@ import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../con
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import React from 'react';
-import { updateTabSignatureFromStorage } from "./updateSignatureFromStorage";
 // eslint-disable-next-line no-unused-vars
 import log from "../log";
+import { setDocumentSignature } from "./setters";
+import bgScriptApi from "./backgroundScriptApi";
 
 // Global variables:
 let uiInsertedIntoDOM = false;
 let root = null;
 
-/** Update tab signature when the contentScript loads:
- *  This is an immediately invoked function expression (IIFE)
- */ 
-updateTabSignatureFromStorage();
+
+(async function updateTabSignatureFromStorage() {
+    log.debug('updateTabSignatureFromStorage called');
+    const signature = await bgScriptApi.loadSignature();
+    if (signature) {
+        log.debug('retrieved signature:', signature);
+        await setDocumentSignature(signature, true, false);
+    } else {
+        log.debug('no signature found');
+    }
+})();
 
 function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
