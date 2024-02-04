@@ -21,7 +21,7 @@ class BackgroundScriptAPI {
         try {
             return await chrome.runtime.sendMessage({command: "load_signature"});
         } catch (error) {
-            log.error('Failed to save signature:', error);
+            log.error('Failed to load signature:', error);
             throw error;
         }
     }
@@ -31,6 +31,15 @@ class BackgroundScriptAPI {
             return await chrome.runtime.sendMessage({ command: "get_tab_info" });
         } catch (error) {
             console.error('Failed to get tab Info:', error);
+            throw error;
+        }
+    }
+
+    async getFaviconUrl() {
+        try {
+            return await chrome.runtime.sendMessage({ command: "get_favicon_url" });
+        } catch (error) {
+            console.error('Failed to get favicon:', error);
             throw error;
         }
     }

@@ -38,6 +38,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             return sendResponse(null);
         });
         return true; // To indicate that the response will be asynchronous
+    } else if (message.command === "get_favicon_url") {
+        sendResponse(sender.tab.favIconUrl);
     }
 });
 

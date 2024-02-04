@@ -1,5 +1,6 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID} = require('../src/config.js');
+const { faviconLinksCSSQuery } = require('../src/contentScript/setters.js');
 
 class DriverUtils {
     /**
@@ -35,7 +36,7 @@ class DriverUtils {
     }
     
     async assertEmojiSetAsFavicon() {
-        const faviconElement = await this.driver.executeScript("return document.querySelector('link[rel*=\"icon\"]');");
+        const faviconElement = await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
         expect(await this.getAttribute(faviconElement, "rel")).toContain("icon");
         expect(await this.getAttribute(faviconElement, "href")).toMatch(/^data:image\/png;base64,/);
         expect(await this.getAttribute(faviconElement, "type")).toMatch('image/x-icon');

@@ -4,6 +4,8 @@ import { emojiToDataURL } from "../utils";
 import bgScriptApi from "./backgroundScriptApi";
 import { preserveFavicon, preserveTabTitle } from "./preservers";
 
+export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
+
 function setDocumentTitle(newTabTitle, preserve = true) {
     if (preserve) {
         preserveTabTitle(newTabTitle);
@@ -11,9 +13,13 @@ function setDocumentTitle(newTabTitle, preserve = true) {
     document.title = newTabTitle;
 }
 
-function setDocumentFavicon(favicon, preserve = true) {
+function setDocumentFaviconEmoji(favicon, preserve = true) {
+    setDocumentFavicon(emojiToDataURL(favicon, 64), preserve);
+}
+
+function setDocumentFavicon(faviconUrl, preserve = true) {
     // Check if a favicon link element already exists
-    let faviconLinks = document.querySelectorAll("html > head link[rel~='icon']");
+    let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
 
     faviconLinks.forEach(link => {
         link.parentNode.removeChild(link);
@@ -21,16 +27,15 @@ function setDocumentFavicon(favicon, preserve = true) {
 
     const link = document.createElement('link');
     link.type = 'image/x-icon';
-    link.rel = 'shortcut icon';
-    // The only supported type of favicon is emojis, so the favicon is assumed to be one.
-    const emojiDataURL = emojiToDataURL(favicon, 64);
-    link.href = emojiDataURL;
+    link.rel = 'icon';
+    link.href = faviconUrl;
     document.getElementsByTagName('head')[0].appendChild(link);
 
     if (preserve) {
-        preserveFavicon(emojiDataURL);
+        preserveFavicon(faviconUrl);
     }
 }
+
 
 /**
  * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy, they will not be set.
@@ -41,7 +46,7 @@ export async function setDocumentSignature(signature, preserve = true, save = tr
         setDocumentTitle(signature.title, preserve);
     }
     if (signature.favicon) {
-        setDocumentFavicon(signature.favicon, preserve);
+        setDocumentFaviconEmoji(signature.favicon, preserve);
     }
     if (save) {
         // Even this call will know not to set the title or favicon if they are not truthy.
