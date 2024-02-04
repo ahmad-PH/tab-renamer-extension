@@ -23,12 +23,25 @@ export class Tab {
 export class TabSignature {
     /**
      * @param {string} title 
-     * @param {string} favicon 
+     * @param {FaviconDTO} favicon 
      * @param {string} originalTitle
+     * @param {string} originalFaviconUrl
      */
-    constructor(title, favicon, originalTitle = null) {
+    constructor(title, favicon, originalTitle = null, originalFaviconUrl = null) {
         this.title = title;
         this.favicon = favicon;
         this.originalTitle = originalTitle;
+        this.originalFaviconUrl = originalFaviconUrl;
+    }
+}
+
+export class FaviconDTO {
+    /**
+     * @param {string} type 
+     * @param {string} content 
+     */
+    constructor(type, content) {
+        this.type = type;
+        this.content = content;
     }
 }

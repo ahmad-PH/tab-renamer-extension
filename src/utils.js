@@ -17,7 +17,7 @@ export function assertType(value, type) {
     }
 }
 
-export function emojiToDataURL(emoji, sideLength) {
+export function emojiToDataURL(emoji, sideLength = 64) {
     log.debug('emojiToDataURL called with emoji:', emoji);
     if (!emoji) {
         throw new Error(`emojiToDataURL called with ${emoji}`);

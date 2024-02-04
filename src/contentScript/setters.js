@@ -1,24 +1,22 @@
+import { Favicon } from "../favicon";
 import log from "../log";
 import { TabSignature } from "../types";
-import { emojiToDataURL } from "../utils";
 import bgScriptApi from "./backgroundScriptApi";
-import { preserveFavicon, preserveTabTitle } from "./preservers";
+import { preserveFavicon, preserveTabTitle, disconnectFaviconPreserver, disconnectTabTitlePreserver } from "./preservers";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
 function setDocumentTitle(newTabTitle, preserve = true) {
+    log.debug('setDocumentTitle called with newTabTitle:', newTabTitle, preserve);
     if (preserve) {
         preserveTabTitle(newTabTitle);
     }
     document.title = newTabTitle;
 }
 
-function setDocumentFaviconEmoji(favicon, preserve = true) {
-    setDocumentFavicon(emojiToDataURL(favicon, 64), preserve);
-}
-
 function setDocumentFavicon(faviconUrl, preserve = true) {
     // Check if a favicon link element already exists
+    log.debug('setDocumentFavicon called with faviconUrl:', faviconUrl, preserve);
     let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
 
     faviconLinks.forEach(link => {
@@ -36,6 +34,17 @@ function setDocumentFavicon(faviconUrl, preserve = true) {
     }
 }
 
+function restoreDocumentTitle(originalTitle) {
+    log.debug('restoreDocumentTitle called with originalTitle:', originalTitle);
+    disconnectTabTitlePreserver();
+    setDocumentTitle(originalTitle, false);
+}
+
+function restoreDocumentFavicon(originalFaviconUrl) {
+    log.debug('restoreDocumentFavicon called with originalFaviconUrl:', originalFaviconUrl);
+    disconnectFaviconPreserver();
+    setDocumentFavicon(originalFaviconUrl, false);
+}
 
 /**
  * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy, they will not be set.
@@ -44,10 +53,16 @@ export async function setDocumentSignature(signature, preserve = true, save = tr
     log.debug('setDocumentSignature called with signature:', signature);
     if (signature.title) {
         setDocumentTitle(signature.title, preserve);
+    } else {
+        restoreDocumentTitle(signature.originalTitle);
     }
+
     if (signature.favicon) {
-        setDocumentFaviconEmoji(signature.favicon, preserve);
+        setDocumentFavicon(Favicon.fromDTO(signature.favicon).getUrl(), preserve);
+    } else {
+        restoreDocumentFavicon(signature.originalFaviconUrl);
     }
+
     if (save) {
         // Even this call will know not to set the title or favicon if they are not truthy.
         await bgScriptApi.saveSignature(signature);

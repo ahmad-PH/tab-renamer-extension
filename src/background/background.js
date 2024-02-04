@@ -1,5 +1,5 @@
 import { storageGet, storageSet } from "../utils";
-import { Tab, TabSignature } from "../types";
+import { Tab } from "../types";
 import { loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";

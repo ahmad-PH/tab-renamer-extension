@@ -23,6 +23,7 @@ class DriverUtils {
         await emojiPicker.click();
     
         const xpath = `//*[contains(text(),'${emoji}')]`;
+        await this.driver.wait(until.elementLocated(By.xpath(xpath)));
         const emojiElement = await this.driver.findElement(By.xpath(xpath));
         await emojiElement.click();
     
