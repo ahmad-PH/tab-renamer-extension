@@ -16,6 +16,7 @@ export default function App() {
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const originalTitle = useRef(null);
+    // const originalFaviconUrl = useRef(null);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -42,13 +43,17 @@ export default function App() {
                 if (signature.favicon) {
                     setSelectedEmoji(signature.favicon);
                 }
-                log.debug('originalTitle:', originalTitle);
             }
             if (signature && signature.originalTitle) {
                 originalTitle.current = signature.originalTitle;
             } else {
                 originalTitle.current = document.title;
             }
+            // if (signature && signature.originalFaviconUrl) {
+            //     originalFaviconUrl.current = signature.originalFaviconUrl;
+            // } else {
+            //     originalFaviconUrl.current = await bgScriptApi.getFaviconUrl();
+            // }
             log.debug('originalTitle:', originalTitle.current);
         };
         loadInitialData();
@@ -86,7 +91,8 @@ export default function App() {
                 log.debug('storage:');
                 log.debug(items);
             });
-            log.debug(bgScriptApi.loadSignature());
+            log.debug('loadsignature() output:', bgScriptApi.loadSignature());
+            log.debug('faviconUrl:', await bgScriptApi.getFaviconUrl());
         };
         document.body.addEventListener('click', debugFunction);
 
