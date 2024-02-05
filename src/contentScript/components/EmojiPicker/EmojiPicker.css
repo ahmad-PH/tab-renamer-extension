@@ -12,7 +12,7 @@
     top: 120%;
     left: 0;
 
-    border-radius: 12px;
+    border-radius: 15px;
 }
 
 #tab-renamer-extension-emoji-picker .header-container {
@@ -99,7 +99,7 @@
 #tab-renamer-extension-emoji-search-bar {
     font-family: 'Arial', sans-serif !important;
     background-color: white;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 6px 10px;
     margin: 0;
     width: 100%;
