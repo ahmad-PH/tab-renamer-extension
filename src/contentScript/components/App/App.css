@@ -63,7 +63,7 @@
     text-rendering: optimizeLegibility;
 
     border: none;
-    border-radius: 12px; /* Rounded corners */
+    border-radius: 15px;
 
     background-color: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
