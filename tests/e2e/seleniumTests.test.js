@@ -14,8 +14,9 @@ describe('Selenium UI Tests', () => {
     /** @type {DriverUtils|null} */
     let driverUtils = null;
 
-    const url1 = 'https://www.google.com/';
-    // const url2 = 'https://www.example.com/';
+    const googleUrl = 'https://www.google.com/';
+    const googleFavicon = 'https://www.google.com/favicon.ico';
+    const url1 = googleUrl;
     // const url2 = 'https://www.nationalgeographic.com/';
     const url2 = 'https://www.ahmadphosseini.com/';
 
@@ -143,6 +144,13 @@ describe('Selenium UI Tests', () => {
         await driverUtils.renameTab('');
         const actualTitle = await driverUtils.getTitle();
         expect(actualTitle).toBe(originalTitle);
+    })
+
+    test('Restores original favicon when empty favicon passed', async () => {
+        await driver.get(googleUrl);
+        await driverUtils.setFavicon('🎂');
+        await driverUtils.removeFavicon();
+        await driverUtils.assertFaviconUrl(googleFavicon);
     })
 
 });
