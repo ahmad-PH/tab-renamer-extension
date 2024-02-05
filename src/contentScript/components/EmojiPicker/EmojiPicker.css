@@ -75,7 +75,6 @@
 
 #tab-renamer-extension-emoji-picker .emoji-item .emoji-wrapper {
     transform: translateY(-1.5px);
-    pointer-events: none;
 }
   
 #tab-renamer-extension-emoji-picker .emoji-item:hover {

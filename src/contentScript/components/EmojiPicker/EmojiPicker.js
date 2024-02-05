@@ -126,7 +126,7 @@ SearchBar.propTypes = {
 
 const Emoji = ({ emoji, onClick }) => {
     return (
-        <span 
+        <div 
             className='emoji-item' 
             data-unicode={emoji.unicode} 
             data-shortcode={emoji.shortcode}
@@ -134,9 +134,8 @@ const Emoji = ({ emoji, onClick }) => {
         >
             <span className='emoji-wrapper'>
                 {emoji.emoji}
-                {/* {String.fromCodePoint(parseInt(emoji.unicode.replace("U+", ""), 16))} */}
             </span>
-        </span>
+        </div>
     );
 }
 
