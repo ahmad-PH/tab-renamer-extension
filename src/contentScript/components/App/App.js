@@ -141,9 +141,11 @@ export default function App() {
             <div id={MAIN_BAR_ID}>
                 <div id="tab-renamer-extension-favicon-picker-wrapper">
                     <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
-                    {emojiPickerIsVisible && 
-                        <EmojiPicker onEmojiClick={handleEmojiClick} onRemoveEmoji={handleRemoveEmoji}/>
-                    }
+                    <EmojiPicker 
+                        onEmojiClick={handleEmojiClick}
+                        onRemoveEmoji={handleRemoveEmoji}
+                        className={emojiPickerIsVisible ? 'visible' : ''}
+                    />
                 </div>
                 <input 
                     type="text"

@@ -6,13 +6,19 @@
     /* width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
     width: 375px;
     height: 300px;
+    border-radius: 15px;
     overflow-y: auto; 
 
     position: absolute;
     top: 120%;
     left: 0;
 
-    border-radius: 15px;
+    transition: opacity 0.15s ease-in-out;
+    opacity: 0;
+}
+
+#tab-renamer-extension-emoji-picker.visible {
+    opacity: 1;
 }
 
 #tab-renamer-extension-emoji-picker .header-container {
@@ -64,7 +70,6 @@
     align-items: center;
     justify-content: center;
 
-    cursor: pointer;
     transition: background-color 0.3s ease;
     text-align: center;
     width: 2em;
@@ -75,6 +80,7 @@
 
 #tab-renamer-extension-emoji-picker .emoji-item .emoji-wrapper {
     transform: translateY(-1.5px);
+    cursor: pointer;
 }
   
 #tab-renamer-extension-emoji-picker .emoji-item:hover {

@@ -53,7 +53,7 @@ class EmojiPicker extends Component {
 
     render() {
         return (
-            <div id={EMOJI_PICKER_ID}>
+            <div id={EMOJI_PICKER_ID} className={this.props.className}>
                 <div className='header-container'>
                     <div className='header'>
                         <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
@@ -99,6 +99,7 @@ class EmojiPicker extends Component {
 EmojiPicker.propTypes = {
     onEmojiClick: PropTypes.func.isRequired,
     onRemoveEmoji: PropTypes.func.isRequired,
+    className: PropTypes.string,
 }
 
 const SearchBar = ({ onSearchBarChanged }) => {
