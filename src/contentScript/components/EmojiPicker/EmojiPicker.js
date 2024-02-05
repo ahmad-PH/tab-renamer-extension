@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useRef } from 'react';
 import './EmojiPicker.css';
 import PropTypes from 'prop-types';
-import { EMOJI_PICKER_ID } from '../../../config';
+import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID } from '../../../config';
 import { Button } from '@mui/material';
 
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
@@ -57,17 +57,12 @@ class EmojiPicker extends Component {
                 <div className='header-container'>
                     <div className='header'>
                         <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
-                        <button 
-                            onClick={this.props.onRemoveEmoji}
-                            className="remove-button"
-                        >
+                        <button id={EMOJI_REMOVE_BUTTON_ID} onClick={this.props.onRemoveEmoji} className="remove-button">
                             Remove
                         </button>
                     </div>
                 </div>
 
-                {/* <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} /> */}
-                
                 <div className='content'>
                     {this.state.searchValue === "" ? (
                         <div id={ALL_EMOJIS_ID}>

@@ -8,5 +8,6 @@ export const FAVICON_PICKER_ID = `${EXTENSION_PREFIX}-favicon-picker`;
 export const EMOJI_PICKER_ID = `${EXTENSION_PREFIX}-emoji-picker`;
 export const EMOJI_PICKER_IMAGE_ID = `${EXTENSION_PREFIX}-emoji-picker-image`;
 export const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
+export const EMOJI_REMOVE_BUTTON_ID = `${EXTENSION_PREFIX}-emoji-remove-button`;
 
 export const EVENT_OPEN_RENAME_DIALOG = `open_rename_dialog`;

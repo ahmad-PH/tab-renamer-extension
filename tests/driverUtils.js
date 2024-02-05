@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID} = require('../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID } = require('../src/config.js');
 const { faviconLinksCSSQuery } = require('../src/contentScript/setters.js');
 
 class DriverUtils {
@@ -36,11 +36,20 @@ class DriverUtils {
         await this.setFavicon(favicon);
     }
     
+    async getFaviconElement() {
+        return await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
+    }
+
     async assertEmojiSetAsFavicon() {
-        const faviconElement = await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
+        const faviconElement = this.getFaviconElement();
         expect(await this.getAttribute(faviconElement, "rel")).toContain("icon");
         expect(await this.getAttribute(faviconElement, "href")).toMatch(/^data:image\/png;base64,/);
         expect(await this.getAttribute(faviconElement, "type")).toMatch('image/x-icon');
+    }
+
+    async assertFaviconUrl(faviconUrl) {
+        const faviconElement = this.getFaviconElement();
+        expect(await this.getAttribute(faviconElement, "href")).toBe(faviconUrl);
     }
 
     async openRenameDialog() {
@@ -102,6 +111,16 @@ class DriverUtils {
         await this.driver.close();
         await this.driver.switchTo().window(newTabHandle);
         await this.openTabToURL(originalUrl);
+    }
+
+    async removeFavicon() {
+        await this.openRenameDialog();
+        const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
+        await emojiPicker.click();
+        const emojiRemoveButton = await this.driver.findElement(By.id(EMOJI_REMOVE_BUTTON_ID));
+        emojiRemoveButton.click();
+        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        await renameBox.sendKeys(Key.ENTER);
     }
 
 }
