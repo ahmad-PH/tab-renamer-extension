@@ -26,10 +26,11 @@
 #tab-renamer-extension-emoji-picker .remove-button {
     cursor: pointer;
     background-color: white;
-    color: gray;
+    color: #706f6f;
     border: none;
     text-align: center;
     padding: 10px 20px;
+    margin-left: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,7 +102,6 @@
     border-radius: 8px;
     padding: 6px 10px;
     margin: 0;
-    margin-bottom: 10px;
     width: 100%;
     box-sizing: border-box;
     outline: none; /* remove the default browser outline */

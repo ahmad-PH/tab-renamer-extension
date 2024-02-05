@@ -110,16 +110,7 @@ export default function App() {
             event.preventDefault();
             log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current, originalFavicon.current);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
-            let newDocumentFavicon = null;
-            if (inputBoxValue === 'TRIGGER') {
-                newDocumentFavicon = null;
-            } else {
-                if (selectedEmoji) {
-                    newDocumentFavicon = new EmojiFavicon(selectedEmoji).toDTO()
-                } else {
-                    newDocumentFavicon = null;
-                }
-            }
+            const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
             await setDocumentSignature(new TabSignature(
                 newDocumentTitle,
                 newDocumentFavicon,
