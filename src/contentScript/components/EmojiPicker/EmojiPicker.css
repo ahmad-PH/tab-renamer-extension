@@ -6,8 +6,6 @@
     /* width: calc(9 * 40px); /* 40px is a rough estimate of each emoji's size */
     width: 375px;
     height: 300px;
-    padding: 10px;
-
     overflow-y: auto; 
 
     position: absolute;
@@ -17,11 +15,47 @@
     border-radius: 12px;
 }
 
+#tab-renamer-extension-emoji-picker .header-container {
+    padding: 10px;
+    position: sticky;
+    background-color: white; /* or any color that matches your design */
+    top: 0;
+    z-index: 1;
+}
+
+#tab-renamer-extension-emoji-picker .remove-button {
+    cursor: pointer;
+    background-color: white;
+    color: gray;
+    border: none;
+    text-align: center;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+}
+
+#tab-renamer-extension-emoji-picker .remove-button:hover {
+    background-color: #f2f2f2;
+}
+
+#tab-renamer-extension-emoji-picker .header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#tab-renamer-extension-emoji-picker .content {
+    z-index: 0;
+    margin: 10px;
+}
+
+
 #tab-renamer-extension-emoji-picker .emoji-grid {
     display: grid;
     grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
     grid-gap: 4px; 
-    padding: 8px;
 }
 
 #tab-renamer-extension-emoji-picker .emoji-item {
