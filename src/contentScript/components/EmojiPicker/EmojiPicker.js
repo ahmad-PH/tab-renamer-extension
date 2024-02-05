@@ -2,6 +2,7 @@ import React, { Component, useEffect, useRef } from 'react';
 import './EmojiPicker.css';
 import PropTypes from 'prop-types';
 import { EMOJI_PICKER_ID } from '../../../config';
+import { Button } from '@mui/material';
 
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
@@ -53,34 +54,48 @@ class EmojiPicker extends Component {
     render() {
         return (
             <div id={EMOJI_PICKER_ID}>
-                <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
+                <div className='header-container'>
+                    <div className='header'>
+                        <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
+                        <button 
+                            onClick={this.props.onRemoveEmoji}
+                            className="remove-button"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                </div>
 
-                {this.state.searchValue === "" ? (
-                    <div id={ALL_EMOJIS_ID}>
-                        {this.state.allEmojis && Object.entries(this.state.allEmojis).map(([category, emojis]) => (
-                            <div className='emoji-category' key={category}>
-                                <div className='emoji-category-title'>
-                                    {this.formatEmojiCategoryTitle(category)}
+                {/* <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} /> */}
+                
+                <div className='content'>
+                    {this.state.searchValue === "" ? (
+                        <div id={ALL_EMOJIS_ID}>
+                            {this.state.allEmojis && Object.entries(this.state.allEmojis).map(([category, emojis]) => (
+                                <div className='emoji-category' key={category}>
+                                    <div className='emoji-category-title'>
+                                        {this.formatEmojiCategoryTitle(category)}
+                                    </div>
+                                    <div className='emoji-grid'>
+                                        {emojis.map(emoji => (
+                                            <Emoji emoji={emoji} key={emoji.unicode} onClick={
+                                                () => this.props.onEmojiClick(emoji.emoji)
+                                            }/>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className='emoji-grid'>
-                                    {emojis.map(emoji => (
-                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={
-                                            () => this.props.onEmojiClick(emoji.emoji)
-                                        }/>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div id={SEARCH_RESULTS_ID} className='emoji-grid'>
-                        {this.state.emojis.map(emoji => (
-                            <Emoji emoji={emoji} key={emoji.unicode} onClick={
-                                this.props.onEmojiClick
-                            }/>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    ) : (
+                        <div id={SEARCH_RESULTS_ID} className='emoji-grid'>
+                            {this.state.emojis.map(emoji => (
+                                <Emoji emoji={emoji} key={emoji.unicode} onClick={
+                                    this.props.onEmojiClick
+                                }/>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         );
     }
@@ -88,6 +103,7 @@ class EmojiPicker extends Component {
 
 EmojiPicker.propTypes = {
     onEmojiClick: PropTypes.func.isRequired,
+    onRemoveEmoji: PropTypes.func.isRequired,
 }
 
 const SearchBar = ({ onSearchBarChanged }) => {

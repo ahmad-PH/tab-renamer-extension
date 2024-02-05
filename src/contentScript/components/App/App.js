@@ -139,6 +139,11 @@ export default function App() {
         setEmojiPickerIsVisible(false);
     }
 
+    const handleRemoveEmoji = () => {
+        setSelectedEmoji(null);
+        setEmojiPickerIsVisible(false);
+    }
+
     return (
         <div id={ROOT_ELEMENT_ID} style={{ display: isVisible ? 'block' : 'none' }}>
             <div id={OVERLAY_ID} onClick={() => {setIsVisible(false)}}></div>
@@ -146,7 +151,7 @@ export default function App() {
                 <div id="tab-renamer-extension-favicon-picker-wrapper">
                     <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
                     {emojiPickerIsVisible && 
-                        <EmojiPicker onEmojiClick={handleEmojiClick}/>
+                        <EmojiPicker onEmojiClick={handleEmojiClick} onRemoveEmoji={handleRemoveEmoji}/>
                     }
                 </div>
                 <input 
