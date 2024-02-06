@@ -1,8 +1,8 @@
 import React, { Component, useEffect, useRef } from 'react';
-import './EmojiPicker.css';
+import styles from './EmojiPicker.module.css';
 import PropTypes from 'prop-types';
 import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID } from '../../../config';
-import { Button } from '@mui/material';
+import classNames from 'classnames';
 
 const SEARCH_RESULTS_ID = 'tab-renamer-extension-search-results-div';
 const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
@@ -53,25 +53,25 @@ class EmojiPicker extends Component {
 
     render() {
         return (
-            <div id={EMOJI_PICKER_ID} className={this.props.className}>
-                <div className='header-container'>
-                    <div className='header'>
+            <div id={EMOJI_PICKER_ID} className={classNames(styles.root, {[styles.visible]: this.props.isVisible})}>
+                <div className={styles.headerContainer}>
+                    <div className={styles.header}>
                         <SearchBar onSearchBarChanged={(searchValue) => this.setState({searchValue})} />
-                        <button id={EMOJI_REMOVE_BUTTON_ID} onClick={this.props.onRemoveEmoji} className="remove-button">
+                        <button id={EMOJI_REMOVE_BUTTON_ID} onClick={this.props.onRemoveEmoji} className={styles.removeButton}>
                             Remove
                         </button>
                     </div>
                 </div>
 
-                <div className='content'>
+                <div className={styles.content}>
                     {this.state.searchValue === "" ? (
                         <div id={ALL_EMOJIS_ID}>
                             {this.state.allEmojis && Object.entries(this.state.allEmojis).map(([category, emojis]) => (
-                                <div className='emoji-category' key={category}>
-                                    <div className='emoji-category-title'>
+                                <div key={category}>
+                                    <div className={styles.emojiCategoryTitle}>
                                         {this.formatEmojiCategoryTitle(category)}
                                     </div>
-                                    <div className='emoji-grid'>
+                                    <div className={styles.emojiGrid}>
                                         {emojis.map(emoji => (
                                             <Emoji emoji={emoji} key={emoji.unicode} onClick={
                                                 () => this.props.onEmojiClick(emoji.emoji)
@@ -82,7 +82,7 @@ class EmojiPicker extends Component {
                             ))}
                         </div>
                     ) : (
-                        <div id={SEARCH_RESULTS_ID} className='emoji-grid'>
+                        <div id={SEARCH_RESULTS_ID} className={classNames(styles.searchResults, styles.emojiGrid)}>
                             {this.state.emojis.map(emoji => (
                                 <Emoji emoji={emoji} key={emoji.unicode} onClick={
                                     this.props.onEmojiClick
@@ -99,7 +99,7 @@ class EmojiPicker extends Component {
 EmojiPicker.propTypes = {
     onEmojiClick: PropTypes.func.isRequired,
     onRemoveEmoji: PropTypes.func.isRequired,
-    className: PropTypes.string,
+    isVisible: PropTypes.bool.isRequired,
 }
 
 const SearchBar = ({ onSearchBarChanged }) => {
@@ -112,6 +112,7 @@ const SearchBar = ({ onSearchBarChanged }) => {
     return (
         <input
             id={SEARCH_BAR_ID}
+            className={styles.emojiSearchBar}
             ref={searchBarRef}
             type='text'
             placeholder='Search for an emoji'
@@ -128,12 +129,12 @@ SearchBar.propTypes = {
 const Emoji = ({ emoji, onClick }) => {
     return (
         <div 
-            className='emoji-item' 
+            className={styles.emojiItem}
             data-unicode={emoji.unicode} 
             data-shortcode={emoji.shortcode}
             onClick={onClick}
         >
-            <span className='emoji-wrapper'>
+            <span className={styles.emojiWrapper}>
                 {emoji.emoji}
             </span>
         </div>

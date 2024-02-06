@@ -47,7 +47,8 @@ function restoreDocumentFavicon(originalFaviconUrl) {
 }
 
 /**
- * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy, they will not be set.
+ * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy,
+ * they will be restored to their original form.
  */
 export async function setDocumentSignature(signature, preserve = true, save = true) {
     log.debug('setDocumentSignature called with signature:', signature);
@@ -64,7 +65,6 @@ export async function setDocumentSignature(signature, preserve = true, save = tr
     }
 
     if (save) {
-        // Even this call will know not to set the title or favicon if they are not truthy.
         await bgScriptApi.saveSignature(signature);
     }
 }

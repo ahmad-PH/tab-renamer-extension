@@ -1,4 +1,4 @@
-#tab-renamer-extension-root, #tab-renamer-extension-root * {
+.root, .root * {
     all: initial;
     animation: none;
     background: none;
@@ -12,7 +12,7 @@
     padding: 0;
 }
 
-#tab-renamer-extension-overlay {
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
     z-index: 9998; /* Just below the input box */
 }
 
-#tab-renamer-extension-main-bar {
+.mainBar {
     display: flex;
     align-items: center;
 
@@ -34,13 +34,13 @@
     z-index: 9999;
 }
 
-#tab-renamer-extension-favicon-picker-wrapper {
+.faviconPickerWrapper {
     position: relative;
     width: 60px;
     height: 60px;
 }
 
-#tab-renamer-extension-input-box {
+.inputBox {
     /*==================== Dimensions ==================== */
     width: 300px;
     height: 60px;
@@ -74,8 +74,15 @@
     transition: all 0.3s ease; /* Smooth transition effects */
 }
 
+/* Style for input box when it gets focus */
+.inputBox:focus {
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */
+}
+
 /* Styling for the placeholder text */
-#tab-renamer-extension-input-box::placeholder {
-  color: rgb(199, 199, 199) !important;
-  font-weight: bold;
+.inputBox::placeholder {
+    color: rgb(112, 111, 111, 0.7);
+    /* color: rgb(199, 199, 199) !important; */
 }

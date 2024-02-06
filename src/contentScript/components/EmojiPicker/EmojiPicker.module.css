@@ -1,4 +1,4 @@
-#tab-renamer-extension-emoji-picker {
+.root {
     background-color: white;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -17,11 +17,11 @@
     opacity: 0;
 }
 
-#tab-renamer-extension-emoji-picker.visible {
+.root.visible {
     opacity: 1;
 }
 
-#tab-renamer-extension-emoji-picker .header-container {
+.headerContainer {
     padding: 10px;
     position: sticky;
     background-color: white; /* or any color that matches your design */
@@ -29,7 +29,12 @@
     z-index: 1;
 }
 
-#tab-renamer-extension-emoji-picker .remove-button {
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.removeButton {
     cursor: pointer;
     background-color: white;
     color: #706f6f;
@@ -44,28 +49,23 @@
     transition: background-color 0.3s ease;
 }
 
-#tab-renamer-extension-emoji-picker .remove-button:hover {
+.removeButton:hover {
     background-color: #f2f2f2;
 }
 
-#tab-renamer-extension-emoji-picker .header {
-    display: flex;
-    justify-content: space-between;
-}
-
-#tab-renamer-extension-emoji-picker .content {
+.content {
     z-index: 0;
-    margin: 10px;
+    margin: 0px 10px;
 }
 
-
-#tab-renamer-extension-emoji-picker .emoji-grid {
+.emojiGrid {
     display: grid;
     grid-template-columns: repeat(9, 1fr); /* Creates 9 columns */
     grid-gap: 4px; 
+    padding: 5px 0px;
 }
 
-#tab-renamer-extension-emoji-picker .emoji-item {
+.emojiItem {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -78,31 +78,23 @@
     font-size: 16px;
 }
 
-#tab-renamer-extension-emoji-picker .emoji-item .emoji-wrapper {
+.emojiItem .emojiWrapper {
     transform: translateY(-1.5px);
     cursor: pointer;
 }
   
-#tab-renamer-extension-emoji-picker .emoji-item:hover {
+.emojiItem:hover {
     background-color: rgba(169, 169, 255, 0.829);
     border-radius: 6px;
 }
 
-#tab-renamer-extension-emoji-picker .emoji-category-title {
+.emojiCategoryTitle {
     font-family: 'Arial', sans-serif !important;
     color: #6f6f6f;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin: 10px 5px;
 }
 
-/* Style for input box when it gets focus */
-#tab-renamer-extension-input-box:focus {
-    border: none;
-    outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */
-}
-
-#tab-renamer-extension-emoji-search-bar {
+.emojiSearchBar {
     font-family: 'Arial', sans-serif !important;
     background-color: white;
     border-radius: 12px;
@@ -115,12 +107,12 @@
     transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for the focus effect */
 }
 
-#tab-renamer-extension-emoji-search-bar:focus {
+.emojiSearchBar:focus {
     border-color: #4da3ff;
     box-shadow: 0 0 5px 4px rgba(31, 138, 252, 0.285); /* Light blue halo-like shadow */
 }
 
-#tab-renamer-extension-search-results-div {
+.searchResults {
     width: 100%;
 }
 

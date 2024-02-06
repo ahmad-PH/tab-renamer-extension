@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './App.css';
+import styles from './App.module.css';
 import { setDocumentSignature } from "../../setters";
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, MAIN_BAR_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
 import log from "../../../log";
@@ -136,20 +136,21 @@ export default function App() {
     }
 
     return (
-        <div id={ROOT_ELEMENT_ID} style={{ display: isVisible ? 'block' : 'none' }}>
-            <div id={OVERLAY_ID} onClick={() => {setIsVisible(false)}}></div>
-            <div id={MAIN_BAR_ID}>
-                <div id="tab-renamer-extension-favicon-picker-wrapper">
+        <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
+            <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}></div>
+            <div className={styles.mainBar}>
+                <div className={styles.faviconPickerWrapper}>
                     <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
                     <EmojiPicker 
                         onEmojiClick={handleEmojiClick}
                         onRemoveEmoji={handleRemoveEmoji}
-                        className={emojiPickerIsVisible ? 'visible' : ''}
+                        isVisible={emojiPickerIsVisible}
                     />
                 </div>
                 <input 
                     type="text"
                     id={INPUT_BOX_ID}
+                    className={styles.inputBox}
                     placeholder="New Tab Title"
                     autoComplete="off"
                     value={inputBoxValue}
