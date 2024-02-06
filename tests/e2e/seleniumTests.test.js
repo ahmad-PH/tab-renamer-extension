@@ -2,7 +2,7 @@ const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('../driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
 jest.setTimeout(15 * SECONDS);
@@ -61,10 +61,46 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe(newTitle);
     });
 
+    test('Input box has focus when rename dialog is opened', async () => {
+        await driver.get(url1);
+
+        // Click on the body so that the browser window is actually focused:
+        const body = await driver.findElement(By.css('body'));
+        await driver.actions().click(body).perform();
+
+        await driverUtils.openRenameDialog();
+
+        const inputBox = await driver.findElement(By.id(INPUT_BOX_ID));
+        const activeElement = await driver.switchTo().activeElement();
+
+        expect(await activeElement.getAttribute('id')).toBe(await inputBox.getAttribute('id'));
+    });
+
     test('Can set emojis', async () => {
         await driver.get(url1);
         await driverUtils.setFavicon('😃');
         await driverUtils.assertEmojiSetAsFavicon();
+    });
+
+    test('Can search for emojis', async () => {
+        await driver.get(url1);
+        await driverUtils.openEmojiPicker();
+
+        const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
+        await emojiSearchBar.sendKeys('halo');
+
+        // Verify that search results contains the halo emoji, and nothing else (checking a few
+        // common emojis as a proxy for checking all emojis)
+        const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
+        const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
+        const elements = await driver.findElements(By.xpath(xpathForEmoji('😇'), searchResults));
+        expect(elements.length).toBeGreaterThan(0);
+
+        const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
+        for (const emoji of commonEmojis) {
+            const elements = await driver.findElements(By.xpath(xpathForEmoji(emoji), searchResults));
+            expect(elements.length).toBe(0);
+        }
     });
 
     test('Retains tab signature when tab is re-opened', async () => {
@@ -151,20 +187,5 @@ describe('Selenium UI Tests', () => {
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
         await driverUtils.assertFaviconUrl(googleFavicon);
-    });
-
-    test('Input box has focus when rename dialog is opened', async () => {
-        await driver.get(url1);
-
-        // Click on the body so that the browser window is actually focused:
-        const body = await driver.findElement(By.css('body'));
-        await driver.actions().click(body).perform();
-
-        await driverUtils.openRenameDialog();
-
-        const inputBox = await driver.findElement(By.id(INPUT_BOX_ID));
-        const activeElement = await driver.switchTo().activeElement();
-
-        expect(await activeElement.getAttribute('id')).toBe(await inputBox.getAttribute('id'));
     });
 });

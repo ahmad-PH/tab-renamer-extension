@@ -16,11 +16,15 @@ class DriverUtils {
         await renameBox.clear();
         await renameBox.sendKeys(newTabTitle, Key.ENTER);
     }
-    
-    async setFavicon(emoji) {
+
+    async openEmojiPicker() {
         await this.openRenameDialog();
         const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
-        await emojiPicker.click();
+        await emojiPicker.click();        
+    }
+    
+    async setFavicon(emoji) {
+        await this.openEmojiPicker();
     
         const xpath = `//*[contains(text(),'${emoji}')]`;
         await this.driver.wait(until.elementLocated(By.xpath(xpath)));
