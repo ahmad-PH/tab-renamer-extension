@@ -16,6 +16,7 @@ export default function App() {
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
+    const inputRef = useRef(null);
 
     /** @type {React.MutableRefObject<string>} */
     const originalTitle = useRef(null);
@@ -135,6 +136,12 @@ export default function App() {
         setEmojiPickerIsVisible(false);
     }
 
+    useEffect(() => {
+        if (isVisible && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isVisible]);
+
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
             <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}></div>
@@ -157,6 +164,7 @@ export default function App() {
                     onChange={(event) => setInputBoxValue(event.target.value)}
                     onClick={(event) => event.stopPropagation()}
                     onKeyDown={handleInputBoxKeydown}
+                    ref={inputRef}
                 />
             </div>
         </div>

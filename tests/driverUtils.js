@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID } = require('../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG } = require('../src/config.js');
 const { faviconLinksCSSQuery } = require('../src/contentScript/setters.js');
 
 class DriverUtils {
@@ -53,7 +53,7 @@ class DriverUtils {
     }
 
     async openRenameDialog() {
-        await this.driver.executeScript("document.dispatchEvent(new Event('open_rename_dialog'));");
+        await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_OPEN_RENAME_DIALOG}'));`);
         await this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
     }
 

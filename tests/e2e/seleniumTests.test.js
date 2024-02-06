@@ -2,7 +2,7 @@ const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('../driverUtils.js');
-const { ROOT_ELEMENT_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
 jest.setTimeout(15 * SECONDS);
@@ -151,6 +151,20 @@ describe('Selenium UI Tests', () => {
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
         await driverUtils.assertFaviconUrl(googleFavicon);
-    })
+    });
 
+    test('Input box has focus when rename dialog is opened', async () => {
+        await driver.get(url1);
+
+        // Click on the body so that the browser window is actually focused:
+        const body = await driver.findElement(By.css('body'));
+        await driver.actions().click(body).perform();
+
+        await driverUtils.openRenameDialog();
+
+        const inputBox = await driver.findElement(By.id(INPUT_BOX_ID));
+        const activeElement = await driver.switchTo().activeElement();
+
+        expect(await activeElement.getAttribute('id')).toBe(await inputBox.getAttribute('id'));
+    });
 });

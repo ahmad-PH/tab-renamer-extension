@@ -94,9 +94,9 @@ EmojiPicker.propTypes = {
 const SearchBar = ({ onSearchBarChanged }) => {
     const searchBarRef = useRef(null);
 
-    useEffect(() => {
-        searchBarRef.current.focus();
-    }, []);
+    // useEffect(() => {
+    //     searchBarRef.current.focus();
+    // }, []);
 
     return (
         <input
