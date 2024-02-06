@@ -3,16 +3,16 @@ import { Tab } from "../types";
 import { loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { EVENT_OPEN_RENAME_DIALOG } from "../config";
+import { COMMAND_OPEN_RENAME_DIALOG } from "../config";
 
 const log = getLogger('background.js');
 log.setLevel('WARN');
 
 chrome.commands.onCommand.addListener((command) => {
-    if (command === EVENT_OPEN_RENAME_DIALOG) {
+    if (command === COMMAND_OPEN_RENAME_DIALOG) {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             return chrome.tabs.sendMessage(tabs[0].id, {
-                command: EVENT_OPEN_RENAME_DIALOG,
+                command: COMMAND_OPEN_RENAME_DIALOG,
                 tabId: tabs[0].id
             });
         }).catch(error => 
@@ -71,8 +71,11 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
 //     }
 // });
 
-// Might be needed later, for making sure the contentScript gets injected when
-// the extension is installed or updated:
+
+/**
+ * This function makes sure the contentScript gets injected properly when extension is installed or
+ * updated without requiring the user to reload the tabs.
+ */
 chrome.runtime.onInstalled.addListener(async () => {
     const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
     log.debug('after query:', allTabs);
@@ -91,6 +94,20 @@ chrome.runtime.onInstalled.addListener(async () => {
             }
         }
     });
+});
+
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.contextMenus.create({
+        "id": "renameTab",
+        "title": "Rename Tab",
+        "contexts": ["page"]
+    });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === "renameTab") {
+        chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
+    }
 });
 
 chrome.runtime.onConnect.addListener((port) => {

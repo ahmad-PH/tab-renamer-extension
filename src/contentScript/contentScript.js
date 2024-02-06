@@ -1,6 +1,6 @@
 import { disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
 import listenerManager from "./listenerManager";
-import { EVENT_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
+import { COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import React from 'react';
@@ -38,23 +38,23 @@ function insertUIIntoDOM() {
 
 (function initializeUIListeners() {
     function chromeListener(message, _sender, _sendResponse) {
-        if (message.command === EVENT_OPEN_RENAME_DIALOG) {
+        if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
             insertUIIntoDOM();
             chrome.runtime.onMessage.removeListener(chromeListener);
-            document.removeEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+            document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
         }
     }
 
     function domListener(event) {
-        if (event.type === EVENT_OPEN_RENAME_DIALOG) {
+        if (event.type === COMMAND_OPEN_RENAME_DIALOG) {
             insertUIIntoDOM();
             chrome.runtime.onMessage.removeListener(chromeListener);
-            document.removeEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+            document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
         }
     }
 
     chrome.runtime.onMessage.addListener(chromeListener);
-    document.addEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+    document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
 
 // Clean-up logic for when the extension unloads/reloads.

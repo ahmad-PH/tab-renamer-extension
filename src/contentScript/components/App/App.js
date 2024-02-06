@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './App.module.css';
 import { setDocumentSignature } from "../../setters";
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, EVENT_OPEN_RENAME_DIALOG } from '../../../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
 import log from "../../../log";
@@ -70,7 +70,7 @@ export default function App() {
 
     useEffect(() => {
         function chromeListener(message, _sender, _sendResponse) {
-            if (message.command === EVENT_OPEN_RENAME_DIALOG) {
+            if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
             }
             // else if (message.command === 'set_tab_signature') {
@@ -81,15 +81,15 @@ export default function App() {
         chrome.runtime.onMessage.addListener(chromeListener);
 
         function domListener(event) {
-            if (event.type === EVENT_OPEN_RENAME_DIALOG) {
+            if (event.type === COMMAND_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
             }
         }
-        document.addEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+        document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 
         return () => {
             chrome.runtime.onMessage.removeListener(chromeListener);
-            document.removeEventListener(EVENT_OPEN_RENAME_DIALOG, domListener);
+            document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
         };
     });
 
