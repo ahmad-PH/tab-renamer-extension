@@ -1,5 +1,5 @@
 import { storageGet, storageSet } from "../utils.js";
-import { Tab } from "../types.js";
+import { TabInfo } from "../types.js";
 
 /** garbage collector (gc) logger */
 const gcLog = require("loglevel").getLogger("module-one")
@@ -16,8 +16,8 @@ async function garbageCollector() {
 }
 
 /**
- * @param {Tab[]} tabs - The list of tabs to filter.
- * @returns {Tab[]} - The tabs to keep.
+ * @param {TabInfo[]} tabs - The list of tabs to filter.
+ * @returns {TabInfo[]} - The tabs to keep.
  */
 export function garabageCollectionFilter(tabs) {
     gcLog.debug('Retrieved all tab info:', JSON.stringify(tabs, null, 2));

@@ -1,4 +1,4 @@
-export class Tab {
+export class TabInfo {
     /**
      * @param {number} id
      * @param {string} url

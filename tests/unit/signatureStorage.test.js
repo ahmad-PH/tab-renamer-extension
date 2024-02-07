@@ -1,5 +1,5 @@
 const { findMatchingTab, loadTab, saveTab } = require('../../src/background/signatureStorage.js');
-const { Tab, TabSignature } = require('../../src/types.js');
+const { TabInfo, TabSignature } = require('../../src/types.js');
 const { storageSet, storageGet } = require('../../src/utils.js');
 const { chromeStorageMock } = require('../chromeStorageMock.js');
 
@@ -14,7 +14,7 @@ describe('findMatchingTab', () => {
 
     it('returns correct signature when matching tabId exists', () => {
         const storedTabInfo = {
-            [targetTab.id]: new Tab(targetTab.id, targetTab.url, targetTab.windowIndex, false, null,
+            [targetTab.id]: new TabInfo(targetTab.id, targetTab.url, targetTab.windowIndex, false, null,
                  new TabSignature('Google', '🔍'))
         }
 
@@ -24,7 +24,7 @@ describe('findMatchingTab', () => {
 
     it('returns null when no matching tabId and no closed tab with matching url', () => {
         const storedTabInfo = {
-            2: new Tab(2, targetTab.url, 0, false, null, new TabSignature('Title', '🔍'))
+            2: new TabInfo(2, targetTab.url, 0, false, null, new TabSignature('Title', '🔍'))
         }
         expect(findMatchingTab(storedTabInfo, targetTab.id, targetTab.url, targetTab.windowIndex))
             .toBe(null);
@@ -32,7 +32,7 @@ describe('findMatchingTab', () => {
 
     it('returns correct signature when no matching tabId and one closed tab with matching url', () => {
         const storedTabInfo = {
-            2: new Tab(2, targetTab.url, 0, true, now, new TabSignature('Title', '🔍'))
+            2: new TabInfo(2, targetTab.url, 0, true, now, new TabSignature('Title', '🔍'))
         }
         expect(findMatchingTab(storedTabInfo, targetTab.id, targetTab.url, targetTab.windowIndex))
             .toBe(storedTabInfo[2]);
@@ -41,9 +41,9 @@ describe('findMatchingTab', () => {
     it('returns correct signature when no matching tabId, multiple closed tabs with matching url, ' + 
         'and one matching window index', () => {
         const storedTabInfo = {
-            2: new Tab(2, targetTab.url, targetTab.windowIndex, true, now, new TabSignature('Title', '🔍')),
-            3: new Tab(3, targetTab.url, targetTab.windowIndex + 1, true, now, new TabSignature('Title', '🔍')),
-            4: new Tab(4, targetTab.url, targetTab.windowIndex + 2, true, now, new TabSignature('Title', '🔍')),
+            2: new TabInfo(2, targetTab.url, targetTab.windowIndex, true, now, new TabSignature('Title', '🔍')),
+            3: new TabInfo(3, targetTab.url, targetTab.windowIndex + 1, true, now, new TabSignature('Title', '🔍')),
+            4: new TabInfo(4, targetTab.url, targetTab.windowIndex + 2, true, now, new TabSignature('Title', '🔍')),
         }
         expect(findMatchingTab(storedTabInfo, targetTab.id, targetTab.url, targetTab.windowIndex))
             .toBe(storedTabInfo[2]);
@@ -52,11 +52,11 @@ describe('findMatchingTab', () => {
     it('returns most recent signature when no matching tabId, multiple closed tabs with matching url, ' + 
         'and no matching window index', () => {
         const storedTabInfo = {
-            2: new Tab(2, targetTab.url, targetTab.windowIndex + 1, true, 
+            2: new TabInfo(2, targetTab.url, targetTab.windowIndex + 1, true, 
                 new Date('2021-01-01').toISOString(), new TabSignature('Title', '🔍')),
-            3: new Tab(3, targetTab.url, targetTab.windowIndex + 2, true, 
+            3: new TabInfo(3, targetTab.url, targetTab.windowIndex + 2, true, 
                 new Date('2021-01-05').toISOString(), new TabSignature('Title', '🔍')),
-            4: new Tab(4, targetTab.url, targetTab.windowIndex + 3, true, 
+            4: new TabInfo(4, targetTab.url, targetTab.windowIndex + 3, true, 
                 new Date('2021-01-02').toISOString(), new TabSignature('Title', '🔍')),
         }
         expect(findMatchingTab(storedTabInfo, targetTab.id, targetTab.url, targetTab.windowIndex))
@@ -77,14 +77,14 @@ describe('save/loadTab', () => {
     });
 
     it('loadTab updates isClosed after matching', async () => {
-        await storageSet({1: new Tab(1, 'https://www.google.com', 5, true, null, new TabSignature('Google', '🔍'))});
+        await storageSet({1: new TabInfo(1, 'https://www.google.com', 5, true, null, new TabSignature('Google', '🔍'))});
         expect((await storageGet(1)).isClosed).toBe(true);
         await loadTab(1, null, null, true);
         expect((await storageGet(1)).isClosed).toBe(false);
     });
 
     it('loadTab can load signature saved with saveTab', async () => {
-        await saveTab(new Tab(1, 'https://www.google.com', 5, false, null, new TabSignature('Google', '🔍')));
+        await saveTab(new TabInfo(1, 'https://www.google.com', 5, false, null, new TabSignature('Google', '🔍')));
         const signature = (await loadTab(1, null, null, false)).signature;
         expect(signature.title).toBe('Google');
         expect(signature.favicon).toBe('🔍');
@@ -93,7 +93,7 @@ describe('save/loadTab', () => {
     it('loadTab with isBeingOpened=true updates tabId and removes old tabId after matching', async () => {
         const sharedURL = 'https://www.google.com';
         const sharedIndex = 5;
-        await storageSet({1: new Tab(1, sharedURL, sharedIndex, true, new Date().toISOString,
+        await storageSet({1: new TabInfo(1, sharedURL, sharedIndex, true, new Date().toISOString,
          new TabSignature('Google', '🔍'))});
         await loadTab(10, sharedURL, sharedIndex, true);
 

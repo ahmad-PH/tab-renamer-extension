@@ -1,6 +1,6 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG } = require('../src/config.js');
-const { faviconLinksCSSQuery } = require('../src/contentScript/setters.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG } = require('../../src/config.js');
+const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 
 class DriverUtils {
     /**

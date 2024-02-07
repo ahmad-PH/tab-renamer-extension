@@ -1,6 +1,6 @@
 const { default: log } = require("../log");
 import bgScriptApi from "./backgroundScriptApi";
-import { setDocumentSignature } from "./setters";
+import { setDocumentSignature } from "./tab";
 
 /** 
  * Update tab signature when the contentScript loads

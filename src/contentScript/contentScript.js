@@ -6,8 +6,8 @@ import App from './components/App';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import log from "../log";
-import { setDocumentSignature } from "./setters";
 import bgScriptApi from "./backgroundScriptApi";
+import tab from "./tab";
 
 // Global variables:
 let uiInsertedIntoDOM = false;
@@ -19,7 +19,7 @@ let root = null;
     const signature = await bgScriptApi.loadSignature();
     if (signature) {
         log.debug('retrieved signature:', signature);
-        await setDocumentSignature(signature, true, false);
+        await tab.setSignature(signature, true, false);
     } else {
         log.debug('no signature found');
     }
@@ -31,7 +31,7 @@ function insertUIIntoDOM() {
         rootElement.id = ROOT_ELEMENT_ID;
         document.body.appendChild(rootElement);
         root = createRoot(rootElement);
-        root.render(<App />)
+        root.render(<App tab={tab}/>)
         uiInsertedIntoDOM = true;
     }
 }

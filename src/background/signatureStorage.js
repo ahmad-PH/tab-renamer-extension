@@ -1,4 +1,4 @@
-import { Tab } from "../types";
+import { TabInfo } from "../types";
 import { storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
@@ -6,11 +6,11 @@ const log = getLogger('signatureStorage.js');
 // log.setLevel('DEBUG');
 
 /**
- * @param {Object.<number, Tab>} storedTabInfo
+ * @param {Object.<number, TabInfo>} storedTabInfo
  * @param {number} tabId
  * @param {string} url
  * @param {number} index
- * @returns {Tab|null} The tab that matches the given information, or null if no match is found
+ * @returns {TabInfo|null} The tab that matches the given information, or null if no match is found
  */
 function findMatchingTab(storedTabInfo, tabId, url, index) {
     log.debug('findMatchingTab called with:', { storedTabInfo, tabId, url, index });
@@ -54,7 +54,7 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
  * @param {string} url
  * @param {number} index
  * @param {boolean} isBeingOpened
- * @returns {Promise<Tab|null>} The tab matching the given information.
+ * @returns {Promise<TabInfo|null>} The tab matching the given information.
  */
 async function loadTab(tabId, url, index, isBeingOpened) {
     // Put a descriptive log logging everyhting with its name:
@@ -81,12 +81,12 @@ async function loadTab(tabId, url, index, isBeingOpened) {
 }
 
 /**
- * @param {Tab} tab
+ * @param {TabInfo} tab
  */
 async function saveTab(tab) {
     log.debug('Function called: saveSignature');
     log.debug('tab:', tab);
-    /** @type {Tab} */
+    /** @type {TabInfo} */
     const result = await storageGet(tab.id);
     log.debug('result retrieved:', result);
     let newSignature = Object.assign({}, tab.signature);
@@ -97,7 +97,7 @@ async function saveTab(tab) {
     }
     log.debug('newSignature after possible overwrite with title and favicon:', newSignature);
 
-    await storageSet({[tab.id]: new Tab(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
+    await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
     log.debug('Data saved to storage');
 }
 

@@ -1,7 +1,7 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
-const { DriverUtils } = require('../driverUtils.js');
+const { DriverUtils } = require('./driverUtils.js');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;

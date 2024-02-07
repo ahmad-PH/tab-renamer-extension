@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './App.module.css';
-import { setDocumentSignature } from "../../setters";
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
 import bgScriptApi from '../../backgroundScriptApi';
@@ -9,9 +8,13 @@ import SelectedEmoji from '../SelectedEmoji';
 import EmojiPicker from '../EmojiPicker';
 import { TabSignature } from '../../../types';
 import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
+import { Tab } from '../../tab';
 
-
-export default function App() {
+/**
+ * @param {Object} props 
+ * @property {Tab} props.tab
+ */
+export default function App({tab}) {
     const [isVisible, setIsVisible] = useState(true);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
@@ -112,7 +115,7 @@ export default function App() {
             log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current, originalFavicon.current);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
             const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
-            await setDocumentSignature(new TabSignature(
+            await tab.setSignature(new TabSignature(
                 newDocumentTitle,
                 newDocumentFavicon,
                 originalTitle.current,
@@ -169,5 +172,9 @@ export default function App() {
             </div>
         </div>
     );
+}
+
+App.propTypes = {
+    tab: PropTypes.object.isRequired
 }
 

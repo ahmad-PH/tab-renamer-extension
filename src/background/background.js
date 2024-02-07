@@ -1,5 +1,5 @@
 import { storageGet, storageSet } from "../utils";
-import { Tab } from "../types";
+import { TabInfo } from "../types";
 import { loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
     } else if (message.command === "save_signature") {
-        const tab = new Tab(sender.tab.id, sender.tab.url, sender.tab.index, false, null, message.signature);
+        const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index, false, null, message.signature);
         saveTab(tab);
     } else if (message.command === "load_signature") {
         loadTab(sender.tab.id, sender.tab.url, sender.tab.index, false)
@@ -47,7 +47,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     log.debug('onRemoved listener called:');
     log.debug('tab closed:', tabId, removeInfo);
 
-    /** @type {Tab} */
+    /** @type {TabInfo} */
     let tabInfo = await storageGet(tabId);
     log.debug('retrieved tab Info', tabInfo);
 
