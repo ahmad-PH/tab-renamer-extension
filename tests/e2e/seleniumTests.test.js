@@ -41,11 +41,19 @@ describe('Selenium UI Tests', () => {
         await createNewDriver();
     });
 
-    afterEach(async () => {
-        await driver.quit();
+    const tearDown = async () => { 
+        if (driver) {
+            await driver.quit();
+        }
+        driver = null;
         driverUtils = null;
         await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
-    });
+    }
+
+    afterEach(tearDown);
+    // Make tests interrupt-friendly:
+    process.on('SIGINT', tearDown);
+    process.on('SIGTERM', tearDown);
 
     test('Can open dialog', async () => {
         await driver.get(url1);
