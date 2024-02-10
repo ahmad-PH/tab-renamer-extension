@@ -14,18 +14,24 @@ describe('Selenium UI Tests', () => {
     /** @type {DriverUtils|null} */
     let driverUtils = null;
 
+    /** Some sample URLs to use for testing */
     const googleUrl = 'https://www.google.com/';
+    const facebookUrl = 'https://www.facebook.com/';
     const googleFavicon = 'https://www.google.com/favicon.ico';
-    const url1 = googleUrl;
-    // const url2 = 'https://www.nationalgeographic.com/';
-    const url2 = 'https://www.ahmadphosseini.com/';
+    const urls = [
+        googleUrl, 
+        'https://www.ahmadphosseini.com/',
+        'https://motherfuckingwebsite.com/',
+        facebookUrl,
+        'https://www.nationalgeographic.com/'
+    ]
 
     const createNewDriver = async () => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
         if (!(await fs.lstat(extensionPath)).isDirectory()) {
             throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
         }
-
+        
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(new chrome.Options()
@@ -56,13 +62,13 @@ describe('Selenium UI Tests', () => {
     process.on('SIGTERM', tearDown);
 
     test('Can open dialog', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         await driverUtils.openRenameDialog();
         await driver.findElement(By.id(ROOT_ELEMENT_ID));
     });
 
     test('Can rename tab', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         const newTitle = 'New Title';
         await driverUtils.renameTab(newTitle);
         const actualTitle = await driverUtils.getTitle();
@@ -70,7 +76,7 @@ describe('Selenium UI Tests', () => {
     });
 
     test('Input box has focus when rename dialog is opened', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
 
         // Click on the body so that the browser window is actually focused:
         const body = await driver.findElement(By.css('body'));
@@ -85,13 +91,13 @@ describe('Selenium UI Tests', () => {
     });
 
     test('Can set emojis', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         await driverUtils.setFavicon('😃');
         await driverUtils.assertEmojiSetAsFavicon();
     });
 
     test('Can search for emojis', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         await driverUtils.openEmojiPicker();
 
         const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
@@ -112,7 +118,7 @@ describe('Selenium UI Tests', () => {
     });
 
     test('Retains tab signature when tab is re-opened', async () => {
-        const originalURL = url1;
+        const originalURL = urls[0];
         await driver.get(originalURL);
         const newTitle = 'New title', newFavicon = '🙃';
 
@@ -146,11 +152,11 @@ describe('Selenium UI Tests', () => {
         */
         await driver.switchTo().newWindow('tab'); // dummy tab
 
-        await driver.get(url1);
+        await driver.get(urls[0]);
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
 
-        await driverUtils.openTabToURL(url2);
+        await driverUtils.openTabToURL(urls[1]);
 
         const signature2 = { title: 'Title2', favicon: '🌟' };
         await driverUtils.setSignature(signature2.title, signature2.favicon);
@@ -161,18 +167,18 @@ describe('Selenium UI Tests', () => {
         await driver.sleep(100);
         await createNewDriver();
 
-        await driver.get(url1);
+        await driver.get(urls[0]);
         expect(await driverUtils.getTitle()).toBe(signature1.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
-        await driverUtils.openTabToURL(url2);
+        await driverUtils.openTabToURL(urls[1]);
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
     }, 20 * SECONDS); // The timeout
 
     test('Restores original title when empty title passed', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         const originalTitle = await driverUtils.getTitle();
         await driverUtils.renameTab('New title');
         await driverUtils.renameTab('');
@@ -181,7 +187,7 @@ describe('Selenium UI Tests', () => {
     })
 
     test('Restores original title when empty title passed, after being re-opened', async () => {
-        await driver.get(url1);
+        await driver.get(urls[0]);
         const originalTitle = await driverUtils.getTitle();
         await driverUtils.renameTab('New title');
         await driverUtils.closeAndReopenCurrentTab();
@@ -195,5 +201,16 @@ describe('Selenium UI Tests', () => {
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
         await driverUtils.assertFaviconUrl(googleFavicon);
+    });
+
+    test('Title Preserver keeps the title the same', async () => {
+        // This test is mainly written to emulate what Facebook does (revert the title to its original)
+        // which is the only scenario where my title preserver is even required.
+        await driver.get(urls[0]);
+        await driverUtils.renameTab('New title');
+        await driver.executeScript('document.title = "Some other title"');
+        await driver.sleep(10); // give preserver time to correct the title
+        const actualTitle = await driverUtils.getTitle();
+        expect(actualTitle).toBe('New title');
     });
 });

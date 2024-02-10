@@ -1,9 +1,11 @@
 import { Favicon } from "../favicon";
-import log from "../log";
+import log, { getLogger } from "../log";
 import { TabSignature } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
+
+const plog = getLogger('Preservers', 'debug');
 
 /**
  * A class that represents the current document/tab in which the content script is running.
@@ -85,19 +87,27 @@ export class Tab {
     }
 
 
-    /* This function seems to be only required when:
-    * 1- Clicking on a link that changes the tab
-    * 2- On websites like Facebook that keep enforing their own title
-    */
-
+    /**
+     * This function seems to be only required when:
+     * On websites like Facebook that keep enforing their own title.
+     * Neither of these scenarios require the preserver keep the title the same:
+     * 1- Typing a new url in the address bar
+     * 2- Searching for a query on Google (automatic changing of the page url)
+     * 3- Clicking a link on a website 
+     * The loading of the signature from memory is enough for all these cases.
+     * The preserver doesn't even help reduce the "flash" of the website's actual title.
+     * That one is inevitable it seems.
+     */
     preserveTabTitle(desiredTitle) {
         // Disconnect the previous observer if it exists, to avoid an infinite loop.    
-        log.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
+        plog.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
         this.disconnectTabTitlePreserver();
         this.tabMutationObserver = new MutationObserver((mutations) => {
+            plog.debug('mutationObserver callback called', mutations);
             mutations.forEach((mutation) => {
                 if (mutation.target.nodeName === 'TITLE') {
                     const newTitle = document.title;
+                    plog.debug('TITLE mutation detected', newTitle);
                     if (newTitle !== desiredTitle) {
                         document.title = desiredTitle;
                     }
@@ -106,6 +116,7 @@ export class Tab {
         });
 
         const titleElement = document.querySelector('head > title');
+        plog.debug('titleElement:', titleElement);
         if (titleElement) {
             this.tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
         }
