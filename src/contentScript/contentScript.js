@@ -1,4 +1,4 @@
-import { disconnectTabTitlePreserver, disconnectFaviconPreserver } from "./preservers";
+import tab from "./tab";
 import listenerManager from "./listenerManager";
 import { COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME } from "../config";
 import { createRoot } from 'react-dom/client';
@@ -7,7 +7,6 @@ import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import log from "../log";
 import bgScriptApi from "./backgroundScriptApi";
-import tab from "./tab";
 
 // Global variables:
 let uiInsertedIntoDOM = false;
@@ -62,8 +61,8 @@ const runtimePort = chrome.runtime.connect({ name: "content-script" });
 runtimePort.onDisconnect.addListener(() => {
     listenerManager.removeAllListeners();
 
-    disconnectTabTitlePreserver();
-    disconnectFaviconPreserver();
+    tab.disconnectTabTitlePreserver();
+    tab.disconnectFaviconPreserver();
 
     if (uiInsertedIntoDOM) {
         root.unmount();

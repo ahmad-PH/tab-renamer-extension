@@ -2,13 +2,12 @@ import { Favicon } from "../favicon";
 import log from "../log";
 import { TabSignature } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
-import { preserveFavicon, preserveTabTitle, disconnectFaviconPreserver, disconnectTabTitlePreserver } from "./preservers";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
 /**
- * A class that represents the current document, or tab, which the content script is running in.
- * The class is exported by type-checking purposes, and should not be instantiated.
+ * A class that represents the current document/tab in which the content script is running.
+ * The class is exported for type-checking purposes, and should not be instantiated.
  */
 export class Tab { 
     static instanceExists = false;
@@ -17,12 +16,15 @@ export class Tab {
             throw new Error('Tab instance already exists, should only be instantiated once.');
         }
         Tab.instanceExists = true;
+
+        this.tabMutationObserver = null;
+        this.faviconMutationObserver = null;
     }
 
     setTitle(newTabTitle, preserve = true) {
         log.debug('setDocumentTitle called with newTabTitle:', newTabTitle, preserve);
         if (preserve) {
-            preserveTabTitle(newTabTitle);
+            this.preserveTabTitle(newTabTitle);
         }
         document.title = newTabTitle;
     }
@@ -43,19 +45,19 @@ export class Tab {
         document.getElementsByTagName('head')[0].appendChild(link);
     
         if (preserve) {
-            preserveFavicon(faviconUrl);
+            this.preserveFavicon(faviconUrl);
         }
     }
 
     restoreTitle(originalTitle) {
         log.debug('restoreDocumentTitle called with originalTitle:', originalTitle);
-        disconnectTabTitlePreserver();
+        this.disconnectTabTitlePreserver();
         this.setTitle(originalTitle, false);
     }
     
     restoreFavicon(originalFaviconUrl) {
         log.debug('restoreDocumentFavicon called with originalFaviconUrl:', originalFaviconUrl);
-        disconnectFaviconPreserver();
+        this.disconnectFaviconPreserver();
         this.setFavicon(originalFaviconUrl, false);
     }
 
@@ -81,9 +83,77 @@ export class Tab {
             await bgScriptApi.saveSignature(signature);
         }
     }
+
+
+    /* This function seems to be only required when:
+    * 1- Clicking on a link that changes the tab
+    * 2- On websites like Facebook that keep enforing their own title
+    */
+
+    preserveTabTitle(desiredTitle) {
+        // Disconnect the previous observer if it exists, to avoid an infinite loop.    
+        log.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
+        this.disconnectTabTitlePreserver();
+        this.tabMutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.target.nodeName === 'TITLE') {
+                    const newTitle = document.title;
+                    if (newTitle !== desiredTitle) {
+                        document.title = desiredTitle;
+                    }
+                }
+            });
+        });
+
+        const titleElement = document.querySelector('head > title');
+        if (titleElement) {
+            this.tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
+        }
+    }
+
+    disconnectTabTitlePreserver() {
+        log.debug('disconnectTabTitlePreserver called');
+        if (this.tabMutationObserver) {
+            this.tabMutationObserver.disconnect();
+        }
+    }
+
+
+    /**
+     * @param {string} emojiDataURL
+     */
+    preserveFavicon(emojiDataURL) {
+        // Disconnect the previous observer if it exists, to avoid infinite loop.
+        this.disconnectFaviconPreserver();
+
+        this.faviconMutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                const target = mutation.target;
+                if (target instanceof HTMLLinkElement) {
+                    if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+                        if (target.href !== emojiDataURL) {
+                            target.href = emojiDataURL;
+                        }
+                    }
+                }
+
+            });
+        });
+
+        const headElement = document.querySelector('head');
+        if (headElement) {
+            this.faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
+        }
+    }
+
+    disconnectFaviconPreserver() {
+        if (this.faviconMutationObserver) {
+            this.faviconMutationObserver.disconnect();
+        }
+    }
+
 }
 
 const tab = new Tab();
-Object.freeze(tab);
 
 export default tab;
