@@ -1,4 +1,5 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
+const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
@@ -40,9 +41,13 @@ describe('Selenium UI Tests', () => {
             chromeOptions.addArguments('--headless=new')
         }
 
+        const loggingPrefs = new logging.Preferences();
+        loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
+
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(chromeOptions)
+            .setLoggingPrefs(loggingPrefs)
         .build();
         driverUtils = new DriverUtils(driver);
     }
@@ -53,6 +58,12 @@ describe('Selenium UI Tests', () => {
 
     const tearDown = async () => { 
         if (driver) {
+            const logs = await driver.manage().logs().get(logging.Type.BROWSER);
+            const extensionPrefix = 'chrome-extension://klljeoabgpehcibnkgcfaipponlgpkfc/';
+            const extensionLogs = logs.filter(log => (
+                log.message.startsWith(extensionPrefix) && log.message.includes('#')
+            )).map(log => log.message.replace(extensionPrefix, ''));
+            console.log('extension logs:', extensionLogs);
             await driver.quit();
         }
         driver = null;
