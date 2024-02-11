@@ -4,6 +4,7 @@ import bgScriptApi from "./backgroundScriptApi";
 import tab from "./tab";
 
 const log = getLogger('InitializationContentScript', 'debug');
+const olog = getLogger('Observer', 'debug');
 
 /** 
  * Update tab signature when the contentScript loads
@@ -29,5 +30,57 @@ const log = getLogger('InitializationContentScript', 'debug');
 
     const newSignature = new TabSignature(title, favicon, originalTitle, originalFaviconUrl);
     log.debug('setting signature to:', newSignature);
-    await tab.setSignature(newSignature, false, false);
+    // await tab.setSignature(newSignature, false, false);
+
+
+
+
+
+    // Title Observer:
+    let titleMutationObserver = new MutationObserver((mutations) => {
+        olog.debug('titleMutationObserver callback called', mutations);
+        mutations.forEach((mutation) => {
+            if (mutation.target.nodeName === 'TITLE') {
+                const newTitle = document.title;
+                olog.debug('TITLE mutation detected, newTitle:', newTitle);
+            }
+        });
+    });
+
+    const titleElement = document.querySelector('head > title');
+    // rplog.debug('title element:', titleElement)
+    if (titleElement) {
+        titleMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
+    }
+
+    // Favicon Observer:
+    let faviconMutationObserver = new MutationObserver((mutations) => {
+        olog.debug('faviconMutationObserver callback called', mutations);
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.target === document.head) {
+                olog.debug('Children of <head> have changed');
+                ['addedNodes', 'removedNodes'].forEach((nodeType) => {
+                    mutation[nodeType].forEach((node) => {
+                        if (node.nodeName === 'LINK') {
+                            olog.debug(nodeType + ' LINK detected:');
+                            const newHref = node.href;
+                            if (newHref.length > 100) {
+                                olog.debug('LINK href:', newHref.substring(0, 40) + '...');
+                            } else {
+                                olog.debug('LINK href:', newHref);
+                            }
+                        }
+                    });
+                
+                });
+            }
+        });
+    });
+
+    const headElement = document.querySelector('head');
+    olog.debug('head element:', headElement);
+    if (headElement) {
+        faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
+    }
+
 })();

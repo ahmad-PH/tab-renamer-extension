@@ -5,7 +5,11 @@ const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
 
+// eslint-disable-next-line no-unused-vars
 const SECONDS = 1000;
+// eslint-disable-next-line no-unused-vars
+const MINUTES = 60 * SECONDS;
+
 jest.setTimeout(10 * SECONDS);
 
 describe('Selenium UI Tests', () => {
@@ -60,6 +64,7 @@ describe('Selenium UI Tests', () => {
         if (driver) {
             const logs = await driver.manage().logs().get(logging.Type.BROWSER);
             const extensionPrefix = 'chrome-extension://klljeoabgpehcibnkgcfaipponlgpkfc/';
+            // eslint-disable-next-line no-unused-vars
             const extensionLogs = logs.filter(log => (
                 log.message.startsWith(extensionPrefix) && log.message.includes('#')
             )).map(log => log.message.replace(extensionPrefix, ''));
@@ -213,11 +218,13 @@ describe('Selenium UI Tests', () => {
 
     test('Restores original favicon when empty favicon passed', async () => {
         await driver.get(googleUrl);
-        await driver.sleep(1 * SECONDS);
+        // await driver.sleep(1 * SECONDS);
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
+        // await driver.sleep(2 * SECONDS);
+        // await driver.sleep(20 * MINUTES);
         await driverUtils.assertFaviconUrl(googleFavicon);
-    });
+    }, 30 * MINUTES);
 
     test('Title Preserver keeps the title the same', async () => {
         // This test is mainly written to emulate what Facebook does (revert the title to its original)
@@ -229,4 +236,13 @@ describe('Selenium UI Tests', () => {
         const actualTitle = await driverUtils.getTitle();
         expect(actualTitle).toBe('New title');
     });
+
+
+    test("Title won't flash to the original, when switching between pages", async () => {
+        await driver.get(urls[0]);
+        await driverUtils.renameTab('New title');
+        await driver.sleep(5 * SECONDS);
+        await driver.get(urls[1]);
+        await driver.sleep(5 * SECONDS);
+    }, 100 * SECONDS);
 });

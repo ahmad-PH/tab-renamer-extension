@@ -120,6 +120,12 @@ export default function App() {
                 tab.signature.originalTitle,
                 tab.signature.originalFaviconUrl
             ));
+            if (!newDocumentTitle) {
+                tab.restoreTitle();
+            } 
+            if (!newDocumentFavicon) {
+                tab.restoreFavicon();
+            }
             setIsVisible(false);
         }
     };

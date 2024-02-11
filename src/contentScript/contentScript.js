@@ -12,12 +12,15 @@ import log from "../log";
 let uiInsertedIntoDOM = false;
 let root = null;
 
+let tabInitializationPromise = tab.initializeForMainContentScript();
+
 async function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
+        // await tab.initializeForMainContentScript();
+        await tabInitializationPromise;
         const rootElement = document.createElement(ROOT_TAG_NAME);
         document.body.appendChild(rootElement);
         root = createRoot(rootElement);
-        await tab.initializeForMainContentScript();
         root.render(
             <TabContext.Provider value={tab}>
                 <App/>
@@ -26,7 +29,7 @@ async function insertUIIntoDOM() {
         uiInsertedIntoDOM = true;
     }
 }
-
+ 
 (function initializeUIListeners() {
     async function chromeListener(message, _sender, _sendResponse) {
         if (message.command === COMMAND_OPEN_RENAME_DIALOG) {

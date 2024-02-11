@@ -64,6 +64,9 @@ export class Tab {
         // Check if a favicon link element already exists
         log.debug('setDocumentFavicon called with faviconUrl:', 
             faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
+        if (preserve) {
+            this.preserveFavicon(faviconUrl);
+        }
         let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
     
         faviconLinks.forEach(link => {
@@ -75,44 +78,41 @@ export class Tab {
         link.rel = 'icon';
         link.href = faviconUrl;
         document.getElementsByTagName('head')[0].appendChild(link);
-    
-        if (preserve) {
-            this.preserveFavicon(faviconUrl);
-        }
     }
 
-    restoreTitle(originalTitle) {
-        log.debug('restoreDocumentTitle called with originalTitle:', originalTitle);
+    restoreTitle() {
+        log.debug('restoreDocumentTitle called with originalTitle:', this.signature.originalTitle);
         this.disconnectTabTitlePreserver();
-        if (originalTitle !== document.title) {
-            this.setTitle(originalTitle, false);
+        if (this.signature.originalTitle !== document.title) {
+            this.setTitle(this.signature.originalTitle, false);
         }
     }
     
-    async restoreFavicon(originalFaviconUrl) {
-        log.debug('restoreDocumentFavicon called with originalFaviconUrl:', originalFaviconUrl);
+    async restoreFavicon() {
+        log.debug('restoreDocumentFavicon called with originalFaviconUrl:', this.signature.originalFaviconUrl);
         this.disconnectFaviconPreserver();
-        if (originalFaviconUrl !== (await bgScriptApi.getFaviconUrl())) {
-            this.setFavicon(originalFaviconUrl, false);
+        if (this.signature.originalFaviconUrl !== (await bgScriptApi.getFaviconUrl())) {
+            this.setFavicon(this.signature.originalFaviconUrl, false);
         }
     }
 
     /**
      * @param {TabSignature} signature - The signature to set. If the title or favicon are not truthy,
-     * they will be restored to their original form.
+     * they will be divorced from the values shown in the chrome UI (the preservers will be disconnected).
+     * This will not restore them to their original values.
      */
     async setSignature(signature, preserve = true, save = true) {
         log.debug('setDocumentSignature called with signature:', signature);
         if (signature.title) {
             this.setTitle(signature.title, preserve);
         } else {
-            this.restoreTitle(signature.originalTitle);
+            this.disconnectTabTitlePreserver();
         }
 
         if (signature.favicon) {
             this.setFavicon(Favicon.fromDTO(signature.favicon).getUrl(), preserve);
         } else {
-            this.restoreFavicon(signature.originalFaviconUrl);
+            this.disconnectFaviconPreserver();
         }
 
         if (save) {
@@ -144,7 +144,7 @@ export class Tab {
             mutations.forEach((mutation) => {
                 if (mutation.target.nodeName === 'TITLE') {
                     const newTitle = document.title;
-                    plog.debug('TITLE mutation detected', newTitle);
+                    plog.debug('TITLE mutation detected', newTitle, 'while desriedTitle is:', desiredTitle);
                     if (newTitle !== desiredTitle) {
                         document.title = desiredTitle;
                     }

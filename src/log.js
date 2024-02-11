@@ -27,7 +27,7 @@ export function getLogger(name, level) {
         const originalMethod = logger[method];
 
         logger[method] = function (message, ...args) {
-            originalMethod.call(logger, `${name}: ${message}`, ...args);
+            originalMethod.call(logger, `#${name}: ${message}`, ...args);
         };
     });
 
