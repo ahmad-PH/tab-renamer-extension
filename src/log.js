@@ -20,6 +20,17 @@ if (typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production') {
 export function getLogger(name, level) {
     const logger = log.getLogger(name);
     logger.setLevel(level || log.getLevel());
+
+    const methods = ['trace', 'debug', 'log', 'info', 'warn', 'error'];
+
+    methods.forEach(method => {
+        const originalMethod = logger[method];
+
+        logger[method] = function (message, ...args) {
+            originalMethod.call(logger, `${name}: ${message}`, ...args);
+        };
+    });
+
     return logger;
 }
 
