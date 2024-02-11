@@ -1,14 +1,17 @@
 import { Favicon } from "../favicon";
-import log, { getLogger } from "../log";
+import { getLogger } from "../log";
 import { TabSignature } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
+const log = getLogger('Tab', 'debug');
 const plog = getLogger('Preservers', 'debug');
 
 /**
  * A class that represents the current document/tab in which the content script is running.
+ * The tab title and favicon displayed in the chrome UI, will always match the this.signature
+ * object held in the Tab object.
  * The class is exported for type-checking purposes, and should not be instantiated.
  */
 export class Tab { 
@@ -18,9 +21,35 @@ export class Tab {
             throw new Error('Tab instance already exists, should only be instantiated once.');
         }
         Tab.instanceExists = true;
-
-        this.tabMutationObserver = null;
+        /** @type {TabSignature|null} */
+        this.signature = null;
+        this.titleMutationObserver = null;
         this.faviconMutationObserver = null;
+    }
+
+    /**
+     * This must be called before using the Tab object, when it is being used inside the 
+     * main content script.
+     */
+    async initializeForMainContentScript() {
+        log.debug('initializeForMainContentScript called');
+        const signature = await bgScriptApi.loadSignature();
+        log.debug('retrieved signature:', signature);
+        log.debug('document.title:', document.title, 'faviconUrl:', await bgScriptApi.getFaviconUrl());
+
+        if (signature) { // Then, initializationContentScript would have already set the originals
+            log.debug('signature found, setting it.');
+            await tab.setSignature(signature, true, false);
+        } else {
+            const newSignature = new TabSignature(
+                null,
+                null,
+                document.title,
+                await bgScriptApi.getFaviconUrl()
+            );
+            log.debug('signature not found, setting signature to:', newSignature);
+            await tab.setSignature(newSignature, false, false);
+        }
     }
 
     setTitle(newTabTitle, preserve = true) {
@@ -33,7 +62,8 @@ export class Tab {
 
     setFavicon(faviconUrl, preserve = true) {
         // Check if a favicon link element already exists
-        log.debug('setDocumentFavicon called with faviconUrl:', faviconUrl, preserve);
+        log.debug('setDocumentFavicon called with faviconUrl:', 
+            faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
         let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
     
         faviconLinks.forEach(link => {
@@ -54,13 +84,17 @@ export class Tab {
     restoreTitle(originalTitle) {
         log.debug('restoreDocumentTitle called with originalTitle:', originalTitle);
         this.disconnectTabTitlePreserver();
-        this.setTitle(originalTitle, false);
+        if (originalTitle !== document.title) {
+            this.setTitle(originalTitle, false);
+        }
     }
     
-    restoreFavicon(originalFaviconUrl) {
+    async restoreFavicon(originalFaviconUrl) {
         log.debug('restoreDocumentFavicon called with originalFaviconUrl:', originalFaviconUrl);
         this.disconnectFaviconPreserver();
-        this.setFavicon(originalFaviconUrl, false);
+        if (originalFaviconUrl !== (await bgScriptApi.getFaviconUrl())) {
+            this.setFavicon(originalFaviconUrl, false);
+        }
     }
 
     /**
@@ -84,26 +118,29 @@ export class Tab {
         if (save) {
             await bgScriptApi.saveSignature(signature);
         }
+
+        this.signature = signature;
     }
 
 
     /**
-     * This function seems to be only required when:
-     * On websites like Facebook that keep enforing their own title.
+     * This function is required when:
+     * 1- On Websites reacting to new routes without triggering a reload, like YouTube
+     * 2- On websites like Facebook that keep enforing their own title.
      * Neither of these scenarios require the preserver keep the title the same:
      * 1- Typing a new url in the address bar
      * 2- Searching for a query on Google (automatic changing of the page url)
      * 3- Clicking a link on a website 
      * The loading of the signature from memory is enough for all these cases.
-     * The preserver doesn't even help reduce the "flash" of the website's actual title.
-     * That one is inevitable it seems.
+     * The preserver doesn't even help reduce the "flash" of the website's actual title
+     * in these scenarios.
      */
     preserveTabTitle(desiredTitle) {
         // Disconnect the previous observer if it exists, to avoid an infinite loop.    
         plog.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
         this.disconnectTabTitlePreserver();
-        this.tabMutationObserver = new MutationObserver((mutations) => {
-            plog.debug('mutationObserver callback called', mutations);
+        this.titleMutationObserver = new MutationObserver((mutations) => {
+            plog.debug('titleMutationObserver callback called', mutations);
             mutations.forEach((mutation) => {
                 if (mutation.target.nodeName === 'TITLE') {
                     const newTitle = document.title;
@@ -118,14 +155,14 @@ export class Tab {
         const titleElement = document.querySelector('head > title');
         plog.debug('titleElement:', titleElement);
         if (titleElement) {
-            this.tabMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
+            this.titleMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
         }
     }
 
     disconnectTabTitlePreserver() {
         log.debug('disconnectTabTitlePreserver called');
-        if (this.tabMutationObserver) {
-            this.tabMutationObserver.disconnect();
+        if (this.titleMutationObserver) {
+            this.titleMutationObserver.disconnect();
         }
     }
 
@@ -135,36 +172,39 @@ export class Tab {
      */
     preserveFavicon(emojiDataURL) {
         // Disconnect the previous observer if it exists, to avoid infinite loop.
+        plog.debug('preserveFavicon called with emojiDataURL:', emojiDataURL.substring(0, 10) + '...');
         this.disconnectFaviconPreserver();
-
+    
         this.faviconMutationObserver = new MutationObserver((mutations) => {
+            plog.debug('faviconMutationObserver callback called', mutations);
             mutations.forEach((mutation) => {
                 const target = mutation.target;
                 if (target instanceof HTMLLinkElement) {
                     if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
-                        if (target.href !== emojiDataURL) {
+                        const newHref = target.href;
+                        plog.debug('LINK mutation detected', newHref.substring(0, 10) + '...');
+                        if (newHref !== emojiDataURL) {
                             target.href = emojiDataURL;
                         }
                     }
                 }
-
             });
         });
-
+    
         const headElement = document.querySelector('head');
+        plog.debug('headElement:', headElement);
         if (headElement) {
             this.faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
         }
     }
-
+    
     disconnectFaviconPreserver() {
+        plog.debug('disconnectFaviconPreserver called');
         if (this.faviconMutationObserver) {
             this.faviconMutationObserver.disconnect();
         }
     }
-
 }
 
 const tab = new Tab();
-
 export default tab;

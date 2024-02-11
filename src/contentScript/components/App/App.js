@@ -1,31 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
-import bgScriptApi from '../../backgroundScriptApi';
-import log from "../../../log";
+// import bgScriptApi from '../../backgroundScriptApi';
+import { getLogger } from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
 import EmojiPicker from '../EmojiPicker';
 import { TabSignature } from '../../../types';
 import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
-import { Tab } from '../../tab';
+
+const log = getLogger('App', 'debug');
+
+export const TabContext = React.createContext(null);
 
 /**
- * @param {Object} props 
- * @property {Tab} props.tab
  */
-export default function App({tab}) {
+export default function App() {
     const [isVisible, setIsVisible] = useState(true);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
 
-    /** @type {React.MutableRefObject<string>} */
-    const originalTitle = useRef(null);
-    
-    /** @type {React.MutableRefObject<string>} */
-    const originalFavicon = useRef(null);
+    /** 
+     * @typedef {import('../../tab').Tab} Tab
+     * @type {Tab} 
+     */
+    const tab = useContext(TabContext);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -42,34 +43,32 @@ export default function App({tab}) {
     }, []);
 
     useEffect(() => {
-        const loadInitialData = async () => {
-            const signature = await bgScriptApi.loadSignature();
-            log.debug('retrieved signaturein loadInitialData:', signature);
-            if (signature) {
-                if (signature.title) {
-                    setInputBoxValue(signature.title);
-                }
-                if (signature.favicon) {
-                    if (signature.favicon.type !== EmojiFavicon.type) {
-                        throw new Error('Only supporting emoji favicons at the moment.');
-                    }
-                    setSelectedEmoji(EmojiFavicon.fromDTO(signature.favicon).emoji);
-                }
+        log.debug('useEffect to load inputbox and favicon:', tab.signature.title, tab.signature.favicon);
+        if (tab.signature.title) {
+            setInputBoxValue(tab.signature.title);
+        }
+        if (tab.signature.favicon) {
+            if (tab.signature.favicon.type !== EmojiFavicon.type) {
+                throw new Error('Only supporting emoji favicons at the moment.');
             }
-            if (signature && signature.originalTitle) {
-                originalTitle.current = signature.originalTitle;
-            } else {
-                originalTitle.current = document.title;
-            }
-            if (signature && signature.originalFaviconUrl) {
-                originalFavicon.current = signature.originalFaviconUrl;
-            } else {
-                originalFavicon.current = await bgScriptApi.getFaviconUrl();
-            }
-            log.debug('originalTitle:', originalTitle.current);
-            log.debug('originalFavicon:', originalFavicon.current);
-        };
-        loadInitialData();
+            setSelectedEmoji(EmojiFavicon.fromDTO(tab.signature.favicon).emoji);
+        }
+        // const loadInitialData = async () => {
+        //     const signature = await bgScriptApi.loadSignature();
+        //     log.debug('retrieved signature in loadInitialData:', signature);
+        //     if (signature) {
+        //         if (signature.title) {
+        //             setInputBoxValue(signature.title);
+        //         }
+        //         if (signature.favicon) {
+        //             if (signature.favicon.type !== EmojiFavicon.type) {
+        //                 throw new Error('Only supporting emoji favicons at the moment.');
+        //             }
+        //             setSelectedEmoji(EmojiFavicon.fromDTO(signature.favicon).emoji);
+        //         }
+        //     }
+        // };
+        // loadInitialData();
     }, []);
 
     useEffect(() => {
@@ -112,14 +111,14 @@ export default function App({tab}) {
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, originalTitle.current, originalFavicon.current);
+            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, tab.signature.originalTitle, tab.signature.originalFaviconUrl);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
             const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
             await tab.setSignature(new TabSignature(
                 newDocumentTitle,
                 newDocumentFavicon,
-                originalTitle.current,
-                originalFavicon.current
+                tab.signature.originalTitle,
+                tab.signature.originalFaviconUrl
             ));
             setIsVisible(false);
         }
@@ -173,8 +172,3 @@ export default function App({tab}) {
         </div>
     );
 }
-
-App.propTypes = {
-    tab: PropTypes.object.isRequired
-}
-

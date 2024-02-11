@@ -5,7 +5,7 @@ const { DriverUtils } = require('./driverUtils.js');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
 
 const SECONDS = 1000;
-jest.setTimeout(15 * SECONDS);
+jest.setTimeout(10 * SECONDS);
 
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
