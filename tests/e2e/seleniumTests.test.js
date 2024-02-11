@@ -32,13 +32,17 @@ describe('Selenium UI Tests', () => {
             throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
         }
         
+        const chromeOptions = new chrome.Options()
+            .addArguments(`--load-extension=${extensionPath}`)
+            .addArguments('user-data-dir=/tmp/chrome-profile');
+        
+        if (!process.env.HEADED) {
+            chromeOptions.addArguments('--headless=new')
+        }
+
         driver = await new Builder()
             .forBrowser('chrome')
-            .setChromeOptions(new chrome.Options()
-                .addArguments('--headless=new')
-                .addArguments(`--load-extension=${extensionPath}`)
-                .addArguments('user-data-dir=/tmp/chrome-profile')
-            )
+            .setChromeOptions(chromeOptions)
         .build();
         driverUtils = new DriverUtils(driver);
     }
@@ -198,6 +202,7 @@ describe('Selenium UI Tests', () => {
 
     test('Restores original favicon when empty favicon passed', async () => {
         await driver.get(googleUrl);
+        await driver.sleep(1 * SECONDS);
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
         await driverUtils.assertFaviconUrl(googleFavicon);
