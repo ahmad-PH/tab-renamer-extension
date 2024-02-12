@@ -24,7 +24,7 @@ export class Tab {
         /** @type {TabSignature|null} */
         this.signature = null;
         this.titleMutationObserver = null;
-        this.faviconMutationObserver = null;
+        // this.faviconMutationObserver = null;
     }
 
     /**
@@ -160,7 +160,6 @@ export class Tab {
     }
 
     disconnectTabTitlePreserver() {
-        log.debug('disconnectTabTitlePreserver called');
         if (this.titleMutationObserver) {
             this.titleMutationObserver.disconnect();
         }
@@ -169,43 +168,9 @@ export class Tab {
     preserveFavicon() {
         // empty
     }
-
-    /**
-     * @param {string} emojiDataURL
-     */
-    preserveFaviconLegacy(emojiDataURL) {
-        // Disconnect the previous observer if it exists, to avoid infinite loop.
-        plog.debug('preserveFavicon called with emojiDataURL:', emojiDataURL.substring(0, 10) + '...');
-        this.disconnectFaviconPreserver();
-    
-        this.faviconMutationObserver = new MutationObserver((mutations) => {
-            plog.debug('faviconMutationObserver callback called', mutations);
-            mutations.forEach((mutation) => {
-                const target = mutation.target;
-                if (target instanceof HTMLLinkElement) {
-                    if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
-                        const newHref = target.href;
-                        plog.debug('LINK mutation detected', newHref.substring(0, 10) + '...');
-                        if (newHref !== emojiDataURL) {
-                            target.href = emojiDataURL;
-                        }
-                    }
-                }
-            });
-        });
-    
-        const headElement = document.querySelector('head');
-        plog.debug('headElement:', headElement);
-        if (headElement) {
-            this.faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
-        }
-    }
     
     disconnectFaviconPreserver() {
-        plog.debug('disconnectFaviconPreserver called');
-        if (this.faviconMutationObserver) {
-            this.faviconMutationObserver.disconnect();
-        }
+        // empty
     }
 
     async getFavicon(url) {
