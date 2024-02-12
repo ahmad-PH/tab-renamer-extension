@@ -14,7 +14,8 @@ class DriverUtils {
         await this.openRenameDialog();
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         await renameBox.clear();
-        await renameBox.sendKeys(newTabTitle, Key.ENTER);
+        await renameBox.sendKeys(newTabTitle);
+        await this.submitRenameDialog();
     }
 
     async openEmojiPicker() {
@@ -31,8 +32,7 @@ class DriverUtils {
         const emojiElement = await this.driver.findElement(By.xpath(xpath));
         await emojiElement.click();
     
-        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
-        await renameBox.sendKeys(Key.ENTER);
+        await this.submitRenameDialog();
     }
 
     async setSignature(title, favicon) {
@@ -123,8 +123,13 @@ class DriverUtils {
         await emojiPicker.click();
         const emojiRemoveButton = await this.driver.findElement(By.id(EMOJI_REMOVE_BUTTON_ID));
         emojiRemoveButton.click();
+        await this.submitRenameDialog();
+    }
+
+    async submitRenameDialog() {
         const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         await renameBox.sendKeys(Key.ENTER);
+        await this.driver.wait(until.elementIsNotVisible(renameBox));
     }
 
 }

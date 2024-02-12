@@ -100,6 +100,32 @@ export default function App() {
     useEffect(() => {
         const debugFunction = async () => {
             log.debug('storage:', await chrome.storage.sync.get(null));
+
+            async function getFavicon(url) {
+                // Fetch the HTML of the webpage
+                const response = await fetch(url);
+                const html = await response.text();
+            
+                // Parse the HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+            
+                // Find the favicon link
+                // let faviconLink = doc.querySelector('link[rel="shortcut icon"], link[rel="icon"]');
+                let faviconLink = doc.querySelector('head > link[rel~="icon"]');
+            
+                // If no favicon link is found, use /favicon.ico
+                let faviconUrl;
+                if (faviconLink) {
+                    faviconUrl = new URL(faviconLink.href, url).href;
+                } else {
+                    faviconUrl = new URL('/favicon.ico', url).href;
+                }
+            
+                return faviconUrl
+            }
+            log.debug('Fetched url:');
+            log.debug(await getFavicon(document.URL));
         };
         document.body.addEventListener('click', debugFunction);
 
@@ -118,7 +144,7 @@ export default function App() {
                 newDocumentTitle,
                 newDocumentFavicon,
                 tab.signature.originalTitle,
-                tab.signature.originalFaviconUrl
+                await tab.getFavicon(document.URL)
             ));
             if (!newDocumentTitle) {
                 tab.restoreTitle();

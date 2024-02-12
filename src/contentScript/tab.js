@@ -102,7 +102,7 @@ export class Tab {
      * This will not restore them to their original values.
      */
     async setSignature(signature, preserve = true, save = true) {
-        log.debug('setDocumentSignature called with signature:', signature);
+        log.debug('setSignature called with signature:', signature);
         if (signature.title) {
             this.setTitle(signature.title, preserve);
         } else {
@@ -118,7 +118,7 @@ export class Tab {
         if (save) {
             await bgScriptApi.saveSignature(signature);
         }
-
+        
         this.signature = signature;
     }
 
@@ -166,11 +166,14 @@ export class Tab {
         }
     }
 
+    preserveFavicon() {
+        // empty
+    }
 
     /**
      * @param {string} emojiDataURL
      */
-    preserveFavicon(emojiDataURL) {
+    preserveFaviconLegacy(emojiDataURL) {
         // Disconnect the previous observer if it exists, to avoid infinite loop.
         plog.debug('preserveFavicon called with emojiDataURL:', emojiDataURL.substring(0, 10) + '...');
         this.disconnectFaviconPreserver();
@@ -203,6 +206,30 @@ export class Tab {
         if (this.faviconMutationObserver) {
             this.faviconMutationObserver.disconnect();
         }
+    }
+
+    async getFavicon(url) {
+        // Fetch the HTML of the webpage
+        log.debug('Fetching: ', url);
+        const response = await fetch(url);
+        const html = await response.text();
+    
+        // Parse the HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+    
+        // Find the favicon link
+        let faviconLink = doc.querySelector('head > link[rel~="icon"]');
+    
+        // If no favicon link is found, use /favicon.ico
+        let faviconUrl;
+        if (faviconLink) {
+            faviconUrl = new URL(faviconLink.href, url).href;
+        } else {
+            faviconUrl = new URL('/favicon.ico', url).href;
+        }
+    
+        return faviconUrl
     }
 }
 

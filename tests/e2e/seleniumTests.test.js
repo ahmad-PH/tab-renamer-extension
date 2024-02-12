@@ -57,6 +57,9 @@ describe('Selenium UI Tests', () => {
     }
 
     beforeEach(async () => {
+        // It's better to put the deletion here, because sometimes afterEach gets messed up.
+        await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
+
         await createNewDriver();
     });
 
@@ -68,12 +71,12 @@ describe('Selenium UI Tests', () => {
             const extensionLogs = logs.filter(log => (
                 log.message.startsWith(extensionPrefix) && log.message.includes('#')
             )).map(log => log.message.replace(extensionPrefix, ''));
-            console.log('extension logs:', extensionLogs);
+            // console.log('extension logs:', extensionLogs);
             await driver.quit();
         }
         driver = null;
         driverUtils = null;
-        await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
+        // await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
     }
 
     afterEach(tearDown);
@@ -214,17 +217,14 @@ describe('Selenium UI Tests', () => {
         await driverUtils.renameTab('');
         const actualTitle = await driverUtils.getTitle();
         expect(actualTitle).toBe(originalTitle);
-    })
+    });
 
     test('Restores original favicon when empty favicon passed', async () => {
         await driver.get(googleUrl);
-        // await driver.sleep(1 * SECONDS);
         await driverUtils.setFavicon('🎂');
         await driverUtils.removeFavicon();
-        // await driver.sleep(2 * SECONDS);
-        // await driver.sleep(20 * MINUTES);
         await driverUtils.assertFaviconUrl(googleFavicon);
-    }, 30 * MINUTES);
+    });
 
     test('Title Preserver keeps the title the same', async () => {
         // This test is mainly written to emulate what Facebook does (revert the title to its original)
@@ -237,12 +237,11 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe('New title');
     });
 
-
-    test("Title won't flash to the original, when switching between pages", async () => {
-        await driver.get(urls[0]);
-        await driverUtils.renameTab('New title');
-        await driver.sleep(5 * SECONDS);
-        await driver.get(urls[1]);
-        await driver.sleep(5 * SECONDS);
-    }, 100 * SECONDS);
+    // test("Title won't flash to the original, when switching between pages", async () => {
+    //     await driver.get(urls[0]);
+    //     await driverUtils.renameTab('New title');
+    //     await driver.sleep(5 * SECONDS);
+    //     await driver.get(urls[1]);
+    //     await driver.sleep(5 * SECONDS);
+    // }, 100 * SECONDS);
 });

@@ -27,18 +27,16 @@ const olog = getLogger('Observer', 'debug');
 
     let originalTitle = document.title;
     let originalFaviconUrl = await bgScriptApi.getFaviconUrl();
+    log.debug('document.title:', originalTitle, 'faviconUrl:', (originalFaviconUrl ? (originalFaviconUrl.substring(0, 30) + '...') : null));
 
     const newSignature = new TabSignature(title, favicon, originalTitle, originalFaviconUrl);
     log.debug('setting signature to:', newSignature);
     // await tab.setSignature(newSignature, false, false);
 
 
-
-
-
     // Title Observer:
     let titleMutationObserver = new MutationObserver((mutations) => {
-        olog.debug('titleMutationObserver callback called', mutations);
+        // olog.debug('titleMutationObserver callback called', mutations);
         mutations.forEach((mutation) => {
             if (mutation.target.nodeName === 'TITLE') {
                 const newTitle = document.title;
@@ -55,17 +53,17 @@ const olog = getLogger('Observer', 'debug');
 
     // Favicon Observer:
     let faviconMutationObserver = new MutationObserver((mutations) => {
-        olog.debug('faviconMutationObserver callback called', mutations);
+        // olog.debug('faviconMutationObserver callback called', mutations);
         mutations.forEach((mutation) => {
             if (mutation.type === 'childList' && mutation.target === document.head) {
                 olog.debug('Children of <head> have changed');
                 ['addedNodes', 'removedNodes'].forEach((nodeType) => {
                     mutation[nodeType].forEach((node) => {
                         if (node.nodeName === 'LINK') {
-                            olog.debug(nodeType + ' LINK detected:');
+                            olog.debug('LINK mutation detected, of type: ', nodeType);
                             const newHref = node.href;
-                            if (newHref.length > 100) {
-                                olog.debug('LINK href:', newHref.substring(0, 40) + '...');
+                            if (newHref.includes('data:')) {
+                                olog.debug('LINK href:', newHref.substring(0, 30) + '...');
                             } else {
                                 olog.debug('LINK href:', newHref);
                             }
@@ -74,11 +72,18 @@ const olog = getLogger('Observer', 'debug');
                 
                 });
             }
+
+            const target = mutation.target;
+            if (target instanceof HTMLLinkElement) {
+                if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+                    olog.debug('LINK mutation detect, of type: direct mutation.', target.href.substring(0, 10) + '...');
+                }
+            }
         });
     });
 
     const headElement = document.querySelector('head');
-    olog.debug('head element:', headElement);
+    // olog.debug('head element:', headElement);
     if (headElement) {
         faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
     }

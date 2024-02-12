@@ -1,11 +1,15 @@
-import log from "../log";
+import { getLogger } from "../log";
 import { TabSignature } from "../types";
+
+let log = getLogger('BackgroundScriptAPI', 'debug');
 
 class BackgroundScriptAPI {
     /**
      * @param {TabSignature} signature 
      */
     async saveSignature(signature) {
+        log.debug('saveSignature called with signature:', signature);
+        log.debug('Current stack trace:', new Error().stack);
         try {
             await chrome.runtime.sendMessage({command: "save_signature", signature});
         } catch (error) {
