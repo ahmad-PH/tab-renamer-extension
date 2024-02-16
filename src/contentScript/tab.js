@@ -174,17 +174,28 @@ export class Tab {
     }
 
     async getFavicon(url) {
+        console.time('getFavicon');
+    
         // Fetch the HTML of the webpage
+        console.time('fetch');
         log.debug('Fetching: ', url);
         const response = await fetch(url);
         const html = await response.text();
+        console.timeEnd('fetch');
     
         // Parse the HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
+        console.time('parse');
+        const headStartIndex = html.indexOf('<head>');
+        const headEndIndex = html.indexOf('</head>') + '</head>'.length;
+        if (headStartIndex === -1 || headEndIndex === -1) {
+            throw new Error('Head element not found');
+        }
+        const headHtml = html.slice(headStartIndex, headEndIndex);
+        const doc = new DOMParser().parseFromString(headHtml, 'text/html');
+        console.timeEnd('parse');
     
         // Find the favicon link
-        let faviconLink = doc.querySelector('head > link[rel~="icon"]');
+        let faviconLink = doc.querySelector('link[rel~="icon"]');
     
         // If no favicon link is found, use /favicon.ico
         let faviconUrl;
@@ -193,8 +204,8 @@ export class Tab {
         } else {
             faviconUrl = new URL('/favicon.ico', url).href;
         }
-    
-        return faviconUrl
+        console.timeEnd('getFavicon');
+        return faviconUrl;
     }
 }
 
