@@ -177,7 +177,7 @@ export class Tab {
      * in these scenarios.
      */
     _preserveTabTitle(desiredTitle) {
-        // Disconnect the previous observer if it exists, to avoid an infinite loop.    
+        //Disconnect the previous observer if it exists, to avoid an infinite loop.    
         plog.debug('preserveTabTitle called with desiredTitle:', desiredTitle);
         this.disconnectTabTitlePreserver();
         this.titleMutationObserver = new MutationObserver((mutations) => {

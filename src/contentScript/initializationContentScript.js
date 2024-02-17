@@ -4,7 +4,8 @@ import bgScriptApi from "./backgroundScriptApi";
 import tab from "./tab";
 
 const log = getLogger('InitializationContentScript', 'debug');
-const olog = getLogger('Observer', 'debug');
+const ddlog = getLogger('DeepDebugging', 'warn');
+const olog = getLogger('Observer', 'warn');
 
 /** 
  * Update tab signature when the contentScript loads
@@ -14,28 +15,35 @@ const olog = getLogger('Observer', 'debug');
 (async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called from the initialization content script.');
     const signature = await bgScriptApi.loadSignature();
-    let title, favicon;
+    let title;
     if (signature) {
         log.debug('retrieved signature:', signature);
         title = signature.title;
-        favicon = signature.favicon;
     } else {
         log.debug('no signature found');
         title = null;
-        favicon = null;
     }
 
     let originalTitle = document.title;
     let originalFaviconUrl = await bgScriptApi.getFaviconUrl();
     log.debug('document.title:', originalTitle, 'faviconUrl:', (originalFaviconUrl ? (originalFaviconUrl.substring(0, 30) + '...') : null));
 
-    // const newSignature = new TabSignature(title, favicon, originalTitle, originalFaviconUrl);
-    // log.debug('setting signature to:', newSignature);
-
-    await tab.setSignature(title, favicon, false, false);
+    await tab.setSignature(title, null, false, false);
     tab.signature.originalTitle = originalTitle;
+})();
 
-    // Title Observer:
+
+
+(function deepDebugging() {
+    // =================================== Title Observer: ===================================
+    ddlog.debug('Document as seen by the initialization content script:', document);
+    ddlog.debug('Document head:', document.getElementsByTagName('head')[0]);
+    // const link = document.createElement('link');
+    // link.rel = 'icon';
+    // link.href = 'https://www.google.com/favicon.ico';
+    // document.head.appendChild(link);
+
+    // =================================== Title Observer: ===================================
     let titleMutationObserver = new MutationObserver((mutations) => {
         // olog.debug('titleMutationObserver callback called', mutations);
         mutations.forEach((mutation) => {
@@ -88,5 +96,6 @@ const olog = getLogger('Observer', 'debug');
     if (headElement) {
         faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
     }
+
 
 })();

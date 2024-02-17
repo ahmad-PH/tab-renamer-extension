@@ -117,13 +117,17 @@ class DriverUtils {
         await this.openTabToURL(originalUrl);
     }
 
-    async removeFavicon() {
+    async restoreFavicon() {
         await this.openRenameDialog();
         const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
         await emojiPicker.click();
         const emojiRemoveButton = await this.driver.findElement(By.id(EMOJI_REMOVE_BUTTON_ID));
         emojiRemoveButton.click();
         await this.submitRenameDialog();
+    }
+
+    async restoreTitle() {
+        await this.renameTab('');
     }
 
     async submitRenameDialog() {
