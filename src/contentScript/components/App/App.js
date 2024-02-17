@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG } from '../../../config';
 import PropTypes from 'prop-types';
-// import bgScriptApi from '../../backgroundScriptApi';
 import { getLogger } from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
 import EmojiPicker from '../EmojiPicker';
@@ -29,6 +28,12 @@ export default function App() {
     const tab = useContext(TabContext);
 
     useEffect(() => {
+        if (isVisible) {
+            tab.preFetchOriginalFavicon();
+        }
+    }, [isVisible]);
+
+    useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
                 setIsVisible(false);
@@ -43,7 +48,6 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        log.debug('useEffect to load inputbox and favicon:', tab.signature.title, tab.signature.favicon);
         if (tab.signature.title) {
             setInputBoxValue(tab.signature.title);
         }
@@ -100,32 +104,6 @@ export default function App() {
     useEffect(() => {
         const debugFunction = async () => {
             log.debug('storage:', await chrome.storage.sync.get(null));
-
-            async function getFavicon(url) {
-                // Fetch the HTML of the webpage
-                const response = await fetch(url);
-                const html = await response.text();
-            
-                // Parse the HTML
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-            
-                // Find the favicon link
-                // let faviconLink = doc.querySelector('link[rel="shortcut icon"], link[rel="icon"]');
-                let faviconLink = doc.querySelector('head > link[rel~="icon"]');
-            
-                // If no favicon link is found, use /favicon.ico
-                let faviconUrl;
-                if (faviconLink) {
-                    faviconUrl = new URL(faviconLink.href, url).href;
-                } else {
-                    faviconUrl = new URL('/favicon.ico', url).href;
-                }
-            
-                return faviconUrl
-            }
-            log.debug('Fetched url:');
-            log.debug(await getFavicon(document.URL));
         };
         document.body.addEventListener('click', debugFunction);
 
@@ -140,18 +118,7 @@ export default function App() {
             log.debug('Enter key pressed', inputBoxValue, selectedEmoji, tab.signature.originalTitle, tab.signature.originalFaviconUrl);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
             const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
-            await tab.setSignature(new TabSignature(
-                newDocumentTitle,
-                newDocumentFavicon,
-                tab.signature.originalTitle,
-                await tab.getFavicon(document.URL)
-            ));
-            if (!newDocumentTitle) {
-                tab.restoreTitle();
-            } 
-            if (!newDocumentFavicon) {
-                tab.restoreFavicon();
-            }
+            await tab.setSignature(newDocumentTitle, newDocumentFavicon);
             setIsVisible(false);
         }
     };

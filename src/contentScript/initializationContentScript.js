@@ -29,10 +29,11 @@ const olog = getLogger('Observer', 'debug');
     let originalFaviconUrl = await bgScriptApi.getFaviconUrl();
     log.debug('document.title:', originalTitle, 'faviconUrl:', (originalFaviconUrl ? (originalFaviconUrl.substring(0, 30) + '...') : null));
 
-    const newSignature = new TabSignature(title, favicon, originalTitle, originalFaviconUrl);
-    log.debug('setting signature to:', newSignature);
-    // await tab.setSignature(newSignature, false, false);
+    // const newSignature = new TabSignature(title, favicon, originalTitle, originalFaviconUrl);
+    // log.debug('setting signature to:', newSignature);
 
+    await tab.setSignature(title, favicon, false, false);
+    tab.signature.originalTitle = originalTitle;
 
     // Title Observer:
     let titleMutationObserver = new MutationObserver((mutations) => {
