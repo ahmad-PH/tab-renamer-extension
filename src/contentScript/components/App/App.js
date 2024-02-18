@@ -8,7 +8,7 @@ import EmojiPicker from '../EmojiPicker';
 import { TabSignature } from '../../../types';
 import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
 
-const log = getLogger('App', 'debug');
+const log = getLogger('App', 'warn');
 
 export const TabContext = React.createContext(null);
 

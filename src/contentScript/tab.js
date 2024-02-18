@@ -3,11 +3,12 @@ import { getLogger } from "../log";
 import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
+import { restoreFaviconStrategy, FAVICON_RESTORE_STRATEGY, faviconRestorationStrategy } from "../config";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
-const log = getLogger('Tab', 'warn');
-const plog = getLogger('Preservers', 'warn');
+const log = getLogger('Tab', 'debug');
+const plog = getLogger('Preservers', 'debug');
 
 /**
  * A class that represents the current document/tab in which the content script is running.
@@ -28,6 +29,7 @@ export class Tab {
         this.faviconRetriever = new FaviconRetriever();
         this.injectedFaviconLinkElement = null;
         // this.faviconMutationObserver = null;
+        this.removedFaviconLinkElements = null;
     }
 
     /**
@@ -36,7 +38,7 @@ export class Tab {
      */
     async initializeForMainContentScript() {
         deepDebugging();
-        
+
         log.debug('initializeForMainContentScript called');
         const signature = await bgScriptApi.loadSignature();
         log.debug('retrieved signature:', signature);
@@ -108,21 +110,43 @@ export class Tab {
     }
 
     _setFavicon(faviconUrl, preserve = true) {
-        // Check if a favicon link element already exists
-        log.debug('setDocumentFavicon called with faviconUrl:', 
-            faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
-        if (preserve) {
-            this._preserveFavicon(faviconUrl);
+        if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.FETCH_SEPARATELY) {
+            // Check if a favicon link element already exists
+            log.debug('setDocumentFavicon called with faviconUrl:', 
+                faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
+            if (preserve) {
+                this._preserveFavicon(faviconUrl);
+            }
+            let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
+        
+            faviconLinks.forEach(link => {
+                link.parentNode.removeChild(link);
+            });
+        
+            const link = this._createFaviconLinkElement(faviconUrl);
+            document.getElementsByTagName('head')[0].appendChild(link);
+            this.injectedFaviconLinkElement = link;
+
+        } else if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.MUTATION_OBSERVER) {
+            // Check if a favicon link element already exists
+            log.debug('setDocumentFavicon called with faviconUrl:', 
+                faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
+            if (preserve) {
+                this._preserveFavicon(faviconUrl);
+            }
+            let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
+        
+            faviconLinks.forEach(link => {
+                link.parentNode.removeChild(link);
+            });
+
+            this.removedFaviconLinkElements = Array.from(faviconLinks);
+            log.debug('removed faviconLinks:', this.removedFaviconLinkElements.map(link => link.outerHTML));
+        
+            const link = this._createFaviconLinkElement(faviconUrl);
+            document.getElementsByTagName('head')[0].appendChild(link);
+            this.injectedFaviconLinkElement = link;
         }
-        let faviconLinks = document.querySelectorAll(faviconLinksCSSQuery);
-    
-        faviconLinks.forEach(link => {
-            link.parentNode.removeChild(link);
-        });
-    
-        const link = this._createFaviconLinkElement(faviconUrl);
-        document.getElementsByTagName('head')[0].appendChild(link);
-        this.injectedFaviconLinkElement = link;
     }
 
     _createFaviconLinkElement(faviconUrl) {
@@ -143,22 +167,44 @@ export class Tab {
     
     async _restoreFavicon() {
         log.debug('restoreFavicon called. Current signature', this.signature);
-        this.disconnectFaviconPreserver();
-        if (this.signature && this.signature.favicon) { // favicon has been modified from original value
-            log.debug('Favicon has been modified.');
-            let faviconLinks = await this.faviconRetriever.getFaviconLinks(document.URL);
-            log.debug('retrieved faviconLinks:', faviconLinks.map(link => link.outerHTML));
-            if (faviconLinks.length === 0) {
-                faviconLinks = [this._createFaviconLinkElement(new URL('/favicon.ico', document.URL).toString())];
-                log.debug('No favicon links found, using default /favicon.ico:', faviconLinks.map(link => link.outerHTML));
+
+        // @ts-ignore
+        if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.FETCH_SEPARATELY) {
+            this.disconnectFaviconPreserver();
+            if (this.signature && this.signature.favicon) { // favicon has been modified from original value
+                log.debug('Favicon has been modified.');
+                let faviconLinks = await this.faviconRetriever.getFaviconLinks(document.URL);
+                log.debug('retrieved faviconLinks:', faviconLinks.map(link => link.outerHTML));
+                if (faviconLinks.length === 0) {
+                    faviconLinks = [this._createFaviconLinkElement(new URL('/favicon.ico', document.URL).toString())];
+                    log.debug('No favicon links found, using default /favicon.ico:', faviconLinks.map(link => link.outerHTML));
+                }
+
+                const head = document.getElementsByTagName('head')[0];
+                head.removeChild(this.injectedFaviconLinkElement);
+                this.injectedFaviconLinkElement = null;
+                
+                head.append(...faviconLinks);
+
             }
+        } else if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.MUTATION_OBSERVER) {
+            this.disconnectFaviconPreserver();
 
-            const head = document.getElementsByTagName('head')[0];
-            head.removeChild(this.injectedFaviconLinkElement);
-            this.injectedFaviconLinkElement = null;
-            
-            head.append(...faviconLinks);
+            if (this.signature && this.signature.favicon) { // favicon has been modified from original value
+                log.debug('Favicon has been modified.');
+                let faviconLinksToRestore = this.removedFaviconLinkElements;
+                log.debug('favicon links to restore:', faviconLinksToRestore.map(link => link.outerHTML));
+                if (this.removedFaviconLinkElements.length === 0) {
+                    faviconLinksToRestore = [this._createFaviconLinkElement(new URL('/favicon.ico', document.URL).toString())];
+                    log.debug('No favicon links found, using default /favicon.ico:', faviconLinksToRestore.map(link => link.outerHTML));
+                }
 
+                const head = document.getElementsByTagName('head')[0];
+                head.removeChild(this.injectedFaviconLinkElement);
+                this.injectedFaviconLinkElement = null;
+                
+                head.append(...faviconLinksToRestore);
+            }
         }
         // if (this.signature.originalFaviconUrl !== (await bgScriptApi.getFaviconUrl())) {
         //     this._setFavicon(this.signature.originalFaviconUrl, false);
