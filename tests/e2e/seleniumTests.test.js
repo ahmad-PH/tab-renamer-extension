@@ -4,6 +4,9 @@ const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
+const { sleep } = require('../../src/utils.js');
+
+const express = require('express');
 
 // eslint-disable-next-line no-unused-vars
 const SECONDS = 1000;
@@ -23,6 +26,7 @@ describe('Selenium UI Tests', () => {
     const googleUrl = 'https://www.google.com/';
     const googleFaviconUrl = 'https://www.google.com/favicon.ico';
     const facebookUrl = 'https://www.facebook.com/';
+    const youtubeUrl = 'https://www.youtube.com/';
     const websites = [
         {url: googleUrl, faviconUrl: googleFaviconUrl, title: 'Google'},
         {
@@ -31,11 +35,12 @@ describe('Selenium UI Tests', () => {
             title: 'Ahmad Pourihosseini'
         },
         {url: 'https://motherfuckingwebsite.com/'},
+        {url: youtubeUrl},
         {url: facebookUrl},
         {url: 'https://www.nationalgeographic.com/'},
     ];
 
-    const createNewDriver = async () => {
+    const createNewDriver = async (pageLoadStrategy = 'normal') => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
         if (!(await fs.lstat(extensionPath)).isDirectory()) {
             throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
@@ -43,7 +48,8 @@ describe('Selenium UI Tests', () => {
         
         const chromeOptions = new chrome.Options()
             .addArguments(`--load-extension=${extensionPath}`)
-            .addArguments('user-data-dir=/tmp/chrome-profile');
+            .addArguments('user-data-dir=/tmp/chrome-profile')
+            .setPageLoadStrategy(pageLoadStrategy);
         
         if (!process.env.HEADED) {
             chromeOptions.addArguments('--headless=new')
@@ -63,7 +69,6 @@ describe('Selenium UI Tests', () => {
     beforeEach(async () => {
         // It's better to put the deletion here, because sometimes afterEach gets messed up.
         await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
-
         await createNewDriver();
     });
 
@@ -171,7 +176,7 @@ describe('Selenium UI Tests', () => {
     test('Retains tab signatures when window is re-opened', async () => {
         /*
             This is required because 1. driver.close() doesn't allow enough
-            breathing room for chrome.tabs.onRemoced triggers to fully take 
+            breathing room for chrome.tabs.onRemoved triggers to fully take 
             effect. Also, 2. if driver.close() is called on the last tab,
             thus closing the entire window, it has a similar effect.
             As a result, a dummy tab is created so that none of the 
@@ -202,7 +207,7 @@ describe('Selenium UI Tests', () => {
         expect(await driverUtils.getTitle()).toBe(signature2.title);
         await driverUtils.assertEmojiSetAsFavicon();
 
-    }, 20 * SECONDS); // The timeout
+    }, 20 * SECONDS);
 
     test('Restores original title when empty title passed', async () => {
         await driver.get(websites[0].url);
@@ -260,11 +265,61 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe('New title');
     });
 
-    // test("Title won't flash to the original, when switching between pages", async () => {
-    //     await driver.get(websites[0].url);
-    //     await driverUtils.renameTab('New title');
-    //     await driver.sleep(5 * SECONDS);
-    //     await driver.get(websites[1].url);
-    //     await driver.sleep(5 * SECONDS);
-    // }, 100 * SECONDS);
+    test('Title loads before the page load has finished', async function() {
+        await tearDown();
+        await createNewDriver('none');
+
+        const app = express();
+        const port = 3000;
+        let slowResponse = false;
+
+        app.get('/', (_req, res) => {
+            if (!slowResponse) {
+                res.send('<html><body>A quick response!</body></html>');
+            }
+            if (slowResponse) {
+                res.write('<html><body>');
+                setTimeout(() => {
+                    res.end('A slow response!</body></html>');
+                }, 100);
+            }
+        });
+
+        const startServer = (app, port) => {
+            return new Promise((resolve, reject) => {
+                const server = app.listen(port, (err) => {
+                    err ? reject(err) : resolve(server)
+                });
+            });
+        };
+        let server = await startServer(app, port);
+
+        const initialWindow = await driver.getWindowHandle();
+        await driver.switchTo().newWindow('tab');
+        await driver.get(`http://localhost:${port}`);
+        await driverUtils.waitForPageLoad();
+        await driverUtils.renameTab('New title');
+        await driver.close();
+
+        await driver.switchTo().window(initialWindow);
+
+        let sawOneCorrectTitleWhileStillLoading = false;
+        let timerId = setInterval(async () => {
+            const readyState = await driver.executeScript('return document.readyState');
+            const title = await driver.executeScript('return document.title');
+            if (title === 'New title' && readyState === 'loading') {
+                sawOneCorrectTitleWhileStillLoading = true;
+            }
+            // console.log('document.readyState:', readyState, ' and title: ', title, ' at time: ', new Date());
+        }, 5);
+
+        slowResponse = true;
+        driver.get(`http://localhost:${port}`);
+        await driverUtils.waitForPageLoad();
+
+        clearInterval(timerId);
+        server.close();
+
+        expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
+    });
 });

@@ -28,6 +28,9 @@ const olog = getLogger('Observer', 'warn');
     let originalFaviconUrl = await bgScriptApi.getFaviconUrl();
     log.debug('document.title:', originalTitle, 'faviconUrl:', (originalFaviconUrl ? (originalFaviconUrl.substring(0, 30) + '...') : null));
 
+
+    log.debug('DOCUMENT READY STATE:', document.readyState);
+
     await tab.setSignature(title, null, false, false);
     tab.signature.originalTitle = originalTitle;
 })();

@@ -136,6 +136,16 @@ class DriverUtils {
         await this.driver.wait(until.elementIsNotVisible(renameBox));
     }
 
+    /**
+     * This function is only needed when you specifically create a driver with pageLoadStrategy = 'none'.
+     */
+    async waitForPageLoad() {
+        await this.driver.wait(async () => {
+            const readyState = await this.driver.executeScript('return document.readyState');
+            return readyState === 'complete';
+        }, 10000);
+    }
+
 }
 
 module.exports = {
