@@ -49,8 +49,6 @@ class FaviconRetriever {
     }
 
     async _getFaviconLinks(url) {
-        // console.time('getFavicon');
-    
         // Fetch the HTML of the webpage
         // console.time('fetch');
         log.debug('_getFaviconLinks: ', url);
@@ -61,22 +59,20 @@ class FaviconRetriever {
         // console.timeEnd('fetch');
     
         // Parse the HTML
-        // console.time('parse');
-        const headStartIndex = html.indexOf('<head>');
+        const headStartIndex = html.indexOf('<head'); // No '>' as it might contain attributes
         const headEndIndex = html.indexOf('</head>') + '</head>'.length;
         if (headStartIndex === -1 || headEndIndex === -1) {
+            log.debug('Head element not found, the response:', html);
             throw new Error('Head element not found');
         }
         const headHtml = html.slice(headStartIndex, headEndIndex);
         const doc = new DOMParser().parseFromString(headHtml, 'text/html');
-        // console.timeEnd('parse');
     
         // Find all the <link> elements that contain the word "icon" in their "rel" attribute
         const faviconLinks = Array.from(doc.querySelectorAll('link[rel~="icon"]'));
 
         log.debug('_getFaviconLinks, retrieved: ', faviconLinks.map(link => link.outerHTML));
     
-        // console.timeEnd('getFavicon');
         return faviconLinks;
     }
 }
