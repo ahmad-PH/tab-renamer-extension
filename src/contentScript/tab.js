@@ -6,8 +6,8 @@ import FaviconRetriever from "./faviconRetriever";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
-const log = getLogger('Tab', 'debug');
-const plog = getLogger('Preservers', 'debug');
+const log = getLogger('Tab', 'warn');
+const plog = getLogger('Preservers', 'warn');
 
 /**
  * A class that represents the current document/tab in which the content script is running.
@@ -35,6 +35,8 @@ export class Tab {
      * main content script.
      */
     async initializeForMainContentScript() {
+        deepDebugging();
+        
         log.debug('initializeForMainContentScript called');
         const signature = await bgScriptApi.loadSignature();
         log.debug('retrieved signature:', signature);
@@ -219,3 +221,115 @@ export class Tab {
 
 const tab = new Tab();
 export default tab;
+
+
+// Deep Debugging:
+const ddlog = getLogger('DeepDebugging', 'debug');
+const olog = getLogger('Observer', 'debug');
+
+function deepDebugging() {
+    // =================================== Title Observer: ===================================
+    ddlog.debug('Document as seen by the main content script:', document);
+    ddlog.debug('Document head:', document.getElementsByTagName('head')[0]);
+    // const link = document.createElement('link');
+    // link.rel = 'icon';
+    // link.href = 'https://www.google.com/favicon.ico';
+    // document.head.appendChild(link);
+
+    // =================================== Title Observer: ===================================
+    let titleMutationObserver = new MutationObserver((mutations) => {
+        // olog.debug('titleMutationObserver callback called', mutations);
+        mutations.forEach((mutation) => {
+            if (mutation.target.nodeName === 'TITLE') {
+                const newTitle = document.title;
+                olog.debug('TITLE mutation detected, newTitle:', newTitle);
+            }
+        });
+    });
+
+    const titleElement = document.querySelector('head > title');
+    // rplog.debug('title element:', titleElement)
+    if (titleElement) {
+        titleMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
+    }
+
+    // Favicon Observer:
+    let faviconMutationObserver = new MutationObserver((mutations) => {
+        olog.debug('faviconMutationObserver callback called', mutations);
+        let changes = {
+            addedNodes: [],
+            removedNodes: [],
+            directChanges: []
+        };
+        
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.target === document.head) {
+                ['addedNodes', 'removedNodes'].forEach((nodeType) => {
+                    mutation[nodeType].forEach((node) => {
+                        if (node.nodeName === 'LINK' && node.rel.includes('icon')) {
+                            changes[nodeType].push(node.outerHTML);
+                            // olog.debug(`LINK mutation of type ${nodeType} detected. Outer HTML:`, node.outerHTML);
+                        }
+                    });
+                });
+            }
+        
+            const target = mutation.target;
+            if (target instanceof HTMLLinkElement) {
+                if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+                    const attributeName = mutation.attributeName;
+                    const oldValue = mutation.oldValue;
+                    const newValue = target.getAttribute(attributeName);
+                    changes.directChanges.push({
+                        attributeName: attributeName,
+                        oldValue: oldValue,
+                        newValue: newValue
+                    });
+                    // olog.debug(`LINK mutation of type: direct mutation. Attribute ${attributeName} changed from ${oldValue} to ${newValue}`);
+                }
+            }
+        });
+
+        if (changes.addedNodes.length > 0 || changes.removedNodes.length > 0 || changes.directChanges.length > 0) {
+            olog.debug('Changes to favicon elements:', changes);
+        } else {
+            olog.debug('No changes to favicon elements');
+        }
+
+        // mutations.forEach((mutation) => {
+        //     if (mutation.type === 'childList' && mutation.target === document.head) {
+        //         olog.debug('Children of <head> have changed');
+        //         ['addedNodes', 'removedNodes'].forEach((nodeType) => {
+        //             mutation[nodeType].forEach((node) => {
+        //                 if (node.nodeName === 'LINK') {
+        //                     olog.debug(`LINK mutation of type ${nodeType} detected.`);
+        //                     const newHref = node.href;
+        //                     if (newHref.includes('data:')) {
+        //                         olog.debug('LINK href:', newHref.substring(0, 30) + '...');
+        //                     } else {
+        //                         olog.debug('LINK href:', newHref);
+        //                     }
+        //                 }
+        //             });
+        //         });
+        //     }
+
+        //     const target = mutation.target;
+        //     if (target instanceof HTMLLinkElement) {
+        //         if (target.nodeName === 'LINK' && target.rel.includes('icon')) {
+        //             const attributeName = mutation.attributeName;
+        //             const oldValue = mutation.oldValue;
+        //             const newValue = target.getAttribute(attributeName);
+        //             olog.debug(`LINK mutation of type: direct mutation. Attribute ${attributeName} changed from ${oldValue} to ${newValue}`);
+        //         }
+        //     }
+        // });
+    });
+
+    const headElement = document.querySelector('head');
+    // olog.debug('head element', headElement);
+    if (headElement) {
+        faviconMutationObserver.observe(headElement, { subtree: true, childList: true, attributes: true });
+    }
+
+}
