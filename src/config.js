@@ -24,3 +24,10 @@ export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 // Favicon restoration strategy:
 // Accepted values: 'fetch_separately', 'mutation_observer'
 export const faviconRestorationStrategy = 'mutation_observer';
+
+
+
+export const inProduction = () => {
+    return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
+}
+

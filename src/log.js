@@ -1,8 +1,5 @@
 import log from 'loglevel';
-
-const inProduction = () => {
-    return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
-}
+import { inProduction } from './config.js';
 
 if (inProduction()) {
     log.setLevel('ERROR');

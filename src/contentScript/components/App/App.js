@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy } from '../../../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config';
 import PropTypes from 'prop-types';
 import { getLogger } from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
@@ -8,7 +8,7 @@ import EmojiPicker from '../EmojiPicker';
 import { TabSignature } from '../../../types';
 import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
 
-const log = getLogger('App', 'warn');
+const log = getLogger('App', 'debug');
 
 export const TabContext = React.createContext(null);
 
@@ -83,9 +83,6 @@ export default function App() {
             if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
             }
-            // else if (message.command === 'set_tab_signature') {
-            //     setDocumentSignature(message.signature);
-            // }
         }
 
         chrome.runtime.onMessage.addListener(chromeListener);
@@ -95,11 +92,16 @@ export default function App() {
                 setIsVisible(true);
             }
         }
-        document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 
+        if (!inProduction()) { // Only for testing
+            document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
+        }
+        
         return () => {
             chrome.runtime.onMessage.removeListener(chromeListener);
-            document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
+            if (!inProduction()) {
+                document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
+            }
         };
     });
 
@@ -158,7 +160,7 @@ export default function App() {
                         isVisible={emojiPickerIsVisible}
                     />
                 </div>
-                <input 
+                <input
                     type="text"
                     id={INPUT_BOX_ID}
                     className={styles.inputBox}
