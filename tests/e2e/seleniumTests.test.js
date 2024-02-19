@@ -226,7 +226,7 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe(originalTitle);
     });
 
-    test('Title Restoration with page-switch', async () => {
+    test('Title restoration with page-switch', async () => {
         await driver.get(websites[0].url);
         await driverUtils.renameTab('New title');
         await driver.sleep(20); // Give background script time to save the title. NOT SURE if it is actually needed.
@@ -234,6 +234,27 @@ describe('Selenium UI Tests', () => {
         await driverUtils.restoreTitle();
         const actualTitle = await driverUtils.getTitle();
         expect(actualTitle).toBe(websites[1].title);
+    });
+
+    test('Title preserver maintains title despite direct manipulation: Facebook + YouTube', async () => {
+        // This test is mainly to emulate what Facebook and YouTube do.
+        // Faceboook: Try to keep title set to 'Facebook' all the time.
+        // YouTube: Change title when moving between videos, without triggering a reload.
+        await driver.get(websites[0].url);
+        await driverUtils.renameTab('New title');
+        await driver.executeScript('document.title = "Some other title"');
+        await driver.sleep(10); // give preserver time to correct the title
+        const actualTitle = await driverUtils.getTitle();
+        expect(actualTitle).toBe('New title');
+    });
+
+    test('Title restoration after direct title manipulation', async () => {
+        await driver.get(websites[0].url);
+        await driverUtils.renameTab('New title');
+        await driver.executeScript('document.title = "Some other title"');
+        await driverUtils.restoreTitle();
+        const actualTitle = await driverUtils.getTitle();
+        expect(actualTitle).toBe('Some other title');
     });
 
     test('Restores original favicon, page with no favicon <link> elements', async () => {
@@ -256,18 +277,6 @@ describe('Selenium UI Tests', () => {
         await driver.get(websites[1].url);
         await driverUtils.restoreFavicon();
         await driverUtils.assertFaviconUrl(websites[1].faviconUrl);
-    });
-
-    test('Title Preserver test: Facebook + YouTube', async () => {
-        // This test is mainly to emulate what Facebook and YouTube do.
-        // Faceboook: Try to keep title set to 'Facebook' all the time.
-        // YouTube: Change title when moving between videos, without triggering a reload.
-        await driver.get(websites[0].url);
-        await driverUtils.renameTab('New title');
-        await driver.executeScript('document.title = "Some other title"');
-        await driver.sleep(10); // give preserver time to correct the title
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe('New title');
     });
 
     test('Title loads before the page load has finished', async function() {
