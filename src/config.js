@@ -22,9 +22,5 @@ export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 
 
 // Favicon restoration strategy:
-export const FAVICON_RESTORE_STRATEGY = Object.freeze({
-    FETCH_SEPARATELY: 'fetch_separately',
-    MUTATION_OBSERVER: 'mutation_observer'
-});
-
-export const faviconRestorationStrategy = FAVICON_RESTORE_STRATEGY.MUTATION_OBSERVER;
+// Accepted values: 'fetch_separately', 'mutation_observer'
+export const faviconRestorationStrategy = 'mutation_observer';

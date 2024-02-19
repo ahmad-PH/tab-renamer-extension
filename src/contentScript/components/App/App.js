@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG } from '../../../config';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy } from '../../../config';
 import PropTypes from 'prop-types';
 import { getLogger } from "../../../log";
 import SelectedEmoji from '../SelectedEmoji';
@@ -27,11 +27,14 @@ export default function App() {
      */
     const tab = useContext(TabContext);
 
-    useEffect(() => {
-        if (isVisible) {
-            tab.preFetchOriginalFavicon();
-        }
-    }, [isVisible]);
+    // @ts-ignore
+    if (faviconRestorationStrategy === 'fetch_separately') {
+        useEffect(() => {
+            if (isVisible) {
+                tab.preFetchOriginalFavicon();
+            }
+        }, [isVisible]);
+    }
 
     useEffect(() => {
         const handleKeyDown = (event) => {

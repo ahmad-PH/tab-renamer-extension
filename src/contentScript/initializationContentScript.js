@@ -29,7 +29,7 @@ const olog = getLogger('Title Observer', 'debug');
     let titleElements = Array.from(document.querySelectorAll('head > title')).map(el => el.textContent);
 
     log.debug('document.title:', originalTitle, 'document.readyState:', document.readyState, 'title elements:', titleElements);
-    log.debug('document head:', document.head.outerHTML);
+    // log.debug('document head:', document.head.outerHTML);
 
     await tab.setSignature(title, null, false, false);
     if (originalTitle) {
@@ -40,7 +40,6 @@ const olog = getLogger('Title Observer', 'debug');
 
     // =================================== Title Observer: ===================================
     let headMutationObserver = new MutationObserver((mutations) => {
-        // olog.debug('headMutationObsever callback called', mutations);
         mutations.forEach((mutation) => {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(async (node) => {

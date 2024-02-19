@@ -3,12 +3,12 @@ import { getLogger } from "../log";
 import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
-import { faviconRestorationStrategy, FAVICON_RESTORE_STRATEGY } from "../config";
+import { faviconRestorationStrategy } from "../config";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
 const log = getLogger('Tab', 'debug');
-const plog = getLogger('Preservers', 'warn');
+const plog = getLogger('Preservers', 'debug');
 const olog = getLogger('Observer', 'warn');
 
 /**
@@ -115,7 +115,8 @@ export class Tab {
     }
 
     _setFavicon(faviconUrl, preserve = true) {
-        if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.FETCH_SEPARATELY) {
+        // @ts-ignore
+        if (faviconRestorationStrategy === 'fetch_separately') {
             // Check if a favicon link element already exists
             log.debug('setDocumentFavicon called with faviconUrl:', 
                 faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
@@ -132,7 +133,7 @@ export class Tab {
             document.getElementsByTagName('head')[0].appendChild(link);
             this.injectedFaviconLinkElement = link;
 
-        } else if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.MUTATION_OBSERVER) {
+        } else if (faviconRestorationStrategy === 'mutation_observer') {
             // Check if a favicon link element already exists
             log.debug('setDocumentFavicon called with faviconUrl:', 
                 faviconUrl ? faviconUrl.substring(0, 15) : faviconUrl, preserve);
@@ -174,7 +175,7 @@ export class Tab {
         log.debug('restoreFavicon called. Current signature', this.signature);
 
         // @ts-ignore
-        if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.FETCH_SEPARATELY) {
+        if (faviconRestorationStrategy === 'fetch_separately') {
             this.disconnectFaviconPreserver();
             if (this.signature && this.signature.favicon) { // favicon has been modified from original value
                 log.debug('Favicon has been modified.');
@@ -192,7 +193,7 @@ export class Tab {
                 head.append(...faviconLinks);
 
             }
-        } else if (faviconRestorationStrategy === FAVICON_RESTORE_STRATEGY.MUTATION_OBSERVER) {
+        } else if (faviconRestorationStrategy === 'mutation_observer') {
             this.disconnectFaviconPreserver();
 
             if (this.signature && this.signature.favicon) { // favicon has been modified from original value
@@ -241,6 +242,7 @@ export class Tab {
                     plog.debug('TITLE mutation detected', newTitle, 'while desriedTitle is:', desiredTitle);
                     if (newTitle !== desiredTitle) {
                         document.title = desiredTitle;
+                        this.originalTitle = newTitle;
                     }
                 }
             });
