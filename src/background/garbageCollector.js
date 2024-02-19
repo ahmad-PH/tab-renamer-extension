@@ -1,44 +1,43 @@
-import { storageGet, storageSet } from "../utils.js";
+import { storageGet } from "../utils.js";
 import { TabInfo } from "../types.js";
 
 /** garbage collector (gc) logger */
-const gcLog = require("loglevel").getLogger("module-one")
-gcLog.setLevel("SILENT"); // "DEBUG"
+import { getLogger } from "../log.js";
+const log = getLogger("garbageCollector", "warn");
+const SECONDS = 1000, MINUTES = 60 * SECONDS;
+export const garbageCollectionThreshold = 2 * MINUTES;
 
 async function garbageCollector() {
     const allTabs = await storageGet(null);  // Added await here
-    const tabsToKeepList = garabageCollectionFilter(Object.values(allTabs));
-    const tabsToKeep = tabsToKeepList.reduce((accumulator, tab) => {
-        accumulator[tab.id] = tab;
-        return accumulator;
-    }, {});
-    await storageSet(tabsToKeep);
+    const tabIdsToRemove = garabageCollectionFilter(Object.values(allTabs)).map(tabId => tabId.toString());
+    await chrome.storage.sync.remove(tabIdsToRemove);
 }
 
 /**
  * @param {TabInfo[]} tabs - The list of tabs to filter.
- * @returns {TabInfo[]} - The tabs to keep.
+ * @returns {number[]} - The tab ids to remove.
  */
 export function garabageCollectionFilter(tabs) {
-    gcLog.debug('Retrieved all tab info:', JSON.stringify(tabs, null, 2));
+    log.debug('Retrieved all tab info:', JSON.stringify(tabs, null, 2));
     const currentTime = new Date();
 
     return tabs.filter(tab => {
         if (!tab.isClosed) {
-            gcLog.debug(`Tab ${tab.id} is not closed, keeping...`);
-            return true;
+            log.debug(`Tab ${tab.id} is not closed, keeping...`);
+            return false;
         } else {
             const tabClosedAt = new Date(tab.closedAt);
-            gcLog.debug(`Tab ${tab.id} closed at: ${tabClosedAt}`);
-            if ((currentTime.valueOf() - tabClosedAt.valueOf()) < 20000) {
-                gcLog.debug(`Tab ${tab.id} was closed less than 20 seconds ago, keeping...`);
-                return true;
-            } else {
-                gcLog.debug(`Tab ${tab.id} was closed more than 20 seconds ago, discarding...`);
+            log.debug(`Tab ${tab.id} closed at: ${tabClosedAt}`);
+            log.debug('Current time:', currentTime, 'tabClosedAt:', tabClosedAt, 'Difference:', currentTime.valueOf() - tabClosedAt.valueOf());
+            if ((currentTime.valueOf() - tabClosedAt.valueOf()) < garbageCollectionThreshold) {
+                log.debug(`Tab ${tab.id} was closed less than 2 minutes ago, keeping...`);
                 return false;
+            } else {
+                log.debug(`Tab ${tab.id} was closed more than 2 minutes ago, discarding...`);
+                return true;
             }
         }
-    });
+    }).map(tab => tab.id);
 }
 
 export function startTheGarbageCollector() {
