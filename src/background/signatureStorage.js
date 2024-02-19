@@ -19,27 +19,27 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
         log.debug('Tab found in storedTabInfo:', storedTabInfo[tabId]);
         return storedTabInfo[tabId];
     } else { // the tab has been closed
-        const closedTabsWithMatchingURLs = Object.values(storedTabInfo).filter(
-            tabInfoValue => tabInfoValue.isClosed && tabInfoValue.url === url 
+        const candidateTabs = Object.values(storedTabInfo).filter(
+            tabInfoValue => (tabInfoValue.isClosed || tabInfoValue.isDiscarded) && tabInfoValue.url === url 
         );
-        log.debug('closedTabsWithMatchingURLs:', closedTabsWithMatchingURLs);
+        log.debug('candidate tabs:', candidateTabs);
 
-        if (closedTabsWithMatchingURLs.length == 1) {
-            log.debug('One closed tab with matching URL found:', closedTabsWithMatchingURLs[0]);
-            return closedTabsWithMatchingURLs[0];
-        } else if (closedTabsWithMatchingURLs.length > 1) {
-            const tabMatchingURLAndIndex = closedTabsWithMatchingURLs.find(tabInfo => tabInfo.index === index);
+        if (candidateTabs.length == 1) {
+            log.debug('One closed tab with matching URL found:', candidateTabs[0]);
+            return candidateTabs[0];
+        } else if (candidateTabs.length > 1) {
+            const tabMatchingURLAndIndex = candidateTabs.find(tabInfo => tabInfo.index === index);
             log.debug('tabMatchingURLAndIndex:', tabMatchingURLAndIndex);
 
             if (tabMatchingURLAndIndex) {
                 return tabMatchingURLAndIndex;
             } else {
                 // find the most recent tab
-                closedTabsWithMatchingURLs.sort((tabInfo1, tabInfo2) => {
+                candidateTabs.sort((tabInfo1, tabInfo2) => {
                     return new Date(tabInfo2.closedAt).valueOf() - new Date(tabInfo1.closedAt).valueOf() 
                 });
-                log.debug('Most recent tab:', closedTabsWithMatchingURLs[0]);
-                return closedTabsWithMatchingURLs[0];
+                log.debug('Most recent tab:', candidateTabs[0]);
+                return candidateTabs[0];
             }
         }
     }
@@ -71,6 +71,7 @@ async function loadTab(tabId, url, index, isBeingOpened) {
         if (isBeingOpened) {
             matchedTab.isClosed = false;
             matchedTab.closedAt = null;
+            matchedTab.isDiscarded = false;
         }
         await storageSet({[tabId]: matchedTab});
         return matchedTab;
@@ -97,7 +98,7 @@ async function saveTab(tab) {
     }
     log.debug('newSignature after possible overwrite with title and favicon:', newSignature);
 
-    await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
+    await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature, tab.isDiscarded)});
     log.debug('Data saved to storage');
 }
 

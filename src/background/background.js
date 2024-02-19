@@ -26,9 +26,12 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
+
     } else if (message.command === "save_signature") {
-        const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index, false, null, message.signature);
+        const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index,
+            false, null, message.signature, false);
         saveTab(tab);
+
     } else if (message.command === "load_signature") {
         loadTab(sender.tab.id, sender.tab.url, sender.tab.index, false)
         .then((tab) => {
@@ -39,47 +42,58 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             return sendResponse(null);
         });
         return true; // To indicate that the response will be asynchronous
+
     } else if (message.command === "get_favicon_url") {
         sendResponse(sender.tab.favIconUrl);
+
     } else if (message.command === "stash_original_title") {
         originalTitleStash[sender.tab.id] = message.originalTitle;
         console.log(`Stashed original title '${message.originalTitle}' for tabId ${sender.tab.id}`);
+
     } else if (message.command === "unstash_original_title") {
         const result = originalTitleStash[sender.tab.id];
         delete originalTitleStash[sender.tab.id];
         console.log(`Unstashed original title '${result}' for tabId ${sender.tab.id}`);
         sendResponse(result);
     }
+
+    if (message.command === 'test') {
+        chrome.tabs.query
+    }
 });
+
+
+const markTabAsClosed = async (tabId) => {
+    /** @type {TabInfo} */
+    let tabInfo = await storageGet(tabId);
+    if (tabInfo) {
+        tabInfo.isClosed = true;
+        tabInfo.closedAt = new Date().toISOString();
+        await storageSet({[tabId]: tabInfo});
+    }
+};
 
 chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
     log.debug('onRemoved listener called:');
     log.debug('tab closed:', tabId, removeInfo);
-
-    /** @type {TabInfo} */
-    let tabInfo = await storageGet(tabId);
-    log.debug('retrieved tab Info', tabInfo);
-
-    if (tabInfo) {
-        tabInfo.isClosed = true;
-        tabInfo.closedAt = new Date().toISOString();
-        log.debug('Added closedAt to it:', tabInfo);
-        await storageSet({[tabId]: tabInfo});
-    }
+    await markTabAsClosed(tabId);
 });
 
-// chrome.tabs.onCreated.addListener(async (tab) => {
-//     log.debug('onCreated called:', tab);
-//     const signature = (await loadTab(tab.id, tab.url, tab.index, true)).signature;
-//     log.debug('found this info:', signature);
-//     if (signature) {
-//         chrome.tabs.sendMessage(tab.id, {
-//             command: 'set_tab_signature',
-//             signature: signature,
-//         });
-//     }
-// });
+const markTabAsDiscarded = async (tabId) => {
+    /** @type {TabInfo} */
+    let tabInfo = await storageGet(tabId);
+    if (tabInfo) {
+        tabInfo.isDiscarded = true;
+        await storageSet({[tabId]: tabInfo});
+    }
+}
 
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, _tab) => {
+    if (changeInfo.discarded) {
+        console.log(`Tab ${tabId} was discarded`);
+        await markTabAsDiscarded(tabId);
+    }
+});
 
 /**
  * This function makes sure the contentScript gets injected properly when extension is installed or
@@ -103,9 +117,8 @@ chrome.runtime.onInstalled.addListener(async () => {
             }
         }
     });
-});
 
-chrome.runtime.onInstalled.addListener(function() {
+    // Create a context menu item:
     chrome.contextMenus.create({
         "id": "renameTab",
         "title": "Rename Tab",
