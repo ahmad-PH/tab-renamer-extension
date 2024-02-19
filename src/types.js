@@ -29,6 +29,20 @@ export class TabSignature {
         this.title = title;
         this.favicon = favicon;
     }
+
+    /**
+     * @returns {TabSignature}
+     */
+    static fromObject(obj) {
+        if (!Object.prototype.hasOwnProperty.call(obj, 'title')) {
+            throw new Error('Invalid object: missing or invalid "title"' + JSON.stringify(obj));
+        }
+        if (!Object.prototype.hasOwnProperty.call(obj, 'favicon')) {
+            throw new Error('Invalid object: missing or invalid "favicon"' + JSON.stringify(obj));
+        }
+
+        return new TabSignature(obj.title, obj.favicon);
+    }
 }
 
 export class FaviconDTO {

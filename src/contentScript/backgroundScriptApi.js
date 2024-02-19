@@ -1,5 +1,6 @@
 import { getLogger } from "../log";
 import { TabSignature } from "../types";
+import { Tab } from "./tab";
 
 let log = getLogger('BackgroundScriptAPI', 'debug');
 
@@ -12,10 +13,15 @@ class BackgroundScriptAPI {
     }
 
     /**
-     * @returns {Promise<TabSignature>}
+     * @returns {Promise<TabSignature> | null}
      */
     async loadSignature() {
-        return await chrome.runtime.sendMessage({command: "load_signature"});
+        const response = await chrome.runtime.sendMessage({command: "load_signature"});
+        if (response) {
+            return TabSignature.fromObject(response);
+        } else {
+            return null;
+        }
     }
 
     async getTabInfo() {
