@@ -49,19 +49,9 @@ export class Tab {
         if (signature) { // Then, initializationContentScript would have already set the originals
             log.debug('signature found, setting it.');
             await this.setSignature(signature.title, signature.favicon, true, false);
-            this.signature.originalTitle = signature.originalTitle;
-            // await tab.setSignature(signature, true, false);
         } else {
             log.debug('signature not found');
             await this.setSignature(null, null, false, false);
-            this.signature.originalTitle = document.title;
-            // const newSignature = new TabSignature(
-            //     null,
-            //     null,
-            //     document.title,
-            //     await bgScriptApi.getFaviconUrl()
-            // );
-            // await tab.setSignature(newSignature, false, false);
         }
 
         this.originalTitle = await bgScriptApi.unstashOriginalTitle();
@@ -93,7 +83,7 @@ export class Tab {
             this.signature.title = title;
             this.signature.favicon = favicon;
         } else {
-            this.signature = new TabSignature(title, favicon, null, null);
+            this.signature = new TabSignature(title, favicon);
         }
 
         if (save) {

@@ -118,7 +118,7 @@ export default function App() {
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            log.debug('Enter key pressed', inputBoxValue, selectedEmoji, tab.signature.originalTitle, tab.signature.originalFaviconUrl);
+            log.debug('Enter key pressed', inputBoxValue, selectedEmoji);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
             const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
             await tab.setSignature(newDocumentTitle, newDocumentFavicon);
