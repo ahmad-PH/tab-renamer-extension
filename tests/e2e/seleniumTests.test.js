@@ -27,13 +27,11 @@ describe('Selenium UI Tests', () => {
     const googleFaviconUrl = 'https://www.google.com/favicon.ico';
     const facebookUrl = 'https://www.facebook.com/';
     const youtubeUrl = 'https://www.youtube.com/';
+    const ahmadphosseiniUrl = 'https://www.ahmadphosseini.com/';
+    const ahmadphosseiniFaviconUrl = '/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_32x32_fill_lanczos_center_2.png';
     const websites = [
         {url: googleUrl, faviconUrl: googleFaviconUrl, title: 'Google'},
-        {
-            url: 'https://www.ahmadphosseini.com/',
-            faviconUrl: '/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_32x32_fill_lanczos_center_2.png',
-            title: 'Ahmad Pourihosseini'
-        },
+        {url: ahmadphosseiniUrl, faviconUrl: ahmadphosseiniFaviconUrl, title: 'Ahmad Pourihosseini'},
         {url: 'https://motherfuckingwebsite.com/'},
         {url: youtubeUrl},
         {url: facebookUrl},
@@ -238,11 +236,18 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe(websites[1].title);
     });
 
-    test('Restores original favicon when empty favicon passed', async () => {
+    test('Restores original favicon, page with no favicon <link> elements', async () => {
         await driver.get(googleUrl);
         await driverUtils.setFavicon('🎂');
         await driverUtils.restoreFavicon();
         await driverUtils.assertFaviconUrl(googleFaviconUrl);
+    });
+
+    test('Restores original favicon, page with favicon <link> elements', async () => {
+        await driver.get(ahmadphosseiniUrl);
+        await driverUtils.setFavicon('🎂');
+        await driverUtils.restoreFavicon();
+        await driverUtils.assertFaviconUrl(ahmadphosseiniFaviconUrl);
     });
 
     test('Favicon Restoration with page-switch', async () => {
