@@ -5,8 +5,9 @@ import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_OPEN_RENAME_DIALOG } from "../config";
 
-const log = getLogger('background.js');
-log.setLevel('WARN');
+const log = getLogger('background', 'debug');
+
+const originalTitleStash = {};
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === COMMAND_OPEN_RENAME_DIALOG) {
@@ -40,6 +41,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true; // To indicate that the response will be asynchronous
     } else if (message.command === "get_favicon_url") {
         sendResponse(sender.tab.favIconUrl);
+    } else if (message.command === "stash_original_title") {
+        originalTitleStash[sender.tab.id] = message.originalTitle;
+        console.log(`Stashed original title '${message.originalTitle}' for tabId ${sender.tab.id}`);
+    } else if (message.command === "unstash_original_title") {
+        const result = originalTitleStash[sender.tab.id];
+        delete originalTitleStash[sender.tab.id];
+        console.log(`Unstashed original title '${result}' for tabId ${sender.tab.id}`);
+        sendResponse(result);
     }
 });
 

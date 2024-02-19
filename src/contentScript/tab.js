@@ -3,12 +3,13 @@ import { getLogger } from "../log";
 import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
-import { restoreFaviconStrategy, FAVICON_RESTORE_STRATEGY, faviconRestorationStrategy } from "../config";
+import { faviconRestorationStrategy, FAVICON_RESTORE_STRATEGY } from "../config";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
 const log = getLogger('Tab', 'debug');
-const plog = getLogger('Preservers', 'debug');
+const plog = getLogger('Preservers', 'warn');
+const olog = getLogger('Observer', 'warn');
 
 /**
  * A class that represents the current document/tab in which the content script is running.
@@ -30,6 +31,7 @@ export class Tab {
         this.injectedFaviconLinkElement = null;
         // this.faviconMutationObserver = null;
         this.removedFaviconLinkElements = null;
+        this.originalTitle = null;
     }
 
     /**
@@ -61,6 +63,9 @@ export class Tab {
             // );
             // await tab.setSignature(newSignature, false, false);
         }
+
+        this.originalTitle = await bgScriptApi.unstashOriginalTitle();
+        log.debug('unstashed original title:', this.originalTitle);
     }
 
     /**
@@ -160,8 +165,8 @@ export class Tab {
     _restoreTitle() {
         log.debug('restoreDocumentTitle called. Current signature', this.signature);
         this.disconnectTabTitlePreserver();
-        if (this.signature && this.signature.title && this.signature.originalTitle !== document.title) {
-            this._setTitle(this.signature.originalTitle, false);
+        if (this.signature && this.signature.title && this.originalTitle !== document.title) {
+            this._setTitle(this.originalTitle, false);
         }
     }
     
@@ -269,37 +274,9 @@ const tab = new Tab();
 export default tab;
 
 
-// Deep Debugging:
-const ddlog = getLogger('DeepDebugging', 'debug');
-const olog = getLogger('Observer', 'debug');
-
 function deepDebugging() {
-    // =================================== Title Observer: ===================================
-    ddlog.debug('Document as seen by the main content script:', document);
-    ddlog.debug('Document head:', document.getElementsByTagName('head')[0]);
-    // const link = document.createElement('link');
-    // link.rel = 'icon';
-    // link.href = 'https://www.google.com/favicon.ico';
-    // document.head.appendChild(link);
 
-    // =================================== Title Observer: ===================================
-    let titleMutationObserver = new MutationObserver((mutations) => {
-        // olog.debug('titleMutationObserver callback called', mutations);
-        mutations.forEach((mutation) => {
-            if (mutation.target.nodeName === 'TITLE') {
-                const newTitle = document.title;
-                olog.debug('TITLE mutation detected, newTitle:', newTitle);
-            }
-        });
-    });
-
-    const titleElement = document.querySelector('head > title');
-    // rplog.debug('title element:', titleElement)
-    if (titleElement) {
-        titleMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
-    }
-
-    // Favicon Observer:
+    // =================================== Favicon Observer: ===================================
     let faviconMutationObserver = new MutationObserver((mutations) => {
         olog.debug('faviconMutationObserver callback called', mutations);
         let changes = {

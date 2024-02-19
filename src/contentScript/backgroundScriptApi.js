@@ -8,42 +8,33 @@ class BackgroundScriptAPI {
      * @param {TabSignature} signature 
      */
     async saveSignature(signature) {
-        try {
-            await chrome.runtime.sendMessage({command: "save_signature", signature});
-        } catch (error) {
-            log.error('Failed to save signature:', error);
-            throw error;
-        }
+        await chrome.runtime.sendMessage({command: "save_signature", signature});
     }
 
     /**
      * @returns {Promise<TabSignature>}
      */
     async loadSignature() {
-        try {
-            return await chrome.runtime.sendMessage({command: "load_signature"});
-        } catch (error) {
-            log.error('Failed to load signature:', error);
-            throw error;
-        }
+        return await chrome.runtime.sendMessage({command: "load_signature"});
     }
 
     async getTabInfo() {
-        try {
-            return await chrome.runtime.sendMessage({ command: "get_tab_info" });
-        } catch (error) {
-            console.error('Failed to get tab Info:', error);
-            throw error;
-        }
+        return await chrome.runtime.sendMessage({ command: "get_tab_info" });
     }
 
     async getFaviconUrl() {
-        try {
-            return await chrome.runtime.sendMessage({ command: "get_favicon_url" });
-        } catch (error) {
-            console.error('Failed to get favicon:', error);
-            throw error;
-        }
+        return await chrome.runtime.sendMessage({ command: "get_favicon_url" });
+    }
+
+    async stashOriginalTitle(originalTitle) {
+        await chrome.runtime.sendMessage({ command: "stash_original_title", originalTitle });
+    }
+
+    /**
+     * @returns {Promise<string>}
+     */
+    async unstashOriginalTitle() {
+        return await chrome.runtime.sendMessage({ command: "unstash_original_title" });
     }
 }
 
