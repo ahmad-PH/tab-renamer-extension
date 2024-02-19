@@ -1,9 +1,12 @@
 import log from 'loglevel';
 
-if (typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production') {
+const inProduction = () => {
+    return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
+}
+
+if (inProduction()) {
     log.setLevel('ERROR');
 } else {
-    // To debug, set the log level to 'DEBUG'. Otherwise set to 'WARN'.
     log.setLevel('WARN');
     // log.setLevel('DEBUG');
 }
@@ -17,9 +20,13 @@ if (typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production') {
  * @param {log.LogLevelDesc} [level]
  * @returns {log.Logger}
  */
-export function getLogger(name, level) {
+export function getLogger(name, level = log.getLevel()) {
     const logger = log.getLogger(name);
-    logger.setLevel(level || log.getLevel());
+    if (inProduction()) {
+        logger.setLevel('ERROR');
+    } else {
+        logger.setLevel(level);
+    }
 
     const methods = ['trace', 'debug', 'log', 'info', 'warn', 'error'];
 
