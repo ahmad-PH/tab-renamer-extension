@@ -42,7 +42,7 @@ export class Tab {
         deepDebugging();
 
         log.debug('initializeForMainContentScript called');
-        const signature = await bgScriptApi.loadSignature();
+        const signature = await bgScriptApi.loadSignature(true);
         log.debug('retrieved signature:', signature);
         log.debug('document.title:', document.title, 'faviconUrl:', await bgScriptApi.getFaviconUrl());
 

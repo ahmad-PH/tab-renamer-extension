@@ -1,4 +1,5 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
+const { expect, test, describe } = require('@jest/globals');
 const data = require('./data.js');
 const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
@@ -66,7 +67,7 @@ describe('Selenium UI Tests', () => {
         }
         driver = null;
         driverUtils = null;
-        // await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
+        await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
     }
 
     afterEach(tearDown);
@@ -106,7 +107,7 @@ describe('Selenium UI Tests', () => {
     test('Can set emojis', async () => {
         await driver.get(data.websites[0].url);
         await driverUtils.setFavicon('😃');
-        await driverUtils.assertEmojiSetAsFavicon();
+        expect(await driverUtils.faviconIsEmoji()).toBe(true);
     });
 
     test('Can search for emojis', async () => {
@@ -145,7 +146,7 @@ describe('Selenium UI Tests', () => {
 
         // Assert the name and emoji that we set on the tab:
         expect(await driverUtils.getTitle()).toBe(newTitle);
-        await driverUtils.assertEmojiSetAsFavicon();
+        expect(await driverUtils.faviconIsEmoji()).toBe(true);
             
         // Assert the name and emoji that we set in the UI:
         await driverUtils.openRenameDialog();
@@ -182,42 +183,13 @@ describe('Selenium UI Tests', () => {
 
         await driver.get(data.websites[0].url);
         expect(await driverUtils.getTitle()).toBe(signature1.title);
-        await driverUtils.assertEmojiSetAsFavicon();
+        expect(await driverUtils.faviconIsEmoji()).toBe(true);
 
         await driverUtils.openTabToURL(data.websites[1].url);
         expect(await driverUtils.getTitle()).toBe(signature2.title);
-        await driverUtils.assertEmojiSetAsFavicon();
+        expect(await driverUtils.faviconIsEmoji()).toBe(true);
 
     }, 20 * SECONDS);
-
-    test('Restores original title when empty title passed', async () => {
-        await driver.get(data.websites[0].url);
-        const originalTitle = await driverUtils.getTitle();
-        await driverUtils.renameTab('New title');
-        await driverUtils.restoreTitle();
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe(originalTitle);
-    })
-
-    test('Restores original title when empty title passed, after being re-opened', async () => {
-        await driver.get(data.websites[0].url);
-        const originalTitle = await driverUtils.getTitle();
-        await driverUtils.renameTab('New title');
-        await driverUtils.closeAndReopenCurrentTab();
-        await driverUtils.restoreTitle();
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe(originalTitle);
-    });
-
-    test('Title restoration with page-switch', async () => {
-        await driver.get(data.websites[0].url);
-        await driverUtils.renameTab('New title');
-        await driver.sleep(20); // Give background script time to save the title. NOT SURE if it is actually needed.
-        await driver.get(data.websites[1].url);
-        await driverUtils.restoreTitle();
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe(data.websites[1].title);
-    });
 
     test('Title preserver maintains title despite direct manipulation: Facebook + YouTube', async () => {
         // This test is mainly to emulate what Facebook and YouTube do.
@@ -231,36 +203,69 @@ describe('Selenium UI Tests', () => {
         expect(actualTitle).toBe('New title');
     });
 
-    test('Title restoration after direct title manipulation', async () => {
-        await driver.get(data.websites[0].url);
-        await driverUtils.renameTab('New title');
-        await driver.executeScript('document.title = "Some other title"');
-        await driverUtils.restoreTitle();
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe('Some other title');
+    describe('Signature restoration', () => {
+
+        test('Restores original title when empty title passed', async () => {
+            await driver.get(data.websites[0].url);
+            const originalTitle = await driverUtils.getTitle();
+            await driverUtils.renameTab('New title');
+            await driverUtils.restoreTitle();
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe(originalTitle);
+        })
+
+        test('Restores original title when empty title passed, after being re-opened', async () => {
+            await driver.get(data.websites[0].url);
+            const originalTitle = await driverUtils.getTitle();
+            await driverUtils.renameTab('New title');
+            await driverUtils.closeAndReopenCurrentTab();
+            await driverUtils.restoreTitle();
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe(originalTitle);
+        });
+
+        test('Title restoration with page-switch', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.renameTab('New title');
+            await driver.sleep(20); // Give background script time to save the title. NOT SURE if it is actually needed.
+            await driver.get(data.websites[1].url);
+            await driverUtils.restoreTitle();
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe(data.websites[1].title);
+        });
+
+        test('Title restoration after direct title manipulation', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.renameTab('New title');
+            await driver.executeScript('document.title = "Some other title"');
+            await driverUtils.restoreTitle();
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe('Some other title');
+        });
+
+        test('Restores original favicon, page with no favicon <link> elements', async () => {
+            await driver.get(data.googleUrl);
+            await driverUtils.setFavicon('🎂');
+            await driverUtils.restoreFavicon();
+            await driverUtils.assertFaviconUrl(data.googleFaviconUrl);
+        });
+    
+        test('Restores original favicon, page with favicon <link> elements', async () => {
+            await driver.get(data.ahmadphosseiniUrl);
+            await driverUtils.setFavicon('🎂');
+            await driverUtils.restoreFavicon();
+            await driverUtils.assertFaviconUrl(data.ahmadphosseiniFaviconUrl);
+        });
+    
+        test('Favicon Restoration with page-switch', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.setFavicon('🫂');
+            await driver.get(data.websites[1].url);
+            await driverUtils.restoreFavicon();
+            await driverUtils.assertFaviconUrl(data.websites[1].faviconUrl);
+        });
     });
 
-    test('Restores original favicon, page with no favicon <link> elements', async () => {
-        await driver.get(data.googleUrl);
-        await driverUtils.setFavicon('🎂');
-        await driverUtils.restoreFavicon();
-        await driverUtils.assertFaviconUrl(data.googleFaviconUrl);
-    });
-
-    test('Restores original favicon, page with favicon <link> elements', async () => {
-        await driver.get(data.ahmadphosseiniUrl);
-        await driverUtils.setFavicon('🎂');
-        await driverUtils.restoreFavicon();
-        await driverUtils.assertFaviconUrl(data.ahmadphosseiniFaviconUrl);
-    });
-
-    test('Favicon Restoration with page-switch', async () => {
-        await driver.get(data.websites[0].url);
-        await driverUtils.setFavicon('🫂');
-        await driver.get(data.websites[1].url);
-        await driverUtils.restoreFavicon();
-        await driverUtils.assertFaviconUrl(data.websites[1].faviconUrl);
-    });
 
     test('Title loads before the page load has finished', async function() {
         await tearDown();
@@ -318,5 +323,16 @@ describe('Selenium UI Tests', () => {
         server.close();
 
         expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
+    });
+    
+    test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async () => {
+        await driver.get(data.websites[0].url);
+        await driverUtils.renameTab('New title');
+        await driverUtils.setFavicon('📖');
+        await driverUtils.closeAndReopenCurrentTab();
+
+        await driverUtils.openTabToURL(data.websites[0].url);
+        expect(await driverUtils.getTitle()).toBe(data.websites[0].title);
+        expect(await driverUtils.getFaviconUrl()).toBe(data.websites[0].faviconUrl);
     });
 });

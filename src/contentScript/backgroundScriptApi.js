@@ -2,6 +2,7 @@ import { getLogger } from "../log";
 import { TabSignature } from "../types";
 import { Tab } from "./tab";
 
+// eslint-disable-next-line no-unused-vars
 let log = getLogger('BackgroundScriptAPI', 'debug');
 
 class BackgroundScriptAPI {
@@ -13,10 +14,11 @@ class BackgroundScriptAPI {
     }
 
     /**
+     * @param {boolean} isBeingOpened
      * @returns {Promise<TabSignature> | null}
      */
-    async loadSignature() {
-        const response = await chrome.runtime.sendMessage({command: "load_signature"});
+    async loadSignature(isBeingOpened) {
+        const response = await chrome.runtime.sendMessage({command: "load_signature", isBeingOpened});
         if (response) {
             return TabSignature.fromObject(response);
         } else {

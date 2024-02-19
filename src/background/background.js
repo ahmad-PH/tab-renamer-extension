@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         saveTab(tab);
 
     } else if (message.command === "load_signature") {
-        loadTab(sender.tab.id, sender.tab.url, sender.tab.index, false)
+        loadTab(sender.tab.id, sender.tab.url, sender.tab.index, message.isBeingOpened)
         .then((tab) => {
             const signature = tab ? tab.signature : null;
             return sendResponse(signature);

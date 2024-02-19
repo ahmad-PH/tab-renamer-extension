@@ -44,11 +44,22 @@ class DriverUtils {
         return await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
     }
 
-    async assertEmojiSetAsFavicon() {
+    async getFaviconUrl() {
+        const faviconElement = await this.getFaviconElement();
+        if (faviconElement) {
+            return await this.getAttribute(faviconElement, "href");
+        } else {
+            const currentUrl = new URL(await this.driver.getCurrentUrl());
+            return `${currentUrl.protocol}//${currentUrl.hostname}/favicon.ico`;
+        }
+    }
+
+    async faviconIsEmoji() {
         const faviconElement = this.getFaviconElement();
-        expect(await this.getAttribute(faviconElement, "rel")).toContain("icon");
-        expect(await this.getAttribute(faviconElement, "href")).toMatch(/^data:image\/png;base64,/);
-        expect(await this.getAttribute(faviconElement, "type")).toMatch('image/x-icon');
+        const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
+        const hrefMatchesPngData = (await this.getAttribute(faviconElement, "href")).startsWith("data:image/png;base64,");
+        const typeMatchesIcon = (await this.getAttribute(faviconElement, "type")) === 'image/x-icon';
+        return relContainsIcon && hrefMatchesPngData && typeMatchesIcon;
     }
 
     async assertFaviconUrl(faviconUrl) {

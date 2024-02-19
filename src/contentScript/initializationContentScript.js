@@ -13,7 +13,7 @@ const olog = getLogger('Title Observer', 'debug');
  */ 
 (async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called from the initialization content script.');
-    const signature = await bgScriptApi.loadSignature();
+    const signature = await bgScriptApi.loadSignature(false);
     let title;
     if (signature) {
         log.debug('retrieved signature:', signature);
