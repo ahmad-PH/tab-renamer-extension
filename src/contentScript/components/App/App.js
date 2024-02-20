@@ -60,22 +60,6 @@ export default function App() {
             }
             setSelectedEmoji(EmojiFavicon.fromDTO(tab.signature.favicon).emoji);
         }
-        // const loadInitialData = async () => {
-        //     const signature = await bgScriptApi.loadSignature();
-        //     log.debug('retrieved signature in loadInitialData:', signature);
-        //     if (signature) {
-        //         if (signature.title) {
-        //             setInputBoxValue(signature.title);
-        //         }
-        //         if (signature.favicon) {
-        //             if (signature.favicon.type !== EmojiFavicon.type) {
-        //                 throw new Error('Only supporting emoji favicons at the moment.');
-        //             }
-        //             setSelectedEmoji(EmojiFavicon.fromDTO(signature.favicon).emoji);
-        //         }
-        //     }
-        // };
-        // loadInitialData();
     }, []);
 
     useEffect(() => {

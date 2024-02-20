@@ -3,7 +3,10 @@ import styles from './EmojiPicker.module.css';
 import PropTypes from 'prop-types';
 import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ALL_EMOJIS_ID } from '../../../config';
 import classNames from 'classnames';
+import { getLogger } from '../../../log';
 
+// eslint-disable-next-line no-unused-vars
+const log = getLogger('EmojiPicker', 'debug');
 
 const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
@@ -72,9 +75,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                                 </div>
                                 <div className={styles.emojiGrid}>
                                     {emojis.map(emoji => (
-                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={
-                                            () => onEmojiClick(emoji.emoji)
-                                        }/>
+                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={onEmojiClick}/>
                                     ))}
                                 </div>
                             </div>
@@ -127,7 +128,7 @@ const Emoji = ({ emoji, onClick }) => {
             className={styles.emojiItem}
             data-unicode={emoji.unicode} 
             data-shortcode={emoji.shortcode}
-            onClick={onClick}
+            onClick={() => onClick(emoji.emoji)}
         >
             <span className={styles.emojiWrapper}>
                 {emoji.emoji}

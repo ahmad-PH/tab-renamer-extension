@@ -5,7 +5,7 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ROOT_TAG_NAME } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ROOT_TAG_NAME, PICKED_EMOJI_ID } = require('../../src/config.js');
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
@@ -131,18 +131,25 @@ describe('Selenium UI Tests', () => {
             const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
             await emojiSearchBar.sendKeys('halo');
 
-            // Verify that search results contains the halo emoji, and nothing else (checking a few
-            // common emojis as a proxy for checking all emojis)
+            // Verify that search results contains the halo emoji
             const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
             const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
             const elements = await searchResults.findElements(By.xpath(xpathForEmoji('😇')));
-            expect(elements.length).toBeGreaterThan(0);
+            expect(elements.length).toBe(1);
 
+            // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
             const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
             for (const emoji of commonEmojis) {
                 const elements = await searchResults.findElements(By.xpath(xpathForEmoji(emoji)));
                 expect(elements.length).toBe(0);
             }
+
+            // Also make sure it is clickable and will set the correct favicon
+            await elements[0].click()
+
+            const pickedEmojiElement = await driver.findElement(driverUtils.shadowRootLocator.byId(PICKED_EMOJI_ID));
+            const dataEmoji = await pickedEmojiElement.getAttribute('data-emoji');
+            expect(dataEmoji).toBe('😇');
         });
     });
 

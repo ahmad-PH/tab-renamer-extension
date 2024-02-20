@@ -6,7 +6,6 @@ import { EMOJI_PICKER_IMAGE_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID } from '../..
 import log from '../../../log';
 
 function SelectedEmoji({ selectedEmoji, handleFaviconPickerClick }) {
-    log.debug('Rendering SelectedEmoji with emoji:', selectedEmoji);
     const emojiElement = (selectedEmoji ? 
         <img id={PICKED_EMOJI_ID} className={styles.selectedImage} src={emojiToDataURL(selectedEmoji, 55)} data-emoji={selectedEmoji}/> :
         <img id={EMOJI_PICKER_IMAGE_ID} className={styles.placeholderImage} src={chrome.runtime.getURL("assets/emoji_picker_icon.png")}/>
