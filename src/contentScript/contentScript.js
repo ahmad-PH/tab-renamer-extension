@@ -2,8 +2,6 @@ import tab from "./tab";
 import listenerManager from "./listenerManager";
 import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME, inProduction } from "../config";
 import { createRoot } from 'react-dom/client';
-import App from './components/App';
-import { TabContext } from './components/App/App';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { getLogger } from "../log";
@@ -18,11 +16,14 @@ let tabInitializationPromise = tab.initializeForMainContentScript();
 
 async function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
-        // await tab.initializeForMainContentScript();
-        await tabInitializationPromise;
-        const rootElement = document.createElement(ROOT_TAG_NAME);
-        document.body.appendChild(rootElement);
+        const hostElement = document.createElement(ROOT_TAG_NAME);
+        document.body.appendChild(hostElement);
+        const rootElement = hostElement.attachShadow({ mode: 'open' });
         root = createRoot(rootElement);
+
+        const { default: App, TabContext } = await import('./components/App');
+
+        await tabInitializationPromise;
         root.render(
             <TabContext.Provider value={tab}>
                 <App/>
@@ -79,7 +80,8 @@ runtimePort.onDisconnect.addListener(() => {
         uiInsertedIntoDOM = false;
     }
 
-    const rootElement = document.getElementById(ROOT_ELEMENT_ID);
+    // const rootElement = document.getElementById(ROOT_ELEMENT_ID);
+    const rootElement = document.querySelector(ROOT_TAG_NAME);
     if (rootElement) {
         rootElement.remove();
     }

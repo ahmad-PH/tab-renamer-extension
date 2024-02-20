@@ -1,6 +1,11 @@
-const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB } = require('../../src/config.js');
+const { WebDriver, Key, By, until, WebElement } = require('selenium-webdriver');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB, EMOJI_PICKER_ID } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
+const { ROOT_TAG_NAME } = require('../../src/config.js');
+const { getLogger } = require('../../src/log');
+
+// eslint-disable-next-line no-unused-vars
+const log = getLogger('DriverUtils', 'warn');
 
 class DriverUtils {
     /**
@@ -8,11 +13,24 @@ class DriverUtils {
      */
     constructor(driver) {
         this.driver = driver;
+        this.shadowRootSelector = ROOT_TAG_NAME;
+        this.shadowRootLocator = {
+            byId: (id) => {
+                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('#${id}')`);
+            },
+            byCSS: (css) => {
+                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('${css}')`);
+            }
+        };
+    }
+
+    async getShadowRoot() {
+        return await this.driver.findElement(By.css(this.shadowRootSelector)).getShadowRoot();
     }
 
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
-        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
         await renameBox.clear();
         await renameBox.sendKeys(newTabTitle);
         await this.submitRenameDialog();
@@ -20,16 +38,14 @@ class DriverUtils {
 
     async openEmojiPicker() {
         await this.openRenameDialog();
-        const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
+        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID));
         await emojiPicker.click();        
     }
     
     async setFavicon(emoji) {
         await this.openEmojiPicker();
-    
-        const xpath = `//*[contains(text(),'${emoji}')]`;
-        await this.driver.wait(until.elementLocated(By.xpath(xpath)));
-        const emojiElement = await this.driver.findElement(By.xpath(xpath));
+        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_PICKER_ID));
+        const emojiElement = await emojiPicker.findElement(By.xpath(`.//*[contains(text(),'${emoji}')]`));
         await emojiElement.click();
     
         await this.submitRenameDialog();
@@ -69,7 +85,7 @@ class DriverUtils {
 
     async openRenameDialog() {
         await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_OPEN_RENAME_DIALOG}'));`);
-        await this.driver.wait(until.elementLocated(By.id(ROOT_ELEMENT_ID)));
+        await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
     }
 
     async getAttribute(element, attribute) {
@@ -102,13 +118,13 @@ class DriverUtils {
     }
 
     async getTitleInUI() {
-        const input_box = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        const input_box = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
         return input_box.getAttribute('value');
     }
 
     async getFaviconInUI() {
         try {
-            const picked_emoji = await this.driver.findElement(By.id(PICKED_EMOJI_ID));
+            const picked_emoji = await this.driver.findElement(this.shadowRootLocator.byId(PICKED_EMOJI_ID));
             return await picked_emoji.getAttribute('data-emoji');
         } catch (error) {
             if (error.name === 'NoSuchElementError') {
@@ -130,9 +146,9 @@ class DriverUtils {
 
     async restoreFavicon() {
         await this.openRenameDialog();
-        const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
+        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID));
         await emojiPicker.click();
-        const emojiRemoveButton = await this.driver.findElement(By.id(EMOJI_REMOVE_BUTTON_ID));
+        const emojiRemoveButton = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_REMOVE_BUTTON_ID));
         emojiRemoveButton.click();
         await this.submitRenameDialog();
     }
@@ -142,7 +158,7 @@ class DriverUtils {
     }
 
     async submitRenameDialog() {
-        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
         await renameBox.sendKeys(Key.ENTER);
         await this.driver.wait(until.elementIsNotVisible(renameBox));
     }

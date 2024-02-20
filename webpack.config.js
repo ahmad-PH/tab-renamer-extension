@@ -35,11 +35,23 @@ module.exports = (_env, argv) => {
                 },
                 {
                     test: /\.module\.css$/,
-                    use: ['style-loader', {
-                        loader: 'css-loader',
-                        options: {modules: { localIdentName:
-                            isProduction ? '[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
-                        }},
+                    use: [
+                        {
+                            loader: 'style-loader',
+                            options: {
+                                insert: function(element) {
+                                    // eslint-disable-next-line no-undef
+                                    document.querySelector("tab-renamer-root").shadowRoot.appendChild(element);
+                                }
+                            }
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    localIdentName: isProduction ? '[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
+                                }, 
+                            },
                     },],
                 },
             ],

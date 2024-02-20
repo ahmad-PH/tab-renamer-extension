@@ -5,10 +5,14 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ROOT_TAG_NAME } = require('../../src/config.js');
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
+const { getLogger } = require('../../src/log');
+
+// eslint-disable-next-line no-unused-vars
+const log = getLogger('SeleniumUITests', 'debug');
 
 // eslint-disable-next-line no-unused-vars
 const SECONDS = 1000, MINUTES = 60 * SECONDS;
@@ -78,7 +82,7 @@ describe('Selenium UI Tests', () => {
     test('Can open dialog', async () => {
         await driver.get(data.websites[0].url);
         await driverUtils.openRenameDialog();
-        await driver.findElement(By.id(ROOT_ELEMENT_ID));
+        await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
     });
 
     test('Can rename tab', async () => {
@@ -97,11 +101,12 @@ describe('Selenium UI Tests', () => {
         await driver.actions().click(body).perform();
 
         await driverUtils.openRenameDialog();
+        const activeElement = await driver.executeScript(`
+            return document.querySelector('${driverUtils.shadowRootSelector}').shadowRoot.activeElement;
+        `);
 
-        const inputBox = await driver.findElement(By.id(INPUT_BOX_ID));
-        const activeElement = await driver.switchTo().activeElement();
-
-        expect(await activeElement.getAttribute('id')).toBe(await inputBox.getAttribute('id'));
+        expect(activeElement).not.toBeNull();
+        expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
     });
 
     describe('Emoji picker', () => {
@@ -114,8 +119,8 @@ describe('Selenium UI Tests', () => {
         test('Emojis not on page before emoji picker being clicked', async () => {
             await driver.get(data.websites[0].url);
             await driverUtils.openRenameDialog();
-            const xpath = `//*[contains(text(),'😃')]`;
-            const elements = await driver.findElements(By.xpath(xpath));
+            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
+            const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
             expect(elements.length).toBe(0);
         });
 
@@ -123,19 +128,19 @@ describe('Selenium UI Tests', () => {
             await driver.get(data.websites[0].url);
             await driverUtils.openEmojiPicker();
 
-            const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
+            const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
             await emojiSearchBar.sendKeys('halo');
 
             // Verify that search results contains the halo emoji, and nothing else (checking a few
             // common emojis as a proxy for checking all emojis)
-            const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
+            const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
             const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
-            const elements = await driver.findElements(By.xpath(xpathForEmoji('😇'), searchResults));
+            const elements = await searchResults.findElements(By.xpath(xpathForEmoji('😇')));
             expect(elements.length).toBeGreaterThan(0);
 
             const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
             for (const emoji of commonEmojis) {
-                const elements = await driver.findElements(By.xpath(xpathForEmoji(emoji), searchResults));
+                const elements = await searchResults.findElements(By.xpath(xpathForEmoji(emoji)));
                 expect(elements.length).toBe(0);
             }
         });
