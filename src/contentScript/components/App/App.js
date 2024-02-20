@@ -88,7 +88,7 @@ export default function App() {
         chrome.runtime.onMessage.addListener(chromeOpenRenameDialogListener);
 
         function domOpenRenameDialogListener(_event) {
-                setIsVisible(true);
+            setIsVisible(true);
         }
 
         if (!inProduction()) { // Only for testing
@@ -153,11 +153,12 @@ export default function App() {
             <div className={styles.mainBar}>
                 <div className={styles.faviconPickerWrapper}>
                     <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
-                    <EmojiPicker 
-                        onEmojiClick={handleEmojiClick}
-                        onRemoveEmoji={handleRemoveEmoji}
-                        isVisible={emojiPickerIsVisible}
-                    />
+                    {emojiPickerIsVisible && 
+                        <EmojiPicker 
+                            onEmojiClick={handleEmojiClick}
+                            onRemoveEmoji={handleRemoveEmoji}
+                        />
+                    }
                 </div>
                 <input
                     type="text"

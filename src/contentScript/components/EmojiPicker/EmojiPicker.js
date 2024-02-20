@@ -5,9 +5,10 @@ import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_
 import classNames from 'classnames';
 
 
-const EmojiPicker = ({ onEmojiClick, onRemoveEmoji, isVisible }) => {
+const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
     const [allEmojis, setAllEmojis] = useState({});
+    const [isVisible, setIsVisible] = useState(false);
     
     const findMatchingEmojis = (searchValue, emojis) => {
         let filteredEmojis = [];
@@ -43,6 +44,12 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji, isVisible }) => {
             .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
             .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
     };
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsVisible(true);
+        }, 0);
+    }, []);
 
     return (
         <div id={EMOJI_PICKER_ID} className={classNames(styles.root, {[styles.visible]: isVisible})}>

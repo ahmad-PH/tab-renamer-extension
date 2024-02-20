@@ -104,31 +104,41 @@ describe('Selenium UI Tests', () => {
         expect(await activeElement.getAttribute('id')).toBe(await inputBox.getAttribute('id'));
     });
 
-    test('Can set emojis', async () => {
-        await driver.get(data.websites[0].url);
-        await driverUtils.setFavicon('😃');
-        expect(await driverUtils.faviconIsEmoji()).toBe(true);
-    });
+    describe('Emoji picker', () => {
+        test('Can set emojis', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.setFavicon('😃');
+            expect(await driverUtils.faviconIsEmoji()).toBe(true);
+        });
 
-    test('Can search for emojis', async () => {
-        await driver.get(data.websites[0].url);
-        await driverUtils.openEmojiPicker();
-
-        const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
-        await emojiSearchBar.sendKeys('halo');
-
-        // Verify that search results contains the halo emoji, and nothing else (checking a few
-        // common emojis as a proxy for checking all emojis)
-        const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
-        const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
-        const elements = await driver.findElements(By.xpath(xpathForEmoji('😇'), searchResults));
-        expect(elements.length).toBeGreaterThan(0);
-
-        const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
-        for (const emoji of commonEmojis) {
-            const elements = await driver.findElements(By.xpath(xpathForEmoji(emoji), searchResults));
+        test('Emojis not on page before emoji picker being clicked', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.openRenameDialog();
+            const xpath = `//*[contains(text(),'😃')]`;
+            const elements = await driver.findElements(By.xpath(xpath));
             expect(elements.length).toBe(0);
-        }
+        });
+
+        test('Can search for emojis', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.openEmojiPicker();
+
+            const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
+            await emojiSearchBar.sendKeys('halo');
+
+            // Verify that search results contains the halo emoji, and nothing else (checking a few
+            // common emojis as a proxy for checking all emojis)
+            const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
+            const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
+            const elements = await driver.findElements(By.xpath(xpathForEmoji('😇'), searchResults));
+            expect(elements.length).toBeGreaterThan(0);
+
+            const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
+            for (const emoji of commonEmojis) {
+                const elements = await driver.findElements(By.xpath(xpathForEmoji(emoji), searchResults));
+                expect(elements.length).toBe(0);
+            }
+        });
     });
 
     test('Retains tab signature when tab is re-opened', async () => {
