@@ -111,13 +111,14 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
  * This function makes sure the contentScript gets injected properly when extension is installed or
  * updated without requiring the user to reload the tabs.
  */
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
     const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
     log.debug('after query:', allTabs);
     allTabs.forEach(async (tab) => {
         if (
             (tab.url.startsWith('http://') || tab.url.startsWith('https://')) &&
-            !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') // The extensions gallery cannot be scripted 
+            !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') && // The extensions gallery cannot be scripted 
+            !tab.url.startsWith('https://chromewebstore.google.com/') // same as above
         ) { 
             try {
                 await chrome.scripting.executeScript({
@@ -136,6 +137,10 @@ chrome.runtime.onInstalled.addListener(async () => {
         "title": "Rename Tab",
         "contexts": ["page"]
     });
+
+    if (details.reason === "install") {
+        chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
+    }
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
