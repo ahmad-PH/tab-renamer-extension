@@ -1,18 +1,22 @@
 {
     "manifest_version": 3,
     "name": "Tab Renamer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Customize your tab titles and favicons for a more organized browsing experience.",
-    "permissions": ["tabs", "activeTab", "scripting", "storage", "contextMenus"],
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "scripting",
+        "storage",
+        "contextMenus"
+    ],
     "host_permissions": [
         "http://*/*",
         "https://*/*"
     ],
-
     "background": {
         "service_worker": "background.js"
     },
-
     "commands": {
         "open_rename_dialog": {
             "suggested_key": {
@@ -22,28 +26,38 @@
             "description": "Open rename dialog"
         }
     },
-
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
-            "js": ["initializationContentScript.js"],
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "initializationContentScript.js"
+            ],
             "run_at": "document_start"
         },
         {
-            "matches": ["<all_urls>"],
-            "js": ["contentScript.js"],
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "contentScript.js"
+            ],
             "run_at": "document_end"
         }
     ],
-
     "web_accessible_resources": [
         {
-            "resources": ["assets/emoji_picker_icon.png", "assets/emojis.json"],
-            "matches": ["<all_urls>"],
+            "resources": [
+                "assets/emoji_picker_icon.png",
+                "assets/emojis.json"
+            ],
+            "matches": [
+                "<all_urls>"
+            ],
             "use_dynamic_url": false
         }
     ],
-
     "icons": {
         "16": "assets/icon16.png",
         "48": "assets/icon48.png",

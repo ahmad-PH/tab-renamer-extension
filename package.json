@@ -1,13 +1,14 @@
 {
     "name": "tab-renamer-extension",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "",
     "main": "background.js",
     "scripts": {
         "test": "jest --detectOpenHandles",
         "test:headed": "HEADED=true jest --detectOpenHandles",
         "build": "webpack --mode production",
-        "dev": "webpack --mode development --watch"
+        "dev": "webpack --mode development --watch",
+        "version": "node update-manifest-version.js && git add ."
     },
     "repository": {
         "type": "git",
