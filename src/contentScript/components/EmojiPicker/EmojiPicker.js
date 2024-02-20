@@ -95,7 +95,6 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
 EmojiPicker.propTypes = {
     onEmojiClick: PropTypes.func.isRequired,
     onRemoveEmoji: PropTypes.func.isRequired,
-    isVisible: PropTypes.bool.isRequired,
 }
 
 const SearchBar = ({ onSearchBarChanged }) => {
