@@ -2,8 +2,7 @@ import { TabInfo } from "../types";
 import { storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
-const log = getLogger('signatureStorage.js');
-// log.setLevel('DEBUG');
+const log = getLogger('signatureStorage.js', 'debug');
 
 /**
  * @param {Object.<number, TabInfo>} storedTabInfo
@@ -20,7 +19,7 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
         return storedTabInfo[tabId];
     } else { // the tab has been closed
         const candidateTabs = Object.values(storedTabInfo).filter(
-            tabInfoValue => (tabInfoValue.isClosed || tabInfoValue.isDiscarded) && tabInfoValue.url === url 
+            tabInfoValue => tabInfoValue.isClosed && tabInfoValue.url === url 
         );
         log.debug('candidate tabs:', candidateTabs);
 
@@ -49,6 +48,31 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
 }
 
 /**
+ * @param {Object.<number, TabInfo>} storedTabInfo
+ * @param {string} url
+ * @param {number} index
+ * @returns {TabInfo|null} The old record that matched the information given.
+ */
+export function findOldRecordOfFreshlyDiscardedTab(storedTabInfo, url, index) {
+    log.debug('findOldRecordOfFreshlyDiscardedTab called with:', { url, index, storedTabInfo});
+
+    const candidateTabs = Object.values(storedTabInfo).filter(
+        tabInfoValue => !tabInfoValue.isClosed && tabInfoValue.url === url && tabInfoValue.index === index
+    );
+
+    if (candidateTabs.length == 1) {
+        log.debug('One matching tab found:', candidateTabs[0]);
+        return candidateTabs[0];
+    } else if (candidateTabs.length == 0) {
+        log.debug('No matching tab found');
+        return null;
+    } else {
+        throw new Error('More than one candidate tab found for freshly discarded tab. This is unexpected.');
+    }
+}
+
+
+/**
  * Load the tab with the given information, from chrome storage.
  * @param {number} tabId
  * @param {string} url
@@ -71,7 +95,6 @@ async function loadTab(tabId, url, index, isBeingOpened) {
         if (isBeingOpened) {
             matchedTab.isClosed = false;
             matchedTab.closedAt = null;
-            matchedTab.isDiscarded = false;
         }
         await storageSet({[tabId]: matchedTab});
         return matchedTab;
@@ -98,7 +121,7 @@ async function saveTab(tab) {
     }
     log.debug('newSignature after possible overwrite with title and favicon:', newSignature);
 
-    await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature, tab.isDiscarded)});
+    await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
     log.debug('Data saved to storage');
 }
 

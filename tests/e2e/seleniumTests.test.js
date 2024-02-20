@@ -335,4 +335,18 @@ describe('Selenium UI Tests', () => {
         expect(await driverUtils.getTitle()).toBe(data.websites[0].title);
         expect(await driverUtils.getFaviconUrl()).toBe(data.websites[0].faviconUrl);
     });
+
+    test("Discarded tabs reload their titles correctly", async () => {
+        await driver.get(data.websites[0].url);
+        await driverUtils.waitForPageLoad();
+        await driverUtils.setSignature('New title', '📖');
+        await driverUtils.scheduleDiscardTabEvent();
+        await sleep(3 * SECONDS);
+
+        const newTabHandle = (await driver.getAllWindowHandles())[0];
+        await driver.switchTo().window(newTabHandle);
+
+        expect(await driverUtils.getTitle()).toBe('New title');
+        expect(await driverUtils.faviconIsEmoji()).toBe(true);
+    });
 });

@@ -79,28 +79,26 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        function chromeListener(message, _sender, _sendResponse) {
+        function chromeOpenRenameDialogListener(message, _sender, _sendResponse) {
             if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
                 setIsVisible(true);
             }
         }
 
-        chrome.runtime.onMessage.addListener(chromeListener);
+        chrome.runtime.onMessage.addListener(chromeOpenRenameDialogListener);
 
-        function domListener(event) {
-            if (event.type === COMMAND_OPEN_RENAME_DIALOG) {
+        function domOpenRenameDialogListener(_event) {
                 setIsVisible(true);
-            }
         }
 
         if (!inProduction()) { // Only for testing
-            document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
+            document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domOpenRenameDialogListener);
         }
         
         return () => {
-            chrome.runtime.onMessage.removeListener(chromeListener);
+            chrome.runtime.onMessage.removeListener(chromeOpenRenameDialogListener);
             if (!inProduction()) {
-                document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
+                document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, domOpenRenameDialogListener);
             }
         };
     });
@@ -109,6 +107,7 @@ export default function App() {
     useEffect(() => {
         const debugFunction = async () => {
             log.debug('storage:', await chrome.storage.sync.get(null));
+            chrome.runtime.sendMessage({command: 'test'});
         };
         document.body.addEventListener('click', debugFunction);
 

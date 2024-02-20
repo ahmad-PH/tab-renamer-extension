@@ -1,9 +1,9 @@
 import { storageGet, storageSet } from "../utils";
 import { TabInfo } from "../types";
-import { loadTab, saveTab } from "./signatureStorage";
+import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_OPEN_RENAME_DIALOG } from "../config";
+import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG } from "../config";
 
 const log = getLogger('background', 'debug');
 
@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     } else if (message.command === "save_signature") {
         const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index,
-            false, null, message.signature, false);
+            false, null, message.signature);
         saveTab(tab);
 
     } else if (message.command === "load_signature") {
@@ -48,22 +48,37 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     } else if (message.command === "stash_original_title") {
         originalTitleStash[sender.tab.id] = message.originalTitle;
-        console.log(`Stashed original title '${message.originalTitle}' for tabId ${sender.tab.id}`);
 
     } else if (message.command === "unstash_original_title") {
         const result = originalTitleStash[sender.tab.id];
         delete originalTitleStash[sender.tab.id];
-        console.log(`Unstashed original title '${result}' for tabId ${sender.tab.id}`);
         sendResponse(result);
-    }
 
-    if (message.command === 'test') {
-        chrome.tabs.query
+    } else if (message.command === COMMAND_DISCARD_TAB) {
+        log.debug('Received discard tab command. sender tab id:', sender.tab.id);
+        chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
+
+            log.debug('Tab discarded:', discardedTab);
+            const tabs = await chrome.tabs.query({currentWindow: true});
+            log.debug('List of tabs after discarding:', tabs);
+            tabs.forEach(tab => {
+                log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+            });
+            setTimeout(async () => {
+                chrome.tabs.reload(discardedTab.id);
+            }, 500);
+        });
+    }  else if (message.command === 'test') {
+        log.debug('Received test command. List of tabs:');
+        chrome.tabs.query({currentWindow: true}, tabs => {
+            tabs.forEach(tab => {
+                log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+            });
+        });
     }
 });
 
-
-const markTabAsClosed = async (tabId) => {
+chrome.tabs.onRemoved.addListener(async function(tabId, _removeInfo) {
     /** @type {TabInfo} */
     let tabInfo = await storageGet(tabId);
     if (tabInfo) {
@@ -71,27 +86,24 @@ const markTabAsClosed = async (tabId) => {
         tabInfo.closedAt = new Date().toISOString();
         await storageSet({[tabId]: tabInfo});
     }
-};
-
-chrome.tabs.onRemoved.addListener(async function(tabId, removeInfo) {
-    log.debug('onRemoved listener called:');
-    log.debug('tab closed:', tabId, removeInfo);
-    await markTabAsClosed(tabId);
 });
 
-const markTabAsDiscarded = async (tabId) => {
-    /** @type {TabInfo} */
-    let tabInfo = await storageGet(tabId);
-    if (tabInfo) {
-        tabInfo.isDiscarded = true;
-        await storageSet({[tabId]: tabInfo});
-    }
-}
-
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, _tab) => {
-    if (changeInfo.discarded) {
-        console.log(`Tab ${tabId} was discarded`);
-        await markTabAsDiscarded(tabId);
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
+        const storedTabInfo = await storageGet(null);
+        log.debug('Detected update on unloaded and discarded tab:')
+        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}, Status: ${tab.status} Index: ${tab.index}, Favicon URL: ${tab.favIconUrl.substring(0, 20)}`);
+        const matchingTab = findOldRecordOfFreshlyDiscardedTab(storedTabInfo, tab.url, tab.index);
+        log.debug('Found matching tab:', matchingTab);
+        if (matchingTab) {
+            log.debug(`Removing tab with id ${matchingTab.id} from storage and replacing it with ${tab.id}`);
+            await chrome.storage.sync.remove(matchingTab.id.toString());
+            matchingTab.id = tab.id;
+            await storageSet({[tab.id]: matchingTab});
+            log.debug('Storage looks like this now:', await storageGet(null));
+        } else {
+            log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
+        }
     }
 });
 
@@ -134,7 +146,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.runtime.onConnect.addListener((port) => {
     console.assert(port.name === "content-script");
-    log.debug('Connection with content script established successfully.');
+    // log.debug('Connection with content script established successfully.');
 });
 
 startTheGarbageCollector();

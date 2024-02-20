@@ -7,14 +7,13 @@ export class TabInfo {
      * @param {string} closedAt - ISO string representing the time the tab was closed.
      * @param {TabSignature} signature
      */
-    constructor(id, url, index, isClosed, closedAt, signature, isDiscarded = false) {
+    constructor(id, url, index, isClosed, closedAt, signature) {
         this.id = id;
         this.url = url;
         this.index = index;
         this.isClosed = isClosed;
         this.closedAt = closedAt;
         this.signature = signature;
-        this.isDiscarded = isDiscarded;
     }
 }
 

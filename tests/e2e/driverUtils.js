@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 
 class DriverUtils {
@@ -155,6 +155,10 @@ class DriverUtils {
             const readyState = await this.driver.executeScript('return document.readyState');
             return readyState === 'complete';
         }, 10000);
+    }
+
+    async scheduleDiscardTabEvent() {
+        await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_DISCARD_TAB}'));`);
     }
 
 }
