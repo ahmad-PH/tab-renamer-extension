@@ -120,7 +120,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') && // The extensions gallery cannot be scripted 
             !tab.url.startsWith('https://chromewebstore.google.com/') // same as above
         ) { 
+            log.debug('Injecting the extension into:', tab.url);
             try {
+                await chrome.scripting.executeScript({
+                    target: {tabId: tab.id},
+                    files: ['initializationContentScript.js']
+                });
                 await chrome.scripting.executeScript({
                     target: {tabId: tab.id},
                     files: ['contentScript.js']
