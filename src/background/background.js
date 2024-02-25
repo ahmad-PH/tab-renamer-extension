@@ -137,6 +137,10 @@ chrome.runtime.onConnect.addListener((port) => {
     // log.debug('Connection with content script established successfully.');
 });
 
+chrome.action.onClicked.addListener((tab) => {
+    chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
+});
+
 if (!inProduction()) {
     chrome.runtime.onMessage.addListener((message, sender, _sendResponse) => {
         if (message.command === COMMAND_DISCARD_TAB) {
