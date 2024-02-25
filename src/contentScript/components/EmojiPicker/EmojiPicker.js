@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ALL_EMOJIS_ID } from '../../../config';
 import classNames from 'classnames';
 import { getLogger } from '../../../log';
+import { findMatchingEmojis } from '../../emojiSearch';
 
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('EmojiPicker', 'debug');
@@ -12,16 +13,6 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
     const [allEmojis, setAllEmojis] = useState({});
     const [isVisible, setIsVisible] = useState(false);
-    
-    const findMatchingEmojis = (searchValue, emojis) => {
-        let filteredEmojis = [];
-        for (const category in emojis) {
-            filteredEmojis = filteredEmojis.concat(emojis[category].filter(emoji =>
-                emoji.shortcode.includes(searchValue)
-            ));
-        }
-        return filteredEmojis;
-    }
 
     const matchingEmojis = useMemo(
         () => findMatchingEmojis(searchValue, allEmojis),
@@ -123,12 +114,15 @@ SearchBar.propTypes = {
 }
 
 const Emoji = ({ emoji, onClick }) => {
+    const strippedShortcode = emoji.shortcode.substring(1, emoji.shortcode.length - 1);
+
     return (
         <div 
             className={styles.emojiItem}
             data-unicode={emoji.unicode} 
             data-shortcode={emoji.shortcode}
             onClick={() => onClick(emoji.emoji)}
+            title={strippedShortcode}
         >
             <span className={styles.emojiWrapper}>
                 {emoji.emoji}

@@ -1,6 +1,7 @@
-const { findMatchingTab, loadTab, saveTab } = require('../../src/background/signatureStorage.js');
-const { TabInfo, TabSignature } = require('../../src/types.js');
-const { storageSet, storageGet } = require('../../src/utils.js');
+const appRoot = require('app-root-path');
+const { findMatchingTab, loadTab, saveTab } = require(`${appRoot}/src/background/signatureStorage.js`);
+const { TabInfo, TabSignature } = require(`${appRoot}/src/types.js`);
+const { storageSet, storageGet } = require(`${appRoot}/src/utils.js`);
 const { chromeStorageMock } = require('../chromeStorageMock.js');
 
 

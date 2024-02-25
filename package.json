@@ -28,6 +28,7 @@
         "@testing-library/jest-dom": "^6.1.4",
         "@types/chrome": "^0.0.254",
         "@types/jest": "^29.5.11",
+        "app-root-path": "^3.1.0",
         "babel-jest": "^29.7.0",
         "babel-loader": "^9.1.3",
         "chromedriver": "^121.0.0",

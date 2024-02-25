@@ -1,4 +1,5 @@
-const { garabageCollectionFilter, garbageCollectionThreshold } = require('../../src/background/garbageCollector');
+const appRoot = require('app-root-path');
+const { garabageCollectionFilter, garbageCollectionThreshold } = require(`${appRoot}/src/background/garbageCollector`);
 
 describe('garabageCollectionFilter', () => {
     test('should keep the tab if it is not closed', () => {

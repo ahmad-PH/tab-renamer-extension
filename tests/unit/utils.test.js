@@ -1,5 +1,6 @@
 /* global chrome */
-const { storageGet } = require('../../src/utils');
+const appRoot = require('app-root-path');
+const { storageGet } = require(`${appRoot}/src/utils`);
 const { chromeStorageMock } = require('../chromeStorageMock');
 
 describe('storageGet', () => {
