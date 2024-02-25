@@ -38,8 +38,7 @@ class DriverUtils {
 
     async openEmojiPicker() {
         await this.openRenameDialog();
-        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID));
-        await emojiPicker.click();        
+        await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
     }
     
     async setFavicon(emoji) {
@@ -179,6 +178,12 @@ class DriverUtils {
 
     async closeWelcomeTab() {
         await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_CLOSE_WELCOME_TAB}'));`);
+    }
+
+    async getShadowRootActiveElement() {
+        return await this.driver.executeScript(`
+            return document.querySelector('${this.shadowRootSelector}').shadowRoot.activeElement;
+        `);
     }
 
 }

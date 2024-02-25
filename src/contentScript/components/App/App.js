@@ -123,6 +123,12 @@ export default function App() {
         }
     }, [isVisible]);
 
+    useEffect(() => {
+        if (!emojiPickerIsVisible && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [emojiPickerIsVisible]);
+
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
             <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}></div>

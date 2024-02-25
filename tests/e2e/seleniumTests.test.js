@@ -5,7 +5,7 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID, OVERLAY_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID, OVERLAY_ID, FAVICON_PICKER_ID } = require('../../src/config.js');
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
@@ -132,9 +132,7 @@ describe('Selenium UI Tests', () => {
         await driver.actions().click(body).perform();
 
         await driverUtils.openRenameDialog();
-        const activeElement = await driver.executeScript(`
-            return document.querySelector('${driverUtils.shadowRootSelector}').shadowRoot.activeElement;
-        `);
+        const activeElement = await driverUtils.getShadowRootActiveElement();
 
         expect(activeElement).not.toBeNull();
         expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
@@ -153,6 +151,19 @@ describe('Selenium UI Tests', () => {
             const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
             const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
             expect(elements.length).toBe(0);
+        });
+
+        test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
+            await driver.get(data.websites[0].url);
+            await driverUtils.openEmojiPicker();
+            let activeElement = await driverUtils.getShadowRootActiveElement();
+            expect(activeElement).not.toBeNull();
+            expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
+
+            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
+            activeElement = await driverUtils.getShadowRootActiveElement();
+            expect(activeElement).not.toBeNull();
+            expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
         });
 
         test('Can search for emojis', async () => {
