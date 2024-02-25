@@ -1,5 +1,5 @@
 const { WebDriver, Key, By, until, WebElement } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB, EMOJI_PICKER_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB, EMOJI_PICKER_ID, COMMAND_CLOSE_WELCOME_TAB } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 const { ROOT_TAG_NAME } = require('../../src/config.js');
 const { getLogger } = require('../../src/log');
@@ -175,6 +175,10 @@ class DriverUtils {
 
     async scheduleDiscardTabEvent() {
         await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_DISCARD_TAB}'));`);
+    }
+
+    async closeWelcomeTab() {
+        await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_CLOSE_WELCOME_TAB}'));`);
     }
 
 }

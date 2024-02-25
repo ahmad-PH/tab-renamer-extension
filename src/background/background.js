@@ -3,11 +3,12 @@ import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, inProduction } from "../config";
 
 const log = getLogger('background', 'debug');
 
 const originalTitleStash = {};
+let welcomeTab = null;
 
 chrome.commands.onCommand.addListener((command) => {
     if (command === COMMAND_OPEN_RENAME_DIALOG) {
@@ -22,7 +23,7 @@ chrome.commands.onCommand.addListener((command) => {
     }
 });
 
-// Listen for any messages from content scripts.
+// Listen for messages from content script(s):
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "get_tab_info") {
         sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
@@ -54,27 +55,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         delete originalTitleStash[sender.tab.id];
         sendResponse(result);
 
-    } else if (message.command === COMMAND_DISCARD_TAB) {
-        log.debug('Received discard tab command. sender tab id:', sender.tab.id);
-        chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
-
-            log.debug('Tab discarded:', discardedTab);
-            const tabs = await chrome.tabs.query({currentWindow: true});
-            log.debug('List of tabs after discarding:', tabs);
-            tabs.forEach(tab => {
-                log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
-            });
-            setTimeout(async () => {
-                chrome.tabs.reload(discardedTab.id);
-            }, 500);
-        });
-    }  else if (message.command === 'test') {
-        log.debug('Received test command. List of tabs:');
-        chrome.tabs.query({currentWindow: true}, tabs => {
-            tabs.forEach(tab => {
-                log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
-            });
-        });
     }
 });
 
@@ -91,8 +71,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId, _removeInfo) {
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
         const storedTabInfo = await storageGet(null);
-        log.debug('Detected update on unloaded and discarded tab:')
-        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}, Status: ${tab.status} Index: ${tab.index}, Favicon URL: ${tab.favIconUrl.substring(0, 20)}`);
+        log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
         const matchingTab = findOldRecordOfFreshlyDiscardedTab(storedTabInfo, tab.url, tab.index);
         log.debug('Found matching tab:', matchingTab);
         if (matchingTab) {
@@ -100,7 +79,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await chrome.storage.sync.remove(matchingTab.id.toString());
             matchingTab.id = tab.id;
             await storageSet({[tab.id]: matchingTab});
-            log.debug('Storage looks like this now:', await storageGet(null));
         } else {
             log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
         }
@@ -144,7 +122,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     });
 
     if (details.reason === "install") {
-        chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
+        welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
     }
 });
 
@@ -159,4 +137,35 @@ chrome.runtime.onConnect.addListener((port) => {
     // log.debug('Connection with content script established successfully.');
 });
 
+if (!inProduction()) {
+    chrome.runtime.onMessage.addListener((message, sender, _sendResponse) => {
+        if (message.command === COMMAND_DISCARD_TAB) {
+            log.debug('Received discard tab command. sender tab id:', sender.tab.id);
+            chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
+
+                log.debug('Tab discarded:', discardedTab);
+                const tabs = await chrome.tabs.query({currentWindow: true});
+                log.debug('List of tabs after discarding:', tabs);
+                tabs.forEach(tab => {
+                    log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                });
+                setTimeout(async () => {
+                    chrome.tabs.reload(discardedTab.id);
+                }, 500);
+            });
+        }  else if (message.command === 'test') {
+            log.debug('Received test command. List of tabs:');
+            chrome.tabs.query({currentWindow: true}, tabs => {
+                tabs.forEach(tab => {
+                    log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                });
+            });
+        } else if (message.command === COMMAND_CLOSE_WELCOME_TAB && welcomeTab) {
+            chrome.tabs.remove(welcomeTab.id);
+            welcomeTab = null;
+        }
+    });
+}
+
 startTheGarbageCollector();
+

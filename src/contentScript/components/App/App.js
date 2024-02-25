@@ -21,6 +21,7 @@ export default function App() {
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
 
+
     /** 
      * @typedef {import('../../tab').Tab} Tab
      * @type {Tab} 
@@ -49,6 +50,8 @@ export default function App() {
             document.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
+
+    useStopKeyEventsPropagation(isVisible, ['Escape', 'Enter']);
 
     useEffect(() => {
         if (tab.signature.title) {
@@ -87,18 +90,7 @@ export default function App() {
         };
     });
 
-    // For debugging purposes:
-    useEffect(() => {
-        const debugFunction = async () => {
-            log.debug('storage:', await chrome.storage.sync.get(null));
-            chrome.runtime.sendMessage({command: 'test'});
-        };
-        document.body.addEventListener('click', debugFunction);
-
-        return () => {
-            document.body.removeEventListener('click', debugFunction);
-        }
-    });
+    useDebugOnClick();
 
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
@@ -159,4 +151,44 @@ export default function App() {
             </div>
         </div>
     );
+}
+
+
+function useStopKeyEventsPropagation(shouldStopPropagation, exceptionKeys = []) {
+    useEffect(() => {
+        function stopPropagation(event) {
+            if (shouldStopPropagation && !exceptionKeys.includes(event.key)) {
+                event.stopImmediatePropagation();
+            }
+        }
+
+        log.debug('useStopKeyEventsPropagation called:', shouldStopPropagation, exceptionKeys);
+
+        if (shouldStopPropagation) {
+            document.addEventListener('keydown', stopPropagation, true);
+            document.addEventListener('keyup', stopPropagation, true);
+        } else {
+            document.removeEventListener('keydown', stopPropagation, true);
+            document.removeEventListener('keyup', stopPropagation, true);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', stopPropagation, true);
+            document.removeEventListener('keyup', stopPropagation, true);
+        };
+    }, [shouldStopPropagation]);
+}
+
+function useDebugOnClick() {
+    useEffect(() => {
+        const debugFunction = async () => {
+            log.debug('storage:', await chrome.storage.sync.get(null));
+            chrome.runtime.sendMessage({command: 'test'});
+        };
+        document.body.addEventListener('click', debugFunction);
+
+        return () => {
+            document.body.removeEventListener('click', debugFunction);
+        }
+    });
 }

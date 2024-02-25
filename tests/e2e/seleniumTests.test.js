@@ -10,6 +10,7 @@ const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
+const { startExpressServer } = require('./utils.js');
 
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('SeleniumUITests', 'debug');
@@ -25,6 +26,10 @@ describe('Selenium UI Tests', () => {
 
     /** @type {DriverUtils|null} */
     let driverUtils = null;
+
+    // Placeholder for an express server
+    /** @type {http.Server} */
+    let expressServer = null;
 
     const createNewDriver = async (pageLoadStrategy = 'normal') => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
@@ -48,8 +53,14 @@ describe('Selenium UI Tests', () => {
             .forBrowser('chrome')
             .setChromeOptions(chromeOptions)
             .setLoggingPrefs(loggingPrefs)
-        .build();
+            .build();
+
         driverUtils = new DriverUtils(driver);
+
+        if (process.env.HEADED) {
+            await driver.get(data.websites[0].url);
+            await driverUtils.closeWelcomeTab();
+        }
     }
 
     beforeEach(async () => {
@@ -72,6 +83,11 @@ describe('Selenium UI Tests', () => {
         driver = null;
         driverUtils = null;
         await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
+
+        if (expressServer) {
+            expressServer.close();
+            expressServer = null;
+        }
     }
 
     afterEach(tearDown);
@@ -308,15 +324,7 @@ describe('Selenium UI Tests', () => {
                 }, 100);
             }
         });
-
-        const startServer = (app, port) => {
-            return new Promise((resolve, reject) => {
-                const server = app.listen(port, (err) => {
-                    err ? reject(err) : resolve(server)
-                });
-            });
-        };
-        let server = await startServer(app, port);
+        expressServer = await startExpressServer(app, port);
 
         const initialWindow = await driver.getWindowHandle();
         await driver.switchTo().newWindow('tab');
@@ -326,6 +334,9 @@ describe('Selenium UI Tests', () => {
         await driver.close();
 
         await driver.switchTo().window(initialWindow);
+
+        slowResponse = true;
+        driver.get(`http://localhost:${port}`);
 
         let sawOneCorrectTitleWhileStillLoading = false;
         let timerId = setInterval(async () => {
@@ -337,12 +348,9 @@ describe('Selenium UI Tests', () => {
             // console.log('document.readyState:', readyState, ' and title: ', title, ' at time: ', new Date());
         }, 5);
 
-        slowResponse = true;
-        driver.get(`http://localhost:${port}`);
         await driverUtils.waitForPageLoad();
 
         clearInterval(timerId);
-        server.close();
 
         expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
     });
@@ -370,5 +378,39 @@ describe('Selenium UI Tests', () => {
 
         expect(await driverUtils.getTitle()).toBe('New title');
         expect(await driverUtils.faviconIsEmoji()).toBe(true);
+    });
+
+    test("Key event listeners on document don't get triggered when UI is active", async () => {
+        // Set up an express server with custom HTML:
+        const app = express();
+        const port = 3000;
+
+        app.get('/', (req, res) => {
+            res.send(`
+                <html>
+                <body>
+                    <p id="testContainer">Initial</p>
+                    <script>
+                    document.addEventListener('keydown', function(event) {
+                        if (event.key === 'A') {
+                            document.getElementById("testContainer").innerHTML = 'A key pressed';
+                        }
+                    });
+                    </script>
+                </body>
+                </html>
+            `);
+        });
+
+        expressServer = await startExpressServer(app, port);
+
+        await driver.get(`http://localhost:${port}`);
+        await driverUtils.openRenameDialog();
+        await driver.executeScript("document.activeElement.blur()");
+        await driver.actions().sendKeys('A').perform();
+
+        let body = await driver.findElement(By.id('testContainer'));
+        let bodyText = await body.getText();
+        expect(bodyText).not.toContain('A key pressed');
     });
 });

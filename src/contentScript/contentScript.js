@@ -1,6 +1,6 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME, inProduction } from "../config";
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
@@ -54,19 +54,6 @@ async function insertUIIntoDOM() {
     document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
 
-
-const discardTabListener = () => {
-    log.debug('discard tab listener in content script called.');
-    setTimeout(() => {
-        chrome.runtime.sendMessage({command: COMMAND_DISCARD_TAB});
-    }, 500);
-}
-
-if (!inProduction()) {
-    log.debug('Adding discard tab listener in content script.');
-    document.addEventListener(COMMAND_DISCARD_TAB, discardTabListener);
-}
-
 // Clean-up logic for when the extension unloads/reloads.
 const runtimePort = chrome.runtime.connect({ name: "content-script" });
 runtimePort.onDisconnect.addListener(() => {
@@ -92,3 +79,19 @@ runtimePort.onDisconnect.addListener(() => {
 });
 
 
+const discardTabListener = () => {
+    log.debug('discard tab listener in content script called.');
+    setTimeout(() => {
+        chrome.runtime.sendMessage({command: COMMAND_DISCARD_TAB});
+    }, 500);
+}
+
+if (!inProduction()) {
+    log.debug('Adding discard tab listener in content script.');
+    
+    document.addEventListener(COMMAND_DISCARD_TAB, discardTabListener);
+    document.addEventListener(COMMAND_CLOSE_WELCOME_TAB, () => {
+        log.debug('close welcome tab listener in content script called.');
+        chrome.runtime.sendMessage({command: COMMAND_CLOSE_WELCOME_TAB});
+    });
+}
