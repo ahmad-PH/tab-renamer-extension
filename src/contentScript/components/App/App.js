@@ -68,14 +68,14 @@ export default function App() {
     useEffect(() => {
         function chromeOpenRenameDialogListener(message, _sender, _sendResponse) {
             if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
-                setIsVisible(true);
+                setIsVisible(!isVisible);
             }
         }
 
         chrome.runtime.onMessage.addListener(chromeOpenRenameDialogListener);
 
         function domOpenRenameDialogListener(_event) {
-            setIsVisible(true);
+            setIsVisible(!isVisible);
         }
 
         if (!inProduction()) { // Only for testing

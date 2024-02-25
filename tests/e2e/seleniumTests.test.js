@@ -5,7 +5,7 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID } = require('../../src/config.js');
+const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID, OVERLAY_ID } = require('../../src/config.js');
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
@@ -95,10 +95,25 @@ describe('Selenium UI Tests', () => {
     process.on('SIGINT', tearDown);
     process.on('SIGTERM', tearDown);
 
-    test('Can open dialog', async () => {
+    test('Can open and close dialog', async () => {
         await driver.get(data.websites[0].url);
         await driverUtils.openRenameDialog();
-        await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
+        const rootElement = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
+        expect(await rootElement.isDisplayed()).toBe(true);
+
+        // Pressing shortcut twice should close the dialog
+        await driverUtils.openRenameDialog();
+        expect(await rootElement.isDisplayed()).toBe(false);
+
+        // Pressing Escape should close the dialog
+        await driverUtils.openRenameDialog();
+        await driver.actions().sendKeys(Key.ESCAPE).perform();
+        expect(await rootElement.isDisplayed()).toBe(false);
+
+        // Clicking on the overlay should close the dialog
+        await driverUtils.openRenameDialog();
+        await driver.findElement(driverUtils.shadowRootLocator.byId(OVERLAY_ID)).click();
+        expect(await rootElement.isDisplayed()).toBe(false);
     });
 
     test('Can rename tab', async () => {
