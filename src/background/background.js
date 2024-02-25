@@ -10,8 +10,12 @@ const log = getLogger('background', 'debug');
 const originalTitleStash = {};
 let welcomeTab = null;
 
+// I have tested this, and this is now redundant, since the main shorcut will just trigger
+// `chrome.action.onClicked`. But, I'm keeping this around just in case. Also might be useful
+// If I want to add a popup separately (open rename dialog and chrome.action doing separate things)
 chrome.commands.onCommand.addListener((command) => {
     if (command === COMMAND_OPEN_RENAME_DIALOG) {
+        log.debug('Received open rename dialog command.');
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             return chrome.tabs.sendMessage(tabs[0].id, {
                 command: COMMAND_OPEN_RENAME_DIALOG,
@@ -21,6 +25,11 @@ chrome.commands.onCommand.addListener((command) => {
             {log.error('query error', error);}
         );
     }
+});
+
+chrome.action.onClicked.addListener((tab) => {
+    log.debug('Action clicked. Sending open rename dialog command to tab:', tab.id);
+    chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
 });
 
 // Listen for messages from content script(s):
@@ -135,10 +144,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 chrome.runtime.onConnect.addListener((port) => {
     console.assert(port.name === "content-script");
     // log.debug('Connection with content script established successfully.');
-});
-
-chrome.action.onClicked.addListener((tab) => {
-    chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
 });
 
 if (!inProduction()) {
