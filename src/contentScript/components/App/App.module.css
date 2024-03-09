@@ -22,16 +22,19 @@
     z-index: 9998; /* Just below the input box */
 }
 
-.mainBar {
-    display: flex;
-    align-items: center;
 
+.mainBarContainer {
+    display: flex;
     position: fixed;
     top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
-
     z-index: 9999;
+}
+
+.mainBar {
+    display: flex;
+    align-items: center;
 }
 
 .faviconPickerWrapper {

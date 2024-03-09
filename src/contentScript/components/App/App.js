@@ -128,32 +128,35 @@ export default function App() {
             inputRef.current.focus();
         }
     }, [emojiPickerIsVisible]);
-
+    
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
-            <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}></div>
-            <div className={styles.mainBar}>
-                <div className={styles.faviconPickerWrapper}>
-                    <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
-                    {emojiPickerIsVisible && 
-                        <EmojiPicker 
-                            onEmojiClick={handleEmojiClick}
-                            onRemoveEmoji={handleRemoveEmoji}
-                        />
-                    }
+            <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}/>
+            <div className={styles.mainBarContainer}>
+                <div className={styles.mainBar}>
+                    <div className={styles.faviconPickerWrapper}>
+                        <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
+                        {emojiPickerIsVisible && 
+                            <EmojiPicker 
+                                onEmojiClick={handleEmojiClick}
+                                onRemoveEmoji={handleRemoveEmoji}
+                            />
+                        }
+                    </div>
+
+                    <input
+                        type="text"
+                        id={INPUT_BOX_ID}
+                        className={styles.inputBox}
+                        placeholder="New Tab Title"
+                        autoComplete="off"
+                        value={inputBoxValue}
+                        onChange={(event) => setInputBoxValue(event.target.value)}
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={handleInputBoxKeydown}
+                        ref={inputRef}
+                    />
                 </div>
-                <input
-                    type="text"
-                    id={INPUT_BOX_ID}
-                    className={styles.inputBox}
-                    placeholder="New Tab Title"
-                    autoComplete="off"
-                    value={inputBoxValue}
-                    onChange={(event) => setInputBoxValue(event.target.value)}
-                    onClick={(event) => event.stopPropagation()}
-                    onKeyDown={handleInputBoxKeydown}
-                    ref={inputRef}
-                />
             </div>
         </div>
     );
