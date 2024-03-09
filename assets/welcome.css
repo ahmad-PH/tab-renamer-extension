@@ -98,3 +98,9 @@ ul li {
     color: #3c79dc;
     text-decoration: underline;
 }
+
+.how-to-use-img {
+   display: block;
+   margin: 0 auto;
+   padding: 10px;
+}
