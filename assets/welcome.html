@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="icon16.png">
+    <link rel="icon" type="image/png" href="icon48.png">
     <meta charset="utf-8">
 </head>
 <body>
@@ -25,15 +25,11 @@
             </ul>
 
         <h2>How to Use</h2>
-
-            <p> After installation, first, you will need to refresh any tabs that 
-                were already open if you want to use the extension in them
-                <span class="asterisk"><a href="#explanation">*</a></span>.
-            Then, you have three different ways to activate the extension on a page:</p>
+            <p>There are three ways to activate the extension on a page:</p>
             <ol>
                 <li>
                     <strong>Keyboard Shortcut:</strong>
-                    This is the most convenient way to use the extension. The default shortcut is <strong>Ctrl+Shift+Y</strong> or <strong>Command+Shift+Y</strong> on Mac,
+                    The default shortcut is <strong>Ctrl+Shift+Y</strong> or <strong>Command+Shift+Y</strong> on Mac,
                     but you should double-check because sometimes this is not set on installation as it might conflict with existing shortcuts.
                     To set the shortcut yourself, go to <strong>chrome://extensions/shortcuts</strong> and look for 'Tab Renamer'.
                     <img src="keyboard_shortcut.png" alt="Keyboard Shortcut" class="how-to-use-img" style="width:600px;">
@@ -43,12 +39,15 @@
                     <strong>Context Menu Item:</strong>
                     Right-click anywhere on a webpage and select 'Rename Tab' from the context menu.
                     Note that you should right-click inside the webpage, not on the tab itself.
+                    (I wish chrome would let me modify the context menu shown when right-clicking on a tab! 🥲)
                     <img src="context_menu.jpg" alt="Context Menu Item"  class="how-to-use-img" style="width:350px;">
                 </li>
 
                 <li>
                     <strong>Action Icon:</strong>
-                    Click on the extension icon under the <em>puzzle piece</em> icon to the right of the address bar.
+                    Click on the extension icon under the <em>puzzle piece</em>
+                    (<img src="puzzle_piece.png" alt="Puzzle piece" style="height: 24px; vertical-align: middle;">)
+                    icon to the right of the address bar.
                     If you have pinned the extension, you can directly click the extension icon on the toolbar without needing to click on the puzzle piece icon first.
                     <img src="action_icon.jpg" alt="Action Icon" class="how-to-use-img" style="width:600px;">
                 </li>
@@ -56,7 +55,7 @@
             
         <h2>Reverting to Original Values</h2>
             <p> The user interface includes an input box to pick the new tab title, and an emoji picker to pick the new
-                favicon. Leaving any of them empty will revert the corresponding value to its original state if already modified.
+                favicon. Leaving any of them empty will revert the corresponding value to its original state.
             </p>
 
         <div class="developer-note">
@@ -68,13 +67,6 @@
                 I'll do my best to incorporate your feedback into future updates.</p>
             <p> Thank you for supporting independent developers like me, and happy browsing! ❤️</p>
         </div>
-
-        <p id="explanation"><span class="asterisk">*</span> The reason why the extension does not 
-            automatically inject the content script into already-open tabs at install time is that doing
-            so would require accessing broad permissions from the Chrome API (host_permissions). This would 
-            present users with a potentially alarming warning telling them that the extension can read and 
-            modify all their data on all open tabs. I have decided that removing this feature would be a better
-            overall user experience.</p>
     </div>
 </body>
 </html>
