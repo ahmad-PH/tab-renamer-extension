@@ -104,3 +104,11 @@ ul li {
    margin: 0 auto;
    padding: 10px;
 }
+
+.asterisk {
+    color: #3c79dc;
+}
+
+.asterisk a {
+    text-decoration: none;
+}

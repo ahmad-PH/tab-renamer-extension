@@ -99,29 +99,37 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
  * updated without requiring the user to reload the tabs.
  */
 chrome.runtime.onInstalled.addListener(async (details) => {
-    const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
-    log.debug('after query:', allTabs);
-    allTabs.forEach(async (tab) => {
-        if (
-            (tab.url.startsWith('http://') || tab.url.startsWith('https://')) &&
-            !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') && // The extensions gallery cannot be scripted 
-            !tab.url.startsWith('https://chromewebstore.google.com/') // same as above
-        ) { 
-            log.debug('Injecting the extension into:', tab.url);
-            try {
-                await chrome.scripting.executeScript({
-                    target: {tabId: tab.id},
-                    files: ['initializationContentScript.js']
-                });
-                await chrome.scripting.executeScript({
-                    target: {tabId: tab.id},
-                    files: ['contentScript.js']
-                });
-            } catch (e) {
-                log.error('Error while injecting the extension into: ', tab.url, 'full tab info', JSON.stringify(tab), e);
-            }
-        }
-    });
+    // const host_permissions_granted = await new Promise(resolve => {
+    //     chrome.permissions.request({
+    //         origins: ["http://*/*", "https://*/*"]
+    //     }, resolve);
+    // });
+
+    // if (host_permissions_granted) {
+    //     const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
+    //     log.debug('after query:', allTabs);
+    //     allTabs.forEach(async (tab) => {
+    //         if (
+    //             (tab.url.startsWith('http://') || tab.url.startsWith('https://')) &&
+    //             !tab.url.startsWith('https://chrome.google.com/webstore/devconsole') && // The extensions gallery cannot be scripted 
+    //             !tab.url.startsWith('https://chromewebstore.google.com/') // same as above
+    //         ) { 
+    //             log.debug('Injecting the extension into:', tab.url);
+    //             try {
+    //                 await chrome.scripting.executeScript({
+    //                     target: {tabId: tab.id},
+    //                     files: ['initializationContentScript.js']
+    //                 });
+    //                 await chrome.scripting.executeScript({
+    //                     target: {tabId: tab.id},
+    //                     files: ['contentScript.js']
+    //                 });
+    //             } catch (e) {
+    //                 log.error('Error while injecting the extension into: ', tab.url, 'full tab info', JSON.stringify(tab), e);
+    //             }
+    //         }
+    //     });
+    // }
 
     // Create a context menu item:
     chrome.contextMenus.create({

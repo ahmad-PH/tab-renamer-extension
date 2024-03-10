@@ -24,9 +24,12 @@
                 <li><strong> 🔄 Persistent Names:</strong> Your custom tab names and favicons are stored and will be preserved even when you close and reopen the tabs or even the entire window.</li>
             </ul>
 
-        <h2>How to Use Tab Renamer</h2>
+        <h2>How to Use</h2>
 
-            <p>There are three ways to activate the extension on a page:</p>
+            <p> After installation, first, you will need to refresh any tabs that 
+                were already open if you want to use the extension in them.
+                <span class="asterisk"><a href="#explanation">*</a></span>.
+            Then, you have three different ways to activate the extension on a page:</p>
             <ol>
                 <li>
                     <strong>Keyboard Shortcut:</strong>
@@ -51,11 +54,10 @@
                 </li>
             </ol>
             
-            <p><strong>* Note:</strong> The user interface includes an input box to pick the new tab title, and an emoji picker to pick the new
-                favicon. You don't need to fill both in. Leaving any of them empty will revert the corresponding value to its
-                original state.
+        <h2>Reverting to Original Values</h2>
+            <p> The user interface includes an input box to pick the new tab title, and an emoji picker to pick the new
+                favicon. Leaving any of them empty will revert the corresponding value to its original state if already modified.
             </p>
-
 
         <div class="developer-note">
             <h2>A Note from the Developer</h2>
@@ -66,6 +68,13 @@
                 I'll do my best to incorporate your feedback into future updates.</p>
             <p> Thank you for supporting independent developers like me, and happy browsing! ❤️</p>
         </div>
+
+        <p id="explanation"><span class="asterisk">*</span> The reason why the extension does not 
+            automatically inject the content script into already-open tabs at install time is that doing
+            so would require accessing broad permissions from the Chrome API (host_permissions). This would 
+            present users with a potentially alarming warning telling them that the extension can read and 
+            modify all their data on all open tabs. I have decided that removing this feature would be a better
+            overall user experience.</p>
     </div>
 </body>
 </html>
