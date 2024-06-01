@@ -82,6 +82,11 @@
     cursor: pointer;
     font-size: 21px;
 }
+
+.emoji {
+    width: 25px;
+    height: 25px;
+}
   
 .emojiItem:hover {
     background-color: rgba(169, 169, 255, 0.829);

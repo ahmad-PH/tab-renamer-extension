@@ -5,6 +5,7 @@ import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_
 import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';
+import twemoji from 'twemoji';
 
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('EmojiPicker', 'debug');
@@ -115,6 +116,32 @@ SearchBar.propTypes = {
 
 const Emoji = ({ emoji, onClick }) => {
     const strippedShortcode = emoji.shortcode.substring(1, emoji.shortcode.length - 1);
+    const twemojiImg = twemoji.parse(emoji.emoji);
+
+    log.debug('Twemoji emoji:', twemojiImg, typeof twemojiImg);
+
+    const parseTwemojiOutput = (twemojiOutput) => {
+        const parser = new DOMParser();
+        const parsedDoc = parser.parseFromString(twemojiOutput, 'text/html');
+        log.debug('Parsed document:', parsedDoc);
+
+        const imgElement = parsedDoc.querySelector('img');
+        log.debug('Image element:', imgElement);
+
+
+        if (imgElement) {
+            log.debug('Image src:', imgElement.src);
+            log.debug('Image alt:', imgElement.alt);
+            return <img className={styles.emoji} draggable={false} src={imgElement.src} alt={imgElement.alt} />;
+        } else {
+            log.debug('ImgElement is null:', imgElement);
+            return null;
+        }
+
+    };
+    
+    const parseOutput = parseTwemojiOutput(twemojiImg);
+    log.debug('Parsed twemoji:', parseOutput);
 
     return (
         <div 
@@ -125,7 +152,9 @@ const Emoji = ({ emoji, onClick }) => {
             title={strippedShortcode}
         >
             <span className={styles.emojiWrapper}>
-                {emoji.emoji}
+                {parseOutput}
+            {/* <span className={styles.emojiWrapper} dangerouslySetInnerHTML={{ __html: twemojiImg }}> */}
+                {/* {emoji.emoji} */}
             </span>
         </div>
     );

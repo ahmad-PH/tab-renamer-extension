@@ -52,6 +52,7 @@
         "classnames": "^2.5.1",
         "loglevel": "^1.8.1",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "twemoji": "^14.0.2"
     }
 }
