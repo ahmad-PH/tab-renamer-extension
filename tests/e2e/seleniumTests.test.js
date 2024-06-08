@@ -1,5 +1,6 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const { expect, test, describe } = require('@jest/globals');
+const chromedriver = require('chromedriver');
 const express = require('express');
 const path = require('path');
 const data = require('./data.js');
@@ -51,10 +52,13 @@ describe('Selenium UI Tests', () => {
         const loggingPrefs = new logging.Preferences();
         loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
+        let chromeService = new chrome.ServiceBuilder(chromedriver.path);
+
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(chromeOptions)
             .setLoggingPrefs(loggingPrefs)
+            .setChromeService(chromeService)
             .build();
 
         driverUtils = new DriverUtils(driver);
@@ -107,7 +111,9 @@ describe('Selenium UI Tests', () => {
         }
     }
 
-    afterEach(tearDown);
+    afterEach(() => {
+        return tearDown();
+    });
 
     // Make tests interrupt-friendly:
     process.on('SIGINT', tearDown);
