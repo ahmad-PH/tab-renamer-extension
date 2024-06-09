@@ -4,6 +4,7 @@ import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
 import { faviconRestorationStrategy } from "../config";
+import { storageGet } from "../utils";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
@@ -43,8 +44,11 @@ export class Tab {
 
         log.debug('initializeForMainContentScript called');
         const signature = await bgScriptApi.loadSignature(true);
+        log.debug('These are all signatures:', await storageGet(null));
+
         log.debug('retrieved signature:', signature);
         log.debug('document.title:', document.title, 'faviconUrl:', await bgScriptApi.getFaviconUrl());
+        log.debug('Current ID:', (await bgScriptApi.getTabInfo()));
 
         if (signature) { // Then, initializationContentScript would have already set the originals
             log.debug('signature found, setting it.');

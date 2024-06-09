@@ -16,7 +16,7 @@ const { startExpressServer } = require('./utils.js');
 let server;
             
 // eslint-disable-next-line no-unused-vars
-const log = getLogger('SeleniumUITests', 'debug');
+const log = getLogger('SeleniumUITests');
 
 // eslint-disable-next-line no-unused-vars
 const SECONDS = 1000, MINUTES = 60 * SECONDS;

@@ -51,6 +51,10 @@ const chromeStorageMock = {
     }
 };
 
+function setChromeStorageMockData(data) {
+    Object.assign(chromeStorage, data);
+}
+
 module.exports = {
-    chromeStorageMock
+    chromeStorageMock, setChromeStorageMockData
 };
