@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Tab Renamer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Customize your tab titles and favicons for a more organized browsing experience.",
     "permissions": [
         "tabs",
