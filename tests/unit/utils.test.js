@@ -1,6 +1,6 @@
 /* global chrome */
 const { storageGet } = require('src/utils');
-const { chromeStorageMock } = require('../chromeStorageMock');
+const { chromeStorageMock } = require('./chromeStorageMock');
 
 describe('storageGet', () => {
     beforeEach(() => {

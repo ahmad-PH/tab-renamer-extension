@@ -1,6 +1,10 @@
-const { handleChromeUpdate } = require('src/background/handleChromeUpdate');
+/* global chrome */
+const handleChromeUpdateModule = require('src/background/handleChromeUpdate');
+const { handleChromeUpdate } = handleChromeUpdateModule;
 const utils = require('src/utils');
 const { expect } = require('@jest/globals');
+global.chrome = require('./chromeMock');
+jest.useFakeTimers();
 
 // Add custom matcher for comparing dates
 expect.extend({
@@ -27,6 +31,8 @@ describe('handleChromeUpdate', () => {
     });
 
     it('marks all open tabs as closed with current time', async () => {
+
+
         utils.storageGet = jest.fn(() => ({
             1: { isClosed: false, closedAt: null },
         }));
@@ -52,3 +58,21 @@ describe('handleChromeUpdate', () => {
         });
     });
 });
+
+describe('handleChromeUpdate regisitered correctly in the listener', () => {
+    
+    it('', async () => {
+        let originalHandleChromeUpdate = handleChromeUpdateModule.handleChromeUpdate;
+        handleChromeUpdateModule.handleChromeUpdate = jest.fn();
+        require('src/background/background');
+
+        const listeners = chrome.runtime.onInstalled.addListener.mock.calls[0];
+        expect(listeners).toHaveLength(1);
+
+        const listener = listeners[0];
+        await listener({reason: 'chrome_update'});
+
+        expect(handleChromeUpdateModule.handleChromeUpdate).toHaveBeenCalledTimes(1);
+        handleChromeUpdateModule.handleChromeUpdate = originalHandleChromeUpdate;
+    });
+})

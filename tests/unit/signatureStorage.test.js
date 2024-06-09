@@ -1,7 +1,7 @@
 const { findMatchingTab, loadTab, saveTab } = require('src/background/signatureStorage.js');
 const { TabInfo, TabSignature } = require('src/types.js');
 const { storageSet, storageGet } = require('src/utils.js');
-const { chromeStorageMock } = require('../chromeStorageMock.js');
+const { chromeStorageMock } = require('./chromeStorageMock.js');
 
 
 describe('findMatchingTab', () => {
