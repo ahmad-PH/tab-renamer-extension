@@ -1,5 +1,4 @@
-const appRoot = require('app-root-path');
-const { FaviconCache } = require(`${appRoot}/src/background/faviconCache`);
+const { FaviconCache } = require('src/background/faviconCache');
 
 describe('FaviconCache', () => {
     let faviconCache = null;
