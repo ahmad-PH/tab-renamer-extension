@@ -1,3 +1,9 @@
+/**
+ * This file defines data-structures that are purely data and have no logic in them,
+ * and that can be used by any component of the application, whether background, or 
+ * contentScript.
+ */
+
 export class TabInfo {
     /**
      * @param {number} id
