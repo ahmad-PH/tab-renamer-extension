@@ -61,3 +61,19 @@ export class FaviconDTO {
         this.content = content;
     }
 }
+
+export class Emoji {
+    /**
+     * 
+     * @param {string} character - Graphical character
+     * @param {string} unicode_code_point - Official Unicode code point, e.g., "U+1F600".
+     * @param {string} shortcode - Shortcode used for textual searching, e.g., ":grinning_face:", ":slightly_smiling_face:"
+     * @param {Array<string>} keywords
+     */
+    constructor(character, unicode_code_point, shortcode, keywords) {
+        this.character = character;
+        this.unicode = unicode_code_point;  
+        this.shortcode = shortcode;
+        this.keywords = keywords;
+    }
+}
