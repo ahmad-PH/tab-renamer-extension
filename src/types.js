@@ -72,7 +72,7 @@ export class Emoji {
      */
     constructor(character, unicode_code_point, shortcode, keywords) {
         this.character = character;
-        this.unicode = unicode_code_point;  
+        this.unicode_code_point = unicode_code_point;  
         this.shortcode = shortcode;
         this.keywords = keywords;
     }
