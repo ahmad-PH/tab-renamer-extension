@@ -3,10 +3,10 @@ import styles from './App.module.css';
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config';
 import PropTypes from 'prop-types';
 import { getLogger } from "../../../log";
-import SelectedEmoji from '../SelectedEmoji';
-import EmojiPicker from '../EmojiPicker';
+import SelectedFavicon from '../SelectedEmoji';
+import FaviconPicker from '../FaviconPicker';
 import { TabSignature } from '../../../types';
-import { EmojiFavicon, Favicon, UrlFavicon } from '../../../favicon';
+import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 
 const log = getLogger('App', 'debug');
 
@@ -16,7 +16,8 @@ export const TabContext = React.createContext(null);
  */
 export default function App() {
     const [isVisible, setIsVisible] = useState(true);
-    const [selectedEmoji, setSelectedEmoji] = useState(null);
+    /** @type {[Favicon, React.Dispatch<Favicon>]} */
+    const [selectedFavicon, setSelectedFavicon] = useState(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
@@ -58,10 +59,10 @@ export default function App() {
             setInputBoxValue(tab.signature.title);
         }
         if (tab.signature.favicon) {
-            if (tab.signature.favicon.type !== EmojiFavicon.type) {
+            if (![SystemEmojiFavicon.type, TwemojiFavicon.type].includes(tab.signature.favicon.type)) {
                 throw new Error('Only supporting emoji favicons at the moment.');
             }
-            setSelectedEmoji(EmojiFavicon.fromDTO(tab.signature.favicon).emoji);
+            setSelectedFavicon(Favicon.fromDTO(tab.signature.favicon));
         }
     }, []);
 
@@ -95,25 +96,28 @@ export default function App() {
     const handleInputBoxKeydown = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            log.debug('Enter key pressed', inputBoxValue, selectedEmoji);
+            log.debug('Enter key pressed', inputBoxValue, selectedFavicon);
             const newDocumentTitle = inputBoxValue === '' ? null : inputBoxValue;
-            const newDocumentFavicon = selectedEmoji ? new EmojiFavicon(selectedEmoji).toDTO() : null;
+            const newDocumentFavicon = selectedFavicon ? selectedFavicon.toDTO() : null;
             await tab.setSignature(newDocumentTitle, newDocumentFavicon);
             setIsVisible(false);
         }
     };
 
-    const handleFaviconPickerClick = () => {
+    const handleSelectedFaviconClick = () => {
         setEmojiPickerIsVisible(!emojiPickerIsVisible);
     }
 
-    const handleEmojiClick = (emoji) => {
-        setSelectedEmoji(emoji);
+    /**
+     * @param {Favicon} favicon 
+     */
+    const handleFaviconClick = (favicon) => {
+        setSelectedFavicon(favicon);
         setEmojiPickerIsVisible(false);
     }
 
     const handleRemoveEmoji = () => {
-        setSelectedEmoji(null);
+        setSelectedFavicon(null);
         setEmojiPickerIsVisible(false);
     }
 
@@ -135,10 +139,10 @@ export default function App() {
             <div className={styles.mainBarContainer}>
                 <div className={styles.mainBar}>
                     <div className={styles.faviconPickerWrapper}>
-                        <SelectedEmoji selectedEmoji={selectedEmoji} handleFaviconPickerClick={handleFaviconPickerClick}/>
+                        <SelectedFavicon selectedFavicon={selectedFavicon} handleSelectedFaviconClick={handleSelectedFaviconClick}/>
                         {emojiPickerIsVisible && 
-                            <EmojiPicker 
-                                onEmojiClick={handleEmojiClick}
+                            <FaviconPicker 
+                                onFaviconClick={handleFaviconClick}
                                 onRemoveEmoji={handleRemoveEmoji}
                             />
                         }

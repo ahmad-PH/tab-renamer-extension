@@ -1,2 +1,2 @@
-import SelectedEmoji from "./SelectedEmoji";
-export default SelectedEmoji;
+import SelectedFavicon from "./SelectedFavicon";
+export default SelectedFavicon;

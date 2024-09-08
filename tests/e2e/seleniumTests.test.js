@@ -175,14 +175,13 @@ describe('Selenium UI Tests', () => {
 
             // Verify that search results contains the halo emoji
             const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
-            const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
-            const elements = await searchResults.findElements(By.xpath(xpathForEmoji('😇')));
+            const elements = await searchResults.findElements(By.id('😇'));
             expect(elements.length).toBe(1);
 
             // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
             const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
             for (const emoji of commonEmojis) {
-                const elements = await searchResults.findElements(By.xpath(xpathForEmoji(emoji)));
+            const elements = await searchResults.findElements(By.id(emoji));
                 expect(elements.length).toBe(0);
             }
 

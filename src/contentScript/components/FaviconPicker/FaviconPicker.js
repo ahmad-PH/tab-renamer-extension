@@ -6,11 +6,12 @@ import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';
 import { Emoji } from './Emoji';
+import * as types from '../../../types';
 
 // eslint-disable-next-line no-unused-vars
 export const log = getLogger('EmojiPicker', 'debug');
 
-const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
+const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
     const [allEmojis, setAllEmojis] = useState({});
     const [isVisible, setIsVisible] = useState(false);
@@ -67,7 +68,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                                 </div>
                                 <div className={styles.emojiGrid}>
                                     {emojis.map(emoji => (
-                                        <Emoji emoji={emoji} key={emoji.character} onClick={onEmojiClick}/>
+                                        <Emoji emoji={emoji} key={emoji.character} onClick={onFaviconClick}/>
                                     ))}
                                 </div>
                             </div>
@@ -76,7 +77,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                 ) : (
                     <div id={SEARCH_RESULTS_ID} className={classNames(styles.searchResults, styles.emojiGrid)}>
                         {matchingEmojis.map(emoji => (
-                            <Emoji emoji={emoji} key={emoji.unicode} onClick={onEmojiClick}/>
+                            <Emoji emoji={emoji} key={emoji.unicode} onClick={onFaviconClick}/>
                         ))}
                     </div>
                 )}
@@ -85,8 +86,8 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
     );
 }
 
-EmojiPicker.propTypes = {
-    onEmojiClick: PropTypes.func.isRequired,
+FaviconPicker.propTypes = {
+    onFaviconClick: PropTypes.func.isRequired,
     onRemoveEmoji: PropTypes.func.isRequired,
 }
 
@@ -114,4 +115,4 @@ SearchBar.propTypes = {
     onSearchBarChanged: PropTypes.func.isRequired,
 }
 
-export default EmojiPicker;
+export default FaviconPicker;

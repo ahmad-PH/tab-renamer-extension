@@ -29,6 +29,10 @@ export const COMMAND_CLOSE_WELCOME_TAB = `close_welcome_tab`;
 export const faviconRestorationStrategy = 'mutation_observer';
 
 
+// Emoji style:
+// export const EMOJI_STYLE = "native";
+export const EMOJI_STYLE = "twemoji";
+
 
 export const inProduction = () => {
     return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';

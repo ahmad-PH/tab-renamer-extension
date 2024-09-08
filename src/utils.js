@@ -35,6 +35,19 @@ export function emojiToDataURL(emoji, sideLength = 64) {
 
 
 /**
+ * 
+ * @param {string} emoji
+ * @param {string} joinCharacter
+ * @returns code point, of code points of the emoji, joined by the joinCharacter
+ */
+export function getEmojiCodePoint(emoji, joinCharacter = '-') {
+    // toString(16) converts codepoints to hexademical
+    const codePoints = Array.from(emoji).map(symbol => symbol.codePointAt(0).toString(16));
+    return codePoints.join(joinCharacter);
+}
+
+
+/**
  * Promisified version of chrome.storage.sync.set.
  * @param {Object} items - The items to be stored, directly passed to chrome.storage.sync.set.
  * @returns {Promise} - Returns a promise that resolves when the items are successfully stored.
