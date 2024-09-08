@@ -67,7 +67,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                                 </div>
                                 <div className={styles.emojiGrid}>
                                     {emojis.map(emoji => (
-                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={onEmojiClick}/>
+                                        <Emoji emoji={emoji} key={emoji.character} onClick={onEmojiClick}/>
                                     ))}
                                 </div>
                             </div>

@@ -44,7 +44,7 @@ class DriverUtils {
     async setFavicon(emoji) {
         await this.openEmojiPicker();
         const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_PICKER_ID));
-        const emojiElement = await emojiPicker.findElement(By.xpath(`.//*[contains(text(),'${emoji}')]`));
+        const emojiElement = await emojiPicker.findElement(By.id(emoji));
         await emojiElement.click();
     
         await this.submitRenameDialog();

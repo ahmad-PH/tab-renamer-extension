@@ -29,22 +29,23 @@ export const Emoji = ({ emoji, onClick }) => {
     return (
         <div
             className={styles.emojiItem}
+            id={emoji.character}
             data-unicode={emoji.unicode_code_point}
             data-shortcode={emoji.shortcode}
             onClick={() => onClick(emoji.character)}
             title={strippedShortcode}
         >
-                {/* <img 
+                <img 
                     className="emoji" 
                     draggable="false" 
                     alt={emoji.character}
                     src={url}
-                    style={{width: '24px', height: '24px'}}
-                /> */}
+                    style={{cursor: 'pointer', width: '24px', height: '24px'}}
+                />
 
-                <span className={styles.emojiWrapper}>
+                {/* <span className={styles.emojiWrapper}>
                     {emoji.character}
-                </span>
+                </span> */}
 
                 {/* <span className={styles.emojiWrapper} dangerouslySetInnerHTML={{ __html: twemojiImg }} /> */}
         </div>
