@@ -11,6 +11,7 @@ module.exports = (_env, argv) => {
             contentScript: './src/contentScript/contentScript.js',
             initializationContentScript: './src/contentScript/initializationContentScript.js',
             background: './src/background/background.js',
+            settings: './src/settings/settings.js',
         },
         
         output: {
@@ -69,6 +70,7 @@ module.exports = (_env, argv) => {
                 patterns: [
                     { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
                     { from: path.resolve(__dirname, 'assets/'), to: 'assets/' },
+                    { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings.html' },
                 ],
             }),
         ],

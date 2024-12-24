@@ -22,12 +22,15 @@ export const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 export const COMMAND_DISCARD_TAB = `discard_tab`;
 export const COMMAND_CLOSE_WELCOME_TAB = `close_welcome_tab`;
-export const COMMAND_EMOJI_STYLE_CHANGE = `emoji_style_change`;
+export const COMMAND_SET_EMOJI_STYLE = `set_emoji_style`;
 
 // Favicon restoration strategy:
 // Accepted values: 'fetch_separately', 'mutation_observer'
 export const faviconRestorationStrategy = 'mutation_observer';
 
+
+// Settings keys:
+export const SETTINGS_KEY_EMOJI_STYLE = 'settings.emoji_style';
 
 // Emoji style:
 export const EMOJI_STYLE_NATIVE = "native";
@@ -42,19 +45,32 @@ export const inProduction = () => {
     return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
 }
 
-// // Keep the in-memory cache in sync with the storage:
+// Keep the in-memory cache in sync with the storage:
 if (typeof chrome !== 'undefined' && chrome.storage) {
+    console.log('Chrome storage API available, initializing emoji style sync');
+
     // Initial load
-    chrome.storage.sync.get('emojiStyle', ({ emojiStyle }) => {
+    chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE, (result) => {
+        const emojiStyle = result[SETTINGS_KEY_EMOJI_STYLE];
         if (emojiStyle) {
+            console.log('Updating cached emoji style from storage:', {
+                from: cachedConfig.EMOJI_STYLE,
+                to: emojiStyle
+            });
             cachedConfig.EMOJI_STYLE = emojiStyle;
         }
     });
 
     // Listen for changes
-    chrome.storage.onChanged.addListener((changes) => {
-        if (changes.emojiStyle) {
-            cachedConfig.EMOJI_STYLE = changes.emojiStyle.newValue;
+    chrome.storage.sync.onChanged.addListener((changes) => {
+        console.log('Change detected:', changes);
+        if (changes[SETTINGS_KEY_EMOJI_STYLE]) {
+            console.log('Emoji style change detected:', {
+                oldValue: changes[SETTINGS_KEY_EMOJI_STYLE].oldValue,
+                newValue: changes[SETTINGS_KEY_EMOJI_STYLE].newValue,
+                currentCachedValue: cachedConfig.EMOJI_STYLE
+            });
+            cachedConfig.EMOJI_STYLE = changes[SETTINGS_KEY_EMOJI_STYLE].newValue;
         }
     });
 }

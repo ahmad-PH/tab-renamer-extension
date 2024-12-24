@@ -1,6 +1,7 @@
-import { getLogger } from "../log";
-import { TabSignature } from "../types";
-import { Tab } from "./tab";
+import { getLogger } from "./log";
+import { TabSignature } from "./types";
+import { Tab } from "./contentScript/tab";
+import { COMMAND_SET_EMOJI_STYLE } from "./config";
 
 // eslint-disable-next-line no-unused-vars
 let log = getLogger('BackgroundScriptAPI', 'debug');
@@ -39,10 +40,18 @@ class BackgroundScriptAPI {
     }
 
     /**
-     * @returns {Promise<string>}
+     * @returns {Promise<string>} - The original, unstashed title of the tab
      */
     async unstashOriginalTitle() {
         return await chrome.runtime.sendMessage({ command: "unstash_original_title" });
+    }
+
+    /**
+     * @param {string} style
+     * @returns {Promise<void>}
+     */
+    async setEmojiStyle(style) {
+        return await chrome.runtime.sendMessage({ command: COMMAND_SET_EMOJI_STYLE, style });
     }
 }
 

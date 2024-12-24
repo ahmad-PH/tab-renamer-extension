@@ -3,7 +3,7 @@ import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, inProduction } from "../config.js";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config.js";
 
 const log = getLogger('background', 'debug');
 
@@ -34,36 +34,43 @@ chrome.action.onClicked.addListener((tab) => {
 
 // Listen for messages from content script(s):
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.command === "get_tab_info") {
-        sendResponse({ id: sender.tab.id,  url: sender.tab.url, index: sender.tab.index});
+    switch (message.command) {
+        case "get_tab_info":
+            sendResponse({ id: sender.tab.id, url: sender.tab.url, index: sender.tab.index });
+            break;
 
-    } else if (message.command === "save_signature") {
-        const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index,
-            false, null, message.signature);
-        saveTab(tab);
+        case "save_signature": {
+            const tab = new TabInfo(sender.tab.id, sender.tab.url, sender.tab.index,
+                false, null, message.signature);
+            saveTab(tab);
+            break;
+        }
 
-    } else if (message.command === "load_signature") {
-        loadTab(sender.tab.id, sender.tab.url, sender.tab.index, message.isBeingOpened)
-        .then((tab) => {
-            const signature = tab ? tab.signature : null;
-            return sendResponse(signature);
-        }).catch(e => {
-            log.error('Error while loading signature:', e);
-            return sendResponse(null);
-        });
-        return true; // To indicate that the response will be asynchronous
+        case "load_signature":
+            loadTab(sender.tab.id, sender.tab.url, sender.tab.index, message.isBeingOpened)
+                .then((tab) => {
+                    const signature = tab ? tab.signature : null;
+                    return sendResponse(signature);
+                }).catch(e => {
+                    log.error('Error while loading signature:', e);
+                    return sendResponse(null);
+                });
+            return true; // To indicate that the response will be asynchronous
 
-    } else if (message.command === "get_favicon_url") {
-        sendResponse(sender.tab.favIconUrl);
+        case "get_favicon_url":
+            sendResponse(sender.tab.favIconUrl);
+            break;
 
-    } else if (message.command === "stash_original_title") {
-        originalTitleStash[sender.tab.id] = message.originalTitle;
+        case "stash_original_title":
+            originalTitleStash[sender.tab.id] = message.originalTitle;
+            break;
 
-    } else if (message.command === "unstash_original_title") {
-        const result = originalTitleStash[sender.tab.id];
-        delete originalTitleStash[sender.tab.id];
-        sendResponse(result);
-
+        case "unstash_original_title": {
+            const result = originalTitleStash[sender.tab.id];
+            delete originalTitleStash[sender.tab.id];
+            sendResponse(result);
+            break;
+        }
     }
 });
 
@@ -148,30 +155,49 @@ chrome.runtime.onConnect.addListener((port) => {
 
 if (!inProduction()) {
     chrome.runtime.onMessage.addListener((message, sender, _sendResponse) => {
-        if (message.command === COMMAND_DISCARD_TAB) {
-            log.debug('Received discard tab command. sender tab id:', sender.tab.id);
-            chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
+        switch (message.command) {
+            case COMMAND_DISCARD_TAB: {
+                log.debug('Received discard tab command. sender tab id:', sender.tab.id);
+                chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
+                    log.debug('Tab discarded:', discardedTab);
+                    const tabs = await chrome.tabs.query({currentWindow: true});
+                    log.debug('List of tabs after discarding:', tabs);
+                    tabs.forEach(tab => {
+                        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                    });
+                    setTimeout(async () => {
+                        chrome.tabs.reload(discardedTab.id);
+                    }, 500);
+                });
+                break;
+            }
 
-                log.debug('Tab discarded:', discardedTab);
-                const tabs = await chrome.tabs.query({currentWindow: true});
-                log.debug('List of tabs after discarding:', tabs);
-                tabs.forEach(tab => {
-                    log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+            case COMMAND_CLOSE_WELCOME_TAB: {
+                if (welcomeTab) {
+                    chrome.tabs.remove(welcomeTab.id);
+                    welcomeTab = null;
+                }
+                break;
+            }
+
+            case COMMAND_SET_EMOJI_STYLE: {
+                log.debug("Received set emoji style command at background.js with value:", message.style);
+                chrome.storage.sync.set({'settings.emoji_style': message.style}).catch(reason => {
+                    throw new Error(`Error while setting emoji style: ${reason}`);
                 });
-                setTimeout(async () => {
-                    chrome.tabs.reload(discardedTab.id);
-                }, 500);
-            });
-        }  else if (message.command === 'test') {
-            log.debug('Received test command. List of tabs:');
-            chrome.tabs.query({currentWindow: true}, tabs => {
-                tabs.forEach(tab => {
-                    log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                break;
+            }
+
+            case 'test': {
+                log.debug('Received test command. List of tabs:');
+                chrome.tabs.query({currentWindow: true}, tabs => {
+                    tabs.forEach(tab => {
+                        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                    });
                 });
-            });
-        } else if (message.command === COMMAND_CLOSE_WELCOME_TAB && welcomeTab) {
-            chrome.tabs.remove(welcomeTab.id);
-            welcomeTab = null;
+                break;
+            }
+
         }
     });
 }

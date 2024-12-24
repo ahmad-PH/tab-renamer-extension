@@ -1,11 +1,11 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_EMOJI_STYLE_CHANGE, ROOT_TAG_NAME, inProduction } from "../config.js";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, ROOT_TAG_NAME, inProduction } from "../config.js";
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { getLogger } from "../log";
-
+import bgScriptApi from "../backgroundScriptApi";
 const log = getLogger('contentScript', 'debug');
 
 // Global variables:
@@ -86,6 +86,7 @@ const discardTabListener = () => {
     }, 500);
 }
 
+// Listeners for events, only in development mode:
 if (!inProduction()) {
     log.debug('Adding discard tab listener in content script.');
     
@@ -96,13 +97,10 @@ if (!inProduction()) {
     });
 
     log.debug('Adding Emoji style listener in content script.');
-    document.addEventListener(COMMAND_EMOJI_STYLE_CHANGE, 
+    document.addEventListener(COMMAND_SET_EMOJI_STYLE, 
         /** @param {MessageEvent} event */
         (event) => {
             log.debug('Emoji style change listener in content script called.');
-            chrome.runtime.sendMessage({
-                command: COMMAND_EMOJI_STYLE_CHANGE,
-                style: event.data.style
+            bgScriptApi.setEmojiStyle(event.data.style);
         });
-    });
 }

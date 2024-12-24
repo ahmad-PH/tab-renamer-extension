@@ -8,7 +8,7 @@ import log from "./log";
  * @returns {T} The value, if it is of the correct type.
  * @throws {TypeError} If the value is not of the correct type.
  */
-export function assertType(value, type) {
+export function castType(value, type) {
     if (!(value instanceof type)) {
         throw new TypeError(`Expected value to be of type ${type.name}, but received ${typeof value}`);
     }

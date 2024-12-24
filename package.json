@@ -4,7 +4,7 @@
     "description": "",
     "main": "background.js",
     "scripts": {
-        "test": "jest --detectOpenHandles",
+        "test": "jest --detectOpenHandles --verbose",
         "test:headed": "HEADED=true jest --detectOpenHandles",
         "build": "webpack --mode production",
         "dev": "webpack --mode development --watch",
