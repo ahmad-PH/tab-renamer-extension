@@ -1,7 +1,7 @@
 const { WebDriver, Key, By, until, WebElement } = require('selenium-webdriver');
 const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB, EMOJI_PICKER_ID, COMMAND_CLOSE_WELCOME_TAB } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
-const { ROOT_TAG_NAME, EMOJI_STYLE } = require('../../src/config.js');
+const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } = require('../../src/config.js');
 const { Favicon } = require('../../src/favicon');
 const { getLogger } = require('../../src/log');
 
@@ -74,9 +74,9 @@ class DriverUtils {
         const faviconElement = this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;
-        if (EMOJI_STYLE == "native") {
+        if (getEmojiStyle() == EMOJI_STYLE_NATIVE) {
             hrefIsCorrect = (await this.getAttribute(faviconElement, "href")).startsWith("data:image/png;base64,");
-        } else if (EMOJI_STYLE == "twemoji") {
+        } else if (getEmojiStyle() == EMOJI_STYLE_TWEMOJI) {
             hrefIsCorrect = (await this.getAttribute(faviconElement, "href")).startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/");
         }
         const typeMatchesIcon = (await this.getAttribute(faviconElement, "type")) === 'image/x-icon';

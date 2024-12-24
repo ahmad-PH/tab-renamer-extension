@@ -22,7 +22,7 @@ export const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 export const COMMAND_DISCARD_TAB = `discard_tab`;
 export const COMMAND_CLOSE_WELCOME_TAB = `close_welcome_tab`;
-
+export const COMMAND_EMOJI_STYLE_CHANGE = `emoji_style_change`;
 
 // Favicon restoration strategy:
 // Accepted values: 'fetch_separately', 'mutation_observer'
@@ -30,11 +30,31 @@ export const faviconRestorationStrategy = 'mutation_observer';
 
 
 // Emoji style:
-// export const EMOJI_STYLE = "native";
-export const EMOJI_STYLE = "twemoji";
+export const EMOJI_STYLE_NATIVE = "native";
+export const EMOJI_STYLE_TWEMOJI = "twemoji";
+let cachedConfig = {
+    EMOJI_STYLE: EMOJI_STYLE_NATIVE // possible values: 'native', 'twemoji'
+}
 
+export const getEmojiStyle = () => cachedConfig.EMOJI_STYLE;
 
 export const inProduction = () => {
     return typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
 }
 
+// // Keep the in-memory cache in sync with the storage:
+if (typeof chrome !== 'undefined' && chrome.storage) {
+    // Initial load
+    chrome.storage.sync.get('emojiStyle', ({ emojiStyle }) => {
+        if (emojiStyle) {
+            cachedConfig.EMOJI_STYLE = emojiStyle;
+        }
+    });
+
+    // Listen for changes
+    chrome.storage.onChanged.addListener((changes) => {
+        if (changes.emojiStyle) {
+            cachedConfig.EMOJI_STYLE = changes.emojiStyle.newValue;
+        }
+    });
+}

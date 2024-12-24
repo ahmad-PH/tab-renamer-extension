@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './selectedFavicon.module.css';
 import PropTypes from 'prop-types';
-import { EMOJI_PICKER_IMAGE_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID } from '../../../config';
+import { EMOJI_PICKER_IMAGE_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID } from '../../../config.js';
 import log from '../../../log';
 import { Favicon } from '../../../favicon';
 

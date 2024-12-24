@@ -3,7 +3,7 @@ import { getLogger } from "../log";
 import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "./backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
-import { faviconRestorationStrategy } from "../config";
+import { faviconRestorationStrategy } from "../config.js";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 

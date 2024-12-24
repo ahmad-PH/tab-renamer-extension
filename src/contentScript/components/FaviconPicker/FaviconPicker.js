@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import styles from './EmojiPicker.module.css';
+import styles from './FaviconPicker.module.css';
 import PropTypes from 'prop-types';
-import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ALL_EMOJIS_ID } from '../../../config';
+import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ALL_EMOJIS_ID } from '../../../config.js';
 import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';

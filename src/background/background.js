@@ -3,7 +3,7 @@ import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, inProduction } from "../config.js";
 
 const log = getLogger('background', 'debug');
 

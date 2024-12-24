@@ -1,6 +1,6 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_EMOJI_STYLE_CHANGE, ROOT_TAG_NAME, inProduction } from "../config.js";
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
@@ -93,5 +93,16 @@ if (!inProduction()) {
     document.addEventListener(COMMAND_CLOSE_WELCOME_TAB, () => {
         log.debug('close welcome tab listener in content script called.');
         chrome.runtime.sendMessage({command: COMMAND_CLOSE_WELCOME_TAB});
+    });
+
+    log.debug('Adding Emoji style listener in content script.');
+    document.addEventListener(COMMAND_EMOJI_STYLE_CHANGE, 
+        /** @param {MessageEvent} event */
+        (event) => {
+            log.debug('Emoji style change listener in content script called.');
+            chrome.runtime.sendMessage({
+                command: COMMAND_EMOJI_STYLE_CHANGE,
+                style: event.data.style
+        });
     });
 }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as types from '../../../types';
 import styles from './Emoji.module.css';
 import { SystemEmojiFavicon, TwemojiFavicon } from '../../../favicon';
-import { EMOJI_STYLE } from '../../../config';
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config.js';
 // import twemoji from 'twemoji';
 
 /**
@@ -16,14 +16,14 @@ export const Emoji = ({ emoji, onClick }) => {
     // ============== Twemoji approach: ==============
     let emojiComponent = null;
     let faviconToReturn = null;
-    if (EMOJI_STYLE === "native") {
+    if (getEmojiStyle() === EMOJI_STYLE_NATIVE) {
         faviconToReturn = new SystemEmojiFavicon(emoji.character);
         emojiComponent = (
             <span className={styles.emojiWrapper}>
                 {emoji.character}
             </span>
         );
-    } else if (EMOJI_STYLE === "twemoji") {
+    } else if (getEmojiStyle() === EMOJI_STYLE_TWEMOJI) {
         faviconToReturn = new TwemojiFavicon(emoji.character);
         emojiComponent = (
             <img 
@@ -35,7 +35,7 @@ export const Emoji = ({ emoji, onClick }) => {
             />
         );
     } else {
-        log.error('Invalid emoji style:', EMOJI_STYLE);
+        log.error('Invalid emoji style:', getEmojiStyle());
     }
 
     return (

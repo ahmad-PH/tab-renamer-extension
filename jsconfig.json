@@ -13,5 +13,9 @@
         "src/**/*",
         "globals.d.ts",
         "typings.d.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
     ]
 }
