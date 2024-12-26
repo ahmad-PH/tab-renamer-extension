@@ -12,7 +12,6 @@ import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';
 import { Emoji } from './Emoji';
-import * as types from '../../../types';
 
 // eslint-disable-next-line no-unused-vars
 export const log = getLogger('EmojiPicker', 'debug');

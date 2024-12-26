@@ -1,14 +1,15 @@
 import bgScriptApi from "../backgroundScriptApi";
-import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } from "../config";
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
 import { castType } from "../utils";
 import { getLogger } from "../log";
 
 const log = getLogger('settings', 'debug');
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const { emojiStyle } = await chrome.storage.sync.get('emojiStyle');
+    const { emojiStyle } = await chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE);
     if (emojiStyle) {
-        document.getElementById('emojiStyle').value = emojiStyle;
+        const emojiStyleSelect = castType(document.getElementById('emojiStyle'), HTMLSelectElement);
+        emojiStyleSelect.value = emojiStyle;
     }
 });
 

@@ -5,17 +5,28 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = (_env, argv) => {
     const isProduction = argv.mode === 'production';
     const outputPath = isProduction ? 'dist/prod' : 'dist/dev';
+    const entries =  {
+        contentScript: './src/contentScript/contentScript.js',
+        initializationContentScript: './src/contentScript/initializationContentScript.js',
+        background: './src/background/background.js',
+        settings: './src/settings/settings.js',
+    };
+
+    // Marking certain entries as special, by marking their "chunk.name", and mapping to the folder
+    // they should go to under "src".
+    const specialEntryPrefixes = {
+        "settings": "settings/",
+    }
     
     return {
-        entry: {
-            contentScript: './src/contentScript/contentScript.js',
-            initializationContentScript: './src/contentScript/initializationContentScript.js',
-            background: './src/background/background.js',
-            settings: './src/settings/settings.js',
-        },
+        entry: entries,
         
         output: {
-            filename: '[name].js',
+            filename: (pathData) => {
+                const specialPrefixEntry = specialEntryPrefixes[pathData.chunk.name];
+                const prefix = specialPrefixEntry ? specialPrefixEntry : '';
+                return `${prefix}[name].js`;
+            },
             path: path.resolve(__dirname, outputPath)
         },
         
@@ -69,8 +80,14 @@ module.exports = (_env, argv) => {
             new CopyPlugin({
                 patterns: [
                     { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
-                    { from: path.resolve(__dirname, 'assets/'), to: 'assets/' },
-                    { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings.html' },
+                    { from: path.resolve(__dirname, 'src/assets/'), to: 'assets/' },
+                    {
+                        from: path.resolve(__dirname, 'src/settings/'),
+                        to: 'settings/',
+                        globOptions: {
+                            ignore: ['settings.js'],
+                        },
+                    },
                 ],
             }),
         ],

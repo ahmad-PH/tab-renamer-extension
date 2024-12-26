@@ -1,4 +1,4 @@
 dist/
 node_modules/
-assets/twemoji/*
+src/assets/twemoji/*
 .DS_Store

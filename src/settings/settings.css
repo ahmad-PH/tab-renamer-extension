@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: hsl(210, 17%, 98%);
+    font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.top-bar {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    width: 36px;
+    height: 36px;
+    margin-right: 16px;
+}
+
+.app-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 16px;
+}
+
+.page-title {
+    position: absolute;
+    left: -200px;
+    font-size: 24px;
+    color: #98a2ac;
+    font-weight: 600;
+    margin-top: 8px;
+    min-width: 120px;
+}
+
+.settings-pane {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 32px 64px;
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+}
+
+.main-container {
+    max-width: 800px;
+    margin: 40px auto;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+}
+
+select:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    flex: 0 0 200px;
+    padding-right: 24px;
+}
+
+.setting-label label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.setting-label .description {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* .setting-control {
+    flex: 1;
+} */
+
+/* Style for select inputs */
+.setting-control select {
+    width: 200px;  /* fixed width for consistency */
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+}
+
+.setting-control select:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+} 

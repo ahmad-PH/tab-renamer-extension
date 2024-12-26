@@ -3,7 +3,7 @@
     "name": "Tab Renamer",
     "version": "1.0.0",
     "description": "Customize your tab titles and favicons for a more organized browsing experience.",
-    "options_page": "settings.html",
+    "options_page": "settings/settings.html",
     "permissions": [
         "tabs",
         "activeTab",
