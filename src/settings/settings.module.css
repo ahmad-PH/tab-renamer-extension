@@ -5,7 +5,7 @@ body {
     font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-.top-bar {
+.topBar {
     position: sticky;
     top: 0;
     background-color: white;
@@ -22,14 +22,14 @@ body {
     margin-right: 16px;
 }
 
-.app-name {
+.appName {
     font-size: 22px;
     font-weight: 600;
     color: #333;
     margin-right: 16px;
 }
 
-.page-title {
+.pageTitle {
     position: absolute;
     left: -200px;
     font-size: 24px;
@@ -39,7 +39,7 @@ body {
     min-width: 120px;
 }
 
-.settings-pane {
+.settingsPane {
     width: 100%;
     background-color: white;
     border-radius: 8px;
@@ -49,7 +49,7 @@ body {
     font-family: Roboto, sans-serif;
 }
 
-.main-container {
+.mainContainer {
     max-width: 800px;
     margin: 40px auto;
     position: relative;
@@ -78,7 +78,7 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
 }
 
-.setting-item {
+.settingItem {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -87,34 +87,34 @@ select:focus {
     border-bottom: 1px solid #eee;
 }
 
-.setting-item:last-child {
+.settingItem:last-child {
     border-bottom: none;
 }
 
-.setting-label {
+.settingLabel {
     flex: 0 0 200px;
     padding-right: 24px;
 }
 
-.setting-label label {
+.settingLabel label {
     margin: 0;
     font-size: 14px;
     font-weight: 500;
     color: #333;
 }
 
-.setting-label .description {
+.settingLabel .description {
     font-size: 12px;
     color: #666;
     margin-top: 4px;
 }
 
-/* .setting-control {
+/* .settingControl {
     flex: 1;
 } */
 
 /* Style for select inputs */
-.setting-control select {
+.settingControl select {
     width: 200px;  /* fixed width for consistency */
     padding: 8px 12px;
     border: 1px solid #ddd;
@@ -124,7 +124,7 @@ select:focus {
     background-color: white;
 }
 
-.setting-control select:focus {
+.settingControl select:focus {
     outline: none;
     border-color: #0066cc;
     box-shadow: 0 0 0 2px rgba(0,102,204,0.2);

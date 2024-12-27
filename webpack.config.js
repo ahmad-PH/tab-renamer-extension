@@ -41,12 +41,31 @@ module.exports = (_env, argv) => {
                         loader: 'babel-loader',
                     },
                 },
-                {
-                    test: /^(?!.*\.module\.css$).*\.css$/, // All regular .css files (not matching .module.css files)
+                // {
+                //     test: /^(?!.*\.module\.css$).*\.css$/, // All regular .css files (not matching .module.css files)
+                //     use: ['style-loader', 'css-loader'],
+                // },
+                { // All regular .css files, excluding .module.css files
+                    test: /\.css$/,
+                    exclude: /\.module\.css$/,
                     use: ['style-loader', 'css-loader'],
                 },
                 {
                     test: /\.module\.css$/,
+                    exclude: /contentScript\/.*\.module\.css$/,
+                    use: [
+                        { loader: 'style-loader' },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    localIdentName: isProduction ? '[name]--[local]--[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
+                                }, 
+                            },
+                    },],
+                },
+                {
+                    test: /contentScript\/.*\.module\.css$/,
                     use: [
                         {
                             loader: 'style-loader',
@@ -61,7 +80,7 @@ module.exports = (_env, argv) => {
                             loader: 'css-loader',
                             options: {
                                 modules: {
-                                    localIdentName: isProduction ? '[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
+                                    localIdentName: isProduction ? '[name]--[local]--[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
                                 }, 
                             },
                     },],
@@ -85,7 +104,7 @@ module.exports = (_env, argv) => {
                         from: path.resolve(__dirname, 'src/settings/'),
                         to: 'settings/',
                         globOptions: {
-                            ignore: ['settings.js'],
+                            ignore: ['**/settings.js', '**/settings.module.css'],
                         },
                     },
                 ],

@@ -59,7 +59,8 @@
         {
             "resources": [
                 "assets/emoji_picker_icon.png",
-                "assets/emojis.json"
+                "assets/emojis.json",
+                "assets/icon*.png"
             ],
             "matches": [
                 "<all_urls>"
