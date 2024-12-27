@@ -41,16 +41,12 @@ module.exports = (_env, argv) => {
                         loader: 'babel-loader',
                     },
                 },
-                // {
-                //     test: /^(?!.*\.module\.css$).*\.css$/, // All regular .css files (not matching .module.css files)
-                //     use: ['style-loader', 'css-loader'],
-                // },
                 { // All regular .css files, excluding .module.css files
                     test: /\.css$/,
                     exclude: /\.module\.css$/,
                     use: ['style-loader', 'css-loader'],
                 },
-                {
+                { // module.css files not under contentScript
                     test: /\.module\.css$/,
                     exclude: /contentScript\/.*\.module\.css$/,
                     use: [
@@ -64,7 +60,7 @@ module.exports = (_env, argv) => {
                             },
                     },],
                 },
-                {
+                { // module.css files under contentScript
                     test: /contentScript\/.*\.module\.css$/,
                     use: [
                         {
@@ -104,7 +100,8 @@ module.exports = (_env, argv) => {
                         from: path.resolve(__dirname, 'src/settings/'),
                         to: 'settings/',
                         globOptions: {
-                            ignore: ['**/settings.js', '**/settings.module.css'],
+                            ignore: ['**/settings.js'],
+                            // ignore: ['**/settings.js', '**/settings.module.css'],
                         },
                     },
                 ],
