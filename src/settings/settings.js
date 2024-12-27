@@ -1,10 +1,39 @@
-
-import React, { StrictMode } from 'react';
+import React, { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
-import PropTypes from 'prop-types';
+import SettingItem from './components/SettingItem/SettingItem';
+
+import bgScriptApi from "../backgroundScriptApi";
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
+import { getLogger } from "../log";
+
+const log = getLogger('settings', 'debug');
 
 const SettingsPage = () => {
+  const [emojiStyle, setEmojiStyle] = useState('system');
+
+  useEffect(() => {
+    const fetchEmojiStyle = async () => {
+      const emojiStyle = (await chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE))[SETTINGS_KEY_EMOJI_STYLE];
+      log.debug("Emoji style fetched from storage:", emojiStyle);
+      if (emojiStyle) {
+        setEmojiStyle(emojiStyle);
+      }
+    };
+
+    fetchEmojiStyle();
+  }, []);
+
+  const handleEmojiStyleChange = (selectedStyle) => {
+    const valuesMapUIToBackend = {
+      "system": EMOJI_STYLE_NATIVE,
+      "twemoji": EMOJI_STYLE_TWEMOJI,
+    };
+    log.debug("Emoji style change handler in SettingsPage called with value:", selectedStyle);
+    bgScriptApi.setEmojiStyle(valuesMapUIToBackend[selectedStyle]);
+    setEmojiStyle(selectedStyle);
+  };
+
   return (
     <>
       <div className={styles.topBar}>
@@ -19,7 +48,7 @@ const SettingsPage = () => {
             label="Emoji Style"
             description="The style of emojis in emoji picker and tab titles"
           >
-            <select id="emojiStyle">
+            <select id="emojiStyle" value={emojiStyle} onChange={(e) => handleEmojiStyleChange(e.target.value)}>
               <option value="system">Native</option>
               <option value="twemoji">Twemoji</option>
             </select>
@@ -30,60 +59,9 @@ const SettingsPage = () => {
   );
 };
 
-const SettingItem = ({ label, description, children }) => {
-  return (
-    <div className={styles.settingItem}>
-      <div className={styles.settingLabel}>
-        <label>{label}</label>
-        <div className={styles.description}>
-          {description}
-        </div>
-      </div>
-      <div className={styles.settingControl}>
-        {children}
-      </div>
-    </div>
-  );
-};
-
-SettingItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
-};
-
-  
 const root = createRoot(document.getElementById('root'));
-console.log("The root element is:", document.getElementById('root'));
 root.render(
     <StrictMode>
         <SettingsPage />
     </StrictMode>
 );
-
-
-
-// import bgScriptApi from "../backgroundScriptApi";
-// import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
-// import { castType } from "../utils";
-// import { getLogger } from "../log";
-
-// const log = getLogger('settings', 'debug');
-
-// document.addEventListener('DOMContentLoaded', async () => {
-//     const { emojiStyle } = await chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE);
-//     if (emojiStyle) {
-//         const emojiStyleSelect = castType(document.getElementById('emojiStyle'), HTMLSelectElement);
-//         emojiStyleSelect.value = emojiStyle;
-//     }
-// });
-
-// document.getElementById('emojiStyle').addEventListener('change', (event) => {
-//     const valuesMapUIToBackend = {
-//         "system": EMOJI_STYLE_NATIVE,
-//         "twemoji": EMOJI_STYLE_TWEMOJI,
-//     }
-//     const selectedStyle = castType(event.target, HTMLSelectElement).value;
-//     log.debug("Emoji style change listener in settings.js called with value:", selectedStyle);
-//     bgScriptApi.setEmojiStyle(valuesMapUIToBackend[selectedStyle])
-// });
