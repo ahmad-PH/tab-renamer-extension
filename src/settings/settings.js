@@ -2,6 +2,7 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
+import PropTypes from 'prop-types';
 
 const SettingsPage = () => {
   return (
@@ -14,56 +15,42 @@ const SettingsPage = () => {
       <div className={styles.mainContainer}>
         <h1 className={styles.pageTitle}>Settings</h1>
         <div className={styles.settingsPane}>
-          {/* <SettingItem
+          <SettingItem
             label="Emoji Style"
             description="The style of emojis in emoji picker and tab titles"
-            id="emojiStyle"
-            options={[
-              { value: 'system', label: 'Native' },
-              { value: 'twemoji', label: 'Twemoji' }
-            ]}
-          /> */}
-          <div className={styles.settingItem}>
-            <div className={styles.settingLabel}>
-              <label htmlFor="emojiStyle">Emoji Style</label>
-              <div className={styles.description}>
-                The style of emojis in emoji picker and tab titles
-              </div>
-            </div>
-            <div className={styles.settingControl}>
-              <select id="emojiStyle">
-                <option value="system">Nattttive</option>
-                <option value="twemoji">Twemoji</option>
-              </select>
-            </div>
-          </div>
+          >
+            <select id="emojiStyle">
+              <option value="system">Native</option>
+              <option value="twemoji">Twemoji</option>
+            </select>
+          </SettingItem>
         </div>
       </div>
     </>
   );
 };
 
-// const SettingItem = ({ label, description, options, id }) => {
-//   return (
-//       <div className={styles.settingItem}>
-//           <div className={styles.settingLabel}>
-//               <label htmlFor={id}>{label}</label>
-//               <div className={styles.description}>
-//                   {description}
-//               </div>
-//           </div>
-//           <div className={styles.settingControl}>
-//               <select id={id}>
-//                   {options.map(option => (
-//                       <option key={option.value} value={option.value}>
-//                           {option.label}
-//                       </option>
-//                   ))}
-//               </select>
-//           </div>
-//       </div>
-//   );
-// };
+const SettingItem = ({ label, description, children }) => {
+  return (
+    <div className={styles.settingItem}>
+      <div className={styles.settingLabel}>
+        <label>{label}</label>
+        <div className={styles.description}>
+          {description}
+        </div>
+      </div>
+      <div className={styles.settingControl}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+SettingItem.propTypes = {
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired
+};
 
   
 const root = createRoot(document.getElementById('root'));
@@ -73,14 +60,6 @@ root.render(
         <SettingsPage />
     </StrictMode>
 );
-
-
-
-
-
-
-
-
 
 
 
