@@ -74,11 +74,11 @@ describe('Selenium UI Tests', () => {
     const tearDown = async () => { 
         if (driver) {
             const logs = await driver.manage().logs().get(logging.Type.BROWSER);
-            const extensionPrefix = 'chrome-extension://klljeoabgpehcibnkgcfaipponlgpkfc/';
+            const extensionPattern = /chrome-extension:\/\/[^/]+\//;
             // eslint-disable-next-line no-unused-vars
             const extensionLogs = logs.filter(log => (
-                log.message.startsWith(extensionPrefix) && log.message.includes('#')
-            )).map(log => log.message.replace(extensionPrefix, ''));
+                log.message.startsWith('chrome-extension://') && log.message.includes('#')
+            )).map(log => log.message.replace(extensionPattern, ''));
             // console.log('extension logs:', extensionLogs);
             await driver.quit();
         }

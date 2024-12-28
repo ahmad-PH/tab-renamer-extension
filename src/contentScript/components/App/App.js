@@ -8,7 +8,13 @@ import FaviconPicker from '../FaviconPicker';
 import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 import SettingsButton from '../SettingsButton';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* Non-functional note: Any slow-down in this file, for example in the imports above, will lead to a slower execution time 
+ * for the insertUIIntoDOM function, because contentScript.js will import App only when this function is called. Adding an
+ * extra import for 'bootstrap-icons/font/bootstrap-icons.css' will increase the load time of App from ~3ms to ~9ms, which
+ * is significant. This can affect end-to-end tests that still rely on some timers and break them.
+ * If this happens in the future and the change is necessary, I would need to adjust timers on those.
+ */
 
 const log = getLogger('App', 'debug');
 

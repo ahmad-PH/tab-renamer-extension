@@ -16,12 +16,16 @@ let tabInitializationPromise = tab.initializeForMainContentScript();
 
 async function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
+        const startTotalTime = performance.now(); 
+
         const hostElement = document.createElement(ROOT_TAG_NAME);
         document.body.appendChild(hostElement);
         const rootElement = hostElement.attachShadow({ mode: 'open' });
         root = createRoot(rootElement);
 
+        const startImportTime = performance.now();
         const { default: App, TabContext } = await import('./components/App');
+        const endImportTime = performance.now();
 
         await tabInitializationPromise;
         root.render(
@@ -30,6 +34,11 @@ async function insertUIIntoDOM() {
             </TabContext.Provider>
         );
         uiInsertedIntoDOM = true;
+
+        const endTotalTime = performance.now(); // End total timer
+
+        log.debug(`Time taken to import App component: ${endImportTime - startImportTime} ms`);
+        log.debug(`Total time taken for insertUIIntoDOM: ${endTotalTime - startTotalTime} ms`);
     }
 }
  
