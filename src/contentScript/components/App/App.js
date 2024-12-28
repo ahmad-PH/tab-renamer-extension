@@ -7,6 +7,8 @@ import SelectedFavicon from '../SelectedEmoji';
 import FaviconPicker from '../FaviconPicker';
 import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
+import SettingsButton from '../SettingsButton';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const log = getLogger('App', 'debug');
 
@@ -162,6 +164,7 @@ export default function App() {
                     />
                 </div>
             </div>
+            <SettingsButton />
         </div>
     );
 }

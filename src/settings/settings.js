@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import bgScriptApi from "../backgroundScriptApi";
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
 import { getLogger } from "../log";
-import { Select, InputLabel, MenuItem, FormControl } from '@mui/material';
+import { Select, MenuItem, FormControl } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
 
 

@@ -49,6 +49,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@mui/material": "^5.16.13",
+        "bootstrap-icons": "^1.11.3",
         "classnames": "^2.5.1",
         "loglevel": "^1.8.1",
         "react": "^18.2.0",

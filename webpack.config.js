@@ -18,6 +18,25 @@ module.exports = (_env, argv) => {
         "settings": "settings/",
     }
     
+    const shadowRootStyleLoader = {
+        loader: 'style-loader',
+        options: {
+            insert: function(element) {
+                // eslint-disable-next-line no-undef
+                document.querySelector("tab-renamer-root").shadowRoot.appendChild(element);
+            }
+        }
+    };
+
+    const moduleCssLoader = {
+        loader: 'css-loader',
+        options: {
+            modules: {
+                localIdentName: isProduction ? '[name]--[local]--[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
+            },
+        },
+    };
+
     return {
         entry: entries,
         
@@ -41,45 +60,31 @@ module.exports = (_env, argv) => {
                         loader: 'babel-loader',
                     },
                 },
-                { // All regular .css files, excluding .module.css files
+                {
+                    test: /\.svg$/,
+                    type: 'asset',
+                },
+
+
+                // CSS and Module CSS files:
+                { // .css files inside contentScript
+                    test: /contentScript\/.*\.css$/,
+                    exclude: /contentScript\/.*\.module\.css$/,
+                    use: [shadowRootStyleLoader, 'css-loader'],
+                },
+                { // module.css files inside contentScript
+                    test: /contentScript\/.*\.module\.css$/,
+                    use: [shadowRootStyleLoader, moduleCssLoader],
+                },
+                { // .css files, outside contentScript
                     test: /\.css$/,
-                    exclude: /\.module\.css$/,
+                    exclude: [/\.module\.css$/, /contentScript\/.*\.css$/],
                     use: ['style-loader', 'css-loader'],
                 },
-                { // module.css files not under contentScript
+                { // module.css files outside contentScript
                     test: /\.module\.css$/,
                     exclude: /contentScript\/.*\.module\.css$/,
-                    use: [
-                        { loader: 'style-loader' },
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: {
-                                    localIdentName: isProduction ? '[name]--[local]--[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
-                                }, 
-                            },
-                    },],
-                },
-                { // module.css files under contentScript
-                    test: /contentScript\/.*\.module\.css$/,
-                    use: [
-                        {
-                            loader: 'style-loader',
-                            options: {
-                                insert: function(element) {
-                                    // eslint-disable-next-line no-undef
-                                    document.querySelector("tab-renamer-root").shadowRoot.appendChild(element);
-                                }
-                            }
-                        },
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: {
-                                    localIdentName: isProduction ? '[name]--[local]--[hash:base64]' : '[name]--[local]--[hash:base64:5]' // For easier debugging
-                                }, 
-                            },
-                    },],
+                    use: ['style-loader', moduleCssLoader],
                 },
             ],
         },
@@ -96,14 +101,14 @@ module.exports = (_env, argv) => {
                 patterns: [
                     { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
                     { from: path.resolve(__dirname, 'src/assets/'), to: 'assets/' },
-                    {
-                        from: path.resolve(__dirname, 'src/settings/'),
-                        to: 'settings/',
-                        globOptions: {
-                            ignore: ['**/settings.js'],
-                            // ignore: ['**/settings.js', '**/settings.module.css'],
-                        },
-                    },
+                    { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings/settings.html' },
+                    // {
+                    //     from: path.resolve(__dirname, 'src/settings/'),
+                    //     to: 'settings/',
+                    //     globOptions: {
+                    //         ignore: ['**/settings.js', '**/settings.module.css'],
+                    //     },
+                    // },
                 ],
             }),
         ],

@@ -1,0 +1,54 @@
+.settingsButtonContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 0;
+    /* right: -40px; */
+    transition: right 0.3s ease;
+    z-index: 10000;
+}
+
+/* Add a visible handle */
+.settingsButtonContainer::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 40px; /* Position just before the button */
+    width: 40px;
+    height: 40px;
+    /* background-color: rgb(174, 255, 0); */
+    border-radius: 4px 0 0 4px;
+    transform: translateY(-50%);
+}
+
+.settingsButtonContainer:hover {
+    right: 0px;
+}
+
+.settingsButton {
+    /* width: 40px; */
+    /* height: 40px; */
+    border-radius: 50%;
+    /* background-color: red; */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.settingsButtonContainer:hover .settingsButton {
+    background-color: rgba(128, 128, 128, 0.9);
+    transform: rotate(90deg); /* Apply rotation to the button */
+}
+
+/* 
+.settingsButton:hover {
+    background-color: rgba(128, 128, 128, 0.9);
+} */
+
+.settingsButtonIcon {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+} 
