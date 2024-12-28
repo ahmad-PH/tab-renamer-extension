@@ -18,6 +18,9 @@ export const PICKED_EMOJI_ID = `${EXTENSION_PREFIX}-picked-emoji`;
 export const EMOJI_REMOVE_BUTTON_ID = `${EXTENSION_PREFIX}-emoji-remove-button`;
 export const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 
+// Settings Button:
+export const SETTINGS_BUTTON_ID = `${EXTENSION_PREFIX}-settings-button`;
+
 // Commands:
 export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 export const COMMAND_DISCARD_TAB = `discard_tab`;

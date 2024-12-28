@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './SettingsButton.module.css';
 import gearIcon from 'bootstrap-icons/icons/gear.svg';
+import { SETTINGS_BUTTON_ID } from '../../../config';
 
 export default function SettingsButton() {
     const handleClick = () => {
@@ -17,6 +18,7 @@ export default function SettingsButton() {
                 <div className={styles.relativeContainer}>
                     <div className={styles.visibleTriggerArea} />
                     <button 
+                        id={SETTINGS_BUTTON_ID}
                         className={styles.settingsButton}
                         onClick={handleClick}
                         title="Settings"
