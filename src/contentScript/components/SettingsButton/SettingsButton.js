@@ -13,14 +13,17 @@ export default function SettingsButton() {
 
     return (
         <>
-            <div className={styles.settingsButtonContainer}>
-                <button 
-                    className={styles.settingsButton}
-                    onClick={handleClick}
-                    title="Settings"
-                >
-                    <img className={styles.settingsButtonIcon} src={gearIcon} alt="Settings" />
-                </button>
+            <div className={styles.triggerArea}>
+                <div className={styles.relativeContainer}>
+                    <div className={styles.visibleTriggerArea} />
+                    <button 
+                        className={styles.settingsButton}
+                        onClick={handleClick}
+                        title="Settings"
+                    >
+                        <img className={styles.icon} src={gearIcon} alt="Settings" />
+                    </button>
+                </div>
             </div>
         </>
     );

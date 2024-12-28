@@ -1,54 +1,61 @@
-.settingsButtonContainer {
-    position: fixed;
-    bottom: 20px;
-    right: 0;
-    /* right: -40px; */
-    transition: right 0.3s ease;
-    z-index: 10000;
-}
-
-/* Add a visible handle */
-.settingsButtonContainer::before {
-    content: '';
+.triggerArea {
     position: absolute;
-    top: 50%;
-    right: 40px; /* Position just before the button */
-    width: 40px;
-    height: 40px;
-    /* background-color: rgb(174, 255, 0); */
-    border-radius: 4px 0 0 4px;
-    transform: translateY(-50%);
+    right: -55px;
+    bottom: 20px;
+    width: 90px;
+    height: 35px;
+    display: flex;
+    z-index: 9999;
+    transition: right 0.3s ease;
 }
 
-.settingsButtonContainer:hover {
-    right: 0px;
+.relativeContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.visibleTriggerArea {
+    position: absolute;
+    width: 15px;
+    height: 35px;
+    top: 0;
+    right: 55px;
+    background-color: rgb(189, 189, 189);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    transition: opacity 0.3s ease-in;
 }
 
 .settingsButton {
-    /* width: 40px; */
-    /* height: 40px; */
-    border-radius: 50%;
-    /* background-color: red; */
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.settingsButtonContainer:hover .settingsButton {
-    background-color: rgba(128, 128, 128, 0.9);
-    transform: rotate(90deg); /* Apply rotation to the button */
-}
-
-/* 
-.settingsButton:hover {
-    background-color: rgba(128, 128, 128, 0.9);
-} */
-
-.settingsButtonIcon {
-    cursor: pointer;
+    position: absolute;
     width: 35px;
     height: 35px;
-} 
+    top: 0;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.icon {
+    width: 35px;
+    height: 35px;
+}
+
+.triggerArea:hover {
+    right: 0;
+}
+
+.triggerArea:hover .visibleTriggerArea {
+    opacity: 0;
+    transition: opacity 0s;
+}
+
+.triggerArea:hover .settingsButton {
+    transform: rotate(90deg);
+}
