@@ -55,25 +55,10 @@ body {
     position: relative;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-}
-
-select {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.selectElement {
     font-size: 14px;
-    color: #333;
-    background-color: white;
 }
 
-select:focus {
-    outline: none;
-    border-color: #0066cc;
-    box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
-} 
+.selectElementItem {
+    font-size: 14px;
+}

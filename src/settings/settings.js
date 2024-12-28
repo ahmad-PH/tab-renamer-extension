@@ -2,15 +2,19 @@ import React, { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
 import SettingItem from './components/SettingItem/SettingItem';
+import { styled } from '@mui/material/styles';
 
 import bgScriptApi from "../backgroundScriptApi";
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
 import { getLogger } from "../log";
+import { Select, InputLabel, MenuItem, FormControl } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material/styles';
+
 
 const log = getLogger('settings', 'debug');
 
 const SettingsPage = () => {
-  const [emojiStyle, setEmojiStyle] = useState('system');
+  const [emojiStyle, setEmojiStyle] = useState(EMOJI_STYLE_NATIVE);
 
   useEffect(() => {
     const fetchEmojiStyle = async () => {
@@ -25,36 +29,48 @@ const SettingsPage = () => {
   }, []);
 
   const handleEmojiStyleChange = (selectedStyle) => {
-    const valuesMapUIToBackend = {
-      "system": EMOJI_STYLE_NATIVE,
-      "twemoji": EMOJI_STYLE_TWEMOJI,
-    };
     log.debug("Emoji style change handler in SettingsPage called with value:", selectedStyle);
-    bgScriptApi.setEmojiStyle(valuesMapUIToBackend[selectedStyle]);
+    bgScriptApi.setEmojiStyle(selectedStyle);
     setEmojiStyle(selectedStyle);
   };
 
+  const StyledSelect = styled(Select)(() => ({
+    fontFamily: 'Roboto, sans-serif',
+    fontSize: '14px',
+  }));
+
+  console.log("In settings.js, styles property is:", styles);
+
   return (
     <>
-      <div className={styles.topBar}>
-        <img src={chrome.runtime.getURL("assets/icon128.png")} alt="Tab Renamer Logo" className={styles.logo} />
-        <span className={styles.appName}>Tab Renamer</span>
-      </div>
-
-      <div className={styles.mainContainer}>
-        <h1 className={styles.pageTitle}>Settings</h1>
-        <div className={styles.settingsPane}>
-          <SettingItem
-            label="Emoji Style"
-            description="The style of emojis in emoji picker and tab titles"
-          >
-            <select id="emojiStyle" value={emojiStyle} onChange={(e) => handleEmojiStyleChange(e.target.value)}>
-              <option value="system">Native</option>
-              <option value="twemoji">Twemoji</option>
-            </select>
-          </SettingItem>
+      <StyledEngineProvider injectFirst>
+        <div className={styles.topBar}>
+          <img src={chrome.runtime.getURL("assets/icon128.png")} alt="Tab Renamer Logo" className={styles.logo} />
+          <span className={styles.appName}>Tab Renamer</span>
         </div>
-      </div>
+
+        <div className={styles.mainContainer}>
+          <h1 className={styles.pageTitle}>Settings</h1>
+          <div className={styles.settingsPane}>
+            <SettingItem
+              label="Emoji Style"
+              description="The style of emojis in emoji picker and tab titles"
+            >
+              <FormControl sx={{ m: 1, minWidth: 120}} size="small">
+                <Select
+                  id="emoji-style-select"
+                  value={emojiStyle}
+                  onChange={(e) => handleEmojiStyleChange(e.target.value)}
+                  className={styles.selectElement}
+                >
+                  <MenuItem value={EMOJI_STYLE_NATIVE} className={styles.selectElementItem}>Native</MenuItem>
+                  <MenuItem value={EMOJI_STYLE_TWEMOJI} className={styles.selectElementItem}>Twemoji</MenuItem>
+                </Select>
+              </FormControl>
+            </SettingItem>
+          </div>
+        </div>
+      </StyledEngineProvider>
     </>
   );
 };
