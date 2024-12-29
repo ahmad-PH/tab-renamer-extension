@@ -1,3 +1,5 @@
+import { platform, storageGet, storageSet } from "./utils";
+
 const EXTENSION_PREFIX = "tab-renamer-extension";
 
 // App:
@@ -39,8 +41,9 @@ export const SETTINGS_KEY_EMOJI_STYLE = 'settings.emoji_style';
 // Emoji style:
 export const EMOJI_STYLE_NATIVE = "native";
 export const EMOJI_STYLE_TWEMOJI = "twemoji";
+export const EMOJI_STYLE_DEFAULT = platform === 'mac' ? EMOJI_STYLE_NATIVE : EMOJI_STYLE_TWEMOJI;
 let cachedConfig = {
-    EMOJI_STYLE: EMOJI_STYLE_NATIVE // possible values: 'native', 'twemoji'
+    EMOJI_STYLE: EMOJI_STYLE_DEFAULT
 }
 
 export const getEmojiStyle = () => cachedConfig.EMOJI_STYLE;
@@ -53,27 +56,28 @@ export const inProduction = () => {
 if (typeof chrome !== 'undefined' && chrome.storage) {
     console.log('Chrome storage API available, initializing emoji style sync');
 
-    // Initial load
-    chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE, (result) => {
-        const emojiStyle = result[SETTINGS_KEY_EMOJI_STYLE];
+    (async function initializeEmojiStyleFromStorage() {
+        const emojiStyle = await storageGet(SETTINGS_KEY_EMOJI_STYLE);
         if (emojiStyle) {
-            console.log('Updating cached emoji style from storage:', {
-                from: cachedConfig.EMOJI_STYLE,
-                to: emojiStyle
-            });
+            // console.log('Updating cached emoji style from storage:', {
+            //     from: cachedConfig.EMOJI_STYLE,
+            //     to: emojiStyle
+            // });
             cachedConfig.EMOJI_STYLE = emojiStyle;
+        } else { // Emoji style not set in storage yet:
+            cachedConfig.EMOJI_STYLE = EMOJI_STYLE_DEFAULT;
+            await storageSet({ [SETTINGS_KEY_EMOJI_STYLE]: EMOJI_STYLE_DEFAULT });
         }
-    });
+    })();
 
     // Listen for changes
     chrome.storage.sync.onChanged.addListener((changes) => {
-        console.log('Change detected:', changes);
         if (changes[SETTINGS_KEY_EMOJI_STYLE]) {
-            console.log('Emoji style change detected:', {
-                oldValue: changes[SETTINGS_KEY_EMOJI_STYLE].oldValue,
-                newValue: changes[SETTINGS_KEY_EMOJI_STYLE].newValue,
-                currentCachedValue: cachedConfig.EMOJI_STYLE
-            });
+            // console.log('Emoji style change detected:', {
+            //     oldValue: changes[SETTINGS_KEY_EMOJI_STYLE].oldValue,
+            //     newValue: changes[SETTINGS_KEY_EMOJI_STYLE].newValue,
+            //     currentCachedValue: cachedConfig.EMOJI_STYLE
+            // });
             cachedConfig.EMOJI_STYLE = changes[SETTINGS_KEY_EMOJI_STYLE].newValue;
         }
     });

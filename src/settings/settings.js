@@ -2,7 +2,6 @@ import React, { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
 import SettingItem from './components/SettingItem/SettingItem';
-import { styled } from '@mui/material/styles';
 
 import bgScriptApi from "../backgroundScriptApi";
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
