@@ -60,7 +60,8 @@
             "resources": [
                 "assets/emoji_picker_icon.png",
                 "assets/emojis.json",
-                "assets/icon*.png"
+                "assets/icon*.png",
+                "settings/settings.html"
             ],
             "matches": [
                 "<all_urls>"
