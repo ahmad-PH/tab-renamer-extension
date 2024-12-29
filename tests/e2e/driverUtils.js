@@ -9,7 +9,7 @@ const {
     COMMAND_DISCARD_TAB,
     EMOJI_PICKER_ID,
     COMMAND_CLOSE_WELCOME_TAB,
-    SETTINGS_BUTTON_ID,
+    SETTING_BUTTON_TEST_STUB_ID,
 } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } = require('../../src/config.js');
@@ -108,7 +108,7 @@ class DriverUtils {
      * Tries to click on the gear icon. You need to have opened the rename dialog first.
      */
     async openSettingsPage() {
-        await this.driver.findElement(this.shadowRootLocator.byId(SETTINGS_BUTTON_ID)).click();
+        await this.driver.findElement(this.shadowRootLocator.byId(SETTING_BUTTON_TEST_STUB_ID)).click();
         await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
     }
 

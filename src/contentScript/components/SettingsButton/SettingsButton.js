@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SettingsButton.module.css';
-import { SETTINGS_BUTTON_ID } from '../../../config';
+import { SETTING_BUTTON_TEST_STUB_ID, SETTINGS_BUTTON_ID } from '../../../config';
 
 export default function SettingsButton() {
     const handleClick = () => {
@@ -10,6 +10,12 @@ export default function SettingsButton() {
             window.open(chrome.runtime.getURL('settings/settings.html'));
         }
     };
+
+    // This element only exists to provide a stable clickable surface for e2e tests, because the css applied to
+    // the settings button makes it not-interactable in the headless mode.
+    const testStub = (
+        <div className={styles.testStub} id={SETTING_BUTTON_TEST_STUB_ID} onClick={handleClick}/>
+    );
 
     return (
         <>
@@ -28,6 +34,7 @@ export default function SettingsButton() {
                     </button>
                 </div>
             </div>
+            {testStub}
         </>
     );
 } 
