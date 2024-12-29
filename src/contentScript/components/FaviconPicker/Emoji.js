@@ -5,6 +5,7 @@ import * as types from '../../../types';
 import styles from './Emoji.module.css';
 import { SystemEmojiFavicon, TwemojiFavicon } from '../../../favicon';
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config.js';
+import { platform } from '../../../utils';
 // import twemoji from 'twemoji';
 
 /**
@@ -18,8 +19,9 @@ export const Emoji = ({ emoji, onClick }) => {
     let faviconToReturn = null;
     if (getEmojiStyle() === EMOJI_STYLE_NATIVE) {
         faviconToReturn = new SystemEmojiFavicon(emoji.character);
+        const styleObject = platform === 'win' ? {transform: 'translateX(-4.5px)'} : {};
         emojiComponent = (
-            <span className={styles.emojiWrapper}>
+            <span className={styles.emojiWrapper} style={styleObject}>
                 {emoji.character}
             </span>
         );
