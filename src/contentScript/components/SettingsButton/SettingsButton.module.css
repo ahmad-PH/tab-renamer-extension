@@ -1,12 +1,12 @@
 .triggerArea {
-    position: absolute;
+    position: fixed;
     right: -55px;
     bottom: 20px;
     width: 90px;
     height: 35px;
     display: flex;
     z-index: 9999;
-    transition: right 0.3s ease;
+    transition: right 0.5s ease;
 }
 
 .relativeContainer {
@@ -24,7 +24,7 @@
     background-color: rgb(189, 189, 189);
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    transition: opacity 0.3s ease-in;
+    transition: opacity 0.5s ease-in;
 }
 
 .settingsButton {
@@ -38,13 +38,14 @@
     align-items: center;
     background: none;
     border: none;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
 }
 
-.icon {
+.settingsSVG {
+    cursor: pointer;
     width: 35px;
     height: 35px;
+    fill: rgb(189, 189, 189);
 }
 
 .triggerArea:hover {
@@ -53,7 +54,7 @@
 
 .triggerArea:hover .visibleTriggerArea {
     opacity: 0;
-    transition: opacity 0s;
+    transition: opacity 0.1s;
 }
 
 .triggerArea:hover .settingsButton {
