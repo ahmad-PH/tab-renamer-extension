@@ -24,7 +24,6 @@ const express = require('express');
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
 const { startExpressServer } = require('./utils.js');
-const path = require('path');
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('SeleniumUITests', 'warn');
 

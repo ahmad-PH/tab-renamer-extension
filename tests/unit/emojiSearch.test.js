@@ -1,9 +1,6 @@
 const appRoot = require('app-root-path');
 const { findMatchingEmojis } = require(`${appRoot}/src/contentScript/emojiSearch`);
 const fs = require('fs');
-const { getLogger } = require(`${appRoot}/src/log`);
-
-const log = getLogger('emojiSearch.test.js', 'debug');
 
 describe('findMatchingEmojis', () => {
     const emojis = JSON.parse(fs.readFileSync(`${appRoot}/src/assets/emojis.json`, 'utf8'));
