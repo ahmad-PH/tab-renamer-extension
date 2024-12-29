@@ -4,8 +4,8 @@ import { inProduction } from './config.js';
 if (inProduction()) {
     log.setLevel('ERROR');
 } else {
-    log.setLevel('WARN');
-    // log.setLevel('DEBUG');
+    // log.setLevel('WARN');
+    log.setLevel('DEBUG');
 }
 
 /**

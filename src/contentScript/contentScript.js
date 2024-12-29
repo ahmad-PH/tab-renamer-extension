@@ -63,6 +63,7 @@ async function insertUIIntoDOM() {
     document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
 
+
 // Clean-up logic for when the extension unloads/reloads.
 const runtimePort = chrome.runtime.connect({ name: "content-script" });
 runtimePort.onDisconnect.addListener(() => {

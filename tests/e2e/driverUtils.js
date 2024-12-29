@@ -77,7 +77,8 @@ class DriverUtils {
             return await this.getAttribute(faviconElement, "href");
         } else {
             const currentUrl = new URL(await this.driver.getCurrentUrl());
-            return `${currentUrl.protocol}//${currentUrl.hostname}/favicon.ico`;
+            let portString = currentUrl.port ? `:${currentUrl.port}` : '';
+            return `${currentUrl.protocol}//${currentUrl.hostname}${portString}/favicon.ico`;
         }
     }
 

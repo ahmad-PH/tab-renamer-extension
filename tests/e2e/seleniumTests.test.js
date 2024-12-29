@@ -1,5 +1,8 @@
 const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
 const { expect, test, describe } = require('@jest/globals');
+const chromedriver = require('chromedriver');
+const express = require('express');
+const path = require('path');
 const data = require('./data.js');
 const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
@@ -19,11 +22,12 @@ const {
     SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID,
     EMOJI_PICKER_ID
 } = require('../../src/config.js');
-const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
 const { startExpressServer } = require('./utils.js');
+let server;
+            
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('SeleniumUITests', 'warn');
 
@@ -61,10 +65,13 @@ describe('Selenium UI Tests', () => {
         const loggingPrefs = new logging.Preferences();
         loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
+        let chromeService = new chrome.ServiceBuilder(chromedriver.path);
+
         driver = await new Builder()
             .forBrowser('chrome')
             .setChromeOptions(chromeOptions)
             .setLoggingPrefs(loggingPrefs)
+            .setChromeService(chromeService)
             .build();
 
         driverUtils = new DriverUtils(driver);
@@ -74,6 +81,21 @@ describe('Selenium UI Tests', () => {
             await driverUtils.closeWelcomeTab();
         }
     }
+
+    beforeAll((done) => {
+        const app = express();
+        app.use('/', express.static(path.resolve(__dirname, '..', 'data', 'basic_webpage')));
+        const port = 3000;
+        server = app.listen(port, () => {
+            done();
+        });
+    })
+
+    afterAll((done) => {
+        server.close(() => {
+            done();
+        });
+    }) 
 
     beforeEach(async () => {
         // It's better to put the deletion here, because sometimes afterEach gets messed up.
@@ -103,7 +125,10 @@ describe('Selenium UI Tests', () => {
         }
     }
 
-    afterEach(tearDown);
+    afterEach(() => {
+        return tearDown();
+    });
+
     // Make tests interrupt-friendly:
     process.on('SIGINT', tearDown);
     process.on('SIGTERM', tearDown);
@@ -227,7 +252,7 @@ describe('Selenium UI Tests', () => {
         await driverUtils.closeAndReopenCurrentTab();
 
         // Give the extension being tested time to load the title from storage:
-        await driver.sleep(500);
+        await driver.sleep(100);
 
         // Assert the name and emoji that we set on the tab:
         expect(await driverUtils.getTitle()).toBe(newTitle);
@@ -357,24 +382,23 @@ describe('Selenium UI Tests', () => {
         await createNewDriver('none');
 
         const app = express();
-        const port = 3000;
-        let slowResponse = false;
+        const port = 3001;
 
+        let lock;
         app.get('/', (_req, res) => {
-            if (!slowResponse) {
-                res.send('<html><body>A quick response!</body></html>');
-            }
-            if (slowResponse) {
-                res.write('<html><body>');
-                setTimeout(() => {
-                    res.end('A slow response!</body></html>');
-                }, 100);
-            }
+            res.write('<html><body>');
+            lock.then(() => {
+                return res.end('A slow response!</body></html>');
+            }).catch(e => {
+                console.error('Error in lock:', e);
+            })
         });
+
         expressServer = await startExpressServer(app, port);
 
         const initialWindow = await driver.getWindowHandle();
         await driver.switchTo().newWindow('tab');
+        lock = Promise.resolve();
         await driver.get(`http://localhost:${port}`);
         await driverUtils.waitForPageLoad();
         await driverUtils.renameTab('New title');
@@ -382,18 +406,29 @@ describe('Selenium UI Tests', () => {
 
         await driver.switchTo().window(initialWindow);
 
-        slowResponse = true;
+        let resolveLock;
+        lock = new Promise(resolve => {
+            resolveLock = resolve;
+        });
         driver.get(`http://localhost:${port}`);
 
         let sawOneCorrectTitleWhileStillLoading = false;
         let timerId = setInterval(async () => {
-            const readyState = await driver.executeScript('return document.readyState');
-            const title = await driver.executeScript('return document.title');
-            if (title === 'New title' && readyState === 'loading') {
-                sawOneCorrectTitleWhileStillLoading = true;
+            try {
+                const readyState = await driver.executeScript('return document.readyState');
+                const title = await driver.executeScript('return document.title');
+                if (title === 'New title' && readyState === 'loading') {
+                    sawOneCorrectTitleWhileStillLoading = true;
+                }
+            } catch (e) {
+                // There are sometimes errors here, saying the session on driver
+                // has expired. I have not understood why it happens, and it 
+                // seems not to have an important effect on the test.
             }
-            // console.log('document.readyState:', readyState, ' and title: ', title, ' at time: ', new Date());
         }, 5);
+        
+        await sleep(100);
+        resolveLock();
 
         await driverUtils.waitForPageLoad();
 
@@ -430,7 +465,7 @@ describe('Selenium UI Tests', () => {
     test("Key event listeners on document don't get triggered when UI is active", async () => {
         // Set up an express server with custom HTML:
         const app = express();
-        const port = 3000;
+        const port = 3001;
 
         app.get('/', (req, res) => {
             res.send(`

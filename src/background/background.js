@@ -4,6 +4,7 @@ import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatur
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config.js";
+import { handleChromeUpdate } from "./handleChromeUpdate";
 
 const log = getLogger('background', 'debug');
 
@@ -139,6 +140,8 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
+    } else if (details.reason === "chrome_update") {
+        await handleChromeUpdate();
     }
 });
 
@@ -203,4 +206,3 @@ if (!inProduction()) {
 }
 
 startTheGarbageCollector();
-

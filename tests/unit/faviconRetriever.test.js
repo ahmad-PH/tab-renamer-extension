@@ -1,6 +1,5 @@
-const appRoot = require('app-root-path');
 const { JSDOM } = require('jsdom');
-const { default: FaviconRetriever } = require(`${appRoot}/src/contentScript/faviconRetriever.js`);
+const { default: FaviconRetriever } = require('src/contentScript/faviconRetriever.js');
 
 describe('FaviconRetriever', () => {
     let faviconRetriever;

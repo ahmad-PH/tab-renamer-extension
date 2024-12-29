@@ -6,6 +6,11 @@ const youtubeUrl = 'https://www.youtube.com/';
 const ahmadphosseiniUrl = 'https://www.ahmadphosseini.com/';
 const ahmadphosseiniFaviconUrl = '/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_32x32_fill_lanczos_center_2.png';
 const websites = [
+    {
+        url: 'http://localhost:3000/index.html',
+        faviconUrl: 'http://localhost:3000/favicon.ico',
+        title: 'Test Page',
+    },
     {url: googleUrl, faviconUrl: googleFaviconUrl, title: 'Google'},
     {url: ahmadphosseiniUrl, faviconUrl: ahmadphosseiniFaviconUrl, title: 'Ahmad Pourihosseini'},
     {url: 'https://motherfuckingwebsite.com/'},
