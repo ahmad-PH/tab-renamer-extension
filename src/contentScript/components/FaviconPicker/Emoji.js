@@ -44,6 +44,7 @@ export const Emoji = ({ emoji, onClick }) => {
             id={emoji.character}
             data-unicode={emoji.unicode_code_point}
             data-shortcode={emoji.shortcode}
+            data-style={getEmojiStyle()}
             onClick={() => onClick(faviconToReturn)}
             title={strippedShortcode}
         >

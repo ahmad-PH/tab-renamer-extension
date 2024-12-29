@@ -5,13 +5,25 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID, OVERLAY_ID, FAVICON_PICKER_ID } = require('../../src/config.js');
+const {
+    ROOT_ELEMENT_ID,
+    INPUT_BOX_ID,
+    SEARCH_BAR_ID,
+    SEARCH_RESULTS_ID,
+    PICKED_EMOJI_ID,
+    OVERLAY_ID,
+    FAVICON_PICKER_ID,
+    COMMAND_SET_EMOJI_STYLE,
+    EMOJI_STYLE_NATIVE,
+    EMOJI_STYLE_TWEMOJI,
+    SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID,
+    EMOJI_PICKER_ID
+} = require('../../src/config.js');
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
 const { startExpressServer } = require('./utils.js');
-const { COMMAND_SET_EMOJI_STYLE, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
 const path = require('path');
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('SeleniumUITests', 'warn');
@@ -165,7 +177,7 @@ describe('Selenium UI Tests', () => {
 
             test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
                 await driver.get(data.websites[0].url);
-                await driverUtils.openEmojiPicker();
+                await driverUtils.openFaviconPicker();
                 let activeElement = await driverUtils.getShadowRootActiveElement();
                 expect(activeElement).not.toBeNull();
                 expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
@@ -178,7 +190,7 @@ describe('Selenium UI Tests', () => {
 
             test('Can search for emojis', async () => {
                 await driver.get(data.websites[0].url);
-                await driverUtils.openEmojiPicker();
+                await driverUtils.openFaviconPicker();
 
                 const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
                 await emojiSearchBar.sendKeys('halo');
@@ -448,5 +460,37 @@ describe('Selenium UI Tests', () => {
         let body = await driver.findElement(By.id('testContainer'));
         let bodyText = await body.getText();
         expect(bodyText).not.toContain('A key pressed');
+    });
+
+
+    describe('Settings Page', () => {
+        test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
+            // Go to the Settings Page and switch style to Twemoji.
+            await driver.get(data.websites[0].url);
+            await driverUtils.openRenameDialog();
+            const currentWindowHandle = await driver.getWindowHandle();
+            await driverUtils.switchToNewTabAfterPerforming(async () => {
+                await driverUtils.openSettingsPage();
+            });
+            await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).click();
+
+            const twemojiOption = await driver.findElement(By.xpath("//li[contains(text(), 'Twemoji')]"));
+            await twemojiOption.click();
+
+            // Close the settings page, go back to original tab, check emoji style.
+            await driver.close();
+            await driver.switchTo().window(currentWindowHandle);
+
+            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
+            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(EMOJI_PICKER_ID));
+            const emojiElement = await emojiPicker.findElement(By.id('😇'));
+            expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
+
+            // Re-open the settings page, and check that the style is still Twemoji:
+            await driverUtils.switchToNewTabAfterPerforming(async () => {
+                await driverUtils.openSettingsPage();
+            });
+            expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
+        });
     });
 });

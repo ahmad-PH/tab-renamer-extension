@@ -1,5 +1,16 @@
 const { WebDriver, Key, By, until, WebElement } = require('selenium-webdriver');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID, EMOJI_REMOVE_BUTTON_ID, COMMAND_OPEN_RENAME_DIALOG, COMMAND_DISCARD_TAB, EMOJI_PICKER_ID, COMMAND_CLOSE_WELCOME_TAB } = require('../../src/config.js');
+const { 
+    ROOT_ELEMENT_ID,
+    INPUT_BOX_ID,
+    FAVICON_PICKER_ID,
+    PICKED_EMOJI_ID,
+    EMOJI_REMOVE_BUTTON_ID,
+    COMMAND_OPEN_RENAME_DIALOG,
+    COMMAND_DISCARD_TAB,
+    EMOJI_PICKER_ID,
+    COMMAND_CLOSE_WELCOME_TAB,
+    SETTINGS_BUTTON_ID,
+} = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } = require('../../src/config.js');
 const { Favicon } = require('../../src/favicon');
@@ -37,13 +48,13 @@ class DriverUtils {
         await this.submitRenameDialog();
     }
 
-    async openEmojiPicker() {
+    async openFaviconPicker() {
         await this.openRenameDialog();
         await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
     }
     
     async setFavicon(emoji) {
-        await this.openEmojiPicker();
+        await this.openFaviconPicker();
         const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_PICKER_ID));
         const emojiElement = await emojiPicker.findElement(By.id(emoji));
         await emojiElement.click();
@@ -93,6 +104,14 @@ class DriverUtils {
         await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
     }
 
+    /**
+     * Tries to click on the gear icon. You need to have opened the rename dialog first.
+     */
+    async openSettingsPage() {
+        await this.driver.findElement(this.shadowRootLocator.byId(SETTINGS_BUTTON_ID)).click();
+        await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
+    }
+
     async getAttribute(element, attribute) {
         return await this.driver.executeScript(`return arguments[0].getAttribute("${attribute}")`, element);
     }
@@ -101,9 +120,9 @@ class DriverUtils {
         return await this.driver.executeScript("return document.title;");
     }
 
-    async openTabToURL(url) {
+    async switchToNewTabAfterPerforming(action) {
         const originalHandles = await this.driver.getAllWindowHandles();
-        await this.driver.executeScript(`window.open("${url}", "_blank");`);
+        await action();
         const newHandles = await this.driver.getAllWindowHandles();
         const newTabHandle = newHandles.find(handle => !originalHandles.includes(handle));
         await this.driver.switchTo().window(newTabHandle);
@@ -112,6 +131,12 @@ class DriverUtils {
                 return readyState === 'complete';
             });
         });
+    }
+
+    async openTabToURL(url) {
+        await this.switchToNewTabAfterPerforming(() => 
+            this.driver.executeScript(`window.open("${url}", "_blank");`)
+        );
     }
 
     async closeAllTabs() {

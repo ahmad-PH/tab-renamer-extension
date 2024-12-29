@@ -20,6 +20,7 @@ export const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 
 // Settings Button:
 export const SETTINGS_BUTTON_ID = `${EXTENSION_PREFIX}-settings-button`;
+export const SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID = `${EXTENSION_PREFIX}-settings-page-emoji-style-select`;
 
 // Commands:
 export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;

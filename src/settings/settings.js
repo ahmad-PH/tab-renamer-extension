@@ -5,7 +5,7 @@ import SettingItem from './components/SettingItem/SettingItem';
 import { styled } from '@mui/material/styles';
 
 import bgScriptApi from "../backgroundScriptApi";
-import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE } from "../config";
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
 import { getLogger } from "../log";
 import { Select, MenuItem, FormControl } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
@@ -34,13 +34,6 @@ const SettingsPage = () => {
     setEmojiStyle(selectedStyle);
   };
 
-  const StyledSelect = styled(Select)(() => ({
-    fontFamily: 'Roboto, sans-serif',
-    fontSize: '14px',
-  }));
-
-  console.log("In settings.js, styles property is:", styles);
-
   return (
     <>
       <StyledEngineProvider injectFirst>
@@ -58,7 +51,7 @@ const SettingsPage = () => {
             >
               <FormControl sx={{ m: 1, minWidth: 120}} size="small">
                 <Select
-                  id="emoji-style-select"
+                  id={SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID}
                   value={emojiStyle}
                   onChange={(e) => handleEmojiStyleChange(e.target.value)}
                   className={styles.selectElement}
