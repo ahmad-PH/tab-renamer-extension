@@ -1,0 +1,30 @@
+.settingItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.settingItem:last-child {
+    border-bottom: none;
+}
+
+.settingLabel {
+    flex: 0 0 200px;
+    padding-right: 24px;
+}
+
+.settingLabel label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.settingLabel .description {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}

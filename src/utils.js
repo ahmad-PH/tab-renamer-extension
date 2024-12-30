@@ -1,4 +1,17 @@
-import log from "./log";
+/** @module utils - This module should absolutely not import anything from other modules, as it is meant to 
+ * only contain state-less, utility functions. I have even broken the dependency to the logger module to respect
+ * this rule.
+*/
+import { getLogger } from "loglevel";
+
+const log = getLogger('utils');
+
+const inProduction = typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
+if (inProduction) {
+    log.setLevel('ERROR');
+} else {
+    log.setLevel('DEBUG');
+}
 
 /**
  * Asserts the type of a value.
@@ -8,7 +21,7 @@ import log from "./log";
  * @returns {T} The value, if it is of the correct type.
  * @throws {TypeError} If the value is not of the correct type.
  */
-export function assertType(value, type) {
+export function castType(value, type) {
     if (!(value instanceof type)) {
         throw new TypeError(`Expected value to be of type ${type.name}, but received ${typeof value}`);
     }
@@ -29,8 +42,22 @@ export function emojiToDataURL(emoji, sideLength = 64) {
     // Get the canvas context and set the emoji
     const ctx = canvas.getContext('2d');
     ctx.font = `${sideLength}px serif`;
-    ctx.fillText(emoji, 0, sideLength - 8);
+    const textX = platform === 'win' ? -12 : 0;
+    ctx.fillText(emoji, textX, sideLength - 8);
     return canvas.toDataURL();
+}
+
+
+/**
+ * 
+ * @param {string} emoji
+ * @param {string} joinCharacter
+ * @returns code point, of code points of the emoji, joined by the joinCharacter
+ */
+export function getEmojiCodePoint(emoji, joinCharacter = '-') {
+    // toString(16) converts codepoints to hexademical
+    const codePoints = Array.from(emoji).map(symbol => symbol.codePointAt(0).toString(16));
+    return codePoints.join(joinCharacter);
 }
 
 
@@ -54,7 +81,10 @@ export function storageSet(items) {
 /**
  * Promisified version of chrome.storage.sync.get.
  * @param {(null|string|number|(string|number)[])} keys - The key or keys to retrieve. Can be a single key (string or number) or an array of keys.
- * @returns {Promise} - Returns a promise that resolves with the requested items. If a single key is requested, the promise resolves with the value of that key. If multiple keys are requested, the promise resolves with an object containing the keys and their corresponding values.
+ * @returns {Promise} - Returns a promise that resolves with the requested items. If a single key is requested, the promise
+ *                      resolves with the value of that key. If multiple keys are requested, the promise resolves with an 
+ *                      object containing the keys and their corresponding values. When a key doesn't exist, `underfined`
+ *                      is returned for that key.   
  */
 export function storageGet(keys) {
     // Utility flexibility functionality:
@@ -89,3 +119,12 @@ export function storageGet(keys) {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+let platform = 'mac';
+if (typeof navigator !== 'undefined') {
+    const platformString = navigator.userAgent.toLowerCase();
+    platform = platformString.includes('mac') ? 'mac' :
+        platformString.includes('win') ? 'win' : 
+        platformString.includes('linux') ? 'linux' : 'other';
+}
+export { platform };

@@ -8,7 +8,20 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
-const { ROOT_ELEMENT_ID, INPUT_BOX_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, PICKED_EMOJI_ID, OVERLAY_ID, FAVICON_PICKER_ID } = require('../../src/config.js');
+const {
+    ROOT_ELEMENT_ID,
+    INPUT_BOX_ID,
+    SEARCH_BAR_ID,
+    SEARCH_RESULTS_ID,
+    PICKED_EMOJI_ID,
+    OVERLAY_ID,
+    FAVICON_PICKER_ID,
+    COMMAND_SET_EMOJI_STYLE,
+    EMOJI_STYLE_NATIVE,
+    EMOJI_STYLE_TWEMOJI,
+    SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID,
+    EMOJI_PICKER_ID
+} = require('../../src/config.js');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
@@ -16,7 +29,7 @@ const { startExpressServer } = require('./utils.js');
 let server;
             
 // eslint-disable-next-line no-unused-vars
-const log = getLogger('SeleniumUITests');
+const log = getLogger('SeleniumUITests', 'warn');
 
 // eslint-disable-next-line no-unused-vars
 const SECONDS = 1000, MINUTES = 60 * SECONDS;
@@ -86,6 +99,7 @@ describe('Selenium UI Tests', () => {
 
     beforeEach(async () => {
         // It's better to put the deletion here, because sometimes afterEach gets messed up.
+        log.debug("Creating new driver")
         await fs.rm('/tmp/chrome-profile', { recursive: true, force: true });
         await createNewDriver();
     });
@@ -93,12 +107,12 @@ describe('Selenium UI Tests', () => {
     const tearDown = async () => { 
         if (driver) {
             const logs = await driver.manage().logs().get(logging.Type.BROWSER);
-            const extensionPrefix = 'chrome-extension://klljeoabgpehcibnkgcfaipponlgpkfc/';
+            const extensionPattern = /chrome-extension:\/\/[^/]+\//;
             // eslint-disable-next-line no-unused-vars
             const extensionLogs = logs.filter(log => (
-                log.message.startsWith(extensionPrefix) && log.message.includes('#')
-            )).map(log => log.message.replace(extensionPrefix, ''));
-            // console.log('extension logs:', extensionLogs);
+                log.message.startsWith('chrome-extension://') && log.message.includes('#')
+            )).map(log => log.message.replace(extensionPattern, ''));
+            log.debug('extension logs:', extensionLogs);
             await driver.quit();
         }
         driver = null;
@@ -163,59 +177,73 @@ describe('Selenium UI Tests', () => {
     });
 
     describe('Emoji picker', () => {
-        test('Can set emojis', async () => {
-            await driver.get(data.websites[0].url);
-            await driverUtils.setFavicon('😃');
-            expect(await driverUtils.faviconIsEmoji()).toBe(true);
-        });
+        const emojiStyles = [EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI];
+        // const emojiStyles = [EMOJI_STYLE_NATIVE];
+        describe.each(emojiStyles)('with emoji style: %s', (emojiStyle) => {
+            beforeEach(async () => {
+                if (!process.env.HEADED) {
+                    // There is a strange difference in behaviour between headless and headed mode, where in headed 
+                    // mode, you will have one page loaded always, which results in contentScript being loaded and 
+                    // listeners being registered. But with headless mode, this won't happen, and no listeners
+                    // registered, which means the dispatchEvent will not be received.
+                    await driver.get(data.websites[0].url);
+                }
+                await driver.executeScript(`document.dispatchEvent(new MessageEvent('${COMMAND_SET_EMOJI_STYLE}', { data: {style: "${emojiStyle}"}}));`);
+            });
 
-        test('Emojis not on page before emoji picker being clicked', async () => {
-            await driver.get(data.websites[0].url);
-            await driverUtils.openRenameDialog();
-            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
-            const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
-            expect(elements.length).toBe(0);
-        });
+            test('Can set emojis', async () => {
+                await driver.get(data.websites[0].url);
+                await driverUtils.setFavicon('😇');
+                expect(await driverUtils.faviconIsEmoji(emojiStyle)).toBe(true);
+            });
 
-        test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
-            await driver.get(data.websites[0].url);
-            await driverUtils.openEmojiPicker();
-            let activeElement = await driverUtils.getShadowRootActiveElement();
-            expect(activeElement).not.toBeNull();
-            expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
-
-            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
-            activeElement = await driverUtils.getShadowRootActiveElement();
-            expect(activeElement).not.toBeNull();
-            expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
-        });
-
-        test('Can search for emojis', async () => {
-            await driver.get(data.websites[0].url);
-            await driverUtils.openEmojiPicker();
-
-            const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
-            await emojiSearchBar.sendKeys('halo');
-
-            // Verify that search results contains the halo emoji
-            const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
-            const xpathForEmoji = (emoji) => `.//*[contains(text(),'${emoji}')]`;
-            const elements = await searchResults.findElements(By.xpath(xpathForEmoji('😇')));
-            expect(elements.length).toBe(1);
-
-            // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
-            const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
-            for (const emoji of commonEmojis) {
-                const elements = await searchResults.findElements(By.xpath(xpathForEmoji(emoji)));
+            test('Emojis not on page before emoji picker being clicked', async () => {
+                await driver.get(data.websites[0].url);
+                await driverUtils.openRenameDialog();
+                const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
+                const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
                 expect(elements.length).toBe(0);
-            }
+            });
 
-            // Also make sure it is clickable and will set the correct favicon
-            await elements[0].click()
+            test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
+                await driver.get(data.websites[0].url);
+                await driverUtils.openFaviconPicker();
+                let activeElement = await driverUtils.getShadowRootActiveElement();
+                expect(activeElement).not.toBeNull();
+                expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
 
-            const pickedEmojiElement = await driver.findElement(driverUtils.shadowRootLocator.byId(PICKED_EMOJI_ID));
-            const dataEmoji = await pickedEmojiElement.getAttribute('data-emoji');
-            expect(dataEmoji).toBe('😇');
+                await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
+                activeElement = await driverUtils.getShadowRootActiveElement();
+                expect(activeElement).not.toBeNull();
+                expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
+            });
+
+            test('Can search for emojis', async () => {
+                await driver.get(data.websites[0].url);
+                await driverUtils.openFaviconPicker();
+
+                const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
+                await emojiSearchBar.sendKeys('halo');
+
+                // Verify that search results contains the halo emoji
+                const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
+                const elements = await searchResults.findElements(By.id('😇'));
+                expect(elements.length).toBe(1);
+
+                // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
+                const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
+                for (const emoji of commonEmojis) {
+                const elements = await searchResults.findElements(By.id(emoji));
+                    expect(elements.length).toBe(0);
+                }
+
+                // Also make sure it is clickable and will set the correct favicon
+                await elements[0].click()
+
+                const pickedEmojiElement = await driver.findElement(driverUtils.shadowRootLocator.byId(PICKED_EMOJI_ID));
+                const dataEmoji = await pickedEmojiElement.getAttribute('data-emoji');
+                expect(dataEmoji).toBe('😇');
+            });
         });
     });
 
@@ -472,5 +500,37 @@ describe('Selenium UI Tests', () => {
         let body = await driver.findElement(By.id('testContainer'));
         let bodyText = await body.getText();
         expect(bodyText).not.toContain('A key pressed');
+    });
+
+
+    describe('Settings Page', () => {
+        test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
+            // Go to the Settings Page and switch style to Twemoji.
+            await driver.get(data.websites[0].url);
+            await driverUtils.openRenameDialog();
+            const currentWindowHandle = await driver.getWindowHandle();
+            await driverUtils.switchToNewTabAfterPerforming(async () => {
+                await driverUtils.openSettingsPage();
+            });
+            await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).click();
+
+            const twemojiOption = await driver.findElement(By.xpath("//li[contains(text(), 'Twemoji')]"));
+            await twemojiOption.click();
+
+            // Close the settings page, go back to original tab, check emoji style.
+            await driver.close();
+            await driver.switchTo().window(currentWindowHandle);
+
+            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
+            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(EMOJI_PICKER_ID));
+            const emojiElement = await emojiPicker.findElement(By.id('😇'));
+            expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
+
+            // Re-open the settings page, and check that the style is still Twemoji:
+            await driverUtils.switchToNewTabAfterPerforming(async () => {
+                await driverUtils.openSettingsPage();
+            });
+            expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
+        });
     });
 });

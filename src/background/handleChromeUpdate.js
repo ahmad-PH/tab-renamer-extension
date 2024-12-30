@@ -1,7 +1,7 @@
 import { storageGet, storageSet } from '../utils.js';
 import { getLogger } from '../log.js';
 
-const log = getLogger('handleChromeUpdate', 'debug');
+const log = getLogger('handleChromeUpdate', 'warn');
 
 async function handleChromeUpdate() {
     log.debug('handleChromeUpdate called ...');

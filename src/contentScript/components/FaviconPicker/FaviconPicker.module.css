@@ -66,28 +66,6 @@
     font-size: 16px;
 }
 
-.emojiItem {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: background-color 0.3s ease;
-    text-align: center;
-    width: 32px;
-    height: 32px;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
-}
-
-.emojiWrapper {
-    cursor: pointer;
-    font-size: 21px;
-}
-  
-.emojiItem:hover {
-    background-color: rgba(169, 169, 255, 0.829);
-    border-radius: 6px;
-}
-
 .emojiCategoryTitle {
     font-family: 'Arial', sans-serif !important;
     color: #6f6f6f;

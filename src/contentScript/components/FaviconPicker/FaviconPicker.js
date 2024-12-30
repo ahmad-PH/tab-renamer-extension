@@ -1,15 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import styles from './EmojiPicker.module.css';
+import styles from './FaviconPicker.module.css';
 import PropTypes from 'prop-types';
-import { EMOJI_PICKER_ID, EMOJI_REMOVE_BUTTON_ID, SEARCH_BAR_ID, SEARCH_RESULTS_ID, ALL_EMOJIS_ID } from '../../../config';
+import { 
+    EMOJI_PICKER_ID,
+    EMOJI_REMOVE_BUTTON_ID,
+    SEARCH_BAR_ID,
+    SEARCH_RESULTS_ID,
+    ALL_EMOJIS_ID 
+} from '../../../config.js';
 import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';
+import { Emoji } from './Emoji';
 
 // eslint-disable-next-line no-unused-vars
-const log = getLogger('EmojiPicker', 'debug');
+export const log = getLogger('EmojiPicker', 'debug');
 
-const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
+const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
     const [allEmojis, setAllEmojis] = useState({});
     const [isVisible, setIsVisible] = useState(false);
@@ -66,7 +73,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                                 </div>
                                 <div className={styles.emojiGrid}>
                                     {emojis.map(emoji => (
-                                        <Emoji emoji={emoji} key={emoji.unicode} onClick={onEmojiClick}/>
+                                        <Emoji emoji={emoji} key={emoji.character} onClick={onFaviconClick}/>
                                     ))}
                                 </div>
                             </div>
@@ -75,7 +82,7 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
                 ) : (
                     <div id={SEARCH_RESULTS_ID} className={classNames(styles.searchResults, styles.emojiGrid)}>
                         {matchingEmojis.map(emoji => (
-                            <Emoji emoji={emoji} key={emoji.unicode} onClick={onEmojiClick}/>
+                            <Emoji emoji={emoji} key={emoji.unicode} onClick={onFaviconClick}/>
                         ))}
                     </div>
                 )}
@@ -84,8 +91,8 @@ const EmojiPicker = ({ onEmojiClick, onRemoveEmoji }) => {
     );
 }
 
-EmojiPicker.propTypes = {
-    onEmojiClick: PropTypes.func.isRequired,
+FaviconPicker.propTypes = {
+    onFaviconClick: PropTypes.func.isRequired,
     onRemoveEmoji: PropTypes.func.isRequired,
 }
 
@@ -113,27 +120,4 @@ SearchBar.propTypes = {
     onSearchBarChanged: PropTypes.func.isRequired,
 }
 
-const Emoji = ({ emoji, onClick }) => {
-    const strippedShortcode = emoji.shortcode.substring(1, emoji.shortcode.length - 1);
-
-    return (
-        <div 
-            className={styles.emojiItem}
-            data-unicode={emoji.unicode} 
-            data-shortcode={emoji.shortcode}
-            onClick={() => onClick(emoji.emoji)}
-            title={strippedShortcode}
-        >
-            <span className={styles.emojiWrapper}>
-                {emoji.emoji}
-            </span>
-        </div>
-    );
-}
-
-Emoji.propTypes = {
-    emoji: PropTypes.object.isRequired,
-    onClick: PropTypes.func.isRequired,
-}
-
-export default EmojiPicker;
+export default FaviconPicker;

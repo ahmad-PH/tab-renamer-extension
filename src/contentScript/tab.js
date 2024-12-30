@@ -1,9 +1,9 @@
 import { Favicon } from "../favicon";
 import { getLogger } from "../log";
 import { TabSignature, FaviconDTO } from "../types";
-import bgScriptApi from "./backgroundScriptApi";
+import bgScriptApi from "../backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
-import { faviconRestorationStrategy } from "../config";
+import { faviconRestorationStrategy } from "../config.js";
 import { storageGet } from "../utils";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";

@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: hsl(210, 17%, 98%);
+    font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.topBar {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    width: 36px;
+    height: 36px;
+    margin-right: 16px;
+}
+
+.appName {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 16px;
+}
+
+.pageTitle {
+    position: absolute;
+    left: -200px;
+    font-size: 24px;
+    color: #98a2ac;
+    font-weight: 600;
+    margin-top: 8px;
+    min-width: 120px;
+}
+
+.settingsPane {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 32px 64px;
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+}
+
+.mainContainer {
+    max-width: 800px;
+    margin: 40px auto;
+    position: relative;
+}
+
+.selectElement {
+    font-size: 14px;
+}
+
+.selectElementItem {
+    font-size: 14px;
+}

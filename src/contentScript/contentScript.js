@@ -1,11 +1,11 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_ELEMENT_ID, ROOT_TAG_NAME, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, ROOT_TAG_NAME, inProduction } from "../config.js";
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { getLogger } from "../log";
-
+import bgScriptApi from "../backgroundScriptApi";
 const log = getLogger('contentScript', 'debug');
 
 // Global variables:
@@ -16,12 +16,16 @@ let tabInitializationPromise = tab.initializeForMainContentScript();
 
 async function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
+        const startTotalTime = performance.now(); 
+
         const hostElement = document.createElement(ROOT_TAG_NAME);
         document.body.appendChild(hostElement);
         const rootElement = hostElement.attachShadow({ mode: 'open' });
         root = createRoot(rootElement);
 
+        const startImportTime = performance.now();
         const { default: App, TabContext } = await import('./components/App');
+        const endImportTime = performance.now();
 
         await tabInitializationPromise;
         root.render(
@@ -30,6 +34,11 @@ async function insertUIIntoDOM() {
             </TabContext.Provider>
         );
         uiInsertedIntoDOM = true;
+
+        const endTotalTime = performance.now(); // End total timer
+
+        log.debug(`Time taken to import App component: ${endImportTime - startImportTime} ms`);
+        log.debug(`Total time taken for insertUIIntoDOM: ${endTotalTime - startTotalTime} ms`);
     }
 }
  
@@ -87,6 +96,7 @@ const discardTabListener = () => {
     }, 500);
 }
 
+// Listeners for events, only in development mode:
 if (!inProduction()) {
     log.debug('Adding discard tab listener in content script.');
     
@@ -95,4 +105,12 @@ if (!inProduction()) {
         log.debug('close welcome tab listener in content script called.');
         chrome.runtime.sendMessage({command: COMMAND_CLOSE_WELCOME_TAB});
     });
+
+    log.debug('Adding Emoji style listener in content script.');
+    document.addEventListener(COMMAND_SET_EMOJI_STYLE, 
+        /** @param {MessageEvent} event */
+        (event) => {
+            log.debug('Emoji style change listener in content script called.');
+            bgScriptApi.setEmojiStyle(event.data.style);
+        });
 }

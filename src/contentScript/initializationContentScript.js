@@ -1,6 +1,6 @@
 import { getLogger } from '../log';
 import { TabSignature } from '../types';
-import bgScriptApi from "./backgroundScriptApi";
+import bgScriptApi from "../backgroundScriptApi";
 import tab from "./tab";
 
 const log = getLogger('InitializationContentScript', 'debug');
