@@ -138,6 +138,13 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         "contexts": ["page"]
     });
 
+    chrome.contextMenus.create({
+        id: "onboardingPage",
+        title: "View Onboarding Page",
+        contexts: ["action"],
+    });
+    
+
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
     } else if (details.reason === "chrome_update") {
@@ -148,6 +155,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "renameTab") {
         chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
+    }
+    if (info.menuItemId === "onboardingPage") {
+        chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
     }
 });
 
