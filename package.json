@@ -1,6 +1,6 @@
 {
     "name": "tab-renamer-extension",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Chrome extension for customizing your tab titles and favicons for a more organized browsing experience.",
     "main": "background.js",
     "scripts": {
