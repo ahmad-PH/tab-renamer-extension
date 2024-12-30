@@ -12,7 +12,7 @@ const {
     SETTING_BUTTON_TEST_STUB_ID,
 } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
-const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } = require('../../src/config.js');
+const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
 const { Favicon } = require('../../src/favicon');
 const { getLogger } = require('../../src/log');
 
@@ -82,13 +82,13 @@ class DriverUtils {
         }
     }
 
-    async faviconIsEmoji() {
+    async faviconIsEmoji(emojiStyle = EMOJI_STYLE_NATIVE) {
         const faviconElement = this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;
-        if (getEmojiStyle() == EMOJI_STYLE_NATIVE) {
+        if (emojiStyle == EMOJI_STYLE_NATIVE) {
             hrefIsCorrect = (await this.getAttribute(faviconElement, "href")).startsWith("data:image/png;base64,");
-        } else if (getEmojiStyle() == EMOJI_STYLE_TWEMOJI) {
+        } else if (emojiStyle == EMOJI_STYLE_TWEMOJI) {
             hrefIsCorrect = (await this.getAttribute(faviconElement, "href")).startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/");
         }
         const typeMatchesIcon = (await this.getAttribute(faviconElement, "type")) === 'image/x-icon';
@@ -96,7 +96,7 @@ class DriverUtils {
     }
 
     async assertFaviconUrl(faviconUrl) {
-        const faviconElement = this.getFaviconElement();
+        const faviconElement = await this.getFaviconElement();
         expect(await this.getAttribute(faviconElement, "href")).toBe(faviconUrl);
     }
 

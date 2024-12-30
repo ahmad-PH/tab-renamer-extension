@@ -6,7 +6,7 @@ import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config.js";
 import { handleChromeUpdate } from "./handleChromeUpdate";
 
-const log = getLogger('background', 'debug');
+const log = getLogger('background', 'warn');
 
 const originalTitleStash = {};
 let welcomeTab = null;

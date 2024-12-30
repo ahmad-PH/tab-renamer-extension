@@ -1,12 +1,12 @@
 import React from 'react';
 import { log } from './FaviconPicker';
 import PropTypes from 'prop-types';
-import * as types from '../../../types';
 import styles from './Emoji.module.css';
 import { SystemEmojiFavicon, TwemojiFavicon } from '../../../favicon';
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config.js';
 import { platform } from '../../../utils';
-// import twemoji from 'twemoji';
+// eslint-disable-next-line no-unused-vars
+import * as types from '../../../types';
 
 /**
  * @param {{emoji: types.Emoji, onClick: Function}} props

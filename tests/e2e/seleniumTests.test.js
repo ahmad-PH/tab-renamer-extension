@@ -112,7 +112,7 @@ describe('Selenium UI Tests', () => {
             const extensionLogs = logs.filter(log => (
                 log.message.startsWith('chrome-extension://') && log.message.includes('#')
             )).map(log => log.message.replace(extensionPattern, ''));
-            // console.log('extension logs:', extensionLogs);
+            log.debug('extension logs:', extensionLogs);
             await driver.quit();
         }
         driver = null;
@@ -181,14 +181,20 @@ describe('Selenium UI Tests', () => {
         // const emojiStyles = [EMOJI_STYLE_NATIVE];
         describe.each(emojiStyles)('with emoji style: %s', (emojiStyle) => {
             beforeEach(async () => {
-                log.debug("Setting emoji style to: ", emojiStyle);
+                if (!process.env.HEADED) {
+                    // There is a strange difference in behaviour between headless and headed mode, where in headed 
+                    // mode, you will have one page loaded always, which results in contentScript being loaded and 
+                    // listeners being registered. But with headless mode, this won't happen, and no listeners
+                    // registered, which means the dispatchEvent will not be received.
+                    await driver.get(data.websites[0].url);
+                }
                 await driver.executeScript(`document.dispatchEvent(new MessageEvent('${COMMAND_SET_EMOJI_STYLE}', { data: {style: "${emojiStyle}"}}));`);
             });
 
             test('Can set emojis', async () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.setFavicon('😇');
-                expect(await driverUtils.faviconIsEmoji()).toBe(true);
+                expect(await driverUtils.faviconIsEmoji(emojiStyle)).toBe(true);
             });
 
             test('Emojis not on page before emoji picker being clicked', async () => {
