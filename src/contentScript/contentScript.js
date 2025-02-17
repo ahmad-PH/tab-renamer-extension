@@ -19,7 +19,7 @@ async function insertUIIntoDOM() {
         const startTotalTime = performance.now(); 
 
         const hostElement = document.createElement(ROOT_TAG_NAME);
-        document.body.appendChild(hostElement);
+        document.documentElement.appendChild(hostElement);
         const rootElement = hostElement.attachShadow({ mode: 'open' });
         root = createRoot(rootElement);
 
