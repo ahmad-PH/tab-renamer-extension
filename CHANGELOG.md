@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0] - 2024-12-29
+## [1.1.1] - 2025-02-23
 
 ### Added
 
@@ -13,6 +13,8 @@ accessible through a gear icon in the rename overlay.
 ### Fixed
 
 - An issue with the rendering of the native style emojis on Windows causing them not to be appropriately centered in their places in the emoji picker.
+
+- Partially fixed keystores while typing the tab name not being captured appropriately in some webpages.
 
 ## [1.0.1] - 2024-06-09
 
