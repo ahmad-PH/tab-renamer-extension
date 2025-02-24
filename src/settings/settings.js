@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
 import SettingItem from './components/SettingItem/SettingItem';
 
-import bgScriptApi from "../backgroundScriptApi";
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
 import { getLogger } from "../log";
 import { Select, MenuItem, FormControl } from '@mui/material';
@@ -27,9 +26,9 @@ const SettingsPage = () => {
     fetchEmojiStyle();
   }, []);
 
-  const handleEmojiStyleChange = (selectedStyle) => {
+  const handleEmojiStyleChange = async (selectedStyle) => {
     log.debug("Emoji style change handler in SettingsPage called with value:", selectedStyle);
-    bgScriptApi.setEmojiStyle(selectedStyle);
+    await chrome.storage.sync.set({[SETTINGS_KEY_EMOJI_STYLE]: selectedStyle});
     setEmojiStyle(selectedStyle);
   };
 

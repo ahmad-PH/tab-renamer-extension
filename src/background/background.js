@@ -3,8 +3,9 @@ import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config.js";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction, SETTINGS_KEY_EMOJI_STYLE } from "../config.js";
 import { handleChromeUpdate } from "./handleChromeUpdate";
+import { StorageSchemaManager } from "./storageSchemaManager";
 
 const log = getLogger('background', 'warn');
 
@@ -138,8 +139,23 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         "contexts": ["page"]
     });
 
+    chrome.contextMenus.create({
+        id: "onboardingPage",
+        title: "View Onboarding Page",
+        contexts: ["action"],
+    });
+    
+
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
+    } else if (details.reason === "update") {
+        await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
+
+        const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
+        await chrome.storage.sync.clear();
+        for (const key of Object.keys(migratedData)) {
+            await chrome.storage.sync.set({[key]: migratedData[key]});
+        }
     } else if (details.reason === "chrome_update") {
         await handleChromeUpdate();
     }
@@ -148,6 +164,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "renameTab") {
         chrome.tabs.sendMessage(tab.id, {command: COMMAND_OPEN_RENAME_DIALOG});
+    }
+    if (info.menuItemId === "onboardingPage") {
+        chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
     }
 });
 
@@ -185,7 +204,7 @@ if (!inProduction()) {
 
             case COMMAND_SET_EMOJI_STYLE: {
                 log.debug("Received set emoji style command at background.js with value:", message.style);
-                chrome.storage.sync.set({'settings.emoji_style': message.style}).catch(reason => {
+                chrome.storage.sync.set({[SETTINGS_KEY_EMOJI_STYLE]: message.style}).catch(reason => {
                     throw new Error(`Error while setting emoji style: ${reason}`);
                 });
                 break;
