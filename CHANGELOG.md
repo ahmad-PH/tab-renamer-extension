@@ -14,7 +14,7 @@ accessible through a gear icon in the rename overlay.
 
 - An issue with the rendering of the native style emojis on Windows causing them not to be appropriately centered in their places in the emoji picker.
 
-- Partially fixed keystores while typing the tab name not being captured appropriately in some webpages.
+- Partially fixed keystores not being captured appropriately while typing the tab name in some webpages. More fixes to come.
 
 ## [1.0.1] - 2024-06-09
 
