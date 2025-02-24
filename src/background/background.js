@@ -5,6 +5,7 @@ import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config.js";
 import { handleChromeUpdate } from "./handleChromeUpdate";
+import { StorageSchemaManager } from "./storageSchemaManager";
 
 const log = getLogger('background', 'warn');
 
@@ -149,6 +150,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
     } else if (details.reason === "update") {
         await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
+
+        const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
+        await chrome.storage.sync.clear();
+        for (const key of Object.keys(migratedData)) {
+            await chrome.storage.sync.set({[key]: migratedData[key]});
+        }
     } else if (details.reason === "chrome_update") {
         await handleChromeUpdate();
     }
