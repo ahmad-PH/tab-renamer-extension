@@ -8,6 +8,7 @@ import FaviconPicker from '../FaviconPicker';
 import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 import SettingsButton from '../SettingsButton';
+import Frame from 'react-frame-component';
 
 /* Non-functional note: Any slow-down in this file, for example in the imports above, will lead to a slower execution time 
  * for the insertUIIntoDOM function, because contentScript.js will import App only when this function is called. Adding an
@@ -140,6 +141,16 @@ export default function App() {
             inputRef.current.focus();
         }
     }, [emojiPickerIsVisible]);
+
+    const cloneShadowRootStyles = () => {
+        // Combine all style elements from shadowRoot into one
+        const tabRenamerRoot = document.querySelector('tab-renamer-root');
+        let combinedStyles = '';
+        tabRenamerRoot.shadowRoot.querySelectorAll('style').forEach((styleElement) => {
+            combinedStyles += styleElement.textContent;
+        });
+        return <style>{combinedStyles}</style>;
+    }
     
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
@@ -156,18 +167,20 @@ export default function App() {
                         }
                     </div>
 
-                    <input
-                        type="text"
-                        id={INPUT_BOX_ID}
-                        className={styles.inputBox}
-                        placeholder="New Tab Title"
-                        autoComplete="off"
-                        value={inputBoxValue}
-                        onChange={(event) => setInputBoxValue(event.target.value)}
-                        onClick={(event) => event.stopPropagation()}
-                        onKeyDown={handleInputBoxKeydown}
-                        ref={inputRef}
-                    />
+                    <Frame head={cloneShadowRootStyles()}>
+                        <input
+                            type="text"
+                            id={INPUT_BOX_ID}
+                            className={styles.inputBox}
+                            placeholder="New Tab Title"
+                            autoComplete="off"
+                            value={inputBoxValue}
+                            onChange={(event) => setInputBoxValue(event.target.value)}
+                            onClick={(event) => event.stopPropagation()}
+                            onKeyDown={handleInputBoxKeydown}
+                            ref={inputRef}
+                        />
+                    </Frame>
                 </div>
             </div>
             <SettingsButton />
