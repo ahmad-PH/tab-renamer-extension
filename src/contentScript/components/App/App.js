@@ -30,7 +30,7 @@ export default function App() {
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
-
+    const [isInputBoxFocused, setIsInputBoxFocused] = useState(false);
 
     /** 
      * @typedef {import('../../tab').Tab} Tab
@@ -169,7 +169,7 @@ export default function App() {
 
                     <Frame 
                         head={cloneShadowRootStyles()} 
-                        className={styles.inputBoxFrame}
+                        className={styles.inputBoxFrame + (isInputBoxFocused ? ' ' + styles.inputBoxFrameFocused : '')}
                         initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
                         mountTarget="#mountTarget"
                     >
@@ -182,6 +182,8 @@ export default function App() {
                             value={inputBoxValue}
                             onChange={(event) => setInputBoxValue(event.target.value)}
                             onClick={(event) => event.stopPropagation()}
+                            onFocus={() => setIsInputBoxFocused(true)}
+                            onBlur={() => setIsInputBoxFocused(false)}
                             onKeyDown={handleInputBoxKeydown}
                             ref={inputRef}
                         />

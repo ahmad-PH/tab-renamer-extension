@@ -88,6 +88,13 @@
     height: var(--input-height);
     box-sizing: border-box;
     margin-left: 15px;
+    border-radius: 15px;
+}
+
+.inputBoxFrameFocused {
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .inputBoxHTML, .inputBoxBody {
@@ -100,15 +107,13 @@
     align-items: center;
 }
 
-/* Style for input box when it gets focus */
-.inputBox:focus {
-    border: none;
-    outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Slightly darker shadow when focused */
-}
-
 /* Styling for the placeholder text */
 .inputBox::placeholder {
     color: rgb(112, 111, 111, 0.6);
     /* color: rgb(199, 199, 199) !important; */
+}
+
+.inputBox:focus {
+    border: none;
+    outline: none;
 }
