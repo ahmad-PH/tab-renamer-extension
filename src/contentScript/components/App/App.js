@@ -167,7 +167,12 @@ export default function App() {
                         }
                     </div>
 
-                    <Frame head={cloneShadowRootStyles()}>
+                    <Frame 
+                        head={cloneShadowRootStyles()} 
+                        className={styles.inputBoxFrame}
+                        initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
+                        mountTarget="#mountTarget"
+                    >
                         <input
                             type="text"
                             id={INPUT_BOX_ID}

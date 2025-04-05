@@ -1,3 +1,11 @@
+/* :host is required to make it visible to the shadow root elements (like the frame itself), 
+   and :root is required to make it visible to the elements inside the frame. 
+*/
+:host, :root {
+    --input-width: 300px;
+    --input-height: 60px;
+}
+
 .root, .root * {
     animation: none;
     background: none;
@@ -44,10 +52,9 @@
 
 .inputBox {
     /*==================== Dimensions ==================== */
-    width: 300px;
-    height: 60px;
+    width: var(--input-width);
+    height: var(--input-height);
     box-sizing: border-box;
-    margin-left: 15px !important;
 
     /*==================== Font ==================== */
     font-family: 'Arial', sans-serif !important;
@@ -74,6 +81,23 @@
     margin: 0;
 
     transition: all 0.3s ease; /* Smooth transition effects */
+}
+
+.inputBoxFrame {
+    width: var(--input-width);
+    height: var(--input-height);
+    box-sizing: border-box;
+    margin-left: 15px;
+}
+
+.inputBoxHTML, .inputBoxBody {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Style for input box when it gets focus */
