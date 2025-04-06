@@ -30,6 +30,7 @@ export default function App() {
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
+    const [styleElement, setStyleElement] = useState(null);
 
     /** 
      * @typedef {import('../../tab').Tab} Tab
@@ -126,20 +127,20 @@ export default function App() {
         }
     }, [emojiPickerIsVisible]);
 
-    const cloneShadowRootStyles = () => {
+    useEffect(() => {
         // Combine all style elements from shadowRoot into one
         const tabRenamerRoot = document.querySelector('tab-renamer-root');
         let combinedStyles = '';
         tabRenamerRoot.shadowRoot.querySelectorAll('style').forEach((styleElement) => {
             combinedStyles += styleElement.textContent;
         });
-        return <style>{combinedStyles}</style>;
-    }
+        setStyleElement(<style>{combinedStyles}</style>);
+    }, []);
     
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
             <Frame
-                head={cloneShadowRootStyles()} 
+                head={styleElement} 
                 className = {styles.mainBarIFrameContainer}
                 initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
                 mountTarget="#mountTarget"
