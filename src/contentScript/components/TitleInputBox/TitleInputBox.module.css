@@ -1,0 +1,55 @@
+
+.inputBox {
+    /*==================== Dimensions ==================== */
+    width: 300px;
+    height: 60px;
+    box-sizing: border-box;
+    margin-left: 15px !important;
+
+    /*==================== Font ==================== */
+    font-family: 'Arial', sans-serif !important;
+    font-size: 26px !important;
+    font-weight: bold !important;
+    font-style: normal !important;
+    text-transform: none;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #606060 !important; /* Dark gray */
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    border: none;
+    border-radius: 15px;
+
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    padding: 10px 20px; /* Padding for text inside */
+    margin: 0;
+
+    transition: all 0.3s ease; /* Smooth transition effects */
+}
+
+.inputBoxHTML, .inputBoxBody {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the placeholder text */
+.inputBox::placeholder {
+    color: rgb(112, 111, 111, 0.6);
+}
+
+.inputBox:focus {
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}

@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config.js';
+import { ROOT_ELEMENT_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config.js';
 import PropTypes from 'prop-types';
 import { getLogger } from "../../../log";
 import SelectedFavicon from '../SelectedEmoji';
 import FaviconPicker from '../FaviconPicker';
+import TitleInputBox from '../TitleInputBox';
 import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 import SettingsButton from '../SettingsButton';
@@ -167,17 +168,11 @@ export default function App() {
                                             }
                                         </div>
             
-                                        <input
-                                            type="text"
-                                            id={INPUT_BOX_ID}
-                                            className={styles.inputBox}
-                                            placeholder="New Tab Title"
-                                            autoComplete="off"
-                                            value={inputBoxValue}
-                                            onChange={(event) => setInputBoxValue(event.target.value)}
-                                            onClick={(event) => event.stopPropagation()}
-                                            onKeyDown={handleInputBoxKeydown}
-                                            ref={inputRef}
+                                        <TitleInputBox
+                                            inputBoxValue={inputBoxValue}
+                                            setInputBoxValue={setInputBoxValue}
+                                            handleInputBoxKeydown={handleInputBoxKeydown}
+                                            inputRef={inputRef}
                                         />
                                     </div>
                                 </div>
