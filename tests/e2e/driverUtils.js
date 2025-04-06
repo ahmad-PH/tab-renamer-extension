@@ -104,7 +104,7 @@ class DriverUtils {
     }
 
     async faviconIsEmoji(emojiStyle = EMOJI_STYLE_NATIVE) {
-        const faviconElement = this.getFaviconElement();
+        const faviconElement = await this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;
         if (emojiStyle == EMOJI_STYLE_NATIVE) {
@@ -126,7 +126,7 @@ class DriverUtils {
         await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
         if (!intendedToClose) {
             await this.switchToAppIframe();
-            await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.id(OVERLAY_ID))));
+            await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.id(INPUT_BOX_ID))));
             await this.switchToDefaultContent();
         }
         if (doSwitchToAppIframe) {
@@ -140,8 +140,7 @@ class DriverUtils {
     async openSettingsPage() {
         await this.switchToAppIframe();
         await this.driver.findElement(By.id(SETTING_BUTTON_TEST_STUB_ID)).click();
-        await this.switchToDefaultContent();
-        await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
+        // await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
     }
 
     async getAttribute(element, attribute) {
@@ -182,7 +181,6 @@ class DriverUtils {
     async getTitleInUI() {
         await this.switchToAppIframe();
         const input_box = await this.driver.findElement(By.id(INPUT_BOX_ID));
-        await this.switchToDefaultContent();
         return input_box.getAttribute('value');
     }
 
@@ -190,8 +188,7 @@ class DriverUtils {
         try {
             await this.switchToAppIframe();
             const picked_emoji = await this.driver.findElement(By.id(PICKED_EMOJI_ID));
-            await this.switchToDefaultContent();
-            return await picked_emoji.getAttribute('data-emoji');
+            return picked_emoji.getAttribute('data-emoji');
         } catch (error) {
             if (error.name === 'NoSuchElementError') {
                 return null;

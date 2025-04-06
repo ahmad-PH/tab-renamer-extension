@@ -498,6 +498,7 @@ describe('Selenium UI Tests', () => {
         await driver.executeScript("document.activeElement.blur()");
         await driver.actions().sendKeys('A').perform();
 
+        await driverUtils.switchToDefaultContent();
         let body = await driver.findElement(By.id('testContainer'));
         let bodyText = await body.getText();
         expect(bodyText).not.toContain('A key pressed');
@@ -521,10 +522,13 @@ describe('Selenium UI Tests', () => {
             // Close the settings page, go back to original tab, check emoji style.
             await driver.close();
             await driver.switchTo().window(currentWindowHandle);
-
-            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
-            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(EMOJI_PICKER_ID));
-            const emojiElement = await emojiPicker.findElement(By.id('😇'));
+            
+            // After returning to the original window, you will be pointing to the main document,
+            // but the variable focusedOnAppIframe will still be true from last time.
+            driverUtils.focusedOnAppIframe = false;
+            await driverUtils.switchToAppIframe();
+            await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
+            const emojiElement = await driver.wait(until.elementLocated(By.id('😇')), 100);
             expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
             // Re-open the settings page, and check that the style is still Twemoji:

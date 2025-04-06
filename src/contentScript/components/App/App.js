@@ -181,13 +181,13 @@ export default function App() {
                                         />
                                     </div>
                                 </div>
+                                <SettingsButton />
                             </>
                         )
                     }}
                     
                 </FrameContextConsumer>
             </Frame>
-            <SettingsButton />
         </div>
     );
 }
