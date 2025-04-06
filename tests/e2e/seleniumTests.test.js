@@ -135,22 +135,23 @@ describe('Selenium UI Tests', () => {
 
     test('Can open and close dialog', async () => {
         await driver.get(data.websites[0].url);
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({doSwitchToAppIframe: false});
         const rootElement = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
         expect(await rootElement.isDisplayed()).toBe(true);
 
         // Pressing shortcut twice should close the dialog
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({intendedToClose: true, doSwitchToAppIframe: false});
         expect(await rootElement.isDisplayed()).toBe(false);
 
         // Pressing Escape should close the dialog
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({doSwitchToAppIframe: false});
         await driver.actions().sendKeys(Key.ESCAPE).perform();
         expect(await rootElement.isDisplayed()).toBe(false);
 
         // Clicking on the overlay should close the dialog
         await driverUtils.openRenameDialog();
-        await driver.findElement(driverUtils.shadowRootLocator.byId(OVERLAY_ID)).click();
+        await driver.findElement(By.id(OVERLAY_ID)).click();
+        await driverUtils.switchToDefaultContent();
         expect(await rootElement.isDisplayed()).toBe(false);
     });
 
@@ -170,7 +171,7 @@ describe('Selenium UI Tests', () => {
         await driver.actions().click(body).perform();
 
         await driverUtils.openRenameDialog();
-        const activeElement = await driverUtils.getShadowRootActiveElement();
+        const activeElement = await driverUtils.getIframeActiveElement();
 
         expect(activeElement).not.toBeNull();
         expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
@@ -208,12 +209,12 @@ describe('Selenium UI Tests', () => {
             test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openFaviconPicker();
-                let activeElement = await driverUtils.getShadowRootActiveElement();
+                let activeElement = await driverUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
                 expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
 
-                await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
-                activeElement = await driverUtils.getShadowRootActiveElement();
+                await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
+                activeElement = await driverUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
                 expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
             });

@@ -145,6 +145,11 @@ export default function App() {
                 className = {styles.mainBarIFrameContainer}
                 initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
                 mountTarget="#mountTarget"
+                contentDidMount={() => {
+                    if (isVisible) {
+                        inputRef.current.focus();
+                    }
+                }}
             >
                 <FrameContextConsumer>
                     {({document}) => {
