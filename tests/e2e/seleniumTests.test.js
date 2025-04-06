@@ -1,4 +1,4 @@
-const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
+const { WebDriver, Builder, Key, By, until } = require('selenium-webdriver');
 const { expect, test, describe } = require('@jest/globals');
 const chromedriver = require('chromedriver');
 const express = require('express');
@@ -201,8 +201,7 @@ describe('Selenium UI Tests', () => {
             test('Emojis not on page before emoji picker being clicked', async () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openRenameDialog();
-                const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
-                const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
+                const elements = await driver.findElements(By.xpath(`//body//*[contains(text(),'😃')]`));
                 expect(elements.length).toBe(0);
             });
 
@@ -223,25 +222,26 @@ describe('Selenium UI Tests', () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openFaviconPicker();
 
-                const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
+                const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
                 await emojiSearchBar.sendKeys('halo');
 
                 // Verify that search results contains the halo emoji
-                const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
+                const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
+                await driver.wait(until.elementLocated(By.id('😇')), 10);
                 const elements = await searchResults.findElements(By.id('😇'));
                 expect(elements.length).toBe(1);
 
                 // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
                 const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
                 for (const emoji of commonEmojis) {
-                const elements = await searchResults.findElements(By.id(emoji));
+                    const elements = await searchResults.findElements(By.id(emoji));
                     expect(elements.length).toBe(0);
                 }
 
                 // Also make sure it is clickable and will set the correct favicon
                 await elements[0].click()
 
-                const pickedEmojiElement = await driver.findElement(driverUtils.shadowRootLocator.byId(PICKED_EMOJI_ID));
+                const pickedEmojiElement = await driver.findElement(By.id(PICKED_EMOJI_ID));
                 const dataEmoji = await pickedEmojiElement.getAttribute('data-emoji');
                 expect(dataEmoji).toBe('😇');
             });
