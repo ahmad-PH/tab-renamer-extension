@@ -30,7 +30,6 @@ export default function App() {
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
-    const [isInputBoxFocused, setIsInputBoxFocused] = useState(false);
 
     /** 
      * @typedef {import('../../tab').Tab} Tab
@@ -155,24 +154,24 @@ export default function App() {
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
             <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}/>
-            <div className={styles.mainBarContainer}>
-                <div className={styles.mainBar}>
-                    <div className={styles.faviconPickerWrapper}>
-                        <SelectedFavicon selectedFavicon={selectedFavicon} handleSelectedFaviconClick={handleSelectedFaviconClick}/>
-                        {emojiPickerIsVisible && 
-                            <FaviconPicker 
-                                onFaviconClick={handleFaviconClick}
-                                onRemoveEmoji={handleRemoveEmoji}
-                            />
-                        }
-                    </div>
+            <Frame
+                head={cloneShadowRootStyles()} 
+                className = {styles.mainBarIFrameContainer}
+                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
+                mountTarget="#mountTarget"
+            >
+                <div className={styles.mainBarContainer}>
+                    <div className={styles.mainBar}>
+                        <div className={styles.faviconPickerWrapper}>
+                            <SelectedFavicon selectedFavicon={selectedFavicon} handleSelectedFaviconClick={handleSelectedFaviconClick}/>
+                            {emojiPickerIsVisible && 
+                                <FaviconPicker 
+                                    onFaviconClick={handleFaviconClick}
+                                    onRemoveEmoji={handleRemoveEmoji}
+                                />
+                            }
+                        </div>
 
-                    <Frame 
-                        head={cloneShadowRootStyles()} 
-                        className={styles.inputBoxFrame + (isInputBoxFocused ? ' ' + styles.inputBoxFrameFocused : '')}
-                        initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
-                        mountTarget="#mountTarget"
-                    >
                         <input
                             type="text"
                             id={INPUT_BOX_ID}
@@ -182,14 +181,12 @@ export default function App() {
                             value={inputBoxValue}
                             onChange={(event) => setInputBoxValue(event.target.value)}
                             onClick={(event) => event.stopPropagation()}
-                            onFocus={() => setIsInputBoxFocused(true)}
-                            onBlur={() => setIsInputBoxFocused(false)}
                             onKeyDown={handleInputBoxKeydown}
                             ref={inputRef}
                         />
-                    </Frame>
+                    </div>
                 </div>
-            </div>
+            </Frame>
             <SettingsButton />
         </div>
     );
