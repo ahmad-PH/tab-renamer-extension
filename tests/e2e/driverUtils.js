@@ -40,12 +40,22 @@ class DriverUtils {
         return await this.driver.findElement(By.css(this.shadowRootSelector)).getShadowRoot();
     }
 
+    async switchToAppIframe() {
+        await this.driver.switchTo().frame(await this.driver.findElement(this.shadowRootLocator.byCSS('iframe')));
+    }
+
+    async switchToDefaultIframe() {
+        await this.driver.switchTo().defaultContent();
+    }
+
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
-        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
-        await renameBox.clear();
-        await renameBox.sendKeys(newTabTitle);
+        await this.switchToAppIframe();
+        const titleBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        await titleBox.clear();
+        await titleBox.sendKeys(newTabTitle);
         await this.submitRenameDialog();
+        await this.switchToDefaultIframe();
     }
 
     async openFaviconPicker() {
@@ -189,7 +199,7 @@ class DriverUtils {
     }
 
     async submitRenameDialog() {
-        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
+        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         await renameBox.sendKeys(Key.ENTER);
         await this.driver.wait(until.elementIsNotVisible(renameBox));
     }
