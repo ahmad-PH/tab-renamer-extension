@@ -272,7 +272,7 @@ describe('Selenium UI Tests', () => {
     });
 
 
-    test('Retains tab signatures when window is re-opened', async () => {
+    test('Retains tab signatures when the entire window is re-opened', async () => { //TODO: appears to be flaky, investigate.
         /*
             This is required because 1. driver.close() doesn't allow enough
             breathing room for chrome.tabs.onRemoved triggers to fully take 
