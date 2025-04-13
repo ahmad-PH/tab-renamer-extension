@@ -179,7 +179,7 @@ describe('Selenium UI Tests', () => {
 
     describe('Emoji picker', () => {
         const emojiStyles = [EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI];
-        // const emojiStyles = [EMOJI_STYLE_NATIVE];
+        
         describe.each(emojiStyles)('with emoji style: %s', (emojiStyle) => {
             beforeEach(async () => {
                 if (!process.env.HEADED) {
@@ -581,4 +581,5 @@ describe('Selenium UI Tests', () => {
             expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
         });
     });
+
 });
