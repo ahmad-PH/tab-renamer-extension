@@ -26,23 +26,28 @@ class DriverUtils {
     constructor(driver) {
         this.driver = driver;
         this.shadowRootSelector = ROOT_TAG_NAME;
+        const getShadowRootQuery = (selector) => 
+            `return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('${selector}')`;
+        
         this.shadowRootLocator = {
             byId: (id) => {
-                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('#${id}')`);
+                return (driver) => driver.executeScript(getShadowRootQuery(`#${id}`));
             },
             byCSS: (css) => {
-                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('${css}')`);
+                return (driver) => driver.executeScript(getShadowRootQuery(css));
             }
         };
-    }
-
-    async isFocusedOnAppIframe() { // Takes between 3-9 ms to run
-        return await this.driver.executeScript(`return document.documentElement.hasAttribute('data-tab-renamer-frame')`);
     }
 
     async getShadowRoot() {
         return await this.driver.findElement(By.css(this.shadowRootSelector)).getShadowRoot();
     }
+
+    // =================== Iframe State Management ===================
+    async isFocusedOnAppIframe() { // Takes between 3-9 ms to run
+        return await this.driver.executeScript(`return document.documentElement.hasAttribute('data-tab-renamer-frame')`);
+    }
+
 
     async switchToAppIframe() {
         if (!await this.isFocusedOnAppIframe()) {
@@ -69,6 +74,8 @@ class DriverUtils {
             }
         }
     }
+
+    // ================= End: Iframe State Management ===================
 
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
