@@ -504,6 +504,52 @@ describe('Selenium UI Tests', () => {
         expect(bodyText).not.toContain('A key pressed');
     });
 
+    test("Event listeners on the host page won't trigger when working with tab renamer, no matter how aggressive", async () => {
+        const app = express();
+        const port = 3001;
+
+        app.get('/', (req, res) => {
+            res.send(`
+                <html>
+                <body>
+                    <p id="captureContainer">Not triggered (capture)</p>
+                    <script>
+                    // Capture at window level with highest possible priority
+                    window.addEventListener('keydown', function(event) {
+                        if (event.key === 'e') {
+                            window.eventWasSeen = true;
+                            document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
+                            // Stop everything
+                            event.preventDefault(); // Causes the input box to fail to capture the input event.
+                            event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
+                            return false;
+                        }
+                    }, { 
+                        capture: true,  
+                        passive: false, // Allow preventDefault
+                        once: false,    // Handle all events
+                    });
+                    </script>
+                </body>
+                </html>
+            `);
+        });
+
+        expressServer = await startExpressServer(app, port);
+
+        await driver.get(`http://localhost:${port}`);
+        
+        await driver.sleep(2000);
+        await driverUtils.renameTab('eel');
+        await driver.sleep(7000);
+        
+        // Verify the rename worked
+        expect(await driverUtils.getTitle()).toBe('eel');
+        
+        // Verify the handler was not triggered
+        let captureContainer = await driver.findElement(By.id('captureContainer'));
+        expect(await captureContainer.getText()).toBe('Not triggered (capture)');
+    });
 
     describe('Settings Page', () => {
         test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
