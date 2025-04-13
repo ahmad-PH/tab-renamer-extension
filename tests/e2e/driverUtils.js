@@ -57,6 +57,20 @@ class DriverUtils {
         }
     }
 
+    async withIframeContext(callback) {
+        const wasInIframe = await this.isFocusedOnAppIframe();
+        if (!wasInIframe) {
+            await this.switchToAppIframe();
+        }
+        try {
+            return await callback();
+        } finally {
+            if (!wasInIframe) {
+                await this.switchToDefaultContent();
+            }
+        }
+    }
+
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
         const titleBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
