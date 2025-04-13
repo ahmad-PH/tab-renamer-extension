@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
-import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config.js';
+import { ROOT_ELEMENT_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config.js';
 import PropTypes from 'prop-types';
 import { getLogger } from "../../../log";
 import SelectedFavicon from '../SelectedEmoji';
 import FaviconPicker from '../FaviconPicker';
+import TitleInputBox from '../TitleInputBox';
 import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 import SettingsButton from '../SettingsButton';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 /* Non-functional note: Any slow-down in this file, for example in the imports above, will lead to a slower execution time 
  * for the insertUIIntoDOM function, because contentScript.js will import App only when this function is called. Adding an
@@ -29,7 +31,7 @@ export default function App() {
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
     const inputRef = useRef(null);
-
+    const [styleElement, setStyleElement] = useState(null);
 
     /** 
      * @typedef {import('../../tab').Tab} Tab
@@ -45,21 +47,6 @@ export default function App() {
             }
         }, [isVisible]);
     }
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === "Escape") {
-                setIsVisible(false);
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
-
     useStopKeyEventsPropagation(isVisible, ['Escape', 'Enter']);
 
     useEffect(() => {
@@ -140,37 +127,67 @@ export default function App() {
             inputRef.current.focus();
         }
     }, [emojiPickerIsVisible]);
+
+    useEffect(() => {
+        // Combine all style elements from shadowRoot into one
+        const tabRenamerRoot = document.querySelector('tab-renamer-root');
+        let combinedStyles = '';
+        tabRenamerRoot.shadowRoot.querySelectorAll('style').forEach((styleElement) => {
+            combinedStyles += styleElement.textContent;
+        });
+        setStyleElement(<style>{combinedStyles}</style>);
+    }, []);
     
     return (
         <div id={ROOT_ELEMENT_ID} className={styles.root} style={{ display: isVisible ? 'block' : 'none' }}>
-            <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}/>
-            <div className={styles.mainBarContainer}>
-                <div className={styles.mainBar}>
-                    <div className={styles.faviconPickerWrapper}>
-                        <SelectedFavicon selectedFavicon={selectedFavicon} handleSelectedFaviconClick={handleSelectedFaviconClick}/>
-                        {emojiPickerIsVisible && 
-                            <FaviconPicker 
-                                onFaviconClick={handleFaviconClick}
-                                onRemoveEmoji={handleRemoveEmoji}
-                            />
-                        }
-                    </div>
-
-                    <input
-                        type="text"
-                        id={INPUT_BOX_ID}
-                        className={styles.inputBox}
-                        placeholder="New Tab Title"
-                        autoComplete="off"
-                        value={inputBoxValue}
-                        onChange={(event) => setInputBoxValue(event.target.value)}
-                        onClick={(event) => event.stopPropagation()}
-                        onKeyDown={handleInputBoxKeydown}
-                        ref={inputRef}
-                    />
-                </div>
-            </div>
-            <SettingsButton />
+            <Frame
+                head={styleElement} 
+                className = {styles.mainBarIFrameContainer}
+                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}" data-tab-renamer-frame="true"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
+                mountTarget="#mountTarget"
+                contentDidMount={() => {
+                    if (isVisible) {
+                        inputRef.current.focus();
+                    }
+                }}
+            >
+                <FrameContextConsumer>
+                    {({document}) => {
+                        document.addEventListener('keydown', (event) => {
+                            if (event.key === "Escape") {
+                                setIsVisible(false);
+                            }
+                        });
+                        return (
+                            <>
+                                <div id={OVERLAY_ID} className={styles.overlay} onClick={() => {setIsVisible(false)}}/>
+                                <div className={styles.mainBarContainer}>
+                                    <div className={styles.mainBar}>
+                                        <div className={styles.faviconPickerWrapper}>
+                                            <SelectedFavicon selectedFavicon={selectedFavicon} handleSelectedFaviconClick={handleSelectedFaviconClick}/>
+                                            {emojiPickerIsVisible && 
+                                                <FaviconPicker 
+                                                    onFaviconClick={handleFaviconClick}
+                                                    onRemoveEmoji={handleRemoveEmoji}
+                                                />
+                                            }
+                                        </div>
+            
+                                        <TitleInputBox
+                                            inputBoxValue={inputBoxValue}
+                                            setInputBoxValue={setInputBoxValue}
+                                            handleInputBoxKeydown={handleInputBoxKeydown}
+                                            inputRef={inputRef}
+                                        />
+                                    </div>
+                                </div>
+                                <SettingsButton />
+                            </>
+                        )
+                    }}
+                    
+                </FrameContextConsumer>
+            </Frame>
         </div>
     );
 }

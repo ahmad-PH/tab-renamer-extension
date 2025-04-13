@@ -66,7 +66,8 @@ module.exports = (_env, argv) => {
                 },
 
 
-                // CSS and Module CSS files:
+                // ================= CSS (and Module CSS) files: =================
+
                 { // .css files inside contentScript
                     test: /contentScript\/.*\.css$/,
                     exclude: /contentScript\/.*\.module\.css$/,

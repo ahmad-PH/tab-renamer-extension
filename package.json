@@ -6,7 +6,7 @@
     "scripts": {
         "test": "jest --detectOpenHandles --verbose",
         "test:unit": "jest --detectOpenHandles --verbose tests/unit",
-        "test:headed": "HEADED=true jest --detectOpenHandles",
+        "test:headed": "HEADED=true jest --detectOpenHandles --verbose",
         "build": "webpack --mode production",
         "dev": "webpack --mode development --watch",
         "version": "node update-manifest-version.js && git add ."
@@ -32,7 +32,7 @@
         "app-root-path": "^3.1.0",
         "babel-jest": "^29.7.0",
         "babel-loader": "^9.1.3",
-        "chromedriver": "^133.0.1",
+        "chromedriver": "^135.0.0",
         "copy-webpack-plugin": "^11.0.0",
         "css-loader": "^6.8.1",
         "eslint": "^8.56.0",
@@ -55,6 +55,7 @@
         "loglevel": "^1.8.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-frame-component": "^5.2.7",
         "twemoji": "^14.0.2"
     }
 }

@@ -1,4 +1,4 @@
-const { WebDriver, Builder, Key, By } = require('selenium-webdriver');
+const { WebDriver, Builder, Key, By, until } = require('selenium-webdriver');
 const { expect, test, describe } = require('@jest/globals');
 const chromedriver = require('chromedriver');
 const express = require('express');
@@ -135,22 +135,23 @@ describe('Selenium UI Tests', () => {
 
     test('Can open and close dialog', async () => {
         await driver.get(data.websites[0].url);
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({doSwitchToAppIframe: false});
         const rootElement = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
         expect(await rootElement.isDisplayed()).toBe(true);
 
         // Pressing shortcut twice should close the dialog
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({intendedToClose: true, doSwitchToAppIframe: false});
         expect(await rootElement.isDisplayed()).toBe(false);
 
         // Pressing Escape should close the dialog
-        await driverUtils.openRenameDialog();
+        await driverUtils.openRenameDialog({doSwitchToAppIframe: false});
         await driver.actions().sendKeys(Key.ESCAPE).perform();
         expect(await rootElement.isDisplayed()).toBe(false);
 
         // Clicking on the overlay should close the dialog
         await driverUtils.openRenameDialog();
-        await driver.findElement(driverUtils.shadowRootLocator.byId(OVERLAY_ID)).click();
+        await driver.findElement(By.id(OVERLAY_ID)).click();
+        await driverUtils.switchToDefaultContent();
         expect(await rootElement.isDisplayed()).toBe(false);
     });
 
@@ -170,7 +171,7 @@ describe('Selenium UI Tests', () => {
         await driver.actions().click(body).perform();
 
         await driverUtils.openRenameDialog();
-        const activeElement = await driverUtils.getShadowRootActiveElement();
+        const activeElement = await driverUtils.getIframeActiveElement();
 
         expect(activeElement).not.toBeNull();
         expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
@@ -178,7 +179,7 @@ describe('Selenium UI Tests', () => {
 
     describe('Emoji picker', () => {
         const emojiStyles = [EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI];
-        // const emojiStyles = [EMOJI_STYLE_NATIVE];
+        
         describe.each(emojiStyles)('with emoji style: %s', (emojiStyle) => {
             beforeEach(async () => {
                 if (!process.env.HEADED) {
@@ -200,20 +201,19 @@ describe('Selenium UI Tests', () => {
             test('Emojis not on page before emoji picker being clicked', async () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openRenameDialog();
-                const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(ROOT_ELEMENT_ID));
-                const elements = await emojiPicker.findElements(By.xpath(`.//*[contains(text(),'😃')]`));
+                const elements = await driver.findElements(By.xpath(`//body//*[contains(text(),'😃')]`));
                 expect(elements.length).toBe(0);
             });
 
             test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openFaviconPicker();
-                let activeElement = await driverUtils.getShadowRootActiveElement();
+                let activeElement = await driverUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
                 expect(await activeElement.getAttribute('id')).toBe(SEARCH_BAR_ID);
 
-                await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
-                activeElement = await driverUtils.getShadowRootActiveElement();
+                await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
+                activeElement = await driverUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
                 expect(await activeElement.getAttribute('id')).toBe(INPUT_BOX_ID);
             });
@@ -222,25 +222,26 @@ describe('Selenium UI Tests', () => {
                 await driver.get(data.websites[0].url);
                 await driverUtils.openFaviconPicker();
 
-                const emojiSearchBar = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_BAR_ID));
+                const emojiSearchBar = await driver.findElement(By.id(SEARCH_BAR_ID));
                 await emojiSearchBar.sendKeys('halo');
 
                 // Verify that search results contains the halo emoji
-                const searchResults = await driver.findElement(driverUtils.shadowRootLocator.byId(SEARCH_RESULTS_ID));
+                const searchResults = await driver.findElement(By.id(SEARCH_RESULTS_ID));
+                await driver.wait(until.elementLocated(By.id('😇')), 10);
                 const elements = await searchResults.findElements(By.id('😇'));
                 expect(elements.length).toBe(1);
 
                 // ...and nothing else (checking a few ommon emojis as a proxy for checking all emojis)
                 const commonEmojis = ['😂', '😍', '😭', '😊', '😒', '😘', '😩', '😔', '😏', '😁'];
                 for (const emoji of commonEmojis) {
-                const elements = await searchResults.findElements(By.id(emoji));
+                    const elements = await searchResults.findElements(By.id(emoji));
                     expect(elements.length).toBe(0);
                 }
 
                 // Also make sure it is clickable and will set the correct favicon
                 await elements[0].click()
 
-                const pickedEmojiElement = await driver.findElement(driverUtils.shadowRootLocator.byId(PICKED_EMOJI_ID));
+                const pickedEmojiElement = await driver.findElement(By.id(PICKED_EMOJI_ID));
                 const dataEmoji = await pickedEmojiElement.getAttribute('data-emoji');
                 expect(dataEmoji).toBe('😇');
             });
@@ -271,7 +272,7 @@ describe('Selenium UI Tests', () => {
     });
 
 
-    test('Retains tab signatures when window is re-opened', async () => {
+    test('Retains tab signatures when the entire window is re-opened', async () => { //TODO: appears to be flaky, investigate.
         /*
             This is required because 1. driver.close() doesn't allow enough
             breathing room for chrome.tabs.onRemoved triggers to fully take 
@@ -497,11 +498,58 @@ describe('Selenium UI Tests', () => {
         await driver.executeScript("document.activeElement.blur()");
         await driver.actions().sendKeys('A').perform();
 
+        await driverUtils.switchToDefaultContent();
         let body = await driver.findElement(By.id('testContainer'));
         let bodyText = await body.getText();
         expect(bodyText).not.toContain('A key pressed');
     });
 
+    test("Event listeners on the host page won't trigger when working with tab renamer, no matter how aggressive", async () => {
+        const app = express();
+        const port = 3001;
+
+        app.get('/', (req, res) => {
+            res.send(`
+                <html>
+                <body>
+                    <p id="captureContainer">Not triggered (capture)</p>
+                    <script>
+                    // Capture at window level with highest possible priority
+                    window.addEventListener('keydown', function(event) {
+                        if (event.key === 'e') {
+                            window.eventWasSeen = true;
+                            document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
+                            // Stop everything
+                            event.preventDefault(); // Causes the input box to fail to capture the input event.
+                            event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
+                            return false;
+                        }
+                    }, { 
+                        capture: true,  
+                        passive: false, // Allow preventDefault
+                        once: false,    // Handle all events
+                    });
+                    </script>
+                </body>
+                </html>
+            `);
+        });
+
+        expressServer = await startExpressServer(app, port);
+
+        await driver.get(`http://localhost:${port}`);
+        
+        await driver.sleep(2000);
+        await driverUtils.renameTab('eel');
+        await driver.sleep(7000);
+        
+        // Verify the rename worked
+        expect(await driverUtils.getTitle()).toBe('eel');
+        
+        // Verify the handler was not triggered
+        let captureContainer = await driver.findElement(By.id('captureContainer'));
+        expect(await captureContainer.getText()).toBe('Not triggered (capture)');
+    });
 
     describe('Settings Page', () => {
         test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
@@ -520,10 +568,10 @@ describe('Selenium UI Tests', () => {
             // Close the settings page, go back to original tab, check emoji style.
             await driver.close();
             await driver.switchTo().window(currentWindowHandle);
-
-            await driver.findElement(driverUtils.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
-            const emojiPicker = await driver.findElement(driverUtils.shadowRootLocator.byId(EMOJI_PICKER_ID));
-            const emojiElement = await emojiPicker.findElement(By.id('😇'));
+            
+            await driverUtils.switchToAppIframe();
+            await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
+            const emojiElement = await driver.wait(until.elementLocated(By.id('😇')), 100);
             expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
             // Re-open the settings page, and check that the style is still Twemoji:
@@ -533,4 +581,5 @@ describe('Selenium UI Tests', () => {
             expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
         });
     });
+
 });

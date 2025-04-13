@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3] - 2025-02-23
+
+### Fixed
+
+- 🔑 **Complete Fix for Keystroke Registration**: Fully resolved the issue with keystrokes sometimes not being captured while typing in the tab rename box. This builds on the partial fix from v1.1.2 and should now work reliably across all websites.
+  > Technical side-note: The issue was caused by certain websites implementing aggressive global event listeners that interfered with input handling. The fix completely isolates the extension's UI within an iframe, preventing external event manipulation.
+
 ## [1.1.2] - 2025-02-23
 
 ### Added

@@ -26,12 +26,15 @@ class DriverUtils {
     constructor(driver) {
         this.driver = driver;
         this.shadowRootSelector = ROOT_TAG_NAME;
+        const getShadowRootQuery = (selector) => 
+            `return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('${selector}')`;
+        
         this.shadowRootLocator = {
             byId: (id) => {
-                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('#${id}')`);
+                return (driver) => driver.executeScript(getShadowRootQuery(`#${id}`));
             },
             byCSS: (css) => {
-                return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('${css}')`);
+                return (driver) => driver.executeScript(getShadowRootQuery(css));
             }
         };
     }
@@ -40,26 +43,63 @@ class DriverUtils {
         return await this.driver.findElement(By.css(this.shadowRootSelector)).getShadowRoot();
     }
 
+    // =================== Iframe State Management ===================
+    async isFocusedOnAppIframe() { // Takes between 3-9 ms to run
+        return await this.driver.executeScript(`return document.documentElement.hasAttribute('data-tab-renamer-frame')`);
+    }
+
+
+    async switchToAppIframe() {
+        if (!await this.isFocusedOnAppIframe()) {
+            await this.driver.switchTo().frame(await this.driver.findElement(this.shadowRootLocator.byCSS('iframe')));
+        }
+    }
+
+    async switchToDefaultContent() {
+        if (await this.isFocusedOnAppIframe()) {
+            await this.driver.switchTo().defaultContent();
+        }
+    }
+
+    async withIframeContext(callback) {
+        const wasInIframe = await this.isFocusedOnAppIframe();
+        if (!wasInIframe) {
+            await this.switchToAppIframe();
+        }
+        try {
+            return await callback();
+        } finally {
+            if (!wasInIframe) {
+                await this.switchToDefaultContent();
+            }
+        }
+    }
+
+    // ================= End: Iframe State Management ===================
+
     async renameTab(newTabTitle) {
         await this.openRenameDialog();
-        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
-        await renameBox.clear();
-        await renameBox.sendKeys(newTabTitle);
+        const titleBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
+        await titleBox.clear();
+        await titleBox.sendKeys(newTabTitle);
         await this.submitRenameDialog();
+        await this.switchToDefaultContent();
     }
 
     async openFaviconPicker() {
         await this.openRenameDialog();
-        await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID)).click();
+        await this.driver.findElement(By.id(FAVICON_PICKER_ID)).click();
     }
     
     async setFavicon(emoji) {
         await this.openFaviconPicker();
-        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_PICKER_ID));
+        const emojiPicker = await this.driver.findElement(By.id(EMOJI_PICKER_ID));
+        await this.driver.wait(until.elementLocated(By.id(emoji)));
         const emojiElement = await emojiPicker.findElement(By.id(emoji));
         await emojiElement.click();
     
         await this.submitRenameDialog();
+        await this.switchToDefaultContent();
     }
 
     async setSignature(title, favicon) {
@@ -68,7 +108,9 @@ class DriverUtils {
     }
     
     async getFaviconElement() {
-        return await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
+        await this.switchToDefaultContent();
+        const result = await this.driver.executeScript(`return document.querySelector("${faviconLinksCSSQuery}");`);
+        return result;
     }
 
     async getFaviconUrl() {
@@ -83,7 +125,7 @@ class DriverUtils {
     }
 
     async faviconIsEmoji(emojiStyle = EMOJI_STYLE_NATIVE) {
-        const faviconElement = this.getFaviconElement();
+        const faviconElement = await this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;
         if (emojiStyle == EMOJI_STYLE_NATIVE) {
@@ -100,17 +142,26 @@ class DriverUtils {
         expect(await this.getAttribute(faviconElement, "href")).toBe(faviconUrl);
     }
 
-    async openRenameDialog() {
+    async openRenameDialog({ intendedToClose = false, doSwitchToAppIframe = true } = {}) {
         await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_OPEN_RENAME_DIALOG}'));`);
         await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
+        if (!intendedToClose) {
+            await this.switchToAppIframe();
+            await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.id(INPUT_BOX_ID))));
+            await this.switchToDefaultContent();
+        }
+        if (doSwitchToAppIframe) {
+            await this.switchToAppIframe();
+        }
     }
 
     /**
      * Tries to click on the gear icon. You need to have opened the rename dialog first.
      */
     async openSettingsPage() {
-        await this.driver.findElement(this.shadowRootLocator.byId(SETTING_BUTTON_TEST_STUB_ID)).click();
-        await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
+        await this.switchToAppIframe();
+        await this.driver.findElement(By.id(SETTING_BUTTON_TEST_STUB_ID)).click();
+        // await this.driver.wait(until.elementLocated(this.shadowRootLocator.byId(ROOT_ELEMENT_ID)));
     }
 
     async getAttribute(element, attribute) {
@@ -149,14 +200,16 @@ class DriverUtils {
     }
 
     async getTitleInUI() {
-        const input_box = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
+        await this.switchToAppIframe();
+        const input_box = await this.driver.findElement(By.id(INPUT_BOX_ID));
         return input_box.getAttribute('value');
     }
 
     async getFaviconInUI() {
         try {
-            const picked_emoji = await this.driver.findElement(this.shadowRootLocator.byId(PICKED_EMOJI_ID));
-            return await picked_emoji.getAttribute('data-emoji');
+            await this.switchToAppIframe();
+            const picked_emoji = await this.driver.findElement(By.id(PICKED_EMOJI_ID));
+            return picked_emoji.getAttribute('data-emoji');
         } catch (error) {
             if (error.name === 'NoSuchElementError') {
                 return null;
@@ -177,11 +230,12 @@ class DriverUtils {
 
     async restoreFavicon() {
         await this.openRenameDialog();
-        const emojiPicker = await this.driver.findElement(this.shadowRootLocator.byId(FAVICON_PICKER_ID));
+        const emojiPicker = await this.driver.findElement(By.id(FAVICON_PICKER_ID));
         await emojiPicker.click();
-        const emojiRemoveButton = await this.driver.findElement(this.shadowRootLocator.byId(EMOJI_REMOVE_BUTTON_ID));
+        const emojiRemoveButton = await this.driver.findElement(By.id(EMOJI_REMOVE_BUTTON_ID));
         emojiRemoveButton.click();
         await this.submitRenameDialog();
+        await this.switchToDefaultContent();
     }
 
     async restoreTitle() {
@@ -189,7 +243,7 @@ class DriverUtils {
     }
 
     async submitRenameDialog() {
-        const renameBox = await this.driver.findElement(this.shadowRootLocator.byId(INPUT_BOX_ID));
+        const renameBox = await this.driver.findElement(By.id(INPUT_BOX_ID));
         await renameBox.sendKeys(Key.ENTER);
         await this.driver.wait(until.elementIsNotVisible(renameBox));
     }
@@ -212,10 +266,9 @@ class DriverUtils {
         await this.driver.executeScript(`document.dispatchEvent(new Event('${COMMAND_CLOSE_WELCOME_TAB}'));`);
     }
 
-    async getShadowRootActiveElement() {
-        return await this.driver.executeScript(`
-            return document.querySelector('${this.shadowRootSelector}').shadowRoot.activeElement;
-        `);
+    async getIframeActiveElement() {
+        this.switchToAppIframe()
+        return await this.driver.executeScript(`return document.activeElement;`);
     }
 
 }
