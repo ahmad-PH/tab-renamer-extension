@@ -10,7 +10,6 @@ const {
     EMOJI_PICKER_ID,
     COMMAND_CLOSE_WELCOME_TAB,
     SETTING_BUTTON_TEST_STUB_ID,
-    OVERLAY_ID,
 } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
 const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
