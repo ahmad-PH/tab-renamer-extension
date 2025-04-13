@@ -27,7 +27,6 @@ class DriverUtils {
     constructor(driver) {
         this.driver = driver;
         this.shadowRootSelector = ROOT_TAG_NAME;
-        this.focusedOnAppIframe = false;
         this.shadowRootLocator = {
             byId: (id) => {
                 return (driver) => driver.executeScript(`return document.querySelector('${this.shadowRootSelector}').shadowRoot.querySelector('#${id}')`);
@@ -38,21 +37,23 @@ class DriverUtils {
         };
     }
 
+    async focusedOnAppIframe() {
+        return await this.driver.executeScript(`return document.documentElement.hasAttribute('data-tab-renamer-frame')`);
+    }
+
     async getShadowRoot() {
         return await this.driver.findElement(By.css(this.shadowRootSelector)).getShadowRoot();
     }
 
     async switchToAppIframe() {
-        if (!this.focusedOnAppIframe) {
+        if (!await this.focusedOnAppIframe()) {
             await this.driver.switchTo().frame(await this.driver.findElement(this.shadowRootLocator.byCSS('iframe')));
-            this.focusedOnAppIframe = true;
         }
     }
 
     async switchToDefaultContent() {
-        if (this.focusedOnAppIframe) {
+        if (await this.focusedOnAppIframe()) {
             await this.driver.switchTo().defaultContent();
-            this.focusedOnAppIframe = false;
         }
     }
 

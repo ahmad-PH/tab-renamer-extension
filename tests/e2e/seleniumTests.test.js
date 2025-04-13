@@ -569,9 +569,6 @@ describe('Selenium UI Tests', () => {
             await driver.close();
             await driver.switchTo().window(currentWindowHandle);
             
-            // After returning to the original window, you will be pointing to the main document,
-            // but the variable focusedOnAppIframe will still be true from last time.
-            driverUtils.focusedOnAppIframe = false;
             await driverUtils.switchToAppIframe();
             await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
             const emojiElement = await driver.wait(until.elementLocated(By.id('😇')), 100);

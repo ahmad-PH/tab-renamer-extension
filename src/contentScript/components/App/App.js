@@ -143,7 +143,7 @@ export default function App() {
             <Frame
                 head={styleElement} 
                 className = {styles.mainBarIFrameContainer}
-                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
+                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}" data-tab-renamer-frame="true"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
                 mountTarget="#mountTarget"
                 contentDidMount={() => {
                     if (isVisible) {
