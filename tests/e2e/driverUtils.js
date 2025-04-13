@@ -37,7 +37,7 @@ class DriverUtils {
         };
     }
 
-    async focusedOnAppIframe() {
+    async isFocusedOnAppIframe() { // Takes between 3-9 ms to run
         return await this.driver.executeScript(`return document.documentElement.hasAttribute('data-tab-renamer-frame')`);
     }
 
@@ -46,13 +46,13 @@ class DriverUtils {
     }
 
     async switchToAppIframe() {
-        if (!await this.focusedOnAppIframe()) {
+        if (!await this.isFocusedOnAppIframe()) {
             await this.driver.switchTo().frame(await this.driver.findElement(this.shadowRootLocator.byCSS('iframe')));
         }
     }
 
     async switchToDefaultContent() {
-        if (await this.focusedOnAppIframe()) {
+        if (await this.isFocusedOnAppIframe()) {
             await this.driver.switchTo().defaultContent();
         }
     }
