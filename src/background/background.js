@@ -103,6 +103,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 });
 
+chrome.runtime.onStartup.addListener(async () => {
+    log.debug('onStartup listener called');
+    // To addres scenarios where Chrome is closed abruptly, and is not due to an install event (chrome update)
+    await markAllOpenSignaturesAsClosed();
+});
+
 /**
  * This function makes sure the contentScript gets injected properly when extension is installed or
  * updated without requiring the user to reload the tabs.
@@ -145,7 +151,6 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         title: "View Onboarding Page",
         contexts: ["action"],
     });
-    
 
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
@@ -157,9 +162,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         for (const key of Object.keys(migratedData)) {
             await chrome.storage.sync.set({[key]: migratedData[key]});
         }
-    } else if (details.reason === "chrome_update") {
-        await markAllOpenSignaturesAsClosed();
-    }
+    } 
+    // To addres scenarios where chrome is closed abruptly (through a Chrome restart to install updates)
+    await markAllOpenSignaturesAsClosed();
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

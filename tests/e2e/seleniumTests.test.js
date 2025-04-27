@@ -47,16 +47,28 @@ describe('Selenium UI Tests', () => {
     /** @type {http.Server} */
     let expressServer = null;
 
-    const createNewDriver = async (pageLoadStrategy = 'normal') => {
+    const createNewDriver = async (pageLoadStrategy = 'normal', test = false) => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
         if (!(await fs.lstat(extensionPath)).isDirectory()) {
             throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
         }
         
-        const chromeOptions = new chrome.Options()
-            .addArguments(`--load-extension=${extensionPath}`)
-            .addArguments('user-data-dir=/tmp/chrome-profile')
-            .setPageLoadStrategy(pageLoadStrategy);
+        let chromeOptions;
+        if (test) {
+            chromeOptions = new chrome.Options()
+                .addArguments('user-data-dir=/tmp/chrome-profile')
+                .setPageLoadStrategy(pageLoadStrategy);
+        } else {
+            chromeOptions = new chrome.Options()
+                .addArguments(`--load-extension=${extensionPath}`)
+                .addArguments('user-data-dir=/tmp/chrome-profile')
+                .setPageLoadStrategy(pageLoadStrategy);
+        }
+
+        // const chromeOptions = new chrome.Options()
+        //     .addArguments(`--load-extension=${extensionPath}`)
+        //     .addArguments('user-data-dir=/tmp/chrome-profile')
+        //     .setPageLoadStrategy(pageLoadStrategy);
         
         if (!process.env.HEADED) {
             chromeOptions.addArguments('--headless=new')
@@ -274,15 +286,14 @@ describe('Selenium UI Tests', () => {
 
     test('Retains tab signatures when the entire window is re-opened', async () => { //TODO: appears to be flaky, investigate.
         /*
-            This is required because 1. driver.close() doesn't allow enough
-            breathing room for chrome.tabs.onRemoved triggers to fully take 
-            effect. Also, 2. if driver.close() is called on the last tab,
-            thus closing the entire window, it has a similar effect.
-            As a result, a dummy tab is created so that none of the 
-            important tabs are the last to be closed.
+            Historically, this test needed a dummy tab, because driver.quit(), or calling 
+            driver.close() on the last tab would shut down the driver promptly, not allowing
+            enough breathing room for chrome.tabs.onRemoved to take effect.
+            However, resilliency to this condition was added later to the extension, through markAllOpenSignaturesAsClosed()
+            added on some listeners. Consequently, the dummy tab has been removed, and now this test checks: 
+            1- Remembering a tab name after full window close (on tab2: "Title2"), and
+            2- Being resillient to being abruptly shut off. (overlap with "Chrome restart handling" test)
         */
-        await driver.switchTo().newWindow('tab'); // dummy tab
-
         await driver.get(data.websites[0].url);
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
@@ -582,4 +593,20 @@ describe('Selenium UI Tests', () => {
         });
     });
 
+    describe('Chrome restart handling', () => {
+        test('Tab titles are restored correctly when chrome is restarted', async () => {
+            await driver.get(data.websites[0].url);
+            const signature = { title: 'Title1', favicon: '😀' };
+            await driverUtils.setSignature(signature.title, signature.favicon);
+
+            await driver.sleep(100);
+
+            await driver.quit();
+            await createNewDriver();
+
+            await driver.get(data.websites[0].url);
+            expect(await driverUtils.getTitle()).toBe(signature.title);
+            expect(await driverUtils.faviconIsEmoji()).toBe(true);
+        });
+    });
 });
