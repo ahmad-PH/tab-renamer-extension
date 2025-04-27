@@ -1,6 +1,6 @@
 /* global chrome */
-const handleChromeUpdateModule = require('src/background/handleChromeUpdate');
-const { handleChromeUpdate } = handleChromeUpdateModule;
+const markAllOpenSignaturesAsClosedModule = require('src/background/markAllOpenSignaturesAsClosed');
+const { markAllOpenSignaturesAsClosed } = markAllOpenSignaturesAsClosedModule;
 const utils = require('src/utils');
 const { expect } = require('@jest/globals');
 global.chrome = require('./chromeMock');
@@ -25,7 +25,7 @@ expect.extend({
 });
 
 
-describe('handleChromeUpdate', () => {
+describe('markAllOpenSignaturesAsClosed', () => {
     beforeEach(() => {
         utils.storageSet = jest.fn();
     });
@@ -36,7 +36,7 @@ describe('handleChromeUpdate', () => {
         }));
         const recordedTime = new Date().toISOString();
 
-        await handleChromeUpdate();
+        await markAllOpenSignaturesAsClosed();
         
         const updatedStoredTabs = utils.storageSet.mock.calls[0][0];
         expect(updatedStoredTabs[1].isClosed).toBe(true);
@@ -49,7 +49,7 @@ describe('handleChromeUpdate', () => {
             1: { isClosed: true, closedAt: sampleClosureTime },
         }));
 
-        await handleChromeUpdate();
+        await markAllOpenSignaturesAsClosed();
 
         expect(utils.storageSet).toHaveBeenCalledWith({
             1: { isClosed: true, closedAt: sampleClosureTime },
@@ -57,11 +57,11 @@ describe('handleChromeUpdate', () => {
     });
 });
 
-describe('handleChromeUpdate regisitered correctly in the listener', () => {
+describe('markAllOpenSignaturesAsClosed regisitered correctly in the listener', () => {
     
     it('', async () => {
-        let originalHandleChromeUpdate = handleChromeUpdateModule.handleChromeUpdate;
-        handleChromeUpdateModule.handleChromeUpdate = jest.fn();
+        let originalMarkAllOpenSignaturesAsClosed = markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed;
+        markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed = jest.fn();
         require('src/background/background');
 
         const listeners = chrome.runtime.onInstalled.addListener.mock.calls[0];
@@ -70,7 +70,7 @@ describe('handleChromeUpdate regisitered correctly in the listener', () => {
         const listener = listeners[0];
         await listener({reason: 'chrome_update'});
 
-        expect(handleChromeUpdateModule.handleChromeUpdate).toHaveBeenCalledTimes(1);
-        handleChromeUpdateModule.handleChromeUpdate = originalHandleChromeUpdate;
+        expect(markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed).toHaveBeenCalledTimes(1);
+        markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed = originalMarkAllOpenSignaturesAsClosed;
     });
 })

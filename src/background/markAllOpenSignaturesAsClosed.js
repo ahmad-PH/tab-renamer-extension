@@ -1,10 +1,10 @@
 import { getAllTabs, storageSet } from '../utils.js';
 import { getLogger } from '../log.js';
 
-const log = getLogger('handleChromeUpdate', 'warn');
+const log = getLogger('markAllOpenSignaturesAsClosed', 'warn');
 
-async function handleChromeUpdate() {
-    log.debug('handleChromeUpdate called ...');
+async function markAllOpenSignaturesAsClosed() {
+    log.debug('markAllOpenSignaturesAsClosed called ...');
     const storedTabs = await getAllTabs();
     log.debug('current tabs:', storedTabs);
     for (const tabId in storedTabs) {
@@ -17,4 +17,4 @@ async function handleChromeUpdate() {
     await storageSet(storedTabs);
 }
 
-export { handleChromeUpdate };
+export { markAllOpenSignaturesAsClosed };

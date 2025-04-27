@@ -4,7 +4,7 @@ import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatur
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction, SETTINGS_KEY_EMOJI_STYLE } from "../config.js";
-import { handleChromeUpdate } from "./handleChromeUpdate";
+import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
 const log = getLogger('background', 'warn');
@@ -108,6 +108,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
  * updated without requiring the user to reload the tabs.
  */
 chrome.runtime.onInstalled.addListener(async (details) => {
+    log.debug('onInstalled listener called with details:', details);
     const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
     log.debug('after query:', allTabs);
     allTabs.forEach(async (tab) => {
@@ -157,7 +158,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             await chrome.storage.sync.set({[key]: migratedData[key]});
         }
     } else if (details.reason === "chrome_update") {
-        await handleChromeUpdate();
+        await markAllOpenSignaturesAsClosed();
     }
 });
 
