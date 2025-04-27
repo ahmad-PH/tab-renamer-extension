@@ -3,6 +3,7 @@
  * this rule.
 */
 import { getLogger } from "loglevel";
+import * as utils from './utils';
 
 const log = getLogger('utils');
 
@@ -115,6 +116,16 @@ export function storageGet(keys) {
     });
 }
 
+/**  Temporary solution, to filter based on the key being an integer. Needs to be updated to fetch from a 
+ * designated "tabs" section.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing all tabs.
+ */
+export async function getAllTabs() {
+    const fetchedObjects = await utils.storageGet(null);
+    return Object.fromEntries(
+        Object.entries(fetchedObjects).filter(([key]) => Number.isInteger(parseInt(key)))
+    );
+}
 
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

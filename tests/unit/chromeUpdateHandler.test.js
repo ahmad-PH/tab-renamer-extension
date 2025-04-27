@@ -31,8 +31,6 @@ describe('handleChromeUpdate', () => {
     });
 
     it('marks all open tabs as closed with current time', async () => {
-
-
         utils.storageGet = jest.fn(() => ({
             1: { isClosed: false, closedAt: null },
         }));
