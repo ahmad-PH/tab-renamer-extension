@@ -39,17 +39,35 @@ const olog = getLogger('Title Observer', 'debug');
 
 
     // =================================== Title Observer: ===================================
+    let originalTitleContent = null;
+
     let headMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(async (node) => {
+                mutation.removedNodes.forEach((node) => {
+                    if (node.nodeName === 'TITLE') {
+                        olog.debug('TITLE element removed, text:', node.textContent);
+                        originalTitleContent = node.textContent;
+                    }
+                });
+
+                // Check added nodes and prevent unwanted changes
+                mutation.addedNodes.forEach((node) => {
                     if (node.nodeName === 'TITLE') {
                         olog.debug('TITLE element added, text:', node.textContent);
+                        
+                        // If we have an original title and the new content is different
+                        if (originalTitleContent && node.textContent !== originalTitleContent) {
+                            olog.debug('Preventing title change, restoring original:', originalTitleContent);
+                            node.textContent = originalTitleContent;
+                        }
+                        
                         if (!originalTitleIsStashed) {
-                            await bgScriptApi.stashOriginalTitle(node.textContent);
+                            bgScriptApi.stashOriginalTitle(node.textContent);
                         }
                     }
                 });
+            
             }
         });
     });
