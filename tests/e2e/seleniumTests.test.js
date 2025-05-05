@@ -25,7 +25,7 @@ const {
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
-const { startExpressServer } = require('./utils.js');
+const { startExpressServer, startExpressServerWithHTML } = require('./utils.js');
 let server;
             
 // eslint-disable-next-line no-unused-vars
@@ -319,16 +319,18 @@ describe('Selenium UI Tests', () => {
 
     }, 20 * SECONDS);
 
-    test('Title preserver maintains title despite direct manipulation: Facebook + YouTube', async () => {
-        // This test is mainly to emulate what Facebook and YouTube do.
-        // Faceboook: Try to keep title set to 'Facebook' all the time.
-        // YouTube: Change title when moving between videos, without triggering a reload.
-        await driver.get(data.websites[0].url);
-        await driverUtils.renameTab('New title');
-        await driver.executeScript('document.title = "Some other title"');
-        await driver.sleep(10); // give preserver time to correct the title
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe('New title');
+    describe('Title preserver', () => {
+        test('Maintains title despite direct manipulation: Facebook + YouTube', async () => {
+            // This test is mainly to emulate what Facebook and YouTube do.
+            // Faceboook: Try to keep title set to 'Facebook' all the time.
+            // YouTube: Change title when moving between videos, without triggering a reload.
+            await driver.get(data.websites[0].url);
+            await driverUtils.renameTab('New title');
+            await driver.executeScript('document.title = "Some other title"');
+            await driver.sleep(10); // give preserver time to correct the title
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe('New title');
+        });
     });
 
     describe('Signature restoration', () => {
@@ -481,13 +483,9 @@ describe('Selenium UI Tests', () => {
     });
 
     test("Key event listeners on document don't get triggered when UI is active", async () => {
-        // Set up an express server with custom HTML:
-        const app = express();
         const port = 3001;
-
-        app.get('/', (req, res) => {
-            res.send(`
-                <html>
+        expressServer = await startExpressServerWithHTML(port, `
+            <html>
                 <body>
                     <p id="testContainer">Initial</p>
                     <script>
@@ -498,11 +496,8 @@ describe('Selenium UI Tests', () => {
                     });
                     </script>
                 </body>
-                </html>
-            `);
-        });
-
-        expressServer = await startExpressServer(app, port);
+            </html>
+        `);
 
         await driver.get(`http://localhost:${port}`);
         await driverUtils.openRenameDialog();
@@ -516,37 +511,31 @@ describe('Selenium UI Tests', () => {
     });
 
     test("Event listeners on the host page won't trigger when working with tab renamer, no matter how aggressive", async () => {
-        const app = express();
         const port = 3001;
-
-        app.get('/', (req, res) => {
-            res.send(`
-                <html>
-                <body>
-                    <p id="captureContainer">Not triggered (capture)</p>
-                    <script>
-                    // Capture at window level with highest possible priority
-                    window.addEventListener('keydown', function(event) {
-                        if (event.key === 'e') {
-                            window.eventWasSeen = true;
-                            document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
-                            // Stop everything
-                            event.preventDefault(); // Causes the input box to fail to capture the input event.
-                            event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
-                            return false;
-                        }
-                    }, { 
-                        capture: true,  
-                        passive: false, // Allow preventDefault
-                        once: false,    // Handle all events
-                    });
-                    </script>
-                </body>
-                </html>
-            `);
-        });
-
-        expressServer = await startExpressServer(app, port);
+        expressServer = await startExpressServerWithHTML(port, `
+            <html>
+            <body>
+                <p id="captureContainer">Not triggered (capture)</p>
+                <script>
+                // Capture at window level with highest possible priority
+                window.addEventListener('keydown', function(event) {
+                    if (event.key === 'e') {
+                        window.eventWasSeen = true;
+                        document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
+                        // Stop everything
+                        event.preventDefault(); // Causes the input box to fail to capture the input event.
+                        event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
+                        return false;
+                    }
+                }, { 
+                    capture: true,  
+                    passive: false, // Allow preventDefault
+                    once: false,    // Handle all events
+                });
+                </script>
+            </body>
+            </html>
+        `);
 
         await driver.get(`http://localhost:${port}`);
         
@@ -604,9 +593,15 @@ describe('Selenium UI Tests', () => {
             await driver.quit();
             await createNewDriver();
 
+            await driver.sleep(50); // Time for the restart listener to mark all tabs as closed.
+
             await driver.get(data.websites[0].url);
             expect(await driverUtils.getTitle()).toBe(signature.title);
             expect(await driverUtils.faviconIsEmoji()).toBe(true);
         });
     });
+
+    
+
+
 });
