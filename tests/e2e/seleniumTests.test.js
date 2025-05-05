@@ -331,6 +331,38 @@ describe('Selenium UI Tests', () => {
             const actualTitle = await driverUtils.getTitle();
             expect(actualTitle).toBe('New title');
         });
+
+        // TODO; THIS IS THE GITHUB TEST. Complete this next.
+        // test('Maintains title despite manipulations to the title element: GitHub', async () => {
+        //     // head > title having it's direct child removed and replaced with a new string. 
+        //     const port = 3001;
+        //     expressServer = await startExpressServerWithHTML(port, `
+        //         <html>
+        //             <head>
+        //                 <title>Original title</title>
+        //             </head>
+        //             <body>
+        //                 <p>Test Page</p>
+        //             </body>
+        //         </html>
+        //     `);
+
+        //     await driver.get(`http://localhost:${port}`);
+        //     await driverUtils.renameTab('New title');
+
+        //     await driver.sleep(10_000);
+
+        //     await driver.executeScript(`
+        //         const title = document.querySelector('title');
+        //         title.removeChild(title.firstChild);
+        //         title.appendChild(document.createTextNode('Some other title'));
+        //     `);
+
+        //     await driver.sleep(5000);
+
+        //     const actualTitle = await driverUtils.getTitle();
+        //     expect(actualTitle).toBe('New title');
+        // });
     });
 
     describe('Signature restoration', () => {
