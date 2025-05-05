@@ -8,6 +8,9 @@ const chrome = {
       },
       onConnect: {
         addListener: jest.fn()
+      },
+      onStartup: {
+        addListener: jest.fn()
       }
     },
     tabs: {

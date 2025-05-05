@@ -2,6 +2,7 @@ const { findMatchingTab, loadTab, saveTab } = require('src/background/signatureS
 const { TabInfo, TabSignature } = require('src/types.js');
 const { storageSet, storageGet } = require('src/utils.js');
 const { chromeStorageMock } = require('./chromeStorageMock.js');
+const { getAllTabs } = require('../../src/utils.js');
 
 
 describe('findMatchingTab', () => {
@@ -98,7 +99,7 @@ describe('save/loadTab', () => {
         await loadTab(10, sharedURL, sharedIndex, true);
 
         // Assert:
-        const newStoredTabInfo = await storageGet(null);
+        const newStoredTabInfo = await getAllTabs();
         const keys = Object.keys(newStoredTabInfo);
         expect(keys.length).toBe(1);
         expect(keys[0]).toBe('10');

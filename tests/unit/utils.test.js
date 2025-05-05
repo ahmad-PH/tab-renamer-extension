@@ -1,6 +1,9 @@
 /* global chrome */
-const { storageGet } = require('src/utils');
-const { chromeStorageMock } = require('./chromeStorageMock');
+import { storageGet } from 'src/utils';
+import * as utils from 'src/utils';
+import { chromeStorageMock } from './chromeStorageMock';
+import { getAllTabs } from '../../src/utils';
+
 
 describe('storageGet', () => {
     beforeEach(() => {
@@ -13,7 +16,7 @@ describe('storageGet', () => {
     });
 
     it('should pass null to chrome.storage.sync.get when called with null', async () => {
-        await storageGet(null);
+        await getAllTabs();
         expect(chrome.storage.sync.get).toHaveBeenCalledWith(null, expect.any(Function));
     });
 
@@ -37,3 +40,19 @@ describe('storageGet', () => {
         expect(chrome.storage.sync.get).toHaveBeenCalledWith(['key1', 'key2'], expect.any(Function));
     });
 });
+
+
+describe('getAllTabs', () => {
+    it('Will return only entries with keys that parse to integers', async () => {
+        utils.storageGet = jest.fn().mockResolvedValue({
+            '1': 'tab1',
+            '2': 'tab2',
+            'settings.someKey': 'someValue',
+        });
+        const result = await utils.getAllTabs();
+        expect(result).toEqual({
+            '1': 'tab1',
+            '2': 'tab2',
+        });
+    });
+})

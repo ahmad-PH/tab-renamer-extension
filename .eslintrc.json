@@ -42,8 +42,14 @@
         },
         {
             "files": ["tests/**/*.js"],
+            "plugins": ["jest"],
+            "extends": [
+                "plugin:jest/recommended",
+                "plugin:jest/style"
+            ],
             "env": {
-                "jest": true
+                "jest": true,
+                "jest/globals": true
             },
             "parserOptions": {
                 "sourceType": "commonjs"

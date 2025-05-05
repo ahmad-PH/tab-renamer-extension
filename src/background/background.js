@@ -1,10 +1,10 @@
-import { storageGet, storageSet } from "../utils";
+import { getAllTabs, storageGet, storageSet } from "../utils";
 import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
 import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction, SETTINGS_KEY_EMOJI_STYLE } from "../config.js";
-import { handleChromeUpdate } from "./handleChromeUpdate";
+import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
 const log = getLogger('background', 'warn');
@@ -88,7 +88,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId, _removeInfo) {
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
-        const storedTabInfo = await storageGet(null);
+        const storedTabInfo = await getAllTabs();
         log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
         const matchingTab = findOldRecordOfFreshlyDiscardedTab(storedTabInfo, tab.url, tab.index);
         log.debug('Found matching tab:', matchingTab);
@@ -103,11 +103,18 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 });
 
+chrome.runtime.onStartup.addListener(async () => {
+    log.debug('onStartup listener called');
+    // To addres scenarios where Chrome is closed abruptly, and is not due to an install event (chrome update)
+    await markAllOpenSignaturesAsClosed();
+});
+
 /**
  * This function makes sure the contentScript gets injected properly when extension is installed or
  * updated without requiring the user to reload the tabs.
  */
 chrome.runtime.onInstalled.addListener(async (details) => {
+    log.debug('onInstalled listener called with details:', details);
     const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
     log.debug('after query:', allTabs);
     allTabs.forEach(async (tab) => {
@@ -144,21 +151,20 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         title: "View Onboarding Page",
         contexts: ["action"],
     });
-    
 
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
     } else if (details.reason === "update") {
-        await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
+        // await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
 
         const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
         await chrome.storage.sync.clear();
         for (const key of Object.keys(migratedData)) {
             await chrome.storage.sync.set({[key]: migratedData[key]});
         }
-    } else if (details.reason === "chrome_update") {
-        await handleChromeUpdate();
-    }
+    } 
+    // To addres scenarios where chrome is closed abruptly (through a Chrome restart to install updates)
+    await markAllOpenSignaturesAsClosed();
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

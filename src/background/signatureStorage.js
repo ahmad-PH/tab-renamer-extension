@@ -1,5 +1,5 @@
 import { TabInfo } from "../types";
-import { storageGet, storageSet } from "../utils";
+import { getAllTabs, storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
 const log = getLogger('signatureStorage.js', 'warn');
@@ -83,7 +83,7 @@ export function findOldRecordOfFreshlyDiscardedTab(storedTabInfo, url, index) {
 async function loadTab(tabId, url, index, isBeingOpened) {
     // Put a descriptive log logging everyhting with its name:
     log.debug('tabId:', tabId, 'url:', url, 'index:', index, 'isBeingOpened:', isBeingOpened);
-    const storedTabInfo = await storageGet(null);
+    const storedTabInfo = await getAllTabs();
     log.debug('storedTabInfo:', storedTabInfo);
 
     let matchedTab = findMatchingTab(storedTabInfo, tabId, url, index);

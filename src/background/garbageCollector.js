@@ -1,4 +1,4 @@
-import { storageGet } from "../utils.js";
+import { getAllTabs, storageGet } from "../utils.js";
 import { TabInfo } from "../types.js";
 
 /** garbage collector (gc) logger */
@@ -8,7 +8,7 @@ const SECONDS = 1000, MINUTES = 60 * SECONDS;
 export const garbageCollectionThreshold = 2 * MINUTES;
 
 async function garbageCollector() {
-    const allTabs = await storageGet(null);  // Added await here
+    const allTabs = await getAllTabs();  // Added await here
     const tabIdsToRemove = garabageCollectionFilter(Object.values(allTabs)).map(tabId => tabId.toString());
     await chrome.storage.sync.remove(tabIdsToRemove);
 }

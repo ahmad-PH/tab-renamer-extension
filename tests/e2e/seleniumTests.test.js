@@ -25,7 +25,7 @@ const {
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
 const { getLogger } = require('../../src/log');
-const { startExpressServer } = require('./utils.js');
+const { startExpressServer, startExpressServerWithHTML } = require('./utils.js');
 let server;
             
 // eslint-disable-next-line no-unused-vars
@@ -47,16 +47,28 @@ describe('Selenium UI Tests', () => {
     /** @type {http.Server} */
     let expressServer = null;
 
-    const createNewDriver = async (pageLoadStrategy = 'normal') => {
+    const createNewDriver = async (pageLoadStrategy = 'normal', test = false) => {
         const extensionPath = process.env.EXTENSION_PATH || './dist/dev';
         if (!(await fs.lstat(extensionPath)).isDirectory()) {
             throw new Error(`The extensionPath provided: ${extensionPath} does not exist/is not a directory.`);
         }
         
-        const chromeOptions = new chrome.Options()
-            .addArguments(`--load-extension=${extensionPath}`)
-            .addArguments('user-data-dir=/tmp/chrome-profile')
-            .setPageLoadStrategy(pageLoadStrategy);
+        let chromeOptions;
+        if (test) {
+            chromeOptions = new chrome.Options()
+                .addArguments('user-data-dir=/tmp/chrome-profile')
+                .setPageLoadStrategy(pageLoadStrategy);
+        } else {
+            chromeOptions = new chrome.Options()
+                .addArguments(`--load-extension=${extensionPath}`)
+                .addArguments('user-data-dir=/tmp/chrome-profile')
+                .setPageLoadStrategy(pageLoadStrategy);
+        }
+
+        // const chromeOptions = new chrome.Options()
+        //     .addArguments(`--load-extension=${extensionPath}`)
+        //     .addArguments('user-data-dir=/tmp/chrome-profile')
+        //     .setPageLoadStrategy(pageLoadStrategy);
         
         if (!process.env.HEADED) {
             chromeOptions.addArguments('--headless=new')
@@ -274,15 +286,14 @@ describe('Selenium UI Tests', () => {
 
     test('Retains tab signatures when the entire window is re-opened', async () => { //TODO: appears to be flaky, investigate.
         /*
-            This is required because 1. driver.close() doesn't allow enough
-            breathing room for chrome.tabs.onRemoved triggers to fully take 
-            effect. Also, 2. if driver.close() is called on the last tab,
-            thus closing the entire window, it has a similar effect.
-            As a result, a dummy tab is created so that none of the 
-            important tabs are the last to be closed.
+            Historically, this test needed a dummy tab, because driver.quit(), or calling 
+            driver.close() on the last tab would shut down the driver promptly, not allowing
+            enough breathing room for chrome.tabs.onRemoved to take effect.
+            However, resilliency to this condition was added later to the extension, through markAllOpenSignaturesAsClosed()
+            added on some listeners. Consequently, the dummy tab has been removed, and now this test checks: 
+            1- Remembering a tab name after full window close (on tab2: "Title2"), and
+            2- Being resillient to being abruptly shut off. (overlap with "Chrome restart handling" test)
         */
-        await driver.switchTo().newWindow('tab'); // dummy tab
-
         await driver.get(data.websites[0].url);
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
@@ -308,16 +319,50 @@ describe('Selenium UI Tests', () => {
 
     }, 20 * SECONDS);
 
-    test('Title preserver maintains title despite direct manipulation: Facebook + YouTube', async () => {
-        // This test is mainly to emulate what Facebook and YouTube do.
-        // Faceboook: Try to keep title set to 'Facebook' all the time.
-        // YouTube: Change title when moving between videos, without triggering a reload.
-        await driver.get(data.websites[0].url);
-        await driverUtils.renameTab('New title');
-        await driver.executeScript('document.title = "Some other title"');
-        await driver.sleep(10); // give preserver time to correct the title
-        const actualTitle = await driverUtils.getTitle();
-        expect(actualTitle).toBe('New title');
+    describe('Title preserver', () => {
+        test('Maintains title despite direct manipulation: Facebook + YouTube', async () => {
+            // This test is mainly to emulate what Facebook and YouTube do.
+            // Faceboook: Try to keep title set to 'Facebook' all the time.
+            // YouTube: Change title when moving between videos, without triggering a reload.
+            await driver.get(data.websites[0].url);
+            await driverUtils.renameTab('New title');
+            await driver.executeScript('document.title = "Some other title"');
+            await driver.sleep(10); // give preserver time to correct the title
+            const actualTitle = await driverUtils.getTitle();
+            expect(actualTitle).toBe('New title');
+        });
+
+        // TODO; THIS IS THE GITHUB TEST. Complete this next.
+        // test('Maintains title despite manipulations to the title element: GitHub', async () => {
+        //     // head > title having it's direct child removed and replaced with a new string. 
+        //     const port = 3001;
+        //     expressServer = await startExpressServerWithHTML(port, `
+        //         <html>
+        //             <head>
+        //                 <title>Original title</title>
+        //             </head>
+        //             <body>
+        //                 <p>Test Page</p>
+        //             </body>
+        //         </html>
+        //     `);
+
+        //     await driver.get(`http://localhost:${port}`);
+        //     await driverUtils.renameTab('New title');
+
+        //     await driver.sleep(10_000);
+
+        //     await driver.executeScript(`
+        //         const title = document.querySelector('title');
+        //         title.removeChild(title.firstChild);
+        //         title.appendChild(document.createTextNode('Some other title'));
+        //     `);
+
+        //     await driver.sleep(5000);
+
+        //     const actualTitle = await driverUtils.getTitle();
+        //     expect(actualTitle).toBe('New title');
+        // });
     });
 
     describe('Signature restoration', () => {
@@ -470,13 +515,9 @@ describe('Selenium UI Tests', () => {
     });
 
     test("Key event listeners on document don't get triggered when UI is active", async () => {
-        // Set up an express server with custom HTML:
-        const app = express();
         const port = 3001;
-
-        app.get('/', (req, res) => {
-            res.send(`
-                <html>
+        expressServer = await startExpressServerWithHTML(port, `
+            <html>
                 <body>
                     <p id="testContainer">Initial</p>
                     <script>
@@ -487,11 +528,8 @@ describe('Selenium UI Tests', () => {
                     });
                     </script>
                 </body>
-                </html>
-            `);
-        });
-
-        expressServer = await startExpressServer(app, port);
+            </html>
+        `);
 
         await driver.get(`http://localhost:${port}`);
         await driverUtils.openRenameDialog();
@@ -505,37 +543,31 @@ describe('Selenium UI Tests', () => {
     });
 
     test("Event listeners on the host page won't trigger when working with tab renamer, no matter how aggressive", async () => {
-        const app = express();
         const port = 3001;
-
-        app.get('/', (req, res) => {
-            res.send(`
-                <html>
-                <body>
-                    <p id="captureContainer">Not triggered (capture)</p>
-                    <script>
-                    // Capture at window level with highest possible priority
-                    window.addEventListener('keydown', function(event) {
-                        if (event.key === 'e') {
-                            window.eventWasSeen = true;
-                            document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
-                            // Stop everything
-                            event.preventDefault(); // Causes the input box to fail to capture the input event.
-                            event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
-                            return false;
-                        }
-                    }, { 
-                        capture: true,  
-                        passive: false, // Allow preventDefault
-                        once: false,    // Handle all events
-                    });
-                    </script>
-                </body>
-                </html>
-            `);
-        });
-
-        expressServer = await startExpressServer(app, port);
+        expressServer = await startExpressServerWithHTML(port, `
+            <html>
+            <body>
+                <p id="captureContainer">Not triggered (capture)</p>
+                <script>
+                // Capture at window level with highest possible priority
+                window.addEventListener('keydown', function(event) {
+                    if (event.key === 'e') {
+                        window.eventWasSeen = true;
+                        document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
+                        // Stop everything
+                        event.preventDefault(); // Causes the input box to fail to capture the input event.
+                        event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
+                        return false;
+                    }
+                }, { 
+                    capture: true,  
+                    passive: false, // Allow preventDefault
+                    once: false,    // Handle all events
+                });
+                </script>
+            </body>
+            </html>
+        `);
 
         await driver.get(`http://localhost:${port}`);
         
@@ -581,5 +613,27 @@ describe('Selenium UI Tests', () => {
             expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
         });
     });
+
+    describe('Chrome restart handling', () => {
+        test('Tab titles are restored correctly when chrome is restarted', async () => {
+            await driver.get(data.websites[0].url);
+            const signature = { title: 'Title1', favicon: '😀' };
+            await driverUtils.setSignature(signature.title, signature.favicon);
+
+            await driver.sleep(100);
+
+            await driver.quit();
+            await createNewDriver();
+
+            await driver.sleep(50); // Time for the restart listener to mark all tabs as closed.
+
+            await driver.get(data.websites[0].url);
+            expect(await driverUtils.getTitle()).toBe(signature.title);
+            expect(await driverUtils.faviconIsEmoji()).toBe(true);
+        });
+    });
+
+    
+
 
 });
