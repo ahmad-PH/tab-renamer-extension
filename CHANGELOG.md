@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.4] - 2025-05-05
+
+### Fixed
+
+- Fixed a regression where the extension would not corretly load stored names and favicons after a Chrome update, or abrupt restart. Added robust testing to prevent future regressions.
+
 ## [1.1.3] - 2025-04-13
 
 ### Fixed
