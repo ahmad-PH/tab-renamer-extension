@@ -1,4 +1,4 @@
-import { storageGet, storageSet } from "../utils";
+import { getAllTabs, storageGet, storageSet } from "../utils";
 import { TabInfo } from "../types";
 import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
 import { getLogger } from "../log";
@@ -88,7 +88,7 @@ chrome.tabs.onRemoved.addListener(async function(tabId, _removeInfo) {
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
-        const storedTabInfo = await storageGet(null);
+        const storedTabInfo = await getAllTabs();
         log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
         const matchingTab = findOldRecordOfFreshlyDiscardedTab(storedTabInfo, tab.url, tab.index);
         log.debug('Found matching tab:', matchingTab);
