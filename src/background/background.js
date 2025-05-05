@@ -155,7 +155,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === "install") {
         welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
     } else if (details.reason === "update") {
-        await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
+        // await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
 
         const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
         await chrome.storage.sync.clear();
