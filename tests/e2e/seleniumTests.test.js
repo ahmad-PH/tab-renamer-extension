@@ -60,6 +60,7 @@ describe('Selenium UI Tests', () => {
                 .setPageLoadStrategy(pageLoadStrategy);
         } else {
             chromeOptions = new chrome.Options()
+.setBinaryPath("/Users/ahmadph/chrome/mac_arm-139.0.7258.154/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing")
                 .addArguments(`--load-extension=${extensionPath}`)
                 .addArguments('user-data-dir=/tmp/chrome-profile')
                 .setPageLoadStrategy(pageLoadStrategy);

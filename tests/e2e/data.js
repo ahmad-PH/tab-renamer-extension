@@ -1,6 +1,6 @@
 /** Some sample URLs and data to use for testing */
 const googleUrl = 'https://www.google.com/';
-const googleFaviconUrl = 'https://www.google.com/favicon.ico';
+const googleFaviconUrl = '//www.gstatic.com/images/branding/searchlogo/ico/favicon.ico';
 const facebookUrl = 'https://www.facebook.com/';
 const youtubeUrl = 'https://www.youtube.com/';
 const ahmadphosseiniUrl = 'https://www.ahmadphosseini.com/';
@@ -11,8 +11,8 @@ const websites = [
         faviconUrl: 'http://localhost:3000/favicon.ico',
         title: 'Test Page',
     },
-    {url: googleUrl, faviconUrl: googleFaviconUrl, title: 'Google'},
     {url: ahmadphosseiniUrl, faviconUrl: ahmadphosseiniFaviconUrl, title: 'Ahmad Pourihosseini'},
+    {url: googleUrl, faviconUrl: googleFaviconUrl, title: 'Google'},
     {url: 'https://motherfuckingwebsite.com/'},
     {url: youtubeUrl},
     {url: facebookUrl},
