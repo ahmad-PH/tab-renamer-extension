@@ -52,7 +52,6 @@ export default defineConfig({
             '--disable-web-security',
             '--disable-features=VizDisplayCompositor',
           ],
-          headless: process.env.HEADED ? false : true,
         },
         // Custom context for extension testing
         contextOptions: {
@@ -80,5 +79,7 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });
