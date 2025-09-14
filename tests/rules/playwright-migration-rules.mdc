@@ -5,4 +5,4 @@ alwaysApply: false
 
 - Ignore any "shadowRootLocator" or similar logic to find the shadow root in Selenium tests. Playwright tests intelligently find elements inside the shadowroot. No need for explicit handling. In each case, see what the equivalent "locator" would be, if you didn't care about finding the shadow root, and use that for Playwright instead.
 
-
+- Ignore all calls to "switchToDefaultContent()" from Selenium tests or the similar. No need to manually switch between iframe and default content when using Playwright.
