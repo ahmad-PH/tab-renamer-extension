@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect, FrameLocator } from '@playwright/test';
 import { 
     ROOT_ELEMENT_ID,
     INPUT_BOX_ID,
@@ -282,6 +282,11 @@ export class ExtensionUtils {
 
     // =================== Utility Methods ===================
     
+
+    extensionFrame(): FrameLocator {
+        return this.page.locator('iframe').contentFrame()
+    }
+
     /**
      * Wait for page to load completely
      */

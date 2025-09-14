@@ -19,7 +19,7 @@ test.describe('Basic Extension Operations', () => {
     test('Can open and close dialog', async ({ page }) => {
         // Open dialog
         await extensionUtils.openRenameDialog({ doSwitchToAppIframe: false });
-        const rootElement = page.locator('iframe').contentFrame().getByTestId(INPUT_BOX_ID);
+        const rootElement = extensionUtils.extensionFrame().getByTestId(INPUT_BOX_ID);
         await expect(rootElement).toBeVisible();
 
         // Pressing shortcut twice should close the dialog
@@ -33,7 +33,7 @@ test.describe('Basic Extension Operations', () => {
 
         // Clicking on the overlay should close the dialog
         await extensionUtils.openRenameDialog();
-        await page.locator('iframe').contentFrame().getByTestId(OVERLAY_ID).click()
+        await extensionUtils.extensionFrame().getByTestId(OVERLAY_ID).click()
         await expect(rootElement).not.toBeVisible();
     });
 
