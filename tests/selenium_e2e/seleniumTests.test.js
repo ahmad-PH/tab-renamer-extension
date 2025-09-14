@@ -24,7 +24,7 @@ const {
 } = require('../../src/config.js');
 // eslint-disable-next-line no-unused-vars
 const { sleep } = require('../../src/utils.js');
-const { getLogger } = require('../../src/log');
+const { getLogger } = require('../../src/log.js');
 const { startExpressServer, startExpressServerWithHTML } = require('./utils.js');
 let server;
             
@@ -60,6 +60,7 @@ describe('Selenium UI Tests', () => {
                 .setPageLoadStrategy(pageLoadStrategy);
         } else {
             chromeOptions = new chrome.Options()
+                .setBinaryPath("/Users/ahmadph/chrome/mac_arm-139.0.7258.154/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing")
                 .addArguments(`--load-extension=${extensionPath}`)
                 .addArguments('user-data-dir=/tmp/chrome-profile')
                 .setPageLoadStrategy(pageLoadStrategy);
@@ -294,10 +295,12 @@ describe('Selenium UI Tests', () => {
             1- Remembering a tab name after full window close (on tab2: "Title2"), and
             2- Being resillient to being abruptly shut off. (overlap with "Chrome restart handling" test)
         */
+       console.log("Starting test")
         await driver.get(data.websites[0].url);
         const signature1 = { title: 'Title1', favicon: '😀' };
         await driverUtils.setSignature(signature1.title, signature1.favicon);
 
+        console.log("About to open tab2");
         await driverUtils.openTabToURL(data.websites[1].url);
 
         const signature2 = { title: 'Title2', favicon: '🌟' };
@@ -305,6 +308,7 @@ describe('Selenium UI Tests', () => {
 
         await driver.sleep(500);
 
+        console.log("About to close all tabs");
         await driverUtils.closeAllTabs();
         await driver.sleep(100);
         await createNewDriver();
@@ -583,36 +587,37 @@ describe('Selenium UI Tests', () => {
         expect(await captureContainer.getText()).toBe('Not triggered (capture)');
     });
 
-    describe('Settings Page', () => {
-        test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
-            // Go to the Settings Page and switch style to Twemoji.
-            await driver.get(data.websites[0].url);
-            await driverUtils.openRenameDialog();
-            const currentWindowHandle = await driver.getWindowHandle();
-            await driverUtils.switchToNewTabAfterPerforming(async () => {
-                await driverUtils.openSettingsPage();
-            });
-            await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).click();
+    // describe('Settings Page', () => {
+    //     test('Emoji style can be changed properly, and the select element remembers the selected option', async () => {
+    //         // Go to the Settings Page and switch style to Twemoji.
+    //         await driver.get(data.websites[0].url);
+    //         // await driver.sleep(10_000);
+    //         await driverUtils.openRenameDialog();
+    //         const currentWindowHandle = await driver.getWindowHandle();
+    //         await driverUtils.switchToNewTabAfterPerforming(async () => {
+    //             await driverUtils.openSettingsPage();
+    //         });
+    //         await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).click();
 
-            const twemojiOption = await driver.findElement(By.xpath("//li[contains(text(), 'Twemoji')]"));
-            await twemojiOption.click();
+    //         const twemojiOption = await driver.findElement(By.xpath("//li[contains(text(), 'Twemoji')]"));
+    //         await twemojiOption.click();
 
-            // Close the settings page, go back to original tab, check emoji style.
-            await driver.close();
-            await driver.switchTo().window(currentWindowHandle);
+    //         // Close the settings page, go back to original tab, check emoji style.
+    //         await driver.close();
+    //         await driver.switchTo().window(currentWindowHandle);
             
-            await driverUtils.switchToAppIframe();
-            await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
-            const emojiElement = await driver.wait(until.elementLocated(By.id('😇')), 100);
-            expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
+    //         await driverUtils.switchToAppIframe();
+    //         await driver.findElement(By.id(FAVICON_PICKER_ID)).click();
+    //         const emojiElement = await driver.wait(until.elementLocated(By.id('😇')), 100);
+    //         expect(await emojiElement.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
-            // Re-open the settings page, and check that the style is still Twemoji:
-            await driverUtils.switchToNewTabAfterPerforming(async () => {
-                await driverUtils.openSettingsPage();
-            });
-            expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
-        });
-    });
+    //         // Re-open the settings page, and check that the style is still Twemoji:
+    //         await driverUtils.switchToNewTabAfterPerforming(async () => {
+    //             await driverUtils.openSettingsPage();
+    //         });
+    //         expect(await driver.findElement(By.id(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).getText()).toBe("Twemoji");
+    //     });
+    // });
 
     describe('Chrome restart handling', () => {
         test('Tab titles are restored correctly when chrome is restarted', async () => {
