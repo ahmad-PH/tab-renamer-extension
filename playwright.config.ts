@@ -51,7 +51,6 @@ export default defineConfig({
             '--disable-extensions-except=' + path.resolve(__dirname, 'dist/dev'),
             '--disable-web-security',
             '--disable-features=VizDisplayCompositor',
-            '--user-data-dir=/tmp/chrome-profile-playwright',
           ],
           headless: process.env.HEADED ? false : true,
         },
@@ -77,7 +76,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'node -e "const express = require(\'express\'); const app = express(); app.use(\'/\', express.static(\'./tests/data/basic_webpage\')); app.listen(3000, () => console.log(\'Test server running on port 3000\'));"',
+    command: 'node tests/e2e/server.js',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
