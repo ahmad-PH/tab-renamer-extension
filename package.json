@@ -6,11 +6,8 @@
   "scripts": {
     "test": "jest --detectOpenHandles --verbose",
     "test:unit": "jest --detectOpenHandles --verbose tests/unit",
-    "test:headed": "HEADED=true jest --detectOpenHandles --verbose",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "HEADED=true playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug",
+    "test:e2e": "playwright test --project=chromium-extension",
+    "test:e2e:debug": "playwright test --project=chromium-extension --debug",
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
     "version": "node update-manifest-version.js && git add ."
