@@ -45,6 +45,7 @@ export default defineConfig({
       use: { 
         ...devices['Desktop Chrome'],
         // Chrome extension configuration
+        testIdAttribute: 'id',
         launchOptions: {
           args: [
             `--load-extension=${path.resolve(__dirname, 'dist/dev')}`,
