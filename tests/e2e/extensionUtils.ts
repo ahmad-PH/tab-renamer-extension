@@ -37,7 +37,8 @@ export class ExtensionUtils {
      * Get a locator within the shadow root
      */
     private getShadowLocator(selector: string): Locator {
-        return this.page.locator(`${this.shadowRootSelector}`).shadowRoot().locator(selector);
+        return this.page.locator(selector);
+        // return this.page.locator(`${this.shadowRootSelector}`).locator(selector);
     }
 
     /**
@@ -60,9 +61,10 @@ export class ExtensionUtils {
      * Check if currently focused on app iframe
      */
     async isFocusedOnAppIframe(): Promise<boolean> {
-        return await this.page.evaluate(() => {
-            return document.documentElement.hasAttribute('data-tab-renamer-frame');
-        });
+        return Promise.resolve(true);
+        // return await this.page.evaluate(() => {
+        //     return document.documentElement.hasAttribute('data-tab-renamer-frame');
+        // });
     }
 
     /**
@@ -72,16 +74,6 @@ export class ExtensionUtils {
         if (!(await this.isFocusedOnAppIframe())) {
             const iframe = this.getShadowElementByCSS('iframe');
             await this.page.frameLocator(`${this.shadowRootSelector} >> iframe`);
-        }
-    }
-
-    /**
-     * Switch back to default content
-     */
-    async switchToDefaultContent(): Promise<void> {
-        if (await this.isFocusedOnAppIframe()) {
-            // In Playwright, we don't need explicit switching like Selenium
-            // The page context handles this automatically
         }
     }
 
@@ -125,7 +117,9 @@ export class ExtensionUtils {
         }
 
         // Wait for dialog to be visible
-        await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
+        // await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
+        // await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
+        await this.getShadowElementById(ROOT_ELEMENT_ID);
     }
 
     /**

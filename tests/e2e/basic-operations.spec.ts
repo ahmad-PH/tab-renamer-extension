@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import testData from './testData';
+import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID } from '../../src/config';
 
 test.describe('Basic Extension Operations', () => {
     let extensionUtils: ExtensionUtils;
@@ -18,7 +19,7 @@ test.describe('Basic Extension Operations', () => {
     test('Can open and close dialog', async ({ page }) => {
         // Open dialog
         await extensionUtils.openRenameDialog({ doSwitchToAppIframe: false });
-        const rootElement = extensionUtils.getShadowElementById('root-element');
+        const rootElement = page.locator('iframe').contentFrame().getByTestId(INPUT_BOX_ID);
         await expect(rootElement).toBeVisible();
 
         // Pressing shortcut twice should close the dialog
@@ -32,8 +33,7 @@ test.describe('Basic Extension Operations', () => {
 
         // Clicking on the overlay should close the dialog
         await extensionUtils.openRenameDialog();
-        await extensionUtils.getShadowElementById('overlay').click();
-        await extensionUtils.switchToDefaultContent();
+        await page.locator('iframe').contentFrame().getByTestId(OVERLAY_ID).click()
         await expect(rootElement).not.toBeVisible();
     });
 
