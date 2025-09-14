@@ -1,0 +1,365 @@
+import { Page, Locator, expect } from '@playwright/test';
+import { 
+    ROOT_ELEMENT_ID,
+    INPUT_BOX_ID,
+    FAVICON_PICKER_ID,
+    PICKED_EMOJI_ID,
+    EMOJI_REMOVE_BUTTON_ID,
+    COMMAND_OPEN_RENAME_DIALOG,
+    COMMAND_DISCARD_TAB,
+    EMOJI_PICKER_ID,
+    COMMAND_CLOSE_WELCOME_TAB,
+    SETTING_BUTTON_TEST_STUB_ID,
+    ROOT_TAG_NAME,
+    EMOJI_STYLE_NATIVE,
+    EMOJI_STYLE_TWEMOJI,
+    COMMAND_SET_EMOJI_STYLE,
+    OVERLAY_ID,
+    SEARCH_BAR_ID,
+    SEARCH_RESULTS_ID,
+} from '../../src/config.js';
+
+/**
+ * Playwright equivalent of DriverUtils for Chrome extension testing
+ */
+export class ExtensionUtils {
+    private page: Page;
+    private shadowRootSelector: string;
+
+    constructor(page: Page) {
+        this.page = page;
+        this.shadowRootSelector = ROOT_TAG_NAME;
+    }
+
+    // =================== Shadow DOM Access ===================
+    
+    /**
+     * Get a locator within the shadow root
+     */
+    private getShadowLocator(selector: string): Locator {
+        return this.page.locator(`${this.shadowRootSelector}`).shadowRoot().locator(selector);
+    }
+
+    /**
+     * Get shadow root element by ID
+     */
+    getShadowElementById(id: string): Locator {
+        return this.getShadowLocator(`#${id}`);
+    }
+
+    /**
+     * Get shadow root element by CSS selector
+     */
+    getShadowElementByCSS(css: string): Locator {
+        return this.getShadowLocator(css);
+    }
+
+    // =================== Iframe State Management ===================
+    
+    /**
+     * Check if currently focused on app iframe
+     */
+    async isFocusedOnAppIframe(): Promise<boolean> {
+        return await this.page.evaluate(() => {
+            return document.documentElement.hasAttribute('data-tab-renamer-frame');
+        });
+    }
+
+    /**
+     * Switch to app iframe context
+     */
+    async switchToAppIframe(): Promise<void> {
+        if (!(await this.isFocusedOnAppIframe())) {
+            const iframe = this.getShadowElementByCSS('iframe');
+            await this.page.frameLocator(`${this.shadowRootSelector} >> iframe`);
+        }
+    }
+
+    /**
+     * Switch back to default content
+     */
+    async switchToDefaultContent(): Promise<void> {
+        if (await this.isFocusedOnAppIframe()) {
+            // In Playwright, we don't need explicit switching like Selenium
+            // The page context handles this automatically
+        }
+    }
+
+    /**
+     * Execute callback within iframe context
+     */
+    async withIframeContext<T>(callback: () => Promise<T>): Promise<T> {
+        const wasInIframe = await this.isFocusedOnAppIframe();
+        if (!wasInIframe) {
+            await this.switchToAppIframe();
+        }
+        try {
+            return await callback();
+        } finally {
+            if (!wasInIframe) {
+                await this.switchToDefaultContent();
+            }
+        }
+    }
+
+    // ================= End: Iframe State Management ===================
+
+    // =================== Dialog Operations ===================
+    
+    /**
+     * Open rename dialog
+     */
+    async openRenameDialog(options: { 
+        intendedToClose?: boolean; 
+        doSwitchToAppIframe?: boolean;
+    } = {}): Promise<void> {
+        const { intendedToClose = false, doSwitchToAppIframe = true } = options;
+        
+        // Dispatch the command to open the dialog
+        await this.page.evaluate((command) => {
+            document.dispatchEvent(new MessageEvent(command));
+        }, COMMAND_OPEN_RENAME_DIALOG);
+
+        if (doSwitchToAppIframe) {
+            await this.switchToAppIframe();
+        }
+
+        // Wait for dialog to be visible
+        await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
+    }
+
+    /**
+     * Submit rename dialog
+     */
+    async submitRenameDialog(): Promise<void> {
+        await this.page.keyboard.press('Enter');
+    }
+
+    /**
+     * Close rename dialog
+     */
+    async closeRenameDialog(): Promise<void> {
+        await this.page.keyboard.press('Escape');
+    }
+
+    // =================== Tab Operations ===================
+    
+    /**
+     * Rename tab with new title
+     */
+    async renameTab(newTabTitle: string): Promise<void> {
+        await this.openRenameDialog();
+        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        await titleBox.clear();
+        await titleBox.fill(newTabTitle);
+        await this.submitRenameDialog();
+        await this.switchToDefaultContent();
+    }
+
+    /**
+     * Get current tab title
+     */
+    async getTitle(): Promise<string> {
+        return await this.page.title();
+    }
+
+    /**
+     * Get title from UI (within the dialog)
+     */
+    async getTitleInUI(): Promise<string> {
+        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        return await titleBox.inputValue();
+    }
+
+    // =================== Favicon Operations ===================
+    
+    /**
+     * Open favicon picker
+     */
+    async openFaviconPicker(): Promise<void> {
+        await this.openRenameDialog();
+        await this.getShadowElementById(FAVICON_PICKER_ID).click();
+    }
+
+    /**
+     * Set favicon to emoji
+     */
+    async setFavicon(emoji: string): Promise<void> {
+        await this.openFaviconPicker();
+        const emojiPicker = this.getShadowElementById(EMOJI_PICKER_ID);
+        await emojiPicker.locator(`#${emoji}`).waitFor({ state: 'visible' });
+        await emojiPicker.locator(`#${emoji}`).click();
+    }
+
+    /**
+     * Get favicon from UI
+     */
+    async getFaviconInUI(): Promise<string> {
+        const pickedEmojiElement = this.getShadowElementById(PICKED_EMOJI_ID);
+        return await pickedEmojiElement.getAttribute('data-emoji') || '';
+    }
+
+    /**
+     * Check if favicon is emoji
+     */
+    async faviconIsEmoji(emojiStyle?: string): Promise<boolean> {
+        const faviconUrl = await this.getFaviconUrl();
+        return faviconUrl.startsWith('data:image/svg+xml');
+    }
+
+    /**
+     * Get current favicon URL
+     */
+    async getFaviconUrl(): Promise<string> {
+        return await this.page.evaluate(() => {
+            const link = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
+            return link ? link.href : '';
+        });
+    }
+
+    /**
+     * Assert favicon URL matches expected
+     */
+    async assertFaviconUrl(expectedUrl: string): Promise<void> {
+        const actualUrl = await this.getFaviconUrl();
+        expect(actualUrl).toBe(expectedUrl);
+    }
+
+    /**
+     * Restore original favicon
+     */
+    async restoreFavicon(): Promise<void> {
+        await this.openFaviconPicker();
+        await this.getShadowElementById(EMOJI_REMOVE_BUTTON_ID).click();
+    }
+
+    /**
+     * Restore original title
+     */
+    async restoreTitle(): Promise<void> {
+        await this.openRenameDialog();
+        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        await titleBox.clear();
+        await this.submitRenameDialog();
+        await this.switchToDefaultContent();
+    }
+
+    // =================== Tab Management ===================
+    
+    /**
+     * Set tab signature (title + favicon)
+     */
+    async setSignature(title: string, favicon: string): Promise<void> {
+        await this.renameTab(title);
+        await this.setFavicon(favicon);
+    }
+
+    /**
+     * Close and reopen current tab
+     */
+    async closeAndReopenCurrentTab(): Promise<void> {
+        const currentUrl = this.page.url();
+        await this.page.close();
+        await this.page.context().newPage();
+        await this.page.goto(currentUrl);
+    }
+
+    /**
+     * Open new tab to URL
+     */
+    async openTabToURL(url: string): Promise<void> {
+        const newPage = await this.page.context().newPage();
+        await newPage.goto(url);
+        // Switch to the new page
+        this.page = newPage;
+    }
+
+    /**
+     * Close all tabs
+     */
+    async closeAllTabs(): Promise<void> {
+        const pages = this.page.context().pages();
+        for (const page of pages) {
+            if (page !== this.page) {
+                await page.close();
+            }
+        }
+    }
+
+    // =================== Utility Methods ===================
+    
+    /**
+     * Wait for page to load completely
+     */
+    async waitForPageLoad(): Promise<void> {
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    /**
+     * Close welcome tab if it exists
+     */
+    async closeWelcomeTab(): Promise<void> {
+        try {
+            await this.page.evaluate((command) => {
+                document.dispatchEvent(new MessageEvent(command));
+            }, COMMAND_CLOSE_WELCOME_TAB);
+        } catch (error) {
+            // Welcome tab might not exist, ignore error
+        }
+    }
+
+    /**
+     * Get active element within iframe
+     */
+    async getIframeActiveElement(): Promise<Locator | null> {
+        const activeElementId = await this.page.evaluate(() => {
+            return document.activeElement?.id || null;
+        });
+        
+        if (activeElementId) {
+            return this.getShadowElementById(activeElementId);
+        }
+        return null;
+    }
+
+    /**
+     * Schedule discard tab event
+     */
+    async scheduleDiscardTabEvent(): Promise<void> {
+        await this.page.evaluate((command) => {
+            document.dispatchEvent(new MessageEvent(command));
+        }, COMMAND_DISCARD_TAB);
+    }
+
+    /**
+     * Set emoji style
+     */
+    async setEmojiStyle(style: string): Promise<void> {
+        await this.page.evaluate(({ command, style }) => {
+            document.dispatchEvent(new MessageEvent(command, { 
+                data: { style } 
+            }));
+        }, { command: COMMAND_SET_EMOJI_STYLE, style });
+    }
+
+    /**
+     * Open settings page
+     */
+    async openSettingsPage(): Promise<void> {
+        await this.page.goto('chrome://extensions/');
+        // Additional logic to navigate to extension settings would go here
+    }
+
+    /**
+     * Switch to new tab after performing action
+     */
+    async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<void> {
+        const currentPage = this.page;
+        await action();
+        const pages = this.page.context().pages();
+        const newPage = pages.find(p => p !== currentPage);
+        if (newPage) {
+            this.page = newPage;
+        }
+    }
+}
