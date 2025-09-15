@@ -1,4 +1,4 @@
-import { Page, Locator, expect, FrameLocator } from '@playwright/test';
+import { Page, Locator, expect, FrameLocator, ElementHandle } from '@playwright/test';
 import { 
     ROOT_ELEMENT_ID,
     INPUT_BOX_ID,
@@ -143,11 +143,10 @@ export class ExtensionUtils {
      */
     async renameTab(newTabTitle: string): Promise<void> {
         await this.openRenameDialog();
-        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         await titleBox.clear();
         await titleBox.fill(newTabTitle);
         await this.submitRenameDialog();
-        await this.switchToDefaultContent();
     }
 
     /**
@@ -310,15 +309,8 @@ export class ExtensionUtils {
     /**
      * Get active element within iframe
      */
-    async getIframeActiveElement(): Promise<Locator | null> {
-        const activeElementId = await this.page.evaluate(() => {
-            return document.activeElement?.id || null;
-        });
-        
-        if (activeElementId) {
-            return this.getShadowElementById(activeElementId);
-        }
-        return null;
+    async getIframeActiveElement(): Promise<ElementHandle<any>> {
+        return await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement);
     }
 
     /**

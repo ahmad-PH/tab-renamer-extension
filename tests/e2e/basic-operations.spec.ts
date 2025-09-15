@@ -49,12 +49,13 @@ test.describe('Basic Extension Operations', () => {
         await page.locator('body').click();
 
         await extensionUtils.openRenameDialog();
-        const activeElement = await extensionUtils.getIframeActiveElement();
 
+        const activeElement = await extensionUtils.getIframeActiveElement();
+        
         expect(activeElement).not.toBeNull();
         if (activeElement) {
             const activeElementId = await activeElement.getAttribute('id');
-            expect(activeElementId).toBe('input-box');
+            expect(activeElementId).toBe(INPUT_BOX_ID);
         }
     });
 });
