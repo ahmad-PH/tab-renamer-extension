@@ -6,3 +6,9 @@ alwaysApply: false
 - Ignore any "shadowRootLocator" or similar logic to find the shadow root in Selenium tests. Playwright tests intelligently find elements inside the shadowroot. No need for explicit handling. In each case, see what the equivalent "locator" would be, if you didn't care about finding the shadow root, and use that for Playwright instead.
 
 - Ignore all calls to "switchToDefaultContent()" from Selenium tests or the similar. No need to manually switch between iframe and default content when using Playwright.
+
+- Translate all the places where I'm finding an element by Id in Selenium to "getByTestId()" in PlayWright.
+
+- When targeting any of the elements inside the extension (like the input box, the emojis, etc), you need to use the frame locator to get into the iframe first. I have an extensionFrame() utility function in my extensionUtils file for this.
+
+- Whenever looking for an element ID, prefer using the predefined IDs in the config.js file.
