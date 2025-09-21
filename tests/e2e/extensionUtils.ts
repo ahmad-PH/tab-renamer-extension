@@ -55,69 +55,18 @@ export class ExtensionUtils {
         return this.getShadowLocator(css);
     }
 
-    // =================== Iframe State Management ===================
-    
-    /**
-     * Check if currently focused on app iframe
-     */
-    async isFocusedOnAppIframe(): Promise<boolean> {
-        return Promise.resolve(true);
-        // return await this.page.evaluate(() => {
-        //     return document.documentElement.hasAttribute('data-tab-renamer-frame');
-        // });
-    }
-
-    /**
-     * Switch to app iframe context
-     */
-    async switchToAppIframe(): Promise<void> {
-        if (!(await this.isFocusedOnAppIframe())) {
-            const iframe = this.getShadowElementByCSS('iframe');
-            await this.page.frameLocator(`${this.shadowRootSelector} >> iframe`);
-        }
-    }
-
-    /**
-     * Execute callback within iframe context
-     */
-    async withIframeContext<T>(callback: () => Promise<T>): Promise<T> {
-        const wasInIframe = await this.isFocusedOnAppIframe();
-        if (!wasInIframe) {
-            await this.switchToAppIframe();
-        }
-        try {
-            return await callback();
-        } finally {
-            if (!wasInIframe) {
-                await this.switchToDefaultContent();
-            }
-        }
-    }
-
-    // ================= End: Iframe State Management ===================
-
     // =================== Dialog Operations ===================
     
     /**
      * Open rename dialog
      */
-    async openRenameDialog(options: { 
-        intendedToClose?: boolean; 
-        doSwitchToAppIframe?: boolean;
-    } = {}): Promise<void> {
-        const { intendedToClose = false, doSwitchToAppIframe = true } = options;
-        
+    async openRenameDialog(): Promise<void> {
         // Dispatch the command to open the dialog
         await this.page.evaluate((command) => {
             document.dispatchEvent(new MessageEvent(command));
         }, COMMAND_OPEN_RENAME_DIALOG);
 
-        if (doSwitchToAppIframe) {
-            await this.switchToAppIframe();
-        }
-
         // Wait for dialog to be visible
-        // await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
         // await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
         await this.getShadowElementById(ROOT_ELEMENT_ID);
     }

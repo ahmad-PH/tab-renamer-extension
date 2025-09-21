@@ -12,3 +12,5 @@ alwaysApply: false
 - When targeting any of the elements inside the extension (like the input box, the emojis, etc), you need to use the frame locator to get into the iframe first. I have an extensionFrame() utility function in my extensionUtils file for this.
 
 - Whenever looking for an element ID, prefer using the predefined IDs in the config.js file.
+
+- Feel free to ignore iframe-related "state management" like "switchToAppIframe", "withIframeContext", or "isFocusedOnAppIframe" since playWright automatically switches between iframe and original contents when the correct locator is specified.

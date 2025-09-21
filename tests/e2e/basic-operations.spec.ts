@@ -18,16 +18,16 @@ test.describe('Basic Extension Operations', () => {
 
     test('Can open and close dialog', async ({ page }) => {
         // Open dialog
-        await extensionUtils.openRenameDialog({ doSwitchToAppIframe: false });
+        await extensionUtils.openRenameDialog();
         const rootElement = extensionUtils.extensionFrame().getByTestId(INPUT_BOX_ID);
         await expect(rootElement).toBeVisible();
 
         // Pressing shortcut twice should close the dialog
-        await extensionUtils.openRenameDialog({ intendedToClose: true, doSwitchToAppIframe: false });
+        await extensionUtils.openRenameDialog({ intendedToClose: true });
         await expect(rootElement).not.toBeVisible();
 
         // Pressing Escape should close the dialog
-        await extensionUtils.openRenameDialog({ doSwitchToAppIframe: false });
+        await extensionUtils.openRenameDialog();
         await page.keyboard.press('Escape');
         await expect(rootElement).not.toBeVisible();
 
