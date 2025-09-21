@@ -1,5 +1,5 @@
 ---
-description: When migration browser tests from Selenium to Playwright, or when writing new Playwright tests
+description: When migrating browser tests from Selenium to Playwright, or when writing new Playwright tests
 alwaysApply: false
 ---
 
