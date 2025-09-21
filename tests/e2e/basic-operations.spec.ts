@@ -23,7 +23,7 @@ test.describe('Basic Extension Operations', () => {
         await expect(rootElement).toBeVisible();
 
         // Pressing shortcut twice should close the dialog
-        await extensionUtils.openRenameDialog({ intendedToClose: true });
+        await extensionUtils.openRenameDialog();
         await expect(rootElement).not.toBeVisible();
 
         // Pressing Escape should close the dialog
