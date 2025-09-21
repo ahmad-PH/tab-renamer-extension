@@ -24,35 +24,9 @@ import {
  */
 export class ExtensionUtils {
     private page: Page;
-    private shadowRootSelector: string;
 
     constructor(page: Page) {
         this.page = page;
-        this.shadowRootSelector = ROOT_TAG_NAME;
-    }
-
-    // =================== Shadow DOM Access ===================
-    
-    /**
-     * Get a locator within the shadow root
-     */
-    private getShadowLocator(selector: string): Locator {
-        return this.page.locator(selector);
-        // return this.page.locator(`${this.shadowRootSelector}`).locator(selector);
-    }
-
-    /**
-     * Get shadow root element by ID
-     */
-    getShadowElementById(id: string): Locator {
-        return this.getShadowLocator(`#${id}`);
-    }
-
-    /**
-     * Get shadow root element by CSS selector
-     */
-    getShadowElementByCSS(css: string): Locator {
-        return this.getShadowLocator(css);
     }
 
     // =================== Dialog Operations ===================
@@ -67,8 +41,7 @@ export class ExtensionUtils {
         }, COMMAND_OPEN_RENAME_DIALOG);
 
         // Wait for dialog to be visible
-        // await this.getShadowElementById(ROOT_ELEMENT_ID).waitFor({ state: 'visible' });
-        await this.getShadowElementById(ROOT_ELEMENT_ID);
+        await this.page.getByTestId(ROOT_ELEMENT_ID);
     }
 
     /**
@@ -109,7 +82,7 @@ export class ExtensionUtils {
      * Get title from UI (within the dialog)
      */
     async getTitleInUI(): Promise<string> {
-        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        const titleBox = this.page.getByTestId(INPUT_BOX_ID);
         return await titleBox.inputValue();
     }
 
@@ -120,7 +93,7 @@ export class ExtensionUtils {
      */
     async openFaviconPicker(): Promise<void> {
         await this.openRenameDialog();
-        await this.getShadowElementById(FAVICON_PICKER_ID).click();
+        await this.page.getByTestId(FAVICON_PICKER_ID).click();
     }
 
     /**
@@ -128,7 +101,7 @@ export class ExtensionUtils {
      */
     async setFavicon(emoji: string): Promise<void> {
         await this.openFaviconPicker();
-        const emojiPicker = this.getShadowElementById(EMOJI_PICKER_ID);
+        const emojiPicker = this.page.getByTestId(EMOJI_PICKER_ID);
         await emojiPicker.locator(`#${emoji}`).waitFor({ state: 'visible' });
         await emojiPicker.locator(`#${emoji}`).click();
     }
@@ -137,7 +110,7 @@ export class ExtensionUtils {
      * Get favicon from UI
      */
     async getFaviconInUI(): Promise<string> {
-        const pickedEmojiElement = this.getShadowElementById(PICKED_EMOJI_ID);
+        const pickedEmojiElement = this.page.getByTestId(PICKED_EMOJI_ID);
         return await pickedEmojiElement.getAttribute('data-emoji') || '';
     }
 
@@ -172,7 +145,7 @@ export class ExtensionUtils {
      */
     async restoreFavicon(): Promise<void> {
         await this.openFaviconPicker();
-        await this.getShadowElementById(EMOJI_REMOVE_BUTTON_ID).click();
+        await this.page.getByTestId(EMOJI_REMOVE_BUTTON_ID).click();
     }
 
     /**
@@ -180,7 +153,7 @@ export class ExtensionUtils {
      */
     async restoreTitle(): Promise<void> {
         await this.openRenameDialog();
-        const titleBox = this.getShadowElementById(INPUT_BOX_ID);
+        const titleBox = this.page.getByTestId(INPUT_BOX_ID);
         await titleBox.clear();
         await this.submitRenameDialog();
         await this.switchToDefaultContent();

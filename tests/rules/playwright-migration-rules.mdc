@@ -14,3 +14,5 @@ alwaysApply: false
 - Whenever looking for an element ID, prefer using the predefined IDs in the config.js file.
 
 - Feel free to ignore iframe-related "state management" like "switchToAppIframe", "withIframeContext", or "isFocusedOnAppIframe" since playWright automatically switches between iframe and original contents when the correct locator is specified.
+
+- Ignore any shadow-dom-related selectors in the tests, as playWright locators automatically find elements inside shadowDOMs.
