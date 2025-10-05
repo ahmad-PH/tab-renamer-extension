@@ -16,6 +16,8 @@ let tabInitializationPromise = tab.initializeForMainContentScript();
 
 async function insertUIIntoDOM() {
     if (uiInsertedIntoDOM === false) {
+        uiInsertedIntoDOM = true; // Set immediately to prevent concurrent calls
+        
         const startTotalTime = performance.now(); 
 
         const hostElement = document.createElement(ROOT_TAG_NAME);
@@ -33,7 +35,6 @@ async function insertUIIntoDOM() {
                 <App/>
             </TabContext.Provider>
         );
-        uiInsertedIntoDOM = true;
 
         const endTotalTime = performance.now(); // End total timer
 
