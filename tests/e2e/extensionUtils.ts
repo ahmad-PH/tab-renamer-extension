@@ -156,7 +156,6 @@ export class ExtensionUtils {
         const titleBox = this.page.getByTestId(INPUT_BOX_ID);
         await titleBox.clear();
         await this.submitRenameDialog();
-        await this.switchToDefaultContent();
     }
 
     // =================== Tab Management ===================
@@ -231,8 +230,8 @@ export class ExtensionUtils {
     /**
      * Get active element within iframe
      */
-    async getIframeActiveElement(): Promise<ElementHandle<any>> {
-        return await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement);
+    async getIframeActiveElement(): Promise<ElementHandle<any> | null> {
+        return (await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement)).asElement();
     }
 
     /**
