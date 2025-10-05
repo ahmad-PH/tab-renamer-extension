@@ -16,3 +16,5 @@ alwaysApply: false
 - Feel free to ignore iframe-related "state management" like "switchToAppIframe", "withIframeContext", or "isFocusedOnAppIframe" since playWright automatically switches between iframe and original contents when the correct locator is specified.
 
 - Ignore any shadow-dom-related selectors in the tests, as playWright locators automatically find elements inside shadowDOMs.
+
+- Do not leave comments that add really no information other than repeating a function, or a variable's name. Only add additional comments if they are adding information more than that.
