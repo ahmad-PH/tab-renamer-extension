@@ -9,7 +9,7 @@ alwaysApply: false
 
 - Translate all the places where I'm finding an element by Id in Selenium to "getByTestId()" in PlayWright.
 
-- When targeting any of the elements inside the extension (like the input box, the emojis, etc), you need to use the frame locator to get into the iframe first. I have an extensionFrame() utility function in my extensionUtils file for this.
+- When targeting almost all elements inside the extension (e.g. the input box, the emojis, etc), use the extensionUtils.extensionFrame().getXYZ instead of page.getXYZ(). This is because exept for a few very high-level elements (like the root), everything else is inside the extension frame. DO NOT use page.getXYZ() (or other locators) except if there is explicity evidence that you should.
 
 - Whenever looking for an element ID, prefer using the predefined IDs in the config.js file.
 
