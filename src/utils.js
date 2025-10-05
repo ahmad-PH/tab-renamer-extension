@@ -133,9 +133,20 @@ export function sleep(ms) {
 
 let platform = 'mac';
 if (typeof navigator !== 'undefined') {
-    const platformString = navigator.userAgent.toLowerCase();
+    let platformString = '';
+    
+    // Try different methods to get platform string, in order of preference
+    if (navigator.userAgentData?.platform) {
+        platformString = navigator.userAgentData.platform.toLowerCase();
+    } else if (navigator.platform) {
+        platformString = navigator.platform.toLowerCase();
+    } else {
+        platformString = navigator.userAgent.toLowerCase();
+    }
+    
     platform = platformString.includes('mac') ? 'mac' :
         platformString.includes('win') ? 'win' : 
         platformString.includes('linux') ? 'linux' : 'other';
 }
+
 export { platform };
