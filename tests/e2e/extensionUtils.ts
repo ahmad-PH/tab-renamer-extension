@@ -41,7 +41,7 @@ export class ExtensionUtils {
         }, COMMAND_OPEN_RENAME_DIALOG);
 
         // Wait for dialog to be visible
-        await this.page.getByTestId(ROOT_ELEMENT_ID);
+        await expect(this.page.getByTestId(ROOT_ELEMENT_ID)).toBeAttached();
     }
 
     /**
