@@ -7,7 +7,6 @@ export const test = base.extend<{
   extensionId: string;
 }>({
   context: async ({ }, use) => {
-    console.log('Project root:', appRootPath.path);
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',
