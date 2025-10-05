@@ -19,6 +19,8 @@ import {
     SEARCH_RESULTS_ID,
 } from '../../src/config.js';
 
+export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
+
 /**
  * Playwright equivalent of DriverUtils for Chrome extension testing
  */
@@ -93,7 +95,7 @@ export class ExtensionUtils {
      */
     async openFaviconPicker(): Promise<void> {
         await this.openRenameDialog();
-        await this.page.getByTestId(FAVICON_PICKER_ID).click();
+        await this.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
     }
 
     /**
@@ -101,9 +103,10 @@ export class ExtensionUtils {
      */
     async setFavicon(emoji: string): Promise<void> {
         await this.openFaviconPicker();
-        const emojiPicker = this.page.getByTestId(EMOJI_PICKER_ID);
+        const emojiPicker = this.extensionFrame().getByTestId(EMOJI_PICKER_ID);
         await emojiPicker.locator(`#${emoji}`).waitFor({ state: 'visible' });
         await emojiPicker.locator(`#${emoji}`).click();
+        await this.submitRenameDialog();
     }
 
     /**
@@ -114,22 +117,32 @@ export class ExtensionUtils {
         return await pickedEmojiElement.getAttribute('data-emoji') || '';
     }
 
-    /**
-     * Check if favicon is emoji
-     */
-    async faviconIsEmoji(emojiStyle?: string): Promise<boolean> {
-        const faviconUrl = await this.getFaviconUrl();
-        return faviconUrl.startsWith('data:image/svg+xml');
-    }
-
-    /**
-     * Get current favicon URL
-     */
     async getFaviconUrl(): Promise<string> {
         return await this.page.evaluate(() => {
             const link = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
             return link ? link.href : '';
         });
+    }
+
+    async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {
+        const faviconElement = this.getFaviconElement();
+        const relContainsIcon = (await faviconElement.getAttribute("rel"))?.includes("icon") || false;
+        
+        let hrefIsCorrect: boolean;
+        if (emojiStyle == EMOJI_STYLE_NATIVE) {
+            hrefIsCorrect = (await faviconElement.getAttribute("href"))?.startsWith("data:image/png;base64,") || false;
+        } else if (emojiStyle == EMOJI_STYLE_TWEMOJI) {
+            hrefIsCorrect = (await faviconElement.getAttribute("href"))?.startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/") || false;
+        } else {
+            throw new Error(`Invalid emoji style: ${emojiStyle}`);
+        }
+
+        const typeMatchesIcon = (await faviconElement.getAttribute("type")) === 'image/x-icon';
+        return relContainsIcon && hrefIsCorrect && typeMatchesIcon;
+    }
+
+    getFaviconElement(): Locator {
+        return this.page.locator(faviconLinksCSSQuery);
     }
 
     /**
@@ -145,7 +158,7 @@ export class ExtensionUtils {
      */
     async restoreFavicon(): Promise<void> {
         await this.openFaviconPicker();
-        await this.page.getByTestId(EMOJI_REMOVE_BUTTON_ID).click();
+        await this.extensionFrame().getByTestId(EMOJI_REMOVE_BUTTON_ID).click();
     }
 
     /**
@@ -153,7 +166,7 @@ export class ExtensionUtils {
      */
     async restoreTitle(): Promise<void> {
         await this.openRenameDialog();
-        const titleBox = this.page.getByTestId(INPUT_BOX_ID);
+        const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         await titleBox.clear();
         await this.submitRenameDialog();
     }
