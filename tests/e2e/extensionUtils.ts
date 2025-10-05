@@ -46,16 +46,10 @@ export class ExtensionUtils {
         await expect(this.page.getByTestId(ROOT_ELEMENT_ID)).toBeAttached();
     }
 
-    /**
-     * Submit rename dialog
-     */
     async submitRenameDialog(): Promise<void> {
         await this.page.keyboard.press('Enter');
     }
 
-    /**
-     * Close rename dialog
-     */
     async closeRenameDialog(): Promise<void> {
         await this.page.keyboard.press('Escape');
     }
@@ -84,7 +78,7 @@ export class ExtensionUtils {
      * Get title from UI (within the dialog)
      */
     async getTitleInUI(): Promise<string> {
-        const titleBox = this.page.getByTestId(INPUT_BOX_ID);
+        const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         return await titleBox.inputValue();
     }
 
@@ -113,7 +107,7 @@ export class ExtensionUtils {
      * Get favicon from UI
      */
     async getFaviconInUI(): Promise<string> {
-        const pickedEmojiElement = this.page.getByTestId(PICKED_EMOJI_ID);
+        const pickedEmojiElement = this.extensionFrame().getByTestId(PICKED_EMOJI_ID);
         return await pickedEmojiElement.getAttribute('data-emoji') || '';
     }
 
@@ -184,11 +178,14 @@ export class ExtensionUtils {
     /**
      * Close and reopen current tab
      */
-    async closeAndReopenCurrentTab(): Promise<void> {
+    async closeAndReopenCurrentTab(): Promise<Page> {
+        await this.page.pause();
         const currentUrl = this.page.url();
         await this.page.close();
-        await this.page.context().newPage();
-        await this.page.goto(currentUrl);
+        const newPage = await this.page.context().newPage();
+        await newPage.goto(currentUrl);
+        this.page = newPage;
+        return newPage;
     }
 
     /**
