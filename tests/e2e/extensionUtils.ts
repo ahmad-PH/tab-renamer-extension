@@ -47,11 +47,9 @@ export class ExtensionUtils {
     }
 
     async submitRenameDialog(): Promise<void> {
-        await this.page.keyboard.press('Enter');
-    }
-
-    async closeRenameDialog(): Promise<void> {
-        await this.page.keyboard.press('Escape');
+        const renameBox = await this.extensionFrame().getByTestId(INPUT_BOX_ID);
+        await renameBox.press('Enter');
+        await renameBox.waitFor({ state: 'hidden' });
     }
 
     // =================== Tab Operations ===================
