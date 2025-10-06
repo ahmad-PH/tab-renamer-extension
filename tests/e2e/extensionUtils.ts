@@ -32,17 +32,12 @@ export class ExtensionUtils {
     }
 
     // =================== Dialog Operations ===================
-    
-    /**
-     * Open rename dialog
-     */
+
     async openRenameDialog(): Promise<void> {
-        // Dispatch the command to open the dialog
         await this.page.evaluate((command) => {
             document.dispatchEvent(new MessageEvent(command));
         }, COMMAND_OPEN_RENAME_DIALOG);
 
-        // Wait for dialog to be visible
         await expect(this.page.getByTestId(ROOT_ELEMENT_ID)).toBeAttached();
     }
 
@@ -54,9 +49,6 @@ export class ExtensionUtils {
 
     // =================== Tab Operations ===================
     
-    /**
-     * Rename tab with new title
-     */
     async renameTab(newTabTitle: string): Promise<void> {
         await this.openRenameDialog();
         const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
@@ -65,16 +57,10 @@ export class ExtensionUtils {
         await this.submitRenameDialog();
     }
 
-    /**
-     * Get current tab title
-     */
     async getTitle(): Promise<string> {
         return await this.page.title();
     }
 
-    /**
-     * Get title from UI (within the dialog)
-     */
     async getTitleInUI(): Promise<string> {
         const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         return await titleBox.inputValue();
@@ -82,17 +68,11 @@ export class ExtensionUtils {
 
     // =================== Favicon Operations ===================
     
-    /**
-     * Open favicon picker
-     */
     async openFaviconPicker(): Promise<void> {
         await this.openRenameDialog();
         await this.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
     }
 
-    /**
-     * Set favicon to emoji
-     */
     async setFavicon(emoji: string): Promise<void> {
         await this.openFaviconPicker();
         const emojiPicker = this.extensionFrame().getByTestId(EMOJI_PICKER_ID);
@@ -101,9 +81,6 @@ export class ExtensionUtils {
         await this.submitRenameDialog();
     }
 
-    /**
-     * Get favicon from UI
-     */
     async getFaviconInUI(): Promise<string> {
         const pickedEmojiElement = this.extensionFrame().getByTestId(PICKED_EMOJI_ID);
         return await pickedEmojiElement.getAttribute('data-emoji') || '';
@@ -196,9 +173,6 @@ export class ExtensionUtils {
         this.page = newPage;
     }
 
-    /**
-     * Close all tabs
-     */
     async closeAllTabs(): Promise<void> {
         const pages = this.page.context().pages();
         for (const page of pages) {
@@ -215,16 +189,10 @@ export class ExtensionUtils {
         return this.page.locator('iframe').contentFrame()
     }
 
-    /**
-     * Wait for page to load completely
-     */
     async waitForPageLoad(): Promise<void> {
         await this.page.waitForLoadState('networkidle');
     }
 
-    /**
-     * Close welcome tab if it exists
-     */
     async closeWelcomeTab(): Promise<void> {
         try {
             await this.page.evaluate((command) => {
@@ -235,25 +203,16 @@ export class ExtensionUtils {
         }
     }
 
-    /**
-     * Get active element within iframe
-     */
     async getIframeActiveElement(): Promise<ElementHandle<any> | null> {
         return (await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement)).asElement();
     }
 
-    /**
-     * Schedule discard tab event
-     */
     async scheduleDiscardTabEvent(): Promise<void> {
         await this.page.evaluate((command) => {
             document.dispatchEvent(new MessageEvent(command));
         }, COMMAND_DISCARD_TAB);
     }
 
-    /**
-     * Set emoji style
-     */
     async setEmojiStyle(style: string): Promise<void> {
         await this.page.evaluate(({ command, style }) => {
             document.dispatchEvent(new MessageEvent(command, { 
@@ -262,17 +221,11 @@ export class ExtensionUtils {
         }, { command: COMMAND_SET_EMOJI_STYLE, style });
     }
 
-    /**
-     * Open settings page
-     */
     async openSettingsPage(): Promise<void> {
         await this.page.goto('chrome://extensions/');
         // Additional logic to navigate to extension settings would go here
     }
 
-    /**
-     * Switch to new tab after performing action
-     */
     async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<void> {
         const currentPage = this.page;
         await action();
