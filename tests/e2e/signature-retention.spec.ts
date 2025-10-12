@@ -38,7 +38,7 @@ test.describe('Signature Retention', () => {
         expect(await extensionUtils.getFaviconInUI()).toBe(newFavicon);
     });
 
-    test('Retains tab signatures when the entire window is re-opened', async ({ page, context }) => {
+    test('Retains tab signatures when the entire window is re-opened', async ({ page, context, userDataDir }) => {
         /*
             Historically, this test needed a dummy tab, because driver.quit(), or calling 
             driver.close() on the last tab would shut down the driver promptly, not allowing
@@ -61,7 +61,7 @@ test.describe('Signature Retention', () => {
         await page.waitForTimeout(500);
 
         // Simulate browser restart using the utility function
-        const newExtensionUtils = await ExtensionUtils.simulateBrowserRestart(context);
+        const newExtensionUtils = await ExtensionUtils.simulateBrowserRestart(context, userDataDir);
         await newExtensionUtils.page.waitForTimeout(100);
 
         // Navigate to the first URL and verify signature retention

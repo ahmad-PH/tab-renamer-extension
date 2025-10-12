@@ -6,9 +6,10 @@ import appRootPath from 'app-root-path';
 async function globalTeardown(config: FullConfig) {
   console.log('🧹 Cleaning up test data...');
   
-  const testUserDataDir = path.join(appRootPath.path, 'test-user-data');
-  
   try {
+    // Clean up the parent test-user-data directory
+    const testUserDataDir = path.join(appRootPath.path, 'test-user-data');
+    
     if (fs.existsSync(testUserDataDir)) {
       fs.rmSync(testUserDataDir, { recursive: true, force: true });
     }

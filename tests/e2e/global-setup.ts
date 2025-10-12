@@ -6,11 +6,11 @@ import appRootPath from 'app-root-path';
 async function globalSetup(config: FullConfig) {
   console.log('🚀 Setting up test environment...');
   
-  const testUserDataDir = path.join(appRootPath.path, 'test-user-data');
-  
   try {
-    if (fs.existsSync(testUserDataDir)) {
-      fs.rmSync(testUserDataDir, { recursive: true, force: true });
+    // Just ensure the project root directory exists
+    const projectRoot = appRootPath.path;
+    if (!fs.existsSync(projectRoot)) {
+      throw new Error(`Project root directory does not exist: ${projectRoot}`);
     }
   } catch (error) {
     console.error('❌ Error setting up test environment:', error);

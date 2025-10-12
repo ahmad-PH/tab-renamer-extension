@@ -2,6 +2,7 @@ import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
 import appRootPath from 'app-root-path';
 import os from 'os';
+import { randomUUID } from 'crypto';
 
 // Detect the actual platform
 function getPlatformUserAgent() {
@@ -35,13 +36,18 @@ function getPlatformUserAgent() {
 export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
+  userDataDir: string;
 }>({
-  context: async ({ }, use) => {
+  userDataDir: async ({ }, use) => {
+    // Create a unique user data directory for each test to avoid conflicts in parallel execution
+    const uniqueId = randomUUID();
+    const parentDir = path.join(appRootPath.path, 'test-user-data');
+    const userDataDir = path.join(parentDir, `test-user-data-${uniqueId}`);
+    await use(userDataDir);
+  },
+  context: async ({ userDataDir }, use) => {
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const { userAgent } = getPlatformUserAgent();
-    
-    // Use a persistent user data directory to maintain storage across sessions
-    const userDataDir = path.join(appRootPath.path, 'test-user-data');
     
     const context = await chromium.launchPersistentContext(userDataDir, {
       channel: 'chromium',
