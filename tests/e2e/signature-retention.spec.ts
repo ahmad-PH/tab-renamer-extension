@@ -24,7 +24,6 @@ test.describe('Signature Retention', () => {
         await extensionUtils.setFavicon(newFavicon);
         
         page = await extensionUtils.closeAndReopenCurrentTab();
-        await page.pause();
 
         // Give the extension being tested time to load the title from storage
         await page.waitForTimeout(100);
@@ -63,7 +62,7 @@ test.describe('Signature Retention', () => {
 
         await extensionUtils.closeAllTabs();
         await page.waitForTimeout(100);
-        
+
         // Close the context and create a new one to simulate browser restart
         await context.close();
         
