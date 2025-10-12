@@ -60,26 +60,21 @@ test.describe('Signature Retention', () => {
 
         await page.waitForTimeout(500);
 
-        await extensionUtils.closeAllTabs();
-        await page.waitForTimeout(100);
+        // Simulate browser restart using the utility function
+        const newExtensionUtils = await ExtensionUtils.simulateBrowserRestart(context);
+        await newExtensionUtils.page.waitForTimeout(100);
 
-        // Close the context and create a new one to simulate browser restart
-        await context.close();
-        
-        // Note: In Playwright with fixtures, we can't easily recreate the context mid-test
-        // This test might need to be restructured or split into two separate tests
-        // For now, we'll navigate to the URLs and check if signatures are retained
-        
-        // Create new page in the context (simulating reopening)
-        const newPage = await context.newPage();
-        const newExtensionUtils = new ExtensionUtils(newPage);
-
-        await newPage.goto(testData.websites[0].url);
+        // Navigate to the first URL and verify signature retention
+        await newExtensionUtils.page.goto(testData.websites[0].url);
         expect(await newExtensionUtils.getTitle()).toBe(signature1.title);
         expect(await newExtensionUtils.faviconIsEmoji()).toBe(true);
 
+        // Navigate to the second URL and verify signature retention
         await newExtensionUtils.openTabToURL(testData.websites[1].url);
         expect(await newExtensionUtils.getTitle()).toBe(signature2.title);
         expect(await newExtensionUtils.faviconIsEmoji()).toBe(true);
+
+        // Clean up the new context
+        await newExtensionUtils.page.context().close();
     });
 });

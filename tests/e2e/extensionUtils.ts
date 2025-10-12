@@ -19,13 +19,17 @@ import {
     SEARCH_RESULTS_ID,
 } from '../../src/config.js';
 
+import path from 'path';
+import appRootPath from 'app-root-path';
+
+
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
 /**
  * Playwright equivalent of DriverUtils for Chrome extension testing
  */
 export class ExtensionUtils {
-    private page: Page;
+    public page: Page;
 
     constructor(page: Page) {
         this.page = page;
@@ -234,5 +238,33 @@ export class ExtensionUtils {
         if (newPage) {
             this.page = newPage;
         }
+    }
+
+    /**
+     * Simulate browser restart by closing current context and creating a new one
+     * with the same user data directory. This preserves chrome.storage data.
+     * Returns a new ExtensionUtils instance for the restarted browser.
+     */
+    static async simulateBrowserRestart(currentContext: any): Promise<ExtensionUtils> {
+        const { chromium } = await import('@playwright/test');
+        
+        const pathToExtension = path.join(appRootPath.path, 'dist/dev');
+        const userDataDir = path.join(appRootPath.path, 'test-user-data');
+        
+        // Close the current context
+        await currentContext.close();
+        
+        // Create a new context with the same user data directory
+        const newContext = await chromium.launchPersistentContext(userDataDir, {
+            channel: 'chromium',
+            args: [
+                `--disable-extensions-except=${pathToExtension}`,
+                `--load-extension=${pathToExtension}`,
+            ],
+        });
+
+        // Create new page and return new ExtensionUtils instance
+        const newPage = await newContext.newPage();
+        return new ExtensionUtils(newPage);
     }
 }

@@ -40,7 +40,10 @@ export const test = base.extend<{
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const { userAgent } = getPlatformUserAgent();
     
-    const context = await chromium.launchPersistentContext('', {
+    // Use a persistent user data directory to maintain storage across sessions
+    const userDataDir = path.join(appRootPath.path, 'test-user-data');
+    
+    const context = await chromium.launchPersistentContext(userDataDir, {
       channel: 'chromium',
       userAgent,
       args: [
