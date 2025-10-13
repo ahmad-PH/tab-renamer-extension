@@ -67,7 +67,7 @@ test.describe('Miscellaneous Tests', () => {
         let sawOneCorrectTitleWhileStillLoading = false;
         let timerId: NodeJS.Timeout;
 
-        // Set up monitoring
+        // Monitor the title and readyState continuously
         timerId = setInterval(async () => {
             try {
                 const readyState = await secondTab.evaluate('document.readyState');
@@ -82,7 +82,7 @@ test.describe('Miscellaneous Tests', () => {
             }
         }, 5);
 
-        await sleep(100);
+        await sleep(150);
         resolveLock();
 
         await secondTabLoadPromise;
