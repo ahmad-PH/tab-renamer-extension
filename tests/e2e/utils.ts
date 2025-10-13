@@ -1,8 +1,37 @@
 import express from 'express';
 import http from 'http';
+import net from 'net';
 
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Finds the next available port starting from the given port number.
+ * Checks ports sequentially until an available one is found.
+ * @param startPort - The port number to start checking from (default: 3001)
+ * @returns Promise<number> - The first available port number
+ */
+export async function findAvailablePort(startPort: number = 3000): Promise<number> {
+    return new Promise((resolve, _reject) => {
+        const checkPort = (port: number) => {
+            const server = net.createServer();
+            
+            server.listen(port, () => {
+                server.once('close', () => {
+                    resolve(port);
+                });
+                server.close();
+            });
+            
+            server.on('error', () => {
+                // Port is in use, try the next one
+                checkPort(port + 1);
+            });
+        };
+        
+        checkPort(startPort);
+    });
 }
 
 

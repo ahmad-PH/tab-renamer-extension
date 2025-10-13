@@ -2,7 +2,7 @@ import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import express from 'express';
 import { Page } from '@playwright/test';
-import { PromiseLock, sleep, startExpressServer } from './utils';
+import { PromiseLock, sleep, startExpressServer, findAvailablePort } from './utils';
 import http from 'http';
 import testData from './testData';
 
@@ -30,7 +30,7 @@ test.describe('Miscellaneous Tests', () => {
     test('Title loads before the page load has finished', async ({ page }) => {
         const context = page.context()
         const app = express();
-        const port = 3001;
+        const port = await findAvailablePort(3000);
         let lock: PromiseLock;
 
         app.get('/', (_req, res) => {
@@ -73,9 +73,9 @@ test.describe('Miscellaneous Tests', () => {
                 // has expired. I have not understood why it happens, and it 
                 // seems not to have an important effect on the test.
             }
-        }, 5);
+        }, 10);
 
-        await sleep(150);
+        await sleep(200);
         lock.release();
 
         await secondTabLoadPromise;
