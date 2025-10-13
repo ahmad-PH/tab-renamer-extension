@@ -185,6 +185,7 @@ export class ExtensionUtils {
                 document.dispatchEvent(new MessageEvent(command));
             }, COMMAND_CLOSE_WELCOME_TAB);
         } catch (error) {
+            console.error('Error closing welcome tab:', error);
             // Welcome tab might not exist, ignore error
         }
     }
