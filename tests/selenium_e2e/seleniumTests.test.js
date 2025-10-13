@@ -637,8 +637,4 @@ describe('Selenium UI Tests', () => {
             expect(await driverUtils.faviconIsEmoji()).toBe(true);
         });
     });
-
-    
-
-
 });
