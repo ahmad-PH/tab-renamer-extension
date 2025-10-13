@@ -147,7 +147,7 @@ export class ExtensionUtils {
         const currentUrl = this.page.url();
         await this.page.close();
         const newPage = await this.page.context().newPage();
-        await newPage.goto(currentUrl);
+        await newPage.goto(currentUrl, { waitUntil: 'load' });
         this.page = newPage;
         return newPage;
     }
