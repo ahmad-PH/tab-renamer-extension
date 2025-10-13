@@ -53,8 +53,6 @@ test.describe('Miscellaneous Tests', () => {
         await firstTab.goto(`http://localhost:${port}`);
         await firstTab.waitForLoadState('domcontentloaded');
         await extensionUtils.renameTab('New title');
-
-        const secondTab = await context.newPage();
         await firstTab.close();
 
         // Create a new lock for the second request
@@ -62,8 +60,8 @@ test.describe('Miscellaneous Tests', () => {
             resolveLock = resolve;
         });
 
-        // Start navigation but don't wait for it to complete (no await)
-        await secondTab.pause();
+        const secondTab = await context.newPage();
+        // Start navigation but don't wait for it to complete (no await):
         const secondTabLoadPromise = secondTab.goto(`http://localhost:${port}`);
 
         let sawOneCorrectTitleWhileStillLoading = false;
