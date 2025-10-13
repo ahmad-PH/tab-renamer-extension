@@ -2,8 +2,9 @@ import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import express from 'express';
 import { Page } from '@playwright/test';
-import { sleep, startExpressServer } from './utils';
+import { PromiseLock, sleep, startExpressServer } from './utils';
 import http from 'http';
+import testData from './testData';
 
 test.describe('Miscellaneous Tests', () => {
     let extensionUtils: ExtensionUtils;
@@ -28,41 +29,33 @@ test.describe('Miscellaneous Tests', () => {
 
     test('Title loads before the page load has finished', async ({ page }) => {
         const context = page.context()
-
         const app = express();
         const port = 3001;
-
-        let lock: Promise<void>;
-        let resolveLock: () => void;
+        let lock: PromiseLock;
 
         app.get('/', (_req, res) => {
             res.write('<html><body>');
-            lock.then(() => {
+            lock.lock.then(() => {
                 return res.end('A slow response!</body></html>');
             }).catch(e => {
                 console.error('Error in lock:', e);
             });
         });
 
-        // Start the Express server
         expressServer = await startExpressServer(app, port);
 
         // First tab: Set up the title
         const firstTab = page;
-        lock = Promise.resolve();
+        lock = new PromiseLock().release();
         await firstTab.goto(`http://localhost:${port}`);
         await firstTab.waitForLoadState('domcontentloaded');
         await extensionUtils.renameTab('New title');
         await firstTab.close();
 
-        // Create a new lock for the second request
-        lock = new Promise<void>((resolve) => {
-            resolveLock = resolve;
-        });
-
+        // Second tab: Load the page, and observe title loading behavior.
+        lock = new PromiseLock();
         const secondTab = await context.newPage();
-        // Start navigation but don't wait for it to complete (no await):
-        const secondTabLoadPromise = secondTab.goto(`http://localhost:${port}`);
+        const secondTabLoadPromise = secondTab.goto(`http://localhost:${port}`); // Don't wait for completion (no await)
 
         let sawOneCorrectTitleWhileStillLoading = false;
         let timerId: NodeJS.Timeout;
@@ -83,7 +76,7 @@ test.describe('Miscellaneous Tests', () => {
         }, 5);
 
         await sleep(150);
-        resolveLock();
+        lock.release();
 
         await secondTabLoadPromise;
         clearInterval(timerId);
@@ -91,4 +84,16 @@ test.describe('Miscellaneous Tests', () => {
 
         expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
     });
+
+    // test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async ({ page }) => {
+    //     await page.goto(testData.websites[0].url);
+    //     await extensionUtils.renameTab('New title');
+    //     await extensionUtils.setFavicon('📖');
+    //     await extensionUtils.closeAndReopenCurrentTab();
+
+    //     await extensionUtils.openTabToURL(testData.websites[0].url);
+    //     await extensionUtils.page.pause();
+    //     expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
+    //     expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+    // });
 });
