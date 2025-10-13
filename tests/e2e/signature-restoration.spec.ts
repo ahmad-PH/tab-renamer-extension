@@ -21,41 +21,10 @@ test.describe('Signature Restoration', () => {
 
     test('Restores original title when empty title passed, after being re-opened', async ({ page }) => {
         const originalTitle = await extensionUtils.getTitle();
-        console.log(`[DEBUG] Original title: "${originalTitle}"`);
-        
         await extensionUtils.renameTab('New title');
-        const titleAfterRename = await extensionUtils.getTitle();
-        console.log(`[DEBUG] Title after rename: "${titleAfterRename}"`);
-        
-        page = await extensionUtils.closeAndReopenCurrentTab();
-        const titleAfterReopen = await extensionUtils.getTitle();
-        console.log(`[DEBUG] Title after reopen: "${titleAfterReopen}"`);
-        
-        // Wait for extension to be fully ready
-        await extensionUtils.waitForExtensionReady();
-        console.log(`[DEBUG] Extension ready`);
-        
+        await extensionUtils.closeAndReopenCurrentTab();
         await extensionUtils.restoreTitle();
-        console.log(`[DEBUG] Restore title called`);
-        
-        // Retry assertion with exponential backoff
-        let attempts = 0;
-        const maxAttempts = 5;
-        let actualTitle = '';
-        
-        while (attempts < maxAttempts) {
-            await page.waitForTimeout(200 * Math.pow(2, attempts)); // Exponential backoff
-            actualTitle = await extensionUtils.getTitle();
-            console.log(`[DEBUG] Attempt ${attempts + 1}: Final title: "${actualTitle}"`);
-            console.log(`[DEBUG] Expected: "${originalTitle}"`);
-            console.log(`[DEBUG] Match: ${actualTitle === originalTitle}`);
-            
-            if (actualTitle === originalTitle) {
-                break;
-            }
-            attempts++;
-        }
-        
+        const actualTitle = await extensionUtils.getTitle();
         expect(actualTitle).toBe(originalTitle);
     });
 
