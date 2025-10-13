@@ -22,7 +22,7 @@ test.describe('Signature Retention', () => {
         page = await extensionUtils.closeAndReopenCurrentTab();
 
         // Give the extension being tested time to load the title from storage
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(50);
 
         // Assert the name and emoji that we set on the tab
         expect(await extensionUtils.getTitle()).toBe(newTitle);
@@ -96,7 +96,6 @@ test.describe('Signature Retention', () => {
     //         // If timeout occurs, continue with the test - the assertion will fail appropriately
     //     });
         
-    //     // await newExtensionUtils.page.pause(); // Commented out to prevent test hanging
     //     expect(await newExtensionUtils.getTitle()).toBe(signature2.title);
     //     expect(await newExtensionUtils.faviconIsEmoji()).toBe(true);
 

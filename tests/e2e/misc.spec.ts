@@ -90,9 +90,9 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.renameTab('New title');
         await extensionUtils.setFavicon('📖');
         await extensionUtils.closeAndReopenCurrentTab();
+        await extensionUtils.page.waitForTimeout(200); // Make sure the signature has time to get marked as loaded.
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
-        await extensionUtils.page.pause();
         expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
         expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
     });
