@@ -61,8 +61,8 @@ export class ExtensionUtils {
         await this.submitRenameDialog();
     }
 
-    async getTitle(): Promise<string> {
-        return await this.page.title();
+    getTitle(): Promise<string> {
+        return this.page.title();
     }
 
     async getTitleInUI(): Promise<string> {
@@ -118,45 +118,31 @@ export class ExtensionUtils {
         return this.page.locator(faviconLinksCSSQuery);
     }
 
-    /**
-     * Assert favicon URL matches expected
-     */
     async assertFaviconUrl(expectedUrl: string): Promise<void> {
         const actualUrl = await this.getFaviconUrl();
         expect(actualUrl).toBe(expectedUrl);
     }
 
-    /**
-     * Restore original favicon
-     */
     async restoreFavicon(): Promise<void> {
-        await this.openFaviconPicker();
+        await this.openRenameDialog();
+        await this.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
         await this.extensionFrame().getByTestId(EMOJI_REMOVE_BUTTON_ID).click();
+        await this.submitRenameDialog();
     }
 
-    /**
-     * Restore original title
-     */
     async restoreTitle(): Promise<void> {
-        await this.openRenameDialog();
-        const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
-        await titleBox.clear();
-        await this.submitRenameDialog();
+        await this.renameTab('');
+        // Wait for the title change to be processed
+        await this.page.waitForTimeout(100);
     }
 
     // =================== Tab Management ===================
     
-    /**
-     * Set tab signature (title + favicon)
-     */
     async setSignature(title: string, favicon: string): Promise<void> {
         await this.renameTab(title);
         await this.setFavicon(favicon);
     }
 
-    /**
-     * Close and reopen current tab
-     */
     async closeAndReopenCurrentTab(): Promise<Page> {
         const currentUrl = this.page.url();
         await this.page.close();
@@ -166,9 +152,6 @@ export class ExtensionUtils {
         return newPage;
     }
 
-    /**
-     * Open new tab to URL
-     */
     async openTabToURL(url: string): Promise<void> {
         const newPage = await this.page.context().newPage();
         await newPage.goto(url);
@@ -204,6 +187,43 @@ export class ExtensionUtils {
         } catch (error) {
             // Welcome tab might not exist, ignore error
         }
+    }
+
+    async waitForExtensionReady(): Promise<void> {
+        // Wait for the extension to be fully loaded
+        await this.page.waitForFunction(() => {
+            return document.querySelector(`#${ROOT_ELEMENT_ID}`) !== null;
+        }, { timeout: 5000 });
+        
+        // Additional wait for iframe to be ready
+        await this.page.waitForFunction(() => {
+            const rootElement = document.querySelector(`#${ROOT_ELEMENT_ID}`);
+            if (!rootElement) return false;
+            const iframe = rootElement.querySelector('iframe');
+            return iframe && iframe.contentDocument;
+        }, { timeout: 5000 });
+    }
+
+    async startConsoleMonitoring(): Promise<void> {
+        this.page.on('console', msg => {
+            if (msg.type() === 'error' || msg.type() === 'warning') {
+                console.log(`[CONSOLE ${msg.type().toUpperCase()}] ${msg.text()}`);
+            }
+        });
+    }
+
+    async startNetworkMonitoring(): Promise<void> {
+        this.page.on('request', request => {
+            if (request.url().includes('chrome-extension://') || request.url().includes('localhost')) {
+                console.log(`[NETWORK REQUEST] ${request.method()} ${request.url()}`);
+            }
+        });
+        
+        this.page.on('response', response => {
+            if (response.url().includes('chrome-extension://') || response.url().includes('localhost')) {
+                console.log(`[NETWORK RESPONSE] ${response.status()} ${response.url()}`);
+            }
+        });
     }
 
     async getIframeActiveElement(): Promise<ElementHandle<any> | null> {
