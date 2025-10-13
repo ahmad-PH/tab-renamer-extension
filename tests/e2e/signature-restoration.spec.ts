@@ -1,0 +1,102 @@
+import { test, expect } from './fixtures';
+import { ExtensionUtils } from './extensionUtils';
+import testData from './testData';
+
+test.describe('Signature Restoration', () => {
+    let extensionUtils: ExtensionUtils;
+
+    test.beforeEach(async ({ page }) => {
+        extensionUtils = new ExtensionUtils(page);
+        await page.goto(testData.websites[0].url);
+        await extensionUtils.closeWelcomeTab();
+    });
+
+    test('Restores original title when empty title passed', async ({ page }) => {
+        const originalTitle = await extensionUtils.getTitle();
+        await extensionUtils.renameTab('New title');
+        await extensionUtils.restoreTitle();
+        const actualTitle = await extensionUtils.getTitle();
+        expect(actualTitle).toBe(originalTitle);
+    });
+
+    test('Restores original title when empty title passed, after being re-opened', async ({ page }) => {
+        const originalTitle = await extensionUtils.getTitle();
+        console.log(`[DEBUG] Original title: "${originalTitle}"`);
+        
+        await extensionUtils.renameTab('New title');
+        const titleAfterRename = await extensionUtils.getTitle();
+        console.log(`[DEBUG] Title after rename: "${titleAfterRename}"`);
+        
+        page = await extensionUtils.closeAndReopenCurrentTab();
+        const titleAfterReopen = await extensionUtils.getTitle();
+        console.log(`[DEBUG] Title after reopen: "${titleAfterReopen}"`);
+        
+        // Wait for extension to be fully ready
+        await extensionUtils.waitForExtensionReady();
+        console.log(`[DEBUG] Extension ready`);
+        
+        await extensionUtils.restoreTitle();
+        console.log(`[DEBUG] Restore title called`);
+        
+        // Retry assertion with exponential backoff
+        let attempts = 0;
+        const maxAttempts = 5;
+        let actualTitle = '';
+        
+        while (attempts < maxAttempts) {
+            await page.waitForTimeout(200 * Math.pow(2, attempts)); // Exponential backoff
+            actualTitle = await extensionUtils.getTitle();
+            console.log(`[DEBUG] Attempt ${attempts + 1}: Final title: "${actualTitle}"`);
+            console.log(`[DEBUG] Expected: "${originalTitle}"`);
+            console.log(`[DEBUG] Match: ${actualTitle === originalTitle}`);
+            
+            if (actualTitle === originalTitle) {
+                break;
+            }
+            attempts++;
+        }
+        
+        expect(actualTitle).toBe(originalTitle);
+    });
+
+    test('Title restoration with page-switch', async ({ page }) => {
+        await extensionUtils.renameTab('New title');
+        await page.waitForTimeout(20); // Give background script time to save the title
+        await page.goto(testData.websites[1].url);
+        await extensionUtils.restoreTitle();
+        const actualTitle = await extensionUtils.getTitle();
+        expect(actualTitle).toBe(testData.websites[1].title);
+    });
+
+    test('Title restoration after direct title manipulation', async ({ page }) => {
+        await extensionUtils.renameTab('New title');
+        await page.evaluate(() => {
+            document.title = 'Some other title';
+        });
+        await extensionUtils.restoreTitle();
+        const actualTitle = await extensionUtils.getTitle();
+        expect(actualTitle).toBe('Some other title');
+    });
+
+    test('Restores original favicon, page with no favicon <link> elements', async ({ page }) => {
+        await page.goto(testData.googleUrl);
+        await extensionUtils.setFavicon('🎂');
+        await extensionUtils.restoreFavicon();
+        await extensionUtils.assertFaviconUrl(testData.googleFaviconUrl);
+    });
+
+    test('Restores original favicon, page with favicon <link> elements', async ({ page }) => {
+        await page.goto(testData.ahmadphosseiniUrl);
+        await extensionUtils.setFavicon('🎂');
+        await extensionUtils.restoreFavicon();
+        await extensionUtils.assertFaviconUrl(testData.ahmadphosseiniFaviconUrl);
+    });
+
+    test('Favicon Restoration with page-switch', async ({ page }) => {
+        await page.goto(testData.websites[0].url);
+        await extensionUtils.setFavicon('🫂');
+        await page.goto(testData.websites[1].url);
+        await extensionUtils.restoreFavicon();
+        await extensionUtils.assertFaviconUrl(testData.websites[1].faviconUrl as string);
+    });
+});
