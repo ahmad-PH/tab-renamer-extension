@@ -132,8 +132,6 @@ export class ExtensionUtils {
 
     async restoreTitle(): Promise<void> {
         await this.renameTab('');
-        // Wait for the title change to be processed
-        await this.page.waitForTimeout(100);
     }
 
     // =================== Tab Management ===================
@@ -152,13 +150,19 @@ export class ExtensionUtils {
         return newPage;
     }
 
+    /**
+     * This method simulates when we "cmd + shift + t" to get an old tab back, when the tab directly opens 
+     * to the URLand there is no middleground where the tab exists but no URL is there yet.
+     * I have forgotten why this was useful in the first place!
+     * @param url 
+     */
     async openTabToURL(url: string): Promise<void> {
-        const newPage = await this.page.context().newPage();
-        await newPage.goto(url);
-        // Switch to the new page
+        const pagePromise = this.page.context().waitForEvent('page');
+        await this.page.evaluate(`window.open("${url}", "_blank");`);
+        const newPage = await pagePromise;
+        newPage.waitForLoadState("load");
         this.page = newPage;
     }
-
     async closeAllTabs(): Promise<void> {
         const pages = this.page.context().pages();
         for (const page of pages) {
