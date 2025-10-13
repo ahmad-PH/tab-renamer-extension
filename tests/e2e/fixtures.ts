@@ -36,20 +36,12 @@ function getPlatformUserAgent() {
 export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
-  userDataDir: string;
 }>({
-  userDataDir: async ({ }, use) => {
-    // Create a unique user data directory for each test to avoid conflicts in parallel execution
-    const uniqueId = randomUUID();
-    const parentDir = path.join(appRootPath.path, 'test-user-data');
-    const userDataDir = path.join(parentDir, `test-user-data-${uniqueId}`);
-    await use(userDataDir);
-  },
-  context: async ({ userDataDir }, use) => {
+  context: async ({ }, use) => {
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const { userAgent } = getPlatformUserAgent();
     
-    const context = await chromium.launchPersistentContext(userDataDir, {
+    const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',
       userAgent,
       args: [
