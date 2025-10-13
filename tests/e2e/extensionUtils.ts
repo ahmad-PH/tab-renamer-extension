@@ -189,21 +189,6 @@ export class ExtensionUtils {
         }
     }
 
-    async waitForExtensionReady(): Promise<void> {
-        // Wait for the extension to be fully loaded
-        await this.page.waitForFunction(() => {
-            return document.querySelector(`#${ROOT_ELEMENT_ID}`) !== null;
-        }, { timeout: 5000 });
-        
-        // Additional wait for iframe to be ready
-        await this.page.waitForFunction(() => {
-            const rootElement = document.querySelector(`#${ROOT_ELEMENT_ID}`);
-            if (!rootElement) return false;
-            const iframe = rootElement.querySelector('iframe');
-            return iframe && iframe.contentDocument;
-        }, { timeout: 5000 });
-    }
-
     async startConsoleMonitoring(): Promise<void> {
         this.page.on('console', msg => {
             if (msg.type() === 'error' || msg.type() === 'warning') {
