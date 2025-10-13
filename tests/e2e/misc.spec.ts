@@ -85,15 +85,15 @@ test.describe('Miscellaneous Tests', () => {
         expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
     });
 
-    // test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async ({ page }) => {
-    //     await page.goto(testData.websites[0].url);
-    //     await extensionUtils.renameTab('New title');
-    //     await extensionUtils.setFavicon('📖');
-    //     await extensionUtils.closeAndReopenCurrentTab();
+    test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async ({ page }) => {
+        await page.goto(testData.websites[0].url);
+        await extensionUtils.renameTab('New title');
+        await extensionUtils.setFavicon('📖');
+        await extensionUtils.closeAndReopenCurrentTab();
 
-    //     await extensionUtils.openTabToURL(testData.websites[0].url);
-    //     await extensionUtils.page.pause();
-    //     expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
-    //     expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
-    // });
+        await extensionUtils.openTabToURL(testData.websites[0].url);
+        await extensionUtils.page.pause();
+        expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
+        expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+    });
 });
