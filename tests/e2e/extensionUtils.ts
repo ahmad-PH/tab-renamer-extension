@@ -175,10 +175,6 @@ export class ExtensionUtils {
         return this.page.locator(`#${ROOT_ELEMENT_ID} iframe`).contentFrame()
     }
 
-    async waitForPageLoad(): Promise<void> {
-        await this.page.waitForLoadState('networkidle');
-    }
-
     async closeWelcomeTab(): Promise<void> {
         try {
             await this.page.evaluate((command) => {
