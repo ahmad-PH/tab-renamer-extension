@@ -12,6 +12,7 @@ test.describe('Miscellaneous Tests', () => {
 
     test.beforeEach(async ({ page }) => {
         extensionUtils = new ExtensionUtils(page);
+        await page.goto(testData.websites[0].url);
         await extensionUtils.closeWelcomeTab();
     });
 
@@ -86,7 +87,6 @@ test.describe('Miscellaneous Tests', () => {
     });
 
     test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async ({ page }) => {
-        await page.goto(testData.websites[0].url);
         await extensionUtils.renameTab('New title');
         await extensionUtils.setFavicon('📖');
         await extensionUtils.closeAndReopenCurrentTab();
@@ -95,5 +95,34 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.openTabToURL(testData.websites[0].url);
         expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
         expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+    });
+
+
+    test("Discarded tabs reload their titles correctly", async ({ page }) => {
+        await page.goto(testData.websites[0].url);
+        await extensionUtils.renameTab('New title');
+        await extensionUtils.setFavicon('📖');
+        const newPage = await page.context().newPage();
+        // await page.pause();
+        await extensionUtils.scheduleDiscardTabEvent();
+        // await page.pause();
+        await sleep(3_000);
+        // await page.pause();
+
+        await page.reload();
+        expect(await extensionUtils.getTitle()).toBe('New title');
+        expect(await extensionUtils.faviconIsEmoji()).toBe(true);
+
+        // await driver.get(data.websites[0].url);
+        // await driverUtils.waitForPageLoad();
+        // await driverUtils.setSignature('New title', '📖');
+        // await driverUtils.scheduleDiscardTabEvent();
+        // await sleep(3 * SECONDS);
+
+        // const newTabHandle = (await driver.getAllWindowHandles())[0];
+        // await driver.switchTo().window(newTabHandle);
+
+        // expect(await driverUtils.getTitle()).toBe('New title');
+        // expect(await driverUtils.faviconIsEmoji()).toBe(true);
     });
 });
