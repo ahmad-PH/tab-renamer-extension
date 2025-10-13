@@ -17,14 +17,14 @@ export const websites = [
         title: 'Test Page',
     },
     { 
-        url: googleUrl, 
-        faviconUrl: googleFaviconUrl, 
-        title: 'Google' 
-    },
-    { 
         url: ahmadphosseiniUrl, 
         faviconUrl: ahmadphosseiniFaviconUrl, 
         title: 'Ahmad Pourihosseini' 
+    },
+    { 
+        url: googleUrl, 
+        faviconUrl: googleFaviconUrl, 
+        title: 'Google' 
     },
     { 
         url: 'https://motherfuckingwebsite.com/' 
