@@ -143,8 +143,8 @@ export default function App() {
             <Frame
                 head={styleElement} 
                 className = {styles.mainBarIFrameContainer}
-                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}" data-tab-renamer-frame="true"><head></head><body class="${styles.inputBoxBody}" id="mountTarget"></body></html>`}
-                mountTarget="#mountTarget"
+                initialContent={`<!DOCTYPE html><html class="${styles.inputBoxHTML}" data-tab-renamer-frame="true"><head></head><body class="${styles.inputBoxBody}" id="frameMountTarget"></body></html>`}
+                mountTarget="#frameMountTarget"
                 contentDidMount={() => {
                     if (isVisible) {
                         inputRef.current.focus();

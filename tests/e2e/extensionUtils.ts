@@ -190,7 +190,7 @@ export class ExtensionUtils {
     
 
     extensionFrame(): FrameLocator {
-        return this.page.locator('iframe').contentFrame()
+        return this.page.locator(`#${ROOT_ELEMENT_ID} iframe`).contentFrame()
     }
 
     async waitForPageLoad(): Promise<void> {
@@ -245,10 +245,11 @@ export class ExtensionUtils {
      * with the same user data directory. This preserves chrome.storage data.
      * Returns a new ExtensionUtils instance for the restarted browser.
      */
-    static async simulateBrowserRestart(currentContext: any, userDataDir: string): Promise<ExtensionUtils> {
+    static async simulateBrowserRestart(currentContext: any): Promise<ExtensionUtils> {
         const { chromium } = await import('@playwright/test');
         
         const pathToExtension = path.join(appRootPath.path, 'dist/dev');
+        const userDataDir = path.join(appRootPath.path, 'test-user-data');
         
         // Close the current context
         await currentContext.close();
