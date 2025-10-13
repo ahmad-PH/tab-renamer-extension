@@ -158,7 +158,6 @@ export class ExtensionUtils {
      * Close and reopen current tab
      */
     async closeAndReopenCurrentTab(): Promise<Page> {
-        await this.page.pause();
         const currentUrl = this.page.url();
         await this.page.close();
         const newPage = await this.page.context().newPage();

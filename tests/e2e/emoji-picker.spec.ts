@@ -17,11 +17,7 @@ test.describe('Emoji Picker', () => {
 
     test.beforeEach(async ({ page }) => {
         extensionUtils = new ExtensionUtils(page);
-        
-        // Navigate to test page
         await page.goto(testData.websites[0].url);
-        
-        // Close welcome tab if it exists
         await extensionUtils.closeWelcomeTab();
     });
 
