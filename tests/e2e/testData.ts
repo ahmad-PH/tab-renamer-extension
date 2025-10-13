@@ -4,11 +4,11 @@
  */
 
 export const googleUrl = 'https://www.google.com/';
-export const googleFaviconUrl = '//www.gstatic.com/images/branding/searchlogo/ico/favicon.ico';
+export const googleFaviconUrl = 'https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico';
 export const facebookUrl = 'https://www.facebook.com/';
 export const youtubeUrl = 'https://www.youtube.com/';
 export const ahmadphosseiniUrl = 'https://www.ahmadphosseini.com/';
-export const ahmadphosseiniFaviconUrl = '/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_32x32_fill_lanczos_center_2.png';
+export const ahmadphosseiniFaviconUrl = 'https://www.ahmadphosseini.com/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_192x192_fill_lanczos_center_2.png';
 
 export const websites = [
     {
