@@ -3,6 +3,7 @@ import path from 'path';
 import appRootPath from 'app-root-path';
 import os from 'os';
 import { randomUUID } from 'crypto';
+import fs from 'fs';
 
 // Detect the actual platform
 function getPlatformUserAgent() {
@@ -63,4 +64,69 @@ export const test = base.extend<{
     await use(extensionId);
   },
 });
+
+// Special fixture for persistent context with user data directory
+export const testWithPersistentContext = base.extend<{
+  context: BrowserContext;
+  extensionId: string;
+  userDataDir: string;
+  restartBrowser: () => Promise<BrowserContext>;
+}>({
+  userDataDir: async ({ }, use) => {
+    // Create a temporary directory for user data
+    const tempDir = path.join(os.tmpdir(), `playwright-chrome-${randomUUID()}`);
+    fs.mkdirSync(tempDir, { recursive: true });
+    
+    await use(tempDir);
+    
+    // Clean up the temporary directory after test
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  },
+  
+  context: async ({ userDataDir }, use) => {
+    const pathToExtension = path.join(appRootPath.path, 'dist/dev');
+    const { userAgent } = getPlatformUserAgent();
+    
+    const context = await chromium.launchPersistentContext(userDataDir, {
+      channel: 'chromium',
+      userAgent,
+      args: [
+        `--disable-extensions-except=${pathToExtension}`,
+        `--load-extension=${pathToExtension}`,
+      ],
+    });
+    
+    await use(context);
+    await context.close();
+  },
+  
+  restartBrowser: async ({ userDataDir }, use) => {
+    const pathToExtension = path.join(appRootPath.path, 'dist/dev');
+    const { userAgent } = getPlatformUserAgent();
+    
+    const restartFunction = async (): Promise<BrowserContext> => {
+      return await chromium.launchPersistentContext(userDataDir, {
+        channel: 'chromium',
+        userAgent,
+        args: [
+          `--disable-extensions-except=${pathToExtension}`,
+          `--load-extension=${pathToExtension}`,
+        ],
+      });
+    };
+    
+    await use(restartFunction);
+  },
+  
+  extensionId: async ({ context }, use) => {
+    // for manifest v3:
+    let [serviceWorker] = context.serviceWorkers();
+    if (!serviceWorker)
+      serviceWorker = await context.waitForEvent('serviceworker');
+
+    const extensionId = serviceWorker.url().split('/')[2];
+    await use(extensionId);
+  },
+});
+
 export const expect = test.expect;
