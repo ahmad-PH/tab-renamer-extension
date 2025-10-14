@@ -43,7 +43,7 @@ export class ExtensionUtils {
             document.dispatchEvent(new MessageEvent(command));
         }, COMMAND_OPEN_RENAME_DIALOG);
 
-        await expect(this.page.getByTestId(ROOT_ELEMENT_ID)).toBeAttached();
+        await this.page.getByTestId(ROOT_ELEMENT_ID).waitFor({state: "attached"});
     }
 
     async submitRenameDialog(): Promise<void> {
@@ -133,6 +133,7 @@ export class ExtensionUtils {
 
     async restoreTitle(): Promise<void> {
         await this.renameTab('');
+        await this.page.waitForTimeout(100); // Seems necessary beacuse restoring the title involves memory operations.
     }
 
     // =================== Tab Management ===================
