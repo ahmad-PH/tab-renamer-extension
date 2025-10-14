@@ -80,7 +80,14 @@ export const testWithPersistentContext = base.extend<{
     await use(tempDir);
     
     // Clean up the temporary directory after test
-    fs.rmSync(tempDir, { recursive: true, force: true });
+    // Add a small delay to ensure Chrome has released all file handles
+    await new Promise(resolve => setTimeout(resolve, 100));
+    try {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    } catch (error) {
+      // If cleanup fails, it's not critical - the OS will clean up temp files eventually
+      console.warn(`Failed to clean up temp directory ${tempDir}:`, error);
+    }
   },
   
   context: async ({ userDataDir }, use) => {
