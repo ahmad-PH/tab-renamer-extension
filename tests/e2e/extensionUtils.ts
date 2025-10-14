@@ -233,20 +233,12 @@ export class ExtensionUtils {
 
     async openSettingsPage(): Promise<void> {
         await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: 1000 });
-        await this.page.waitForTimeout(2000);
     }
 
-    async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<Page | null> {
-        const currentPage = this.page;
+    async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<Page> {
+        const newPagePromise = this.page.context().waitForEvent('page');
         await action();
-        const pages = this.page.context().pages();
-        const newPage = pages.find(p => p !== currentPage);
-        if (newPage) {
-            this.page = newPage;
-            this.page.bringToFront();
-            return newPage;
-        }
-        return null;
+        return await newPagePromise;
     }
 
     /**

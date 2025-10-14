@@ -181,9 +181,6 @@ test.describe('Miscellaneous Tests', () => {
             await extensionUtils.openSettingsPage();
         });
 
-        expect(settingsPage).not.toBeNull();
-        settingsPage = settingsPage as Page;
-
         await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).click();
 
         const twemojiOption = await settingsPage.locator("//li[contains(text(), 'Twemoji')]");
@@ -204,8 +201,6 @@ test.describe('Miscellaneous Tests', () => {
         settingsPage = await extensionUtils.switchToNewTabAfterPerforming(async () => {
             await extensionUtils.openSettingsPage();
         });
-        expect(settingsPage).not.toBeNull();
-        settingsPage = settingsPage as Page;
 
         await settingsPage.waitForTimeout(100); // Wait for page to load the style from memory.
         expect(await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).textContent()).toBe("Twemoji");
