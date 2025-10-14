@@ -2,7 +2,7 @@ import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import express from 'express';
 import { Page } from '@playwright/test';
-import { PromiseLock, sleep, startExpressServer, findAvailablePort } from './utils';
+import { PromiseLock, sleep, startExpressServer, findAvailablePort, startExpressServerWithHTML } from './utils';
 import http from 'http';
 import testData from './testData';
 
@@ -95,5 +95,34 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.openTabToURL(testData.websites[0].url);
         expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
         expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+    });
+
+    // Verified functionality after migration.
+    test("Key event listeners on document don't get triggered when UI is active", async ({ page }) => {
+        const port = await findAvailablePort(3000);
+        const expressServer = await startExpressServerWithHTML(port, `
+            <html>
+                <body>
+                    <p id="testContainer">Initial</p>
+                    <script>
+                    document.addEventListener('keydown', function(event) {
+                        if (event.key === 'A') {
+                            document.getElementById("testContainer").innerHTML = 'A key pressed';
+                        }
+                    });
+                    </script>
+                </body>
+            </html>
+        `);
+
+        await page.goto(`http://localhost:${port}`);
+        await extensionUtils.openRenameDialog();
+        await page.pause();
+        await page.evaluate("document.activeElement.blur()");
+        await page.keyboard.press('A');
+
+        const body = await page.locator('#testContainer');
+        const bodyText = await body.textContent();
+        expect(bodyText).not.toContain('A key pressed');
     });
 });

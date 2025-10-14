@@ -43,6 +43,14 @@ export function startExpressServer(app: express.Express, port: number): Promise<
     });
 };
 
+export function startExpressServerWithHTML(port: number, html: string): Promise<http.Server> {
+    const app = express();
+    app.get('/', (req, res) => {
+        res.send(html);
+    });
+    return startExpressServer(app, port);
+}
+
 export class PromiseLock {
     private promise!: Promise<void>;
     private resolve!: () => void;
