@@ -100,7 +100,7 @@ test.describe('Miscellaneous Tests', () => {
     // Verified functionality after migration.
     test("Key event listeners on document don't get triggered when UI is active", async ({ page }) => {
         const port = await findAvailablePort(3000);
-        const expressServer = await startExpressServerWithHTML(port, `
+        await startExpressServerWithHTML(port, `
             <html>
                 <body>
                     <p id="testContainer">Initial</p>
@@ -124,5 +124,45 @@ test.describe('Miscellaneous Tests', () => {
         const body = await page.locator('#testContainer');
         const bodyText = await body.textContent();
         expect(bodyText).not.toContain('A key pressed');
+    });
+
+    // Verified functionality after migration.
+    test("Event listeners on the host page won't trigger when working with tab renamer, no matter how aggressive", async ({ page }) => {
+        const port = await findAvailablePort(3000);
+        await startExpressServerWithHTML(port, `
+            <html>
+            <body>
+                <p id="captureContainer">Not triggered (capture)</p>
+                <script>
+                // Capture at window level with highest possible priority
+                window.addEventListener('keydown', function(event) {
+                    if (event.key === 'e') {
+                        window.eventWasSeen = true;
+                        document.getElementById("captureContainer").innerHTML = 'Window capture triggered';
+                        // Stop everything
+                        event.preventDefault(); // Causes the input box to fail to capture the input event.
+                        event.stopImmediatePropagation(); // Just to be extra disruptive and stop any other non-native listeners.
+                        return false;
+                    }
+                }, { 
+                    capture: true,  
+                    passive: false, // Allow preventDefault
+                    once: false,    // Handle all events
+                });
+                </script>
+            </body>
+            </html>
+        `);
+
+        await page.goto(`http://localhost:${port}`);
+        await page.waitForTimeout(500);
+        await page.pause()
+        await extensionUtils.renameTab('eel');
+
+        expect(await extensionUtils.getTitle()).toBe('eel');
+
+        // Verify the handler was not triggered
+        const captureContainer = await page.locator('#captureContainer');
+        expect(await captureContainer.textContent()).toBe('Not triggered (capture)');
     });
 });
