@@ -133,7 +133,7 @@ export class ExtensionUtils {
 
     async restoreTitle(): Promise<void> {
         await this.renameTab('');
-        await this.page.waitForTimeout(100); // Seems necessary beacuse restoring the title involves memory operations.
+        await this.page.waitForTimeout(150); // Seems necessary beacuse restoring the title involves memory operations.
     }
 
     // =================== Tab Management ===================
@@ -162,7 +162,7 @@ export class ExtensionUtils {
         const pagePromise = this.page.context().waitForEvent('page');
         await this.page.evaluate(`window.open("${url}", "_blank");`);
         const newPage = await pagePromise;
-        newPage.waitForLoadState("load");
+        await newPage.waitForLoadState("load");
         this.page = newPage;
     }
     async closeAllTabs(): Promise<void> {
@@ -233,7 +233,7 @@ export class ExtensionUtils {
     }
 
     async openSettingsPage(): Promise<void> {
-        await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: 1000 });
+        await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: 200 });
     }
 
     async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<Page> {
