@@ -17,11 +17,12 @@ import {
     OVERLAY_ID,
     SEARCH_BAR_ID,
     SEARCH_RESULTS_ID,
+    SETTINGS_BUTTON_ID,
+    SETTINGS_BUTTON_TRIGGER_AREA_ID,
 } from '../../src/config.js';
 
 import path from 'path';
 import appRootPath from 'app-root-path';
-
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
@@ -231,18 +232,21 @@ export class ExtensionUtils {
     }
 
     async openSettingsPage(): Promise<void> {
-        await this.page.goto('chrome://extensions/');
-        // Additional logic to navigate to extension settings would go here
+        await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: 1000 });
+        await this.page.waitForTimeout(2000);
     }
 
-    async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<void> {
+    async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<Page | null> {
         const currentPage = this.page;
         await action();
         const pages = this.page.context().pages();
         const newPage = pages.find(p => p !== currentPage);
         if (newPage) {
             this.page = newPage;
+            this.page.bringToFront();
+            return newPage;
         }
+        return null;
     }
 
     /**

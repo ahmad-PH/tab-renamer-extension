@@ -5,6 +5,7 @@ import { Page } from '@playwright/test';
 import { PromiseLock, sleep, startExpressServer, findAvailablePort, startExpressServerWithHTML } from './utils';
 import http from 'http';
 import testData from './testData';
+import { EMOJI_STYLE_TWEMOJI, FAVICON_PICKER_ID, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from '../../src/config.js';
 
 test.describe('Miscellaneous Tests', () => {
     let extensionUtils: ExtensionUtils;
@@ -117,7 +118,6 @@ test.describe('Miscellaneous Tests', () => {
 
         await page.goto(`http://localhost:${port}`);
         await extensionUtils.openRenameDialog();
-        await page.pause();
         await page.evaluate("document.activeElement.blur()");
         await page.keyboard.press('A');
 
@@ -156,7 +156,6 @@ test.describe('Miscellaneous Tests', () => {
 
         await page.goto(`http://localhost:${port}`);
         await page.waitForTimeout(500);
-        await page.pause()
         await extensionUtils.renameTab('eel');
 
         expect(await extensionUtils.getTitle()).toBe('eel');
@@ -164,5 +163,51 @@ test.describe('Miscellaneous Tests', () => {
         // Verify the handler was not triggered
         const captureContainer = await page.locator('#captureContainer');
         expect(await captureContainer.textContent()).toBe('Not triggered (capture)');
+    });
+
+    test('Settings Page: Emoji style can be changed properly, and the select element remembers the selected option', async ({ page }) => {
+        await page.goto(testData.websites[0].url);
+
+        // Close all pages other than the current one:
+        const pages = await page.context().pages();
+        for (const currentPage of pages) {
+            if (currentPage !== page) {
+                await currentPage.close();
+            }
+        }
+        
+        await extensionUtils.openRenameDialog();
+        let settingsPage = await extensionUtils.switchToNewTabAfterPerforming(async () => {
+            await extensionUtils.openSettingsPage();
+        });
+
+        expect(settingsPage).not.toBeNull();
+        settingsPage = settingsPage as Page;
+
+        await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).click();
+
+        const twemojiOption = await settingsPage.locator("//li[contains(text(), 'Twemoji')]");
+        await twemojiOption.click();
+
+        // // Close the settings page, go back to original tab, check emoji style.
+        await settingsPage.close();
+        await page.bringToFront();
+        extensionUtils.page = page;
+        await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
+        const emojiLocator = extensionUtils.extensionFrame().getByTestId("😇");
+        // await page.pause();
+        await emojiLocator.waitFor({state: 'attached', timeout: 1000});
+        expect(await emojiLocator.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
+
+        
+        // Re-open the settings page, and check that the style is still Twemoji:
+        settingsPage = await extensionUtils.switchToNewTabAfterPerforming(async () => {
+            await extensionUtils.openSettingsPage();
+        });
+        expect(settingsPage).not.toBeNull();
+        settingsPage = settingsPage as Page;
+
+        await settingsPage.waitForTimeout(100); // Wait for page to load the style from memory.
+        expect(await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).textContent()).toBe("Twemoji");
     });
 });
