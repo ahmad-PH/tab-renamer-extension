@@ -76,7 +76,7 @@ test.describe('Miscellaneous Tests', () => {
             }
         }, 10);
 
-        await sleep(200);
+        await sleep(250);
         lock.release();
 
         await secondTabLoadPromise;
