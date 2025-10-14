@@ -177,6 +177,7 @@ test.describe('Miscellaneous Tests', () => {
         }
         
         await extensionUtils.openRenameDialog();
+        await page.waitForTimeout(100);
         let settingsPage = await extensionUtils.switchToNewTabAfterPerforming(async () => {
             await extensionUtils.openSettingsPage();
         });
@@ -191,8 +192,8 @@ test.describe('Miscellaneous Tests', () => {
         await page.bringToFront();
         extensionUtils.page = page;
         await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
+        await extensionUtils.page.waitForTimeout(100);
         const emojiLocator = extensionUtils.extensionFrame().getByTestId("😇");
-        // await page.pause();
         await emojiLocator.waitFor({state: 'attached', timeout: 1000});
         expect(await emojiLocator.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
