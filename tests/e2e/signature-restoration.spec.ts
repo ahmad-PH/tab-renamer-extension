@@ -22,6 +22,9 @@ test.describe('Signature Restoration', () => {
         const originalTitle = await page.title();
         await extensionUtils.renameTab('New title');
         await extensionUtils.closeAndReopenCurrentTab();
+         // I find this to be important, since you want to make sure original title is loaded,
+         // before attempting to "restore" it.
+        expect(extensionUtils.page).toHaveTitle('New title');
         await extensionUtils.restoreTitle();
         expect(extensionUtils.page).toHaveTitle(originalTitle);
     });
