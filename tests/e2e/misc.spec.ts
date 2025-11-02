@@ -94,7 +94,7 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.page.waitForTimeout(400); // Make sure the signature has time to mark the signature as !closed.
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
-        expect(await extensionUtils.getTitle()).toBe(testData.websites[0].title);
+        expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
         expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
     });
 
@@ -158,7 +158,7 @@ test.describe('Miscellaneous Tests', () => {
         await page.waitForTimeout(500);
         await extensionUtils.renameTab('eel');
 
-        expect(await extensionUtils.getTitle()).toBe('eel');
+        expect(page).toHaveTitle('eel');
 
         // Verify the handler was not triggered
         const captureContainer = await page.locator('#captureContainer');

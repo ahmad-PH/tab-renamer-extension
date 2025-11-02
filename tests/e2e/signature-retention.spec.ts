@@ -25,7 +25,7 @@ test.describe('Signature Retention', () => {
         await page.waitForTimeout(200);
 
         // Assert the name and emoji that we set on the tab
-        expect(await extensionUtils.getTitle()).toBe(newTitle);
+        expect(page).toHaveTitle(newTitle);
         expect(await extensionUtils.faviconIsEmoji()).toBe(true);
             
         // Assert the name and emoji that we set in the UI

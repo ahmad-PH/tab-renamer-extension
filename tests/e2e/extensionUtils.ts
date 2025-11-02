@@ -62,10 +62,6 @@ export class ExtensionUtils {
         await this.submitRenameDialog();
     }
 
-    getTitle(): Promise<string> {
-        return this.page.title();
-    }
-
     async getTitleInUI(): Promise<string> {
         const titleBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         return await titleBox.inputValue();

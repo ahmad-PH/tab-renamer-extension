@@ -26,18 +26,18 @@ export const websites = [
         faviconUrl: googleFaviconUrl, 
         title: 'Google' 
     },
-    { 
-        url: 'https://motherfuckingwebsite.com/' 
-    },
-    { 
-        url: youtubeUrl 
-    },
-    { 
-        url: facebookUrl 
-    },
-    { 
-        url: 'https://www.nationalgeographic.com/' 
-    },
+    // { 
+    //     url: 'https://motherfuckingwebsite.com/' 
+    // },
+    // { 
+    //     url: youtubeUrl 
+    // },
+    // { 
+    //     url: facebookUrl 
+    // },
+    // { 
+    //     url: 'https://www.nationalgeographic.com/' 
+    // },
 ];
 
 export default {

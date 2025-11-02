@@ -25,7 +25,7 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
         await newPage.waitForTimeout(300); // Time for the restart listener to mark all tabs as closed.
 
         await newPage.goto(testData.websites[0].url);
-        expect(await extensionUtils.getTitle()).toBe(signature.title);
+        expect(newPage).toHaveTitle(signature.title);
         expect(await extensionUtils.faviconIsEmoji()).toBe(true);
     });
 });

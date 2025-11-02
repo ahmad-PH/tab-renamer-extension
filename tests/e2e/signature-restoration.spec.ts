@@ -12,20 +12,18 @@ test.describe('Signature Restoration', () => {
     });
 
     test('Restores original title when empty title passed', async ({ page }) => {
-        const originalTitle = await extensionUtils.getTitle();
+        const originalTitle = await page.title();
         await extensionUtils.renameTab('New title');
         await extensionUtils.restoreTitle();
-        const actualTitle = await extensionUtils.getTitle();
-        expect(actualTitle).toBe(originalTitle);
+        expect(page).toHaveTitle(originalTitle);
     });
 
     test('Restores original title when empty title passed, after being re-opened', async ({ page }) => {
-        const originalTitle = await extensionUtils.getTitle();
+        const originalTitle = await page.title();
         await extensionUtils.renameTab('New title');
         await extensionUtils.closeAndReopenCurrentTab();
         await extensionUtils.restoreTitle();
-        const actualTitle = await extensionUtils.getTitle();
-        expect(actualTitle).toBe(originalTitle);
+        expect(extensionUtils.page).toHaveTitle(originalTitle);
     });
 
     test('Title restoration with page-switch', async ({ page }) => {
@@ -33,8 +31,7 @@ test.describe('Signature Restoration', () => {
         await page.waitForTimeout(20); // Give background script time to save the title
         await page.goto(testData.websites[1].url);
         await extensionUtils.restoreTitle();
-        const actualTitle = await extensionUtils.getTitle();
-        expect(actualTitle).toBe(testData.websites[1].title);
+        expect(page).toHaveTitle(testData.websites[1].title);
     });
 
     test('Title restoration after direct title manipulation', async ({ page }) => {
@@ -43,8 +40,7 @@ test.describe('Signature Restoration', () => {
             document.title = 'Some other title';
         });
         await extensionUtils.restoreTitle();
-        const actualTitle = await extensionUtils.getTitle();
-        expect(actualTitle).toBe('Some other title');
+        expect(page).toHaveTitle('Some other title');
     });
 
     test('Restores original favicon, page with no favicon <link> elements', async ({ page }) => {
