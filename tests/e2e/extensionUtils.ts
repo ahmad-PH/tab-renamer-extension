@@ -163,7 +163,7 @@ export class ExtensionUtils {
         await this.page.evaluate(`window.open("${url}", "_blank");`);
         const newPage = await pagePromise;
         await newPage.waitForLoadState("load");
-        await newPage.waitForTimeout(100);
+        await newPage.waitForTimeout(300);
         this.page = newPage;
     }
     async closeAllTabs(): Promise<void> {

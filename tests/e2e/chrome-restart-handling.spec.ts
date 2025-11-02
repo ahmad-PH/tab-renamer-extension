@@ -22,7 +22,7 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
         const newBrowserContext = await restartBrowser();
         const newPage = await newBrowserContext.newPage();
         extensionUtils = new ExtensionUtils(newPage);
-        await newPage.waitForTimeout(100); // Time for the restart listener to mark all tabs as closed.
+        await newPage.waitForTimeout(300); // Time for the restart listener to mark all tabs as closed.
 
         await newPage.goto(testData.websites[0].url);
         expect(await extensionUtils.getTitle()).toBe(signature.title);
