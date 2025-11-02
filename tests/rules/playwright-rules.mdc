@@ -1,0 +1,8 @@
+---
+description: When writing playwright tests
+alwaysApply: false
+---
+
+- To assert the page title, always use the `await expect(page).toHaveTitle()` pattern, because it has auto-retrying built-in.
+
+- To assert the emoji of the page is successfully set to an emoji, always use the `extensionUtils.assertFaviconIsEmoji()` function instead of reading the status directly. Not doing that can make things flaky.
