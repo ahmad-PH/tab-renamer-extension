@@ -95,7 +95,7 @@ export class ExtensionUtils {
     }
 
     async assertFaviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE) {
-        await expect.poll(() => this.faviconIsEmoji(), {timeout: 1_000}).toBe(true);
+        await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: 1_000}).toBe(true);
     }
 
     async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {

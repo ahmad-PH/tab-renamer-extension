@@ -39,7 +39,7 @@ test.describe('Emoji Picker', () => {
                 
                 // Check if favicon is an emoji (data URL)
                 await page.waitForTimeout(100);
-                expect(await extensionUtils.faviconIsEmoji(emojiStyle)).toBe(true);
+                await extensionUtils.assertFaviconIsEmoji(emojiStyle);
             });
 
             test('Emojis not on page before emoji picker being clicked', async ({ page }) => {

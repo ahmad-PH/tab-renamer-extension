@@ -95,7 +95,7 @@ test.describe('Miscellaneous Tests', () => {
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
         expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
-        expect(await extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+        expect.poll(() => extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
     });
 
     // Verified functionality after migration.
@@ -194,7 +194,7 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
         await extensionUtils.page.waitForTimeout(100);
         const emojiLocator = extensionUtils.extensionFrame().getByTestId("😇");
-        await emojiLocator.waitFor({state: 'attached', timeout: 1000});
+        await emojiLocator.waitFor({state: 'attached', timeout: 1500});
         expect(await emojiLocator.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
         

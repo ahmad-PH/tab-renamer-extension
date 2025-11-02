@@ -26,6 +26,6 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
 
         await newPage.goto(testData.websites[0].url);
         expect(newPage).toHaveTitle(signature.title);
-        expect(await extensionUtils.faviconIsEmoji()).toBe(true);
+        await extensionUtils.assertFaviconIsEmoji();
     });
 });

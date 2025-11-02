@@ -26,7 +26,7 @@ test.describe('Signature Retention', () => {
 
         // Assert the name and emoji that we set on the tab
         expect(page).toHaveTitle(newTitle);
-        expect(await extensionUtils.faviconIsEmoji()).toBe(true);
+        await extensionUtils.assertFaviconIsEmoji();
             
         // Assert the name and emoji that we set in the UI
         await extensionUtils.openRenameDialog();
@@ -80,7 +80,7 @@ test.describe('Signature Retention', () => {
     //     });
         
     //     expect(await newExtensionUtils.getTitle()).toBe(signature1.title);
-    //     expect(await newExtensionUtils.faviconIsEmoji()).toBe(true);
+    //     await newExtensionUtils.assertFaviconIsEmoji();
 
     //     // Navigate to the second URL and verify signature retention
     //     await newExtensionUtils.openTabToURL(testData.websites[1].url);
@@ -97,7 +97,7 @@ test.describe('Signature Retention', () => {
     //     });
         
     //     expect(await newExtensionUtils.getTitle()).toBe(signature2.title);
-    //     expect(await newExtensionUtils.faviconIsEmoji()).toBe(true);
+    //     await newExtensionUtils.assertFaviconIsEmoji();
 
     //     // Clean up the new context
     //     await newExtensionUtils.page.context().close();
