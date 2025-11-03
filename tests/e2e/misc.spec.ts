@@ -96,7 +96,7 @@ test.describe('Miscellaneous Tests', () => {
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
         expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
-        expect.poll(() => extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
+        await expect.poll(() => extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
     });
 
     // Verified functionality after migration.
