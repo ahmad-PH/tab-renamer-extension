@@ -147,6 +147,7 @@ export class ExtensionUtils {
         const currentUrl = this.page.url();
         await this.page.close();
         const newPage = await this.page.context().newPage();
+        await newPage.waitForTimeout(500); // Time for current signature to be written before 
         await newPage.goto(currentUrl, { waitUntil: 'load' });
         this.page = newPage;
         return newPage;
