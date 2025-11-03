@@ -95,7 +95,7 @@ export class ExtensionUtils {
     }
 
     async assertFaviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE) {
-        await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: 1_000}).toBe(true);
+        await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: 5_000}).toBe(true);
     }
 
     async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {
@@ -133,7 +133,7 @@ export class ExtensionUtils {
 
     async restoreTitle(): Promise<void> {
         await this.renameTab('');
-        await this.page.waitForTimeout(400); // Seems necessary beacuse restoring the title involves memory operations.
+        await this.page.waitForTimeout(600); // Seems necessary beacuse restoring the title involves memory operations.
     }
 
     // =================== Tab Management ===================

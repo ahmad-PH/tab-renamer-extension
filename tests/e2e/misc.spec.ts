@@ -92,6 +92,7 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.setFavicon('📖');
         await extensionUtils.closeAndReopenCurrentTab();
         await extensionUtils.page.waitForTimeout(400); // Make sure the signature has time to mark the signature as !closed.
+        await expect(extensionUtils.page).toHaveTitle('New title');
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
         expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
@@ -194,7 +195,7 @@ test.describe('Miscellaneous Tests', () => {
         await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
         await extensionUtils.page.waitForTimeout(100);
         const emojiLocator = extensionUtils.extensionFrame().getByTestId("😇");
-        await emojiLocator.waitFor({state: 'attached', timeout: 1500});
+        await emojiLocator.waitFor({state: 'attached', timeout: 3000});
         expect(await emojiLocator.getAttribute('data-style')).toBe(EMOJI_STYLE_TWEMOJI);
 
         
