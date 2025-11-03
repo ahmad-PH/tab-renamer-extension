@@ -156,7 +156,6 @@ test.describe('Miscellaneous Tests', () => {
         `);
 
         await page.goto(`http://localhost:${port}`);
-        await page.waitForTimeout(500);
         await extensionUtils.renameTab('eel');
 
         expect(page).toHaveTitle('eel');

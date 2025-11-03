@@ -21,9 +21,6 @@ test.describe('Signature Retention', () => {
         
         page = await extensionUtils.closeAndReopenCurrentTab();
 
-        // Give the extension time to load the title from storage
-        await page.waitForTimeout(300);
-
         // Assert the name and emoji that we set on the tab
         expect(page).toHaveTitle(newTitle);
         await extensionUtils.assertFaviconIsEmoji();

@@ -133,7 +133,6 @@ export class ExtensionUtils {
 
     async restoreTitle(): Promise<void> {
         await this.renameTab('');
-        await this.page.waitForTimeout(600); // Seems necessary beacuse restoring the title involves memory operations.
     }
 
     // =================== Tab Management ===================
