@@ -1,7 +1,6 @@
 import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import express from 'express';
-import { Page } from '@playwright/test';
 import { PromiseLock, sleep, startExpressServer, findAvailablePort, startExpressServerWithHTML } from './utils';
 import http from 'http';
 import testData from './testData';
@@ -60,17 +59,16 @@ test.describe('Miscellaneous Tests', () => {
         const secondTabLoadPromise = secondTab.goto(`http://localhost:${port}`); // Don't wait for completion (no await)
 
         let sawOneCorrectTitleWhileStillLoading = false;
-        let timerId: NodeJS.Timeout;
-
         // Monitor the title and readyState continuously
-        timerId = setInterval(async () => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        const timerId = setInterval(async () => {
             try {
                 const readyState = await secondTab.evaluate('document.readyState');
                 const title = await secondTab.evaluate('document.title');
                 if (title === 'New title' && readyState === 'loading') {
                     sawOneCorrectTitleWhileStillLoading = true;
                 }
-            } catch (e) {
+            } catch {
                 // There are sometimes errors here, saying the session on driver
                 // has expired. I have not understood why it happens, and it 
                 // seems not to have an important effect on the test.
@@ -87,7 +85,7 @@ test.describe('Miscellaneous Tests', () => {
         expect(sawOneCorrectTitleWhileStillLoading).toBe(true);
     });
 
-    test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async ({ page }) => {
+    test("Won't retrieve the same signature twice from memory: Marking tabs as !closed correctly", async () => {
         await extensionUtils.renameTab('New title');
         await extensionUtils.setFavicon('📖');
         await extensionUtils.closeAndReopenCurrentTab();
@@ -121,7 +119,7 @@ test.describe('Miscellaneous Tests', () => {
         await page.evaluate("document.activeElement.blur()");
         await page.keyboard.press('A');
 
-        const body = await page.locator('#testContainer');
+        const body = page.locator('#testContainer');
         const bodyText = await body.textContent();
         expect(bodyText).not.toContain('A key pressed');
     });
@@ -157,19 +155,17 @@ test.describe('Miscellaneous Tests', () => {
         await page.goto(`http://localhost:${port}`);
         await extensionUtils.renameTab('eel');
 
-        expect(page).toHaveTitle('eel');
+        await expect(page).toHaveTitle('eel');
 
         // Verify the handler was not triggered
-        const captureContainer = await page.locator('#captureContainer');
-        expect(await captureContainer.textContent()).toBe('Not triggered (capture)');
+        await expect(page.locator('#captureContainer')).toHaveText("Not triggered (capture)");
     });
 
     test('Settings Page: Emoji style can be changed properly, and the select element remembers the selected option', async ({ page }) => {
         await page.goto(testData.websites[0].url);
 
         // Close all pages other than the current one:
-        const pages = await page.context().pages();
-        for (const currentPage of pages) {
+        for (const currentPage of page.context().pages()) {
             if (currentPage !== page) {
                 await currentPage.close();
             }
@@ -183,7 +179,7 @@ test.describe('Miscellaneous Tests', () => {
 
         await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).click();
 
-        const twemojiOption = await settingsPage.locator("//li[contains(text(), 'Twemoji')]");
+        const twemojiOption = settingsPage.locator("//li[contains(text(), 'Twemoji')]");
         await twemojiOption.click();
 
         // // Close the settings page, go back to original tab, check emoji style.
