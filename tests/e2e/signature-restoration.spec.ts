@@ -15,7 +15,7 @@ test.describe('Signature Restoration', () => {
         const originalTitle = await page.title();
         await extensionUtils.renameTab('New title');
         await extensionUtils.restoreTitle();
-        expect(page).toHaveTitle(originalTitle);
+        await expect(page).toHaveTitle(originalTitle);
     });
 
     test('Restores original title when empty title passed, after being re-opened', async ({ page }) => {
@@ -24,9 +24,9 @@ test.describe('Signature Restoration', () => {
         await extensionUtils.closeAndReopenCurrentTab();
          // I find this to be important, since you want to make sure original title is loaded,
          // before attempting to "restore" it.
-        expect(extensionUtils.page).toHaveTitle('New title');
+        await expect(extensionUtils.page).toHaveTitle('New title');
         await extensionUtils.restoreTitle();
-        expect(extensionUtils.page).toHaveTitle(originalTitle);
+        await expect(extensionUtils.page).toHaveTitle(originalTitle);
     });
 
     test('Title restoration with page-switch', async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Signature Restoration', () => {
         await page.waitForTimeout(20); // Give background script time to save the title
         await page.goto(testData.websites[1].url);
         await extensionUtils.restoreTitle();
-        expect(page).toHaveTitle(testData.websites[1].title);
+        await expect(page).toHaveTitle(testData.websites[1].title);
     });
 
     test('Title restoration after direct title manipulation', async ({ page }) => {
@@ -43,7 +43,7 @@ test.describe('Signature Restoration', () => {
             document.title = 'Some other title';
         });
         await extensionUtils.restoreTitle();
-        expect(page).toHaveTitle('Some other title');
+        await expect(page).toHaveTitle('Some other title');
     });
 
     test('Restores original favicon, page with no favicon <link> elements', async ({ page }) => {
@@ -65,6 +65,6 @@ test.describe('Signature Restoration', () => {
         await extensionUtils.setFavicon('🫂');
         await page.goto(testData.websites[1].url);
         await extensionUtils.restoreFavicon();
-        await extensionUtils.assertFaviconUrl(testData.websites[1].faviconUrl as string);
+        await extensionUtils.assertFaviconUrl(testData.websites[1].faviconUrl);
     });
 });

@@ -12,7 +12,6 @@ test.describe('Signature Retention', () => {
     });
 
     test('Retains tab signature when tab is re-opened', async ({ page }) => {
-        const originalURL = testData.websites[0].url;
         const newTitle = 'New title';
         const newFavicon = '🙃';
 
@@ -22,7 +21,7 @@ test.describe('Signature Retention', () => {
         page = await extensionUtils.closeAndReopenCurrentTab();
 
         // Assert the name and emoji that we set on the tab
-        expect(page).toHaveTitle(newTitle);
+        await expect(page).toHaveTitle(newTitle);
         await extensionUtils.assertFaviconIsEmoji();
             
         // Assert the name and emoji that we set in the UI

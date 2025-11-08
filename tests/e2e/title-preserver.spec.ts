@@ -26,7 +26,7 @@ test.describe('Title Preserver', () => {
         // Give preserver time to correct the title
         await page.waitForTimeout(10);
         
-        expect(page).toHaveTitle('New title');
+        await expect(page).toHaveTitle('New title');
     });
 
     test('Maintains title despite manipulations to the title element: GitHub', async ({ page }) => {
@@ -49,6 +49,6 @@ test.describe('Title Preserver', () => {
         // Give preserver time to correct the title
         await page.waitForTimeout(10);
         
-        expect(page).toHaveTitle('New title');
+        await expect(page).toHaveTitle('New title');
     });
 });

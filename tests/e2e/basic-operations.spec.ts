@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 import { ExtensionUtils } from './extensionUtils';
 import testData from './testData';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ROOT_ELEMENT_ID, INPUT_BOX_ID, OVERLAY_ID } from '../../src/config';
 
 test.describe('Basic Extension Operations', () => {

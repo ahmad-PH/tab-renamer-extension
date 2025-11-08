@@ -34,25 +34,23 @@ test.describe('Emoji Picker', () => {
                 }, { command: COMMAND_SET_EMOJI_STYLE, style: emojiStyle });
             });
 
-            test('Can set emojis', async ({ page }) => {
+            test('Can set emojis', async () => {
                 await extensionUtils.setFavicon('😇');
                 await extensionUtils.assertFaviconIsEmoji(emojiStyle);
             });
 
-            test('Emojis not on page before emoji picker being clicked', async ({ page }) => {
+            test('Emojis not on page before emoji picker being clicked', async () => {
                 await extensionUtils.openRenameDialog();
                 expect(await extensionUtils.extensionFrame().getByText('😃').count()).toBe(0);
             });
 
-            test('Emoji picker search bar focused when opened, and returns focus when closed', async ({ page }) => {
+            test('Emoji picker search bar focused when opened, and returns focus when closed', async () => {
                 await extensionUtils.openFaviconPicker();
                 
                 // Check that search bar has focus
                 const activeElement = await extensionUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
-                
-                const activeElementId = await activeElement!.evaluate((el) => el.id);
-                expect(activeElementId).toBe(SEARCH_BAR_ID);
+                expect(await activeElement!.getAttribute('id')).toBe(SEARCH_BAR_ID);
 
                 // Click favicon picker to close emoji picker
                 await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
@@ -60,12 +58,10 @@ test.describe('Emoji Picker', () => {
                 // Check that input box has focus again
                 const activeElementAfterClose = await extensionUtils.getIframeActiveElement();
                 expect(activeElementAfterClose).not.toBeNull();
-                
-                const activeElementIdAfterClose = await activeElementAfterClose!.evaluate((el) => el.id);
-                expect(activeElementIdAfterClose).toBe(INPUT_BOX_ID);
+                expect(await activeElementAfterClose!.getAttribute('id')).toBe(INPUT_BOX_ID);
             });
 
-            test('Can search for emojis', async ({ page }) => {
+            test('Can search for emojis', async () => {
                 await extensionUtils.openFaviconPicker();
 
                 // Type in search bar
