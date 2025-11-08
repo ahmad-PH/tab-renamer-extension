@@ -36,7 +36,7 @@ test.describe('Basic Extension Operations', () => {
     test('Can rename tab', async ({ page }) => {
         const newTitle = 'New Title';
         await extensionUtils.renameTab(newTitle);
-        expect(page).toHaveTitle(newTitle);
+        await expect(page).toHaveTitle(newTitle);
     });
 
     test('Input box has focus when rename dialog is opened', async ({ page }) => {
