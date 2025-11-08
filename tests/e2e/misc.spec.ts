@@ -162,8 +162,6 @@ test.describe('Miscellaneous Tests', () => {
     });
 
     test('Settings Page: Emoji style can be changed properly, and the select element remembers the selected option', async ({ page }) => {
-        await page.goto(testData.websites[0].url);
-
         // Close all pages other than the current one:
         for (const currentPage of page.context().pages()) {
             if (currentPage !== page) {
