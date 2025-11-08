@@ -23,6 +23,7 @@ import {
 
 import path from 'path';
 import appRootPath from 'app-root-path';
+import { getDebugAwareTimeout } from './utils.js';
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
@@ -95,7 +96,7 @@ export class ExtensionUtils {
     }
 
     async assertFaviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE) {
-        await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: 5_000}).toBe(true);
+        await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: getDebugAwareTimeout(5_000)}).toBe(true);
     }
 
     async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {

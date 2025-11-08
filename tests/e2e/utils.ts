@@ -89,3 +89,7 @@ export class PromiseLock {
         return this.isLocked;
     }
 }
+
+export function getDebugAwareTimeout(timeout: number): number {
+    return process.env.PWDEBUG ? 0 : timeout
+}
