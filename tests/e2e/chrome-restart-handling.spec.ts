@@ -13,10 +13,9 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
 
     testWithPersistentContext('Chrome restart handling: Tab titles are restored correctly when chrome is restarted', async ({ page, context, restartBrowser }) => {
         // Set up the initial state
-        await page.goto(testData.websites[0].url);
         const signature = { title: 'Title1', favicon: '😀' };
         await extensionUtils.setSignature(signature.title, signature.favicon);
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(100); // Give time for signature to get persisted to chrome storage.
 
         await context.close();
         const newBrowserContext = await restartBrowser();
@@ -25,7 +24,7 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
         await newPage.waitForTimeout(300); // Time for the restart listener to mark all tabs as closed.
 
         await newPage.goto(testData.websites[0].url);
-        expect(newPage).toHaveTitle(signature.title);
+        await expect(newPage).toHaveTitle(signature.title);
         await extensionUtils.assertFaviconIsEmoji();
     });
 });
