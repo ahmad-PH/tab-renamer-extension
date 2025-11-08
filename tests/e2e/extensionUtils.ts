@@ -1,4 +1,5 @@
 import { Page, Locator, expect, FrameLocator, ElementHandle } from '@playwright/test';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { 
     ROOT_ELEMENT_ID,
     INPUT_BOX_ID,
@@ -20,9 +21,8 @@ import {
     SETTINGS_BUTTON_ID,
     SETTINGS_BUTTON_TRIGGER_AREA_ID,
 } from '../../src/config.js';
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
-import path from 'path';
-import appRootPath from 'app-root-path';
 import { getDebugAwareTimeout } from './utils.js';
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
@@ -48,7 +48,7 @@ export class ExtensionUtils {
     }
 
     async submitRenameDialog(): Promise<void> {
-        const renameBox = await this.extensionFrame().getByTestId(INPUT_BOX_ID);
+        const renameBox = this.extensionFrame().getByTestId(INPUT_BOX_ID);
         await renameBox.press('Enter');
         await renameBox.waitFor({ state: 'hidden' });
     }
@@ -194,7 +194,7 @@ export class ExtensionUtils {
         }
     }
 
-    async startConsoleMonitoring(): Promise<void> {
+    startConsoleMonitoring() {
         this.page.on('console', msg => {
             if (msg.type() === 'error' || msg.type() === 'warning') {
                 console.log(`[CONSOLE ${msg.type().toUpperCase()}] ${msg.text()}`);
@@ -202,7 +202,7 @@ export class ExtensionUtils {
         });
     }
 
-    async startNetworkMonitoring(): Promise<void> {
+    startNetworkMonitoring() {
         this.page.on('request', request => {
             if (request.url().includes('chrome-extension://') || request.url().includes('localhost')) {
                 console.log(`[NETWORK REQUEST] ${request.method()} ${request.url()}`);
@@ -216,7 +216,7 @@ export class ExtensionUtils {
         });
     }
 
-    async getIframeActiveElement(): Promise<ElementHandle<any> | null> {
+    async getIframeActiveElement(): Promise<ElementHandle<Node> | null> {
         return (await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement)).asElement();
     }
 
@@ -242,33 +242,5 @@ export class ExtensionUtils {
         const newPagePromise = this.page.context().waitForEvent('page');
         await action();
         return await newPagePromise;
-    }
-
-    /**
-     * Simulate browser restart by closing current context and creating a new one
-     * with the same user data directory. This preserves chrome.storage data.
-     * Returns a new ExtensionUtils instance for the restarted browser.
-     */
-    static async simulateBrowserRestart(currentContext: any): Promise<ExtensionUtils> {
-        const { chromium } = await import('@playwright/test');
-        
-        const pathToExtension = path.join(appRootPath.path, 'dist/dev');
-        const userDataDir = path.join(appRootPath.path, 'test-user-data');
-        
-        // Close the current context
-        await currentContext.close();
-        
-        // Create a new context with the same user data directory
-        const newContext = await chromium.launchPersistentContext(userDataDir, {
-            channel: 'chromium',
-            args: [
-                `--disable-extensions-except=${pathToExtension}`,
-                `--load-extension=${pathToExtension}`,
-            ],
-        });
-
-        // Create new page and return new ExtensionUtils instance
-        const newPage = await newContext.newPage();
-        return new ExtensionUtils(newPage);
     }
 }
