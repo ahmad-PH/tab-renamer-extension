@@ -48,9 +48,7 @@ test.describe('Basic Extension Operations', () => {
         const activeElement = await extensionUtils.getIframeActiveElement();
         
         expect(activeElement).not.toBeNull();
-        if (activeElement) {
-            const activeElementId = await activeElement.getAttribute('id');
-            expect(activeElementId).toBe(INPUT_BOX_ID);
-        }
+        const activeElementId = await activeElement!.getAttribute('id');
+        expect(activeElementId).toBe(INPUT_BOX_ID);
     });
 });
