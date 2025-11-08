@@ -203,7 +203,6 @@ test.describe('Miscellaneous Tests', () => {
             await extensionUtils.openSettingsPage();
         });
 
-        await settingsPage.waitForTimeout(100); // Wait for page to load the style from memory.
-        expect(await settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID).textContent()).toBe("Twemoji");
+        await expect(settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).toHaveText("Twemoji");
     });
 });
