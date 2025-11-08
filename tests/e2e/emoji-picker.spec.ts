@@ -51,10 +51,8 @@ test.describe('Emoji Picker', () => {
                 const activeElement = await extensionUtils.getIframeActiveElement();
                 expect(activeElement).not.toBeNull();
                 
-                if (activeElement) {
-                    const activeElementId = await activeElement.evaluate((el) => el.id);
-                    expect(activeElementId).toBe(SEARCH_BAR_ID);
-                }
+                const activeElementId = await activeElement!.evaluate((el) => el.id);
+                expect(activeElementId).toBe(SEARCH_BAR_ID);
 
                 // Click favicon picker to close emoji picker
                 await extensionUtils.extensionFrame().getByTestId(FAVICON_PICKER_ID).click();
@@ -63,10 +61,8 @@ test.describe('Emoji Picker', () => {
                 const activeElementAfterClose = await extensionUtils.getIframeActiveElement();
                 expect(activeElementAfterClose).not.toBeNull();
                 
-                if (activeElementAfterClose) {
-                    const activeElementIdAfterClose = await activeElementAfterClose.evaluate((el) => el.id);
-                    expect(activeElementIdAfterClose).toBe(INPUT_BOX_ID);
-                }
+                const activeElementIdAfterClose = await activeElementAfterClose!.evaluate((el) => el.id);
+                expect(activeElementIdAfterClose).toBe(INPUT_BOX_ID);
             });
 
             test('Can search for emojis', async ({ page }) => {
