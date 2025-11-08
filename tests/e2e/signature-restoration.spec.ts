@@ -38,6 +38,10 @@ test.describe('Signature Restoration', () => {
     });
 
     test('Title restoration after direct title manipulation', async ({ page }) => {
+        // This simulates the scenario where some webiste will update the tab title to either
+        // convey some information, or force the title. In that case, we don't want to miss the
+        // update, and revert to the newest version of the title when we restore title.
+        // (My title preservers will actually preventing from "Some other title" from being shown, btw.)
         await extensionUtils.renameTab('New title');
         await page.evaluate(() => {
             document.title = 'Some other title';
