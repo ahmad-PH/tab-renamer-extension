@@ -93,8 +93,6 @@ const olog = getLogger('Title Observer', 'debug');
     if (titleElement) {
         titleMutationObserver.observe(titleElement, { subtree: true, characterData: true, childList: true });
     }
-
-
 })();
 
 
