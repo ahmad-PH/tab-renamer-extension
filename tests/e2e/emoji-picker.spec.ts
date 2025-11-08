@@ -41,11 +41,7 @@ test.describe('Emoji Picker', () => {
 
             test('Emojis not on page before emoji picker being clicked', async ({ page }) => {
                 await extensionUtils.openRenameDialog();
-                
-                // Check that emojis are not visible on the page before opening emoji picker
-                // Using XPath equivalent: check if any element contains the emoji text
-                const emojiElements = await extensionUtils.extensionFrame().locator('text=😃').count();
-                expect(emojiElements).toBe(0);
+                expect(await extensionUtils.extensionFrame().getByText('😃').count()).toBe(0);
             });
 
             test('Emoji picker search bar focused when opened, and returns focus when closed', async ({ page }) => {
