@@ -94,7 +94,7 @@ test.describe('Miscellaneous Tests', () => {
         await expect(extensionUtils.page).toHaveTitle('New title');
 
         await extensionUtils.openTabToURL(testData.websites[0].url);
-        expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
+        await expect(extensionUtils.page).toHaveTitle(testData.websites[0].title);
         await expect.poll(() => extensionUtils.getFaviconUrl()).toBe(testData.websites[0].faviconUrl);
     });
 
