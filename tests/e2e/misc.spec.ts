@@ -198,4 +198,21 @@ test.describe('Miscellaneous Tests', () => {
 
         await expect(settingsPage.getByTestId(SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID)).toHaveText("Twemoji");
     });
+
+    // A test from Selenium that I wasn't able to migrate: 
+    // When sending a discard command, playwright crashes saying: "Error: browserContext.close: Target page, context or browser has been closed"
+    // It doesn't play well with something outside of its control closing the tab :(
+
+    // test("Discarded tabs reload their titles correctly", async ({ page }) => {
+        // await driverUtils.waitForPageLoad();
+        // await driverUtils.setSignature('New title', '📖');
+        // await driverUtils.scheduleDiscardTabEvent();
+        // await sleep(3 * SECONDS);
+
+        // const newTabHandle = (await driver.getAllWindowHandles())[0];
+        // await driver.switchTo().window(newTabHandle);
+
+        // expect(await driverUtils.getTitle()).toBe('New title');
+        // expect(await driverUtils.faviconIsEmoji()).toBe(true);
+    // });
 });
