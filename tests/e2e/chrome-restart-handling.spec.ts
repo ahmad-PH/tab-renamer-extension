@@ -15,7 +15,7 @@ testWithPersistentContext.describe('Chrome restart handling', () => {
         // Set up the initial state
         const signature = { title: 'Title1', favicon: '😀' };
         await extensionUtils.setSignature(signature.title, signature.favicon);
-        await page.waitForTimeout(100); // Give time for signature to get persisted to chrome storage.
+        // It's important not to give time here, to test the extension being resillient to being abruptly shut off.
 
         await context.close();
         const newBrowserContext = await restartBrowser();
