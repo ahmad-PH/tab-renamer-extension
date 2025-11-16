@@ -111,7 +111,7 @@ async function saveTab(tab) {
     log.debug('saveTab: called with:', tab);
     /** @type {TabInfo} */
     const result = await storageGet(tab.id);
-    log.debug('saveTab: seeing if a tab info already exists for this tab id:', result.toString());
+    log.debug('saveTab: seeing if a tab info already exists for this tab id:', result);
     let newSignature = Object.assign({}, tab.signature);
     let isClosed = false, closedAt = null;
     if (result) {
