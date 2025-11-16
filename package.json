@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "jest --detectOpenHandles --verbose tests/unit",
-    "test:e2e": "npx playwright test",
+    "test:e2e": "npm run test:playwright && npm run test:selenium",
+    "test:playwright": "npx playwright test",
     "test:selenium": "jest tests/selenium_e2e",
     "setup:chrome": "npx @puppeteer/browsers install chrome@stable --path ./chrome-cache",
     "build": "webpack --mode production",
