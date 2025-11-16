@@ -75,16 +75,26 @@ export function getLogger(name, level = log.getLevel()) {
 
     const methods = ['trace', 'debug', 'log', 'info', 'warn', 'error'];
     const isInServiceWorker = isServiceWorker();
+    
+    // Map method names to their numeric levels for comparison
+    const methodLevels = {
+        'trace': log.levels.TRACE,
+        'debug': log.levels.DEBUG,
+        'log': log.levels.DEBUG, // 'log' is treated as DEBUG level
+        'info': log.levels.INFO,
+        'warn': log.levels.WARN,
+        'error': log.levels.ERROR
+    };
 
     methods.forEach(method => {
         const originalMethod = logger[method];
 
         logger[method] = function (message, ...args) {
-            // Always log to the original console (service worker console or page console)
             originalMethod.call(logger, `#${name}: ${message}`, ...args);
 
             // If we're in the service worker, also forward to content scripts
-            if (isInServiceWorker) {
+            // Only forward if this method's level is >= the logger's current level
+            if (isInServiceWorker && methodLevels[method] >= logger.getLevel()) {
                 forwardLogToContentScript(method, name, message, args);
             }
         };
