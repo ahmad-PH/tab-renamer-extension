@@ -4,6 +4,10 @@ import appRootPath from 'app-root-path';
 import os from 'os';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
+import * as dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // Detect the actual platform
 function getPlatformUserAgent() {
@@ -43,7 +47,10 @@ function setupConsoleLogging(page: Page, consoleLogs: ConsoleMessage[]) {
 
 // Helper function to print collected console logs
 async function printConsoleLogs(consoleLogs: ConsoleMessage[]) {
-  if (consoleLogs.length > 0) {
+  // Only print if the environment variable is set to true
+  const shouldPrint = process.env.PLAYWRIGHT_PRINT_CONSOLE_LOGS === 'true';
+  
+  if (shouldPrint && consoleLogs.length > 0) {
     console.log('\n==================== Browser Console Logs ====================');
     for (const msg of consoleLogs) {
       const type = msg.type();

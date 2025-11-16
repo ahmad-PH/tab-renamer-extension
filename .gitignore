@@ -8,3 +8,5 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /test-user-data/
+
+**/.env
