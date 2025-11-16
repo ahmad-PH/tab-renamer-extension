@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Config files that shouldn't be linted with TS parser
+package.json
+package-lock.json
+tsconfig.json
+webpack.config.js
+
+# Other
+coverage/
+.cache/
+*.log
+

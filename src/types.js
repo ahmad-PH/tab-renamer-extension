@@ -21,6 +21,10 @@ export class TabInfo {
         this.closedAt = closedAt;
         this.signature = signature;
     }
+
+    toString() {
+        return `TabInfo(id: ${this.id}, url: ${this.url}, index: ${this.index}, isClosed: ${this.isClosed}, closedAt: ${this.closedAt}, signature: ${this.signature.toString()})`;
+    }
 }
 
 /**

@@ -23,6 +23,7 @@ export const ALL_EMOJIS_ID = 'tab-renamer-extension-all-emojis-div';
 // Settings Button:
 export const SETTINGS_BUTTON_ID = `${EXTENSION_PREFIX}-settings-button`;
 export const SETTING_BUTTON_TEST_STUB_ID = `${EXTENSION_PREFIX}-settings-button-test-stub`;
+export const SETTINGS_BUTTON_TRIGGER_AREA_ID = `${EXTENSION_PREFIX}-settings-button-trigger-area`;
 export const SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID = `${EXTENSION_PREFIX}-settings-page-emoji-style-select`;
 
 // Commands:

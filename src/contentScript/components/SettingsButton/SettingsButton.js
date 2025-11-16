@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SettingsButton.module.css';
-import { SETTING_BUTTON_TEST_STUB_ID, SETTINGS_BUTTON_ID } from '../../../config';
+import { SETTINGS_BUTTON_ID, SETTING_BUTTON_TEST_STUB_ID, SETTINGS_BUTTON_TRIGGER_AREA_ID } from '../../../config';
 
 export default function SettingsButton() {
     const handleClick = () => {
@@ -19,7 +19,7 @@ export default function SettingsButton() {
 
     return (
         <>
-            <div className={styles.triggerArea}>
+            <div className={styles.triggerArea} id={SETTINGS_BUTTON_TRIGGER_AREA_ID}>
                 <div className={styles.relativeContainer}>
                     <div className={styles.visibleTriggerArea} />
                     <button 

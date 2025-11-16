@@ -14,32 +14,42 @@ let root = null;
 
 let tabInitializationPromise = tab.initializeForMainContentScript();
 
+if (window.__tabRenamerContentScriptLoaded__) {
+    log.warn('Content script already loaded, preventing duplicate execution');
+    throw new Error('Content script already loaded');
+}
+window.__tabRenamerContentScriptLoaded__ = true;
+
 async function insertUIIntoDOM() {
-    if (uiInsertedIntoDOM === false) {
-        const startTotalTime = performance.now(); 
-
-        const hostElement = document.createElement(ROOT_TAG_NAME);
-        document.documentElement.appendChild(hostElement);
-        const rootElement = hostElement.attachShadow({ mode: 'open' });
-        root = createRoot(rootElement);
-
-        const startImportTime = performance.now();
-        const { default: App, TabContext } = await import('./components/App');
-        const endImportTime = performance.now();
-
-        await tabInitializationPromise;
-        root.render(
-            <TabContext.Provider value={tab}>
-                <App/>
-            </TabContext.Provider>
-        );
-        uiInsertedIntoDOM = true;
-
-        const endTotalTime = performance.now(); // End total timer
-
-        log.debug(`Time taken to import App component: ${endImportTime - startImportTime} ms`);
-        log.debug(`Total time taken for insertUIIntoDOM: ${endTotalTime - startTotalTime} ms`);
+    // Check if root element already exists in DOM (in case script is loaded multiple times)
+    const existingRoot = document.querySelector(ROOT_TAG_NAME);
+    if (existingRoot) {
+        log.debug('Root element already exists in DOM, skipping insertion');
+        return;
     }
+
+    const startTotalTime = performance.now(); 
+
+    const hostElement = document.createElement(ROOT_TAG_NAME);
+    document.documentElement.appendChild(hostElement);
+    const rootElement = hostElement.attachShadow({ mode: 'open' });
+    root = createRoot(rootElement);
+
+    const startImportTime = performance.now();
+    const { default: App, TabContext } = await import('./components/App');
+    const endImportTime = performance.now();
+
+    await tabInitializationPromise;
+    root.render(
+        <TabContext.Provider value={tab}>
+            <App/>
+        </TabContext.Provider>
+    );
+
+    const endTotalTime = performance.now(); // End total timer
+
+    log.debug(`Time taken to import App component: ${endImportTime - startImportTime} ms`);
+    log.debug(`Total time taken for insertUIIntoDOM: ${endTotalTime - startTotalTime} ms`);
 }
  
 (function initializeUIListeners() {
@@ -63,6 +73,20 @@ async function insertUIIntoDOM() {
     document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
 
+// Listener for forwarded logs from the service worker (development mode only)
+if (!inProduction()) {
+    chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
+        if (message.command === '__FORWARD_LOG__') {
+            const { level, name, message: logMessage, args } = message;
+            const prefix = `#${name} [bg]`;
+            
+            // Map the log level to the appropriate console method
+            const consoleMethod = console[level] || console.log;
+            consoleMethod.call(console, prefix, logMessage, ...args);
+        }
+    });
+}
+
 
 // Clean-up logic for when the extension unloads/reloads.
 const runtimePort = chrome.runtime.connect({ name: "content-script" });
@@ -82,6 +106,9 @@ runtimePort.onDisconnect.addListener(() => {
     if (rootElement) {
         rootElement.remove();
     }
+
+    // Reset the global flag to allow script to be reloaded
+    delete window.__tabRenamerContentScriptLoaded__;
 
     if (!inProduction()) {
         document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, discardTabListener);
