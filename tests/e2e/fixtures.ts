@@ -1,4 +1,4 @@
-import { test as base, chromium, type BrowserContext } from '@playwright/test';
+import { test as base, chromium, type BrowserContext, type Page, type ConsoleMessage } from '@playwright/test';
 import path from 'path';
 import appRootPath from 'app-root-path';
 import os from 'os';
@@ -34,9 +34,46 @@ function getPlatformUserAgent() {
   };
 }
 
+// Helper function to set up console logging for a page
+function setupConsoleLogging(page: Page, consoleLogs: ConsoleMessage[]) {
+  page.on('console', (msg) => {
+    consoleLogs.push(msg);
+  });
+}
+
+// Helper function to print collected console logs
+async function printConsoleLogs(consoleLogs: ConsoleMessage[]) {
+  if (consoleLogs.length > 0) {
+    console.log('\n==================== Browser Console Logs ====================');
+    for (const msg of consoleLogs) {
+      const type = msg.type();
+      const text = msg.text();
+      const location = msg.location();
+      const prefix = `[${type.toUpperCase()}]`;
+      
+      // Format location if available
+      const locationStr = location.url ? ` (${location.url}:${location.lineNumber})` : '';
+      
+      console.log(`${prefix}${locationStr} ${text}`);
+      
+      // If there are args, try to print them as well
+      try {
+        const args = await Promise.all(msg.args().map(arg => arg.jsonValue()));
+        if (args.length > 0 && text !== args.join(' ')) {
+          console.log('  Args:', args);
+        }
+      } catch (e) {
+        // Some args might not be serializable, ignore
+      }
+    }
+    console.log('==============================================================\n');
+  }
+}
+
 export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
+  page: Page;
 }>({
   context: async ({ }, use) => {
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
@@ -63,6 +100,21 @@ export const test = base.extend<{
     const extensionId = serviceWorker.url().split('/')[2];
     await use(extensionId);
   },
+  page: async ({ context }, use, testInfo) => {
+    const page = await context.newPage();
+    const consoleLogs: ConsoleMessage[] = [];
+    
+    // Set up console logging
+    setupConsoleLogging(page, consoleLogs);
+    
+    // Use the page
+    await use(page);
+    
+    // Print console logs after test finishes
+    await printConsoleLogs(consoleLogs);
+    
+    await page.close();
+  },
 });
 
 // Special fixture for persistent context with user data directory
@@ -71,6 +123,7 @@ export const testWithPersistentContext = base.extend<{
   extensionId: string;
   userDataDir: string;
   restartBrowser: () => Promise<BrowserContext>;
+  page: Page;
 }>({
   userDataDir: async ({ }, use) => {
     // Create a temporary directory for user data
@@ -133,6 +186,22 @@ export const testWithPersistentContext = base.extend<{
 
     const extensionId = serviceWorker.url().split('/')[2];
     await use(extensionId);
+  },
+  
+  page: async ({ context }, use, testInfo) => {
+    const page = await context.newPage();
+    const consoleLogs: ConsoleMessage[] = [];
+    
+    // Set up console logging
+    setupConsoleLogging(page, consoleLogs);
+    
+    // Use the page
+    await use(page);
+    
+    // Print console logs after test finishes
+    await printConsoleLogs(consoleLogs);
+    
+    await page.close();
   },
 });
 
