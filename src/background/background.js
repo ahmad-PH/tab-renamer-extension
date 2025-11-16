@@ -7,7 +7,7 @@ import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIA
 import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
-const log = getLogger('background', 'warn');
+const log = getLogger('background', 'debug');
 
 const originalTitleStash = {};
 let welcomeTab = null;

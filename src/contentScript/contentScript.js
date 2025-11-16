@@ -73,6 +73,20 @@ async function insertUIIntoDOM() {
     document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
 
+// Listener for forwarded logs from the service worker (development mode only)
+if (!inProduction()) {
+    chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
+        if (message.command === '__FORWARD_LOG__') {
+            const { level, name, message: logMessage, args } = message;
+            const prefix = `#${name} [bg]`;
+            
+            // Map the log level to the appropriate console method
+            const consoleMethod = console[level] || console.log;
+            consoleMethod.call(console, prefix, logMessage, ...args);
+        }
+    });
+}
+
 
 // Clean-up logic for when the extension unloads/reloads.
 const runtimePort = chrome.runtime.connect({ name: "content-script" });
