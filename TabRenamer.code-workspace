@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+	],
+	"settings": {
+		"workbench.editor.limit.enabled": true,
+		"liveServer.settings.multiRootWorkspaceName": "TabRenamer",
+		"workbench.editor.customLabels.enabled": true,
+		"workbench.editor.customLabels.patterns": {
+			"*/tab-renamer-extension/dist/dev/settings/settings.js": "dev settings.js",
+			"*/tab-renamer-extension/dist/dev/settings/settings.html": "dev settings.html",
+			"*/tab-renamer-extension/dist/dev/settings/settings.module.css": "dev settings.module.css",
+			"*/tab-renamer-extension/node_modules/bootstrap-icons/README.md": "Bootstrap README.md"
+		}
+	}
+}
