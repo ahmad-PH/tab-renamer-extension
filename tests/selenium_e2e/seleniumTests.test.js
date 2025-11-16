@@ -159,7 +159,18 @@ describe('Selenium UI Tests', () => {
     // Make tests interrupt-friendly:
     process.on('SIGINT', tearDown);
     process.on('SIGTERM', tearDown);
-
+    
+    // It might be possible to eventually rip out this test and have it in playwright.
+    // The way to do it is: 
+    // 1. Create a page with a JS event instead of playwright newPage() function
+    // 2. Have a scheduled event there that sends the discard command to the backend
+    // 3. Let it trigger a context close. Also do a context.close() on Playwright.
+    // 4. Restart the browser (with persistent context)
+    // 5. Open the same tab and see if it loads the new name you gave before discarding.
+    // -----
+    // Another alternative is to do a more unit-testy type of test:
+    // Put the entire logic of the listender for discard event into a function, and then very
+    // thoroughly test that.
     test("Discarded tabs reload their titles correctly", async () => {
         await driver.get(data.websites[0].url);
         await driverUtils.waitForPageLoad();

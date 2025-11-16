@@ -2,7 +2,7 @@ import { TabInfo } from "../types";
 import { getAllTabs, storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
-const log = getLogger('signatureStorage.js', 'debug');
+const log = getLogger('signatureStorage.js', 'warn');
 
 /**
  * @param {Object.<number, TabInfo>} storedTabInfo
