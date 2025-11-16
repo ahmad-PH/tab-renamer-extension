@@ -1,0 +1,6 @@
+---
+description: When making changes to generic project files
+alwaysApply: false
+---
+
+- When adding something to the .env variables, also add it to .env.example file as well (And document its usage if its an enum-like value with a preset number of accepted values)
