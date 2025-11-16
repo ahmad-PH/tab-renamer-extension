@@ -8,6 +8,7 @@ const logging = require('selenium-webdriver/lib/logging.js');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 const { DriverUtils } = require('./driverUtils.js');
+const { computeExecutablePath, Browser } = require('@puppeteer/browsers');
 const {
     ROOT_ELEMENT_ID,
     INPUT_BOX_ID,
@@ -36,6 +37,19 @@ const SECONDS = 1000, MINUTES = 60 * SECONDS;
 
 jest.setTimeout(10 * SECONDS);
 
+/**
+ * Get the Chrome for Testing executable path using @puppeteer/browsers.
+ * This assumes Chrome was installed using: npm run setup:chrome
+ */
+function getChromePath() {
+    const cacheDir = path.resolve(__dirname, '..', '..', 'chrome-cache');
+    return computeExecutablePath({
+        browser: Browser.CHROME,
+        buildId: 'stable',
+        cacheDir: cacheDir
+    });
+}
+
 describe('Selenium UI Tests', () => {
     /** @type {WebDriver|null} */
     let driver = null;
@@ -60,7 +74,7 @@ describe('Selenium UI Tests', () => {
                 .setPageLoadStrategy(pageLoadStrategy);
         } else {
             chromeOptions = new chrome.Options()
-                .setBinaryPath("/Users/ahmadph/chrome/mac_arm-139.0.7258.154/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing")
+                .setBinaryPath(getChromePath())
                 .addArguments(`--load-extension=${extensionPath}`)
                 .addArguments('user-data-dir=/tmp/chrome-profile')
                 .setPageLoadStrategy(pageLoadStrategy);

@@ -9,4 +9,7 @@ node_modules/
 /playwright/.cache/
 /test-user-data/
 
+# Chrome for Testing cache
+chrome-cache/
+
 **/.env
