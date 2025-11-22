@@ -50,6 +50,8 @@ export default defineConfig({
           // Disable web security for extension testing
           ignoreHTTPSErrors: true,
         },
+
+        video: 'retain-on-failure',
       },
     },
 
