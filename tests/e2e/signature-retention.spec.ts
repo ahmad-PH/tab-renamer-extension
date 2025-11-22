@@ -18,7 +18,7 @@ test.describe('Signature Retention', () => {
         await extensionUtils.renameTab(newTitle);
         await extensionUtils.setFavicon(newFavicon);
 
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
         
         page = await extensionUtils.closeAndReopenCurrentTab();
 
