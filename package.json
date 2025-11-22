@@ -11,7 +11,7 @@
     "test:selenium": "jest tests/selenium_e2e",
     "setup:chrome": "npx @puppeteer/browsers install chrome@stable --path ./chrome-cache",
     "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch",
+    "dev": "webpack --mode development",
     "version": "node update-manifest-version.js && git add ."
   },
   "repository": {

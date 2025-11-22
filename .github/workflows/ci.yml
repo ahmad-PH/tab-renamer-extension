@@ -27,7 +27,7 @@ jobs:
       run: npm ci
     
     - name: Build extension (dev mode for tests)
-      run: npx webpack --mode development
+      run: npm run dev
     
     - name: Setup Chrome for testing
       run: npm run setup:chrome
