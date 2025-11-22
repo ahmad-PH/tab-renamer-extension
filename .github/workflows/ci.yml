@@ -1,57 +1,66 @@
 name: CI
 
 on:
-  # Run tests on every push and pull_request on any branch.
   push:
+    branches: [ main, develop ]
   pull_request:
+    branches: [ main, develop ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Use Node.js
-      uses: actions/setup-node@v2
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
-        node-version: '20'
-
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
     - name: Install dependencies
       run: npm ci
-
-    - name: Build
-      run: npm run build
-
-    - name: Run unit tests
-      run: npm test -- tests/unit
-
-    - name: Install Chrome
-      uses: browser-actions/setup-chrome@latest
-      with:
-        chrome-version: stable
     
-    - uses: nanasess/setup-chromedriver@v2
-    - run: |
-        export DISPLAY=:99
-        chromedriver --url-base=/wd/hub &
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-
-    # - name: Install ChromeDriver
-    #   run: |
-    #       curl -L -o chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chromedriver-linux64.zip"
-    #       unzip chromedriver_linux64.zip
-    #       sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
-    #       rm chromedriver_linux64.zip
-
-    - name: Print file structure
-      run: |
-        echo "Current directory:"
-        pwd
-        echo "Directory structure:"
-        ls -R
-
-    - name: Run end-to-end tests
-      run: npm test -- tests/e2e
+    - name: Build extension (dev mode for tests)
+      run: npx webpack --mode development
+    
+    - name: Setup Chrome for testing
+      run: npm run setup:chrome
+    
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+    
+    - name: Run unit tests
+      run: npm run test:unit
+    
+    - name: Run Playwright e2e tests
+      run: npm run test:playwright
       env:
-        EXTENSION_PATH: ./dist/prod
+        CI: true
+    
+    - name: Run Selenium e2e tests
+      run: npm run test:selenium
+      env:
+        CI: true
+    
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: test-results/
+        retention-days: 30
