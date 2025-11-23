@@ -89,6 +89,8 @@ describe('Selenium UI Tests', () => {
         if (!process.env.HEADED) {
             chromeOptions
                 .addArguments('--headless=new')
+                // These flags are required to pass in CI, otherwise you'll get the following error:
+                // "SessionNotCreatedError: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause." 
                 .addArguments('--no-sandbox')  // Required for CI environments
                 .addArguments('--disable-dev-shm-usage')  // Prevents /dev/shm memory issues
                 .addArguments('--disable-gpu')  // Disable GPU hardware acceleration
