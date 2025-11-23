@@ -92,7 +92,14 @@ describe('Selenium UI Tests', () => {
         const loggingPrefs = new logging.Preferences();
         loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
-        let chromeService = new chrome.ServiceBuilder(chromedriver.path);
+        // Setup ChromeDriver service with verbose logging
+        const logDir = path.resolve(__dirname, '..', '..', 'test-results', 'selenium-logs');
+        await fs.mkdir(logDir, { recursive: true });
+        const logPath = path.join(logDir, 'chromedriver.log');
+        
+        let chromeService = new chrome.ServiceBuilder(chromedriver.path)
+            .loggingTo(logPath)
+            .enableVerboseLogging();
 
         driver = await new Builder()
             .forBrowser('chrome')
@@ -133,13 +140,26 @@ describe('Selenium UI Tests', () => {
 
     const tearDown = async () => { 
         if (driver) {
-            const logs = await driver.manage().logs().get(logging.Type.BROWSER);
-            const extensionPattern = /chrome-extension:\/\/[^/]+\//;
-            // eslint-disable-next-line no-unused-vars
-            const extensionLogs = logs.filter(log => (
-                log.message.startsWith('chrome-extension://') && log.message.includes('#')
-            )).map(log => log.message.replace(extensionPattern, ''));
-            log.debug('extension logs:', extensionLogs);
+            try {
+                const logs = await driver.manage().logs().get(logging.Type.BROWSER);
+                const extensionPattern = /chrome-extension:\/\/[^/]+\//;
+                // eslint-disable-next-line no-unused-vars
+                const extensionLogs = logs.filter(log => (
+                    log.message.startsWith('chrome-extension://') && log.message.includes('#')
+                )).map(log => log.message.replace(extensionPattern, ''));
+                log.debug('extension logs:', extensionLogs);
+                
+                // Save all browser logs to file for CI debugging
+                const logDir = path.resolve(__dirname, '..', '..', 'test-results', 'selenium-logs');
+                await fs.mkdir(logDir, { recursive: true });
+                const browserLogPath = path.join(logDir, 'browser-console.log');
+                const formattedLogs = logs.map(entry => 
+                    `[${entry.level.name}] ${new Date(entry.timestamp).toISOString()} - ${entry.message}`
+                ).join('\n');
+                await fs.appendFile(browserLogPath, formattedLogs + '\n\n');
+            } catch (error) {
+                log.debug('Failed to collect logs:', error);
+            }
             await driver.quit();
         }
         driver = null;
