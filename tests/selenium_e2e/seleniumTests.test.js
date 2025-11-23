@@ -85,8 +85,15 @@ describe('Selenium UI Tests', () => {
         //     .addArguments('user-data-dir=/tmp/chrome-profile')
         //     .setPageLoadStrategy(pageLoadStrategy);
         
+        // Add critical flags for CI/headless environments
         if (!process.env.HEADED) {
-            chromeOptions.addArguments('--headless=new')
+            chromeOptions
+                .addArguments('--headless=new')
+                .addArguments('--no-sandbox')  // Required for CI environments
+                .addArguments('--disable-dev-shm-usage')  // Prevents /dev/shm memory issues
+                .addArguments('--disable-gpu')  // Disable GPU hardware acceleration
+                .addArguments('--disable-software-rasterizer')  // Prevents software rasterizer crashes
+                .addArguments('--disable-setuid-sandbox');  // Additional sandbox bypass
         }
 
         const loggingPrefs = new logging.Preferences();
