@@ -93,7 +93,7 @@ describe('Selenium UI Tests', () => {
         loggingPrefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
         // Setup ChromeDriver service with verbose logging
-        const logDir = path.resolve(__dirname, '..', '..', 'test-results', 'selenium-logs');
+        const logDir = path.resolve(__dirname, '..', '..', 'selenium-logs');
         await fs.mkdir(logDir, { recursive: true });
         const logPath = path.join(logDir, 'chromedriver.log');
         
@@ -150,7 +150,7 @@ describe('Selenium UI Tests', () => {
                 log.debug('extension logs:', extensionLogs);
                 
                 // Save all browser logs to file for CI debugging
-                const logDir = path.resolve(__dirname, '..', '..', 'test-results', 'selenium-logs');
+                const logDir = path.resolve(__dirname, '..', '..', 'selenium-logs');
                 await fs.mkdir(logDir, { recursive: true });
                 const browserLogPath = path.join(logDir, 'browser-console.log');
                 const formattedLogs = logs.map(entry => 

@@ -56,5 +56,5 @@ jobs:
         path: |
           playwright-report/
           test-results/
-          test-results/selenium-logs/
+          selenium-logs/
         retention-days: 30
