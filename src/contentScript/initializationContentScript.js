@@ -59,15 +59,18 @@ const olog = getLogger('Title Observer', 'debug');
                     if (node.nodeName === 'TITLE') {
                         olog.debug('TITLE element added, text:', node.textContent);
                         
+                        // This is important for websites like GitHub that don't load with a document.title
+                        // directly for some reason, and later add a <title> node to the website content.
+                        // Maybe because its dynamically added later. We want to record these instances
+                        // as original title(s).
+                        bgScriptApi.stashOriginalTitle(node.textContent);
+
                         // If we have an original title and the new content is different
                         if (originalTitleContent && node.textContent !== originalTitleContent) {
                             olog.debug('Preventing title change, restoring original:', originalTitleContent);
                             node.textContent = originalTitleContent;
                         }
-                        
-                        if (!originalTitleIsStashed) {
-                            bgScriptApi.stashOriginalTitle(node.textContent);
-                        }
+                    
                     }
                 });
             
