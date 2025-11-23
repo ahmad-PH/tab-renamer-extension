@@ -10,6 +10,7 @@ const {
     EMOJI_PICKER_ID,
     COMMAND_CLOSE_WELCOME_TAB,
     SETTING_BUTTON_TEST_STUB_ID,
+    getEmojiStyle,
 } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab.js');
 const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
@@ -124,7 +125,8 @@ class DriverUtils {
         }
     }
 
-    async faviconIsEmoji(emojiStyle = EMOJI_STYLE_NATIVE) {
+    async faviconIsEmoji(emojiStyle) {
+        emojiStyle = emojiStyle || getEmojiStyle();
         const faviconElement = await this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;
