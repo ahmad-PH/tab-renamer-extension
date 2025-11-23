@@ -12,4 +12,7 @@ node_modules/
 # Chrome for Testing cache
 chrome-cache/
 
+# Selenium logs
+selenium-logs/
+
 **/.env
