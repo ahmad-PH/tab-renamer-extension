@@ -19,42 +19,37 @@ export const stackoverflowUrl = 'https://stackoverflow.com/';
 export const stackoverflowFaviconUrl = 'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico';
 
 export const websites = [
-    {
+    { // 0
         url: 'http://localhost:3000/index.html',
         faviconUrl: 'http://localhost:3000/favicon.ico',
         title: 'Test Page',
     },
-    {
+    { // 1
         url: 'http://localhost:3000/page2.html',
         faviconUrl: 'http://localhost:3000/favicon2.ico',
         title: 'Second Test Page',
     },
-    {
+    { // 2
         url: wikipediaUrl,
         faviconUrl: wikipediaFaviconUrl,
-        title: 'Wikipedia, the free encyclopedia'
+        title: 'Wikipedia'
     },
-    {
-        url: exampleUrl,
-        faviconUrl: exampleFaviconUrl,
-        title: 'Example Domain'
-    },
-    {
+    { // 3
         url: stackoverflowUrl,
         faviconUrl: stackoverflowFaviconUrl,
         title: 'Newest Questions - Stack Overflow'
     },
-    {
+    { // 4
         url: githubUrl,
         faviconUrl: githubFaviconUrl,
-        title: 'GitHub'
+        title: 'GitHub · Change is constant. GitHub keeps you ahead. · GitHub'
     },
-    { 
+    { // 5
         url: ahmadphosseiniUrl, 
         faviconUrl: ahmadphosseiniFaviconUrl, 
         title: 'Ahmad Pourihosseini' 
     },
-    { 
+    { // 6
         url: googleUrl, 
         faviconUrl: googleFaviconUrl, 
         title: 'Google' 

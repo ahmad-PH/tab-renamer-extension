@@ -28,13 +28,16 @@ const olog = getLogger('Title Observer', 'debug');
     let originalTitleIsStashed = false;
     let titleElements = Array.from(document.querySelectorAll('head > title')).map(el => el.textContent);
 
-    log.debug('document.title:', originalTitle, 'document.readyState:', document.readyState, 'title elements:', titleElements);
+    log.debug(`document.title: ${originalTitle}, retrieved title: ${title}, document.readyState: ${document.readyState}, title elements: ${titleElements}`);
     // log.debug('document head:', document.head.outerHTML);
 
     await tab.setSignature(title, null, false, false);
-    if (originalTitle) {
+    if (originalTitle && originalTitle !== title) {
+        log.debug(`Stashing original title: ${originalTitle}, because it is different from the retrieved title: ${title}`);
         await bgScriptApi.stashOriginalTitle(originalTitle);
         originalTitleIsStashed = true;
+    } else {
+        log.debug(`Not stashing original title: ${originalTitle} because it is the same as the retrieved title: ${title}`);
     }
 
 
@@ -56,15 +59,18 @@ const olog = getLogger('Title Observer', 'debug');
                     if (node.nodeName === 'TITLE') {
                         olog.debug('TITLE element added, text:', node.textContent);
                         
+                        // This is important for websites like GitHub that don't load with a document.title
+                        // directly for some reason, and later add a <title> node to the website content.
+                        // Maybe because its dynamically added later. We want to record these instances
+                        // as original title(s).
+                        bgScriptApi.stashOriginalTitle(node.textContent);
+
                         // If we have an original title and the new content is different
                         if (originalTitleContent && node.textContent !== originalTitleContent) {
                             olog.debug('Preventing title change, restoring original:', originalTitleContent);
                             node.textContent = originalTitleContent;
                         }
-                        
-                        if (!originalTitleIsStashed) {
-                            bgScriptApi.stashOriginalTitle(node.textContent);
-                        }
+                    
                     }
                 });
             

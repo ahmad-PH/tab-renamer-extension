@@ -29,12 +29,21 @@ test.describe('Signature Restoration', () => {
         await expect(extensionUtils.page).toHaveTitle(originalTitle);
     });
 
-    test('Title restoration with page-switch', async ({ page }) => {
+    test('Title restoration with page-switch, regular websites', async ({ page }) => {
         await extensionUtils.renameTab('New title');
         await page.waitForTimeout(20); // Give background script time to save the title
-        await page.goto(testData.websites[1].url);
+        await page.goto(testData.websites[0].url);
         await extensionUtils.restoreTitle();
-        await expect(page).toHaveTitle(testData.websites[1].title);
+        await expect(page).toHaveTitle(testData.websites[0].title);
+    });
+
+    test('Title restoration with page-switch, GitHub-like websites', async ({ page }) => {
+        await extensionUtils.renameTab('New title');
+        await page.waitForTimeout(20); // Give background script time to save the title
+        const gitHubIndex = testData.websites.findIndex(website => website.title.includes('GitHub'));
+        await page.goto(testData.websites[gitHubIndex].url);
+        await extensionUtils.restoreTitle();
+        await expect(page).toHaveTitle(testData.websites[gitHubIndex].title);
     });
 
     test('Title restoration after direct title manipulation', async ({ page }) => {
