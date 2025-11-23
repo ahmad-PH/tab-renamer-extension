@@ -42,6 +42,7 @@ jobs:
       run: npm run test:playwright
       env:
         CI: true
+        DEBUG: pw:browser*
     
     - name: Run Selenium e2e tests
       run: npm run test:selenium
