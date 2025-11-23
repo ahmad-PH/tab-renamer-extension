@@ -190,17 +190,17 @@ if (!inProduction()) {
         switch (message.command) {
             case COMMAND_DISCARD_TAB: {
                 log.debug('Received discard tab command. sender tab id:', sender.tab.id);
-                // chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
-                //     log.debug('Tab discarded:', discardedTab);
-                //     const tabs = await chrome.tabs.query({currentWindow: true});
-                //     log.debug('List of tabs after discarding:', tabs);
-                //     tabs.forEach(tab => {
-                //         log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
-                //     });
-                //     setTimeout(async () => {
-                //         chrome.tabs.reload(discardedTab.id);
-                //     }, 500);
-                // });
+                chrome.tabs.discard(sender.tab.id, async (discardedTab) => {
+                    log.debug('Tab discarded:', discardedTab);
+                    const tabs = await chrome.tabs.query({currentWindow: true});
+                    log.debug('List of tabs after discarding:', tabs);
+                    tabs.forEach(tab => {
+                        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                    });
+                    setTimeout(async () => {
+                        chrome.tabs.reload(discardedTab.id);
+                    }, 500);
+                });
                 break;
             }
 
