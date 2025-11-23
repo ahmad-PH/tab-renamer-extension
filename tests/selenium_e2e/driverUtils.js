@@ -102,7 +102,8 @@ class DriverUtils {
         await this.driver.wait(until.elementLocated(By.id(emoji)), 5000);
         const emojiElement = await emojiPicker.findElement(By.id(emoji));
         
-        // Scroll into view
+        // Scroll into view: Needed, or otherwise you will get:
+        // "ElementClickInterceptedError: element click intercepted: Element is not clickable at point (304, 403)"
         await this.driver.executeScript('arguments[0].scrollIntoView({block: "center", behavior: "instant"});', emojiElement);
         
         // Wait a moment for any scroll animations to finish
