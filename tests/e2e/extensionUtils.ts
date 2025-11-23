@@ -93,8 +93,11 @@ export class ExtensionUtils {
 
     async getFaviconUrl(): Promise<string> {
         return await this.page.evaluate(() => {
-            const link = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
-            return link ? link.href : '';
+            const exactMatch = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+            if (exactMatch) return exactMatch.href;
+            
+            const substringMatch = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
+            return substringMatch ? substringMatch.href : '';
         });
     }
 
