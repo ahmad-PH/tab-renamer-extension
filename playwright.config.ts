@@ -71,7 +71,7 @@ export default defineConfig({
   webServer: {
     command: 'node tests/e2e/server.js',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120 * 1000,
     stdout: 'pipe',
     stderr: 'pipe',
