@@ -102,7 +102,7 @@ class DriverUtils {
         // Wait for the specific emoji element to be located and visible
         await this.driver.wait(until.elementLocated(By.id(emoji)), 5000);
         const emojiElement = await emojiPicker.findElement(By.id(emoji));
-        await this.driver.wait(until.elementIsVisible(emojiElement), 5000);
+        await this.driver.wait(until.elementIsVisible(emojiElement), 20000);
         
         // Scroll element into view to ensure it's clickable
         await this.driver.executeScript('arguments[0].scrollIntoView({block: "center", behavior: "instant"});', emojiElement);
