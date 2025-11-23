@@ -32,7 +32,8 @@ const olog = getLogger('Title Observer', 'debug');
     // log.debug('document head:', document.head.outerHTML);
 
     await tab.setSignature(title, null, false, false);
-    if (originalTitle) {
+    if (originalTitle && originalTitle !== title) {
+        log.debug(`Stashing original title: ${originalTitle}, because it is different from the retrieved title: ${title}`);
         await bgScriptApi.stashOriginalTitle(originalTitle);
         originalTitleIsStashed = true;
     }
