@@ -8,7 +8,7 @@ export const googleFaviconUrl = 'https://www.gstatic.com/images/branding/searchl
 export const facebookUrl = 'https://www.facebook.com/';
 export const youtubeUrl = 'https://www.youtube.com/';
 export const ahmadphosseiniUrl = 'https://www.ahmadphosseini.com/';
-export const ahmadphosseiniFaviconUrl = 'https://www.ahmadphosseini.com/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_192x192_fill_lanczos_center_2.png';
+export const ahmadphosseiniFaviconUrl = 'https://www.ahmadphosseini.com/images/icon_hu448cae0ae4c879367eb057f7d28d8a54_13197_32x32_fill_lanczos_center_2.png';
 export const exampleUrl = 'https://example.com/';
 export const exampleFaviconUrl = 'https://example.com/favicon.ico';
 export const wikipediaUrl = 'https://www.wikipedia.org/';
@@ -23,6 +23,11 @@ export const websites = [
         url: 'http://localhost:3000/index.html',
         faviconUrl: 'http://localhost:3000/favicon.ico',
         title: 'Test Page',
+    },
+    {
+        url: 'http://localhost:3000/page2.html',
+        faviconUrl: 'http://localhost:3000/favicon2.ico',
+        title: 'Second Test Page',
     },
     {
         url: wikipediaUrl,
