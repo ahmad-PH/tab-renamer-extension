@@ -107,42 +107,26 @@ export class ExtensionUtils {
 
     async faviconIsEmoji(emojiStyle?: string): Promise<boolean> {
         emojiStyle = emojiStyle ?? getEmojiStyle();
-        logger.info(`[faviconIsEmoji] Checking favicon with emoji style: ${emojiStyle}`);
         
+        // Fetch the three attributes that determine correctness:
         const faviconElement = this.getFaviconElement();
-        
-        // Get all attributes for logging
         const relAttribute = await faviconElement.getAttribute("rel");
         const hrefAttribute = await faviconElement.getAttribute("href");
         const typeAttribute = await faviconElement.getAttribute("type");
         
-        logger.info(`[faviconIsEmoji] Favicon attributes:`, {
-            rel: relAttribute,
-            href: hrefAttribute ? (hrefAttribute.length > 100 ? `${hrefAttribute.substring(0, 100)}...` : hrefAttribute) : hrefAttribute,
-            type: typeAttribute
-        });
-        
         const relContainsIcon = relAttribute?.includes("icon") || false;
-        logger.info(`[faviconIsEmoji] Check 1 - relContainsIcon: ${relContainsIcon} (rel="${relAttribute}")`);
         
         let hrefIsCorrect: boolean;
         if (emojiStyle == EMOJI_STYLE_NATIVE) {
             hrefIsCorrect = hrefAttribute?.startsWith("data:image/png;base64,") || false;
-            logger.info(`[faviconIsEmoji] Check 2 (NATIVE) - hrefIsCorrect: ${hrefIsCorrect} (starts with "data:image/png;base64,")`);
         } else if (emojiStyle == EMOJI_STYLE_TWEMOJI) {
             hrefIsCorrect = hrefAttribute?.startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/") || false;
-            logger.info(`[faviconIsEmoji] Check 2 (TWEMOJI) - hrefIsCorrect: ${hrefIsCorrect} (starts with "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/")`);
         } else {
             throw new Error(`Invalid emoji style: ${emojiStyle}`);
         }
 
         const typeMatchesIcon = typeAttribute === 'image/x-icon';
-        logger.info(`[faviconIsEmoji] Check 3 - typeMatchesIcon: ${typeMatchesIcon} (type="${typeAttribute}")`);
-        
-        const finalResult = relContainsIcon && hrefIsCorrect && typeMatchesIcon;
-        logger.info(`[faviconIsEmoji] Final result: ${finalResult} (all checks: rel=${relContainsIcon}, href=${hrefIsCorrect}, type=${typeMatchesIcon})`);
-        
-        return finalResult;
+        return relContainsIcon && hrefIsCorrect && typeMatchesIcon;
     }
 
     getFaviconElement(): Locator {
