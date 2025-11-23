@@ -132,7 +132,7 @@ export function sleep(ms) {
 }
 
 let platform = 'mac';
-if (typeof navigator !== 'undefined') {
+if (typeof navigator !== 'undefined') { // If running inside a browser
     let platformString = '';
     
     // Try different methods to get platform string, in order of preference
@@ -147,6 +147,11 @@ if (typeof navigator !== 'undefined') {
     platform = platformString.includes('mac') ? 'mac' :
         platformString.includes('win') ? 'win' : 
         platformString.includes('linux') ? 'linux' : 'other';
+} else { // If running outside the browser
+    const platformString = process.platform;
+    platform = platformString === 'darwin' ? 'mac' :
+        platformString === 'win32' ? 'win' :
+        platformString == 'linux' ? 'linux' : 'other';
 }
 
 export { platform };
