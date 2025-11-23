@@ -32,7 +32,22 @@ export class Tab {
         this.injectedFaviconLinkElement = null;
         // this.faviconMutationObserver = null;
         this.removedFaviconLinkElements = null;
-        this.originalTitle = null;
+        this._originalTitle = null;
+    }
+
+    get originalTitle() {
+        log.debug('[GET] originalTitle:', this._originalTitle);
+        return this._originalTitle;
+    }
+
+    set originalTitle(value) {
+        const oldValue = this._originalTitle;
+        log.debug('[SET] originalTitle changing from:', oldValue, 'to:', value);
+        
+        const stack = new Error().stack;
+        log.debug('originalTitle modification stack trace:\n', stack);
+    
+        this._originalTitle = value;
     }
 
     /**

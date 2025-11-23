@@ -28,7 +28,7 @@ const olog = getLogger('Title Observer', 'debug');
     let originalTitleIsStashed = false;
     let titleElements = Array.from(document.querySelectorAll('head > title')).map(el => el.textContent);
 
-    log.debug('document.title:', originalTitle, 'document.readyState:', document.readyState, 'title elements:', titleElements);
+    log.debug(`document.title: ${originalTitle}, retrieved title: ${title}, document.readyState: ${document.readyState}, title elements: ${titleElements}`);
     // log.debug('document head:', document.head.outerHTML);
 
     await tab.setSignature(title, null, false, false);
@@ -36,6 +36,8 @@ const olog = getLogger('Title Observer', 'debug');
         log.debug(`Stashing original title: ${originalTitle}, because it is different from the retrieved title: ${title}`);
         await bgScriptApi.stashOriginalTitle(originalTitle);
         originalTitleIsStashed = true;
+    } else {
+        log.debug(`Not stashing original title: ${originalTitle} because it is the same as the retrieved title: ${title}`);
     }
 
 

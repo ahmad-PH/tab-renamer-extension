@@ -224,11 +224,11 @@ if (!inProduction()) {
                 (async () => {
                     log.debug('Received test command')
                     log.debug('Contents of chrome storage:', await chrome.storage.sync.get(null));
-                    log.debug('List of tabs:');
-                    const tabs = await chrome.tabs.query({currentWindow: true});
-                    tabs.forEach(tab => {
-                        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
-                    });
+                    // log.debug('List of tabs:');
+                    // const tabs = await chrome.tabs.query({currentWindow: true});
+                    // tabs.forEach(tab => {
+                    //     log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                    // });
                 })();
                 break;
             }
