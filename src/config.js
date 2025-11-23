@@ -43,7 +43,8 @@ export const SETTINGS_KEY_EMOJI_STYLE = 'settings.emoji_style';
 // Emoji style:
 export const EMOJI_STYLE_NATIVE = "native";
 export const EMOJI_STYLE_TWEMOJI = "twemoji";
-export const EMOJI_STYLE_DEFAULT = platform === 'mac' ? EMOJI_STYLE_NATIVE : EMOJI_STYLE_TWEMOJI;
+// export const EMOJI_STYLE_DEFAULT = platform === 'mac' ? EMOJI_STYLE_NATIVE : EMOJI_STYLE_TWEMOJI;
+export const EMOJI_STYLE_DEFAULT = EMOJI_STYLE_TWEMOJI;
 let cachedConfig = {
     EMOJI_STYLE: EMOJI_STYLE_DEFAULT
 }

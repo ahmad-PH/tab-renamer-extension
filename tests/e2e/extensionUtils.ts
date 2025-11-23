@@ -20,6 +20,7 @@ import {
     SEARCH_RESULTS_ID,
     SETTINGS_BUTTON_ID,
     SETTINGS_BUTTON_TRIGGER_AREA_ID,
+    getEmojiStyle,
 } from '../../src/config.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -95,11 +96,12 @@ export class ExtensionUtils {
         });
     }
 
-    async assertFaviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE) {
+    async assertFaviconIsEmoji(emojiStyle?: string) {
         await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: getDebugAwareTimeout(5_000)}).toBe(true);
     }
 
-    async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {
+    async faviconIsEmoji(emojiStyle?: string): Promise<boolean> {
+        emojiStyle = emojiStyle ?? getEmojiStyle();
         const faviconElement = this.getFaviconElement();
         const relContainsIcon = (await faviconElement.getAttribute("rel"))?.includes("icon") || false;
         
