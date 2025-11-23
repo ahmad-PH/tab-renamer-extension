@@ -17,7 +17,7 @@ test.describe('Signature Retention', () => {
 
         await extensionUtils.renameTab(newTitle);
         await extensionUtils.setFavicon(newFavicon);
-        
+
         page = await extensionUtils.closeAndReopenCurrentTab();
 
         // Assert the name and emoji that we set on the tab

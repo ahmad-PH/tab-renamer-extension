@@ -20,12 +20,15 @@ import {
     SEARCH_RESULTS_ID,
     SETTINGS_BUTTON_ID,
     SETTINGS_BUTTON_TRIGGER_AREA_ID,
+    getEmojiStyle,
 } from '../../src/config.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
+import { getLogger } from '../../src/log.js';
 import { getDebugAwareTimeout } from './utils.js';
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
+const logger = getLogger('extensionUtils');
 
 /**
  * Playwright equivalent of DriverUtils for Chrome extension testing
@@ -90,29 +93,39 @@ export class ExtensionUtils {
 
     async getFaviconUrl(): Promise<string> {
         return await this.page.evaluate(() => {
-            const link = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
-            return link ? link.href : '';
+            const exactMatch = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+            if (exactMatch) return exactMatch.href;
+            
+            const substringMatch = document.querySelector('link[rel*="icon"]') as HTMLLinkElement;
+            return substringMatch ? substringMatch.href : '';
         });
     }
 
-    async assertFaviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE) {
+    async assertFaviconIsEmoji(emojiStyle?: string) {
         await expect.poll(() => this.faviconIsEmoji(emojiStyle), {timeout: getDebugAwareTimeout(5_000)}).toBe(true);
     }
 
-    async faviconIsEmoji(emojiStyle: string = EMOJI_STYLE_NATIVE): Promise<boolean> {
+    async faviconIsEmoji(emojiStyle?: string): Promise<boolean> {
+        emojiStyle = emojiStyle ?? getEmojiStyle();
+        
+        // Fetch the three attributes that determine correctness:
         const faviconElement = this.getFaviconElement();
-        const relContainsIcon = (await faviconElement.getAttribute("rel"))?.includes("icon") || false;
+        const relAttribute = await faviconElement.getAttribute("rel");
+        const hrefAttribute = await faviconElement.getAttribute("href");
+        const typeAttribute = await faviconElement.getAttribute("type");
+        
+        const relContainsIcon = relAttribute?.includes("icon") || false;
         
         let hrefIsCorrect: boolean;
         if (emojiStyle == EMOJI_STYLE_NATIVE) {
-            hrefIsCorrect = (await faviconElement.getAttribute("href"))?.startsWith("data:image/png;base64,") || false;
+            hrefIsCorrect = hrefAttribute?.startsWith("data:image/png;base64,") || false;
         } else if (emojiStyle == EMOJI_STYLE_TWEMOJI) {
-            hrefIsCorrect = (await faviconElement.getAttribute("href"))?.startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/") || false;
+            hrefIsCorrect = hrefAttribute?.startsWith("https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/") || false;
         } else {
             throw new Error(`Invalid emoji style: ${emojiStyle}`);
         }
 
-        const typeMatchesIcon = (await faviconElement.getAttribute("type")) === 'image/x-icon';
+        const typeMatchesIcon = typeAttribute === 'image/x-icon';
         return relContainsIcon && hrefIsCorrect && typeMatchesIcon;
     }
 

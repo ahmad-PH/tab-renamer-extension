@@ -93,6 +93,10 @@ export const test = base.extend<{
         `--disable-extensions-except=${pathToExtension}`,
         `--load-extension=${pathToExtension}`,
       ],
+      recordVideo: {
+        dir: 'test-results/videos',
+        size: { width: 1280, height: 720 },
+      }
     });
     
     await use(context);
@@ -179,6 +183,10 @@ export const testWithPersistentContext = base.extend<{
           `--disable-extensions-except=${pathToExtension}`,
           `--load-extension=${pathToExtension}`,
         ],
+        recordVideo: {
+          dir: 'test-results/videos',
+          size: { width: 1280, height: 720 },
+        }
       });
     };
     

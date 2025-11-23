@@ -10,6 +10,7 @@ const {
     EMOJI_PICKER_ID,
     COMMAND_CLOSE_WELCOME_TAB,
     SETTING_BUTTON_TEST_STUB_ID,
+    getEmojiStyle,
 } = require('../../src/config.js');
 const { faviconLinksCSSQuery } = require('../../src/contentScript/tab.js');
 const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
@@ -93,9 +94,20 @@ class DriverUtils {
     
     async setFavicon(emoji) {
         await this.openFaviconPicker();
+        
+        // Wait for emoji picker to be fully visible
         const emojiPicker = await this.driver.findElement(By.id(EMOJI_PICKER_ID));
-        await this.driver.wait(until.elementLocated(By.id(emoji)));
+        
+        // Wait for the specific emoji element to be located
+        await this.driver.wait(until.elementLocated(By.id(emoji)), 5000);
         const emojiElement = await emojiPicker.findElement(By.id(emoji));
+        
+        // Scroll into view: Needed, or otherwise you will get:
+        // "ElementClickInterceptedError: element click intercepted: Element is not clickable at point (304, 403)"
+        await this.driver.executeScript('arguments[0].scrollIntoView({block: "center", behavior: "instant"});', emojiElement);
+        
+        // Wait a moment for any scroll animations to finish
+        await this.driver.sleep(100);
         await emojiElement.click();
     
         await this.submitRenameDialog();
@@ -124,7 +136,8 @@ class DriverUtils {
         }
     }
 
-    async faviconIsEmoji(emojiStyle = EMOJI_STYLE_NATIVE) {
+    async faviconIsEmoji(emojiStyle) {
+        emojiStyle = emojiStyle || getEmojiStyle();
         const faviconElement = await this.getFaviconElement();
         const relContainsIcon = (await this.getAttribute(faviconElement, "rel")).includes("icon");
         let hrefIsCorrect;

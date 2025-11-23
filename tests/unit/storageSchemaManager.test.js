@@ -1,5 +1,6 @@
 
 const { StorageSchemaManager } = require('src/background/storageSchemaManager.js');
+const { EMOJI_STYLE_DEFAULT } = require('../../src/config');
 
 describe('storageSchemaManager', () => {
     let schemaManager;
@@ -51,7 +52,7 @@ const examples = {
                 },
                 "url": "https://www.google.com/"
             },
-            "settings.emoji_style": "native",
+            "settings.emoji_style": EMOJI_STYLE_DEFAULT,
             "schemaVersion": "1.1.0"
         },
         "before": {
