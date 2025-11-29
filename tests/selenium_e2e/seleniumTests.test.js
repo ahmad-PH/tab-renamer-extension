@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Warning: This file is deprecated. It is only kept around for the discard tab test, but even
+ *  that is not clear if the test is actually properly working.
+ * @deprecated
+ */
+
 const { WebDriver, Builder, Key, By, until } = require('selenium-webdriver');
 const { expect, test, describe } = require('@jest/globals');
 const chromedriver = require('chromedriver');
