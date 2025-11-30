@@ -5,13 +5,12 @@ import SettingItem from './components/SettingItem/SettingItem';
 
 import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
 import { getLogger } from "../log";
-import { Select, MenuItem, FormControl } from '@mui/material';
+import { Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
-
 
 const log = getLogger('settings', 'debug');
 
-const SettingsPage = () => {
+const SettingsPage: React.FC = () => {
   const [emojiStyle, setEmojiStyle] = useState(EMOJI_STYLE_NATIVE);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ const SettingsPage = () => {
     fetchEmojiStyle();
   }, []);
 
-  const handleEmojiStyleChange = async (selectedStyle) => {
+  const handleEmojiStyleChange = async (selectedStyle: string) => {
     log.debug("Emoji style change handler in SettingsPage called with value:", selectedStyle);
     await chrome.storage.sync.set({[SETTINGS_KEY_EMOJI_STYLE]: selectedStyle});
     setEmojiStyle(selectedStyle);
@@ -51,7 +50,7 @@ const SettingsPage = () => {
                 <Select
                   id={SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID}
                   value={emojiStyle}
-                  onChange={(e) => handleEmojiStyleChange(e.target.value)}
+                  onChange={(e: SelectChangeEvent<string>) => handleEmojiStyleChange(e.target.value)}
                   className={styles.selectElement}
                 >
                   <MenuItem value={EMOJI_STYLE_NATIVE} className={styles.selectElementItem}>Native</MenuItem>
@@ -66,9 +65,10 @@ const SettingsPage = () => {
   );
 };
 
-const root = createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
 root.render(
     <StrictMode>
         <SettingsPage />
     </StrictMode>
 );
+

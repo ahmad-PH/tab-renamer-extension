@@ -1,9 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { INPUT_BOX_ID } from "../../../config";
 import styles from './TitleInputBox.module.css';
 
-export default function TitleInputBox({ inputBoxValue, setInputBoxValue, handleInputBoxKeydown, inputRef }) {
+interface TitleInputBoxProps {
+    inputBoxValue: string;
+    setInputBoxValue: (value: string) => void;
+    handleInputBoxKeydown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    inputRef: React.RefObject<HTMLInputElement>;
+}
+
+export default function TitleInputBox({ inputBoxValue, setInputBoxValue, handleInputBoxKeydown, inputRef }: TitleInputBoxProps) {
     return (
         <input
             type="text"
@@ -20,9 +26,3 @@ export default function TitleInputBox({ inputBoxValue, setInputBoxValue, handleI
     )
 }
 
-TitleInputBox.propTypes = {
-    inputBoxValue: PropTypes.string.isRequired,
-    setInputBoxValue: PropTypes.func.isRequired,
-    handleInputBoxKeydown: PropTypes.func.isRequired,
-    inputRef: PropTypes.object.isRequired,
-};

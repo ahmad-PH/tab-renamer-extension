@@ -11,8 +11,6 @@ export default function SettingsButton() {
         }
     };
 
-    // This element only exists to provide a stable clickable surface for e2e tests, because the css applied to
-    // the settings button makes it not-interactable in the headless mode.
     const testStub = (
         <div className={styles.testStub} id={SETTING_BUTTON_TEST_STUB_ID} onClick={handleClick}/>
     );
@@ -37,4 +35,5 @@ export default function SettingsButton() {
             {testStub}
         </>
     );
-} 
+}
+

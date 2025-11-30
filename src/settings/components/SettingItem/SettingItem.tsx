@@ -1,8 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './SettingItem.module.css';
 
-const SettingItem = ({ label, description, children }) => {
+interface SettingItemProps {
+  label: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+const SettingItem: React.FC<SettingItemProps> = ({ label, description, children }) => {
   return (
     <div className={styles.settingItem}>
       <div className={styles.settingLabel}>
@@ -18,10 +23,5 @@ const SettingItem = ({ label, description, children }) => {
   );
 };
 
-SettingItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
-};
+export default SettingItem;
 
-export default SettingItem; 

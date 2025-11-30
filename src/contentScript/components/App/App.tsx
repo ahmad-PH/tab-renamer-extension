@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from './App.module.css';
-import { ROOT_ELEMENT_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config.js';
-import PropTypes from 'prop-types';
+import { ROOT_ELEMENT_ID, OVERLAY_ID, COMMAND_OPEN_RENAME_DIALOG, faviconRestorationStrategy, inProduction } from '../../../config';
 import { getLogger } from "../../../log";
 import SelectedFavicon from '../SelectedEmoji';
 import FaviconPicker from '../FaviconPicker';
@@ -10,42 +9,28 @@ import { TabSignature } from '../../../types';
 import { Favicon, SystemEmojiFavicon, TwemojiFavicon, UrlFavicon } from '../../../favicon';
 import SettingsButton from '../SettingsButton';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
-
-/* Non-functional note: Any slow-down in this file, for example in the imports above, will lead to a slower execution time 
- * for the insertUIIntoDOM function, because contentScript.js will import App only when this function is called. Adding an
- * extra import for 'bootstrap-icons/font/bootstrap-icons.css' will increase the load time of App from ~3ms to ~9ms, which
- * is significant. This can affect end-to-end tests that still rely on some timers and break them.
- * If this happens in the future and the change is necessary, I would need to adjust timers on those.
- */
+import { Tab } from '../../tab';
 
 const log = getLogger('App', 'debug');
 
-export const TabContext = React.createContext(null);
+export const TabContext = React.createContext<Tab | null>(null);
 
-/**
- */
 export default function App() {
     const [isVisible, setIsVisible] = useState(true);
-    /** @type {[Favicon, React.Dispatch<Favicon>]} */
-    const [selectedFavicon, setSelectedFavicon] = useState(null);
+    const [selectedFavicon, setSelectedFavicon] = useState<Favicon | null>(null);
     const [inputBoxValue, setInputBoxValue] = useState('');
     const [emojiPickerIsVisible, setEmojiPickerIsVisible] = useState(false);
-    const inputRef = useRef(null);
-    const [styleElement, setStyleElement] = useState(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [styleElement, setStyleElement] = useState<JSX.Element | null>(null);
 
-    /** 
-     * @typedef {import('../../tab').Tab} Tab
-     * @type {Tab} 
-     */
-    const tab = useContext(TabContext);
+    const tab = useContext(TabContext)!;
 
-    // @ts-ignore
     if (faviconRestorationStrategy === 'fetch_separately') {
         useEffect(() => {
             if (isVisible) {
                 tab.preFetchOriginalFavicon();
             }
-        }, [isVisible]);
+        }, [isVisible, tab]);
     }
     useStopKeyEventsPropagation(isVisible, ['Escape', 'Enter']);
 
@@ -59,10 +44,10 @@ export default function App() {
             }
             setSelectedFavicon(Favicon.fromDTO(tab.signature.favicon));
         }
-    }, []);
+    }, [tab]);
 
     useEffect(() => {
-        function chromeOpenRenameDialogListener(message, _sender, _sendResponse) {
+        function chromeOpenRenameDialogListener(message: any, _sender: any, _sendResponse: any) {
             if (message.command === COMMAND_OPEN_RENAME_DIALOG) {
                 setIsVisible(!isVisible);
             }
@@ -70,11 +55,11 @@ export default function App() {
 
         chrome.runtime.onMessage.addListener(chromeOpenRenameDialogListener);
 
-        function domOpenRenameDialogListener(_event) {
+        function domOpenRenameDialogListener(_event: Event) {
             setIsVisible(!isVisible);
         }
 
-        if (!inProduction()) { // Only for testing
+        if (!inProduction()) {
             document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domOpenRenameDialogListener);
         }
         
@@ -88,7 +73,7 @@ export default function App() {
 
     useDebugOnClick();
 
-    const handleInputBoxKeydown = async (event) => {
+    const handleInputBoxKeydown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             log.debug('Enter key pressed', inputBoxValue, selectedFavicon);
@@ -103,10 +88,7 @@ export default function App() {
         setEmojiPickerIsVisible(!emojiPickerIsVisible);
     }
 
-    /**
-     * @param {Favicon} favicon 
-     */
-    const handleFaviconClick = (favicon) => {
+    const handleFaviconClick = (favicon: Favicon) => {
         setSelectedFavicon(favicon);
         setEmojiPickerIsVisible(false);
     }
@@ -129,10 +111,9 @@ export default function App() {
     }, [emojiPickerIsVisible]);
 
     useEffect(() => {
-        // Combine all style elements from shadowRoot into one
         const tabRenamerRoot = document.querySelector('tab-renamer-root');
         let combinedStyles = '';
-        tabRenamerRoot.shadowRoot.querySelectorAll('style').forEach((styleElement) => {
+        tabRenamerRoot!.shadowRoot!.querySelectorAll('style').forEach((styleElement) => {
             combinedStyles += styleElement.textContent;
         });
         setStyleElement(<style>{combinedStyles}</style>);
@@ -147,13 +128,13 @@ export default function App() {
                 mountTarget="#frameMountTarget"
                 contentDidMount={() => {
                     if (isVisible) {
-                        inputRef.current.focus();
+                        inputRef.current?.focus();
                     }
                 }}
             >
                 <FrameContextConsumer>
                     {({document}) => {
-                        document.addEventListener('keydown', (event) => {
+                        document.addEventListener('keydown', (event: KeyboardEvent) => {
                             if (event.key === "Escape") {
                                 setIsVisible(false);
                             }
@@ -192,10 +173,9 @@ export default function App() {
     );
 }
 
-
-function useStopKeyEventsPropagation(shouldStopPropagation, exceptionKeys = []) {
+function useStopKeyEventsPropagation(shouldStopPropagation: boolean, exceptionKeys: string[] = []) {
     useEffect(() => {
-        function stopPropagation(event) {
+        function stopPropagation(event: KeyboardEvent) {
             if (shouldStopPropagation && !exceptionKeys.includes(event.key)) {
                 event.stopImmediatePropagation();
             }
@@ -215,7 +195,7 @@ function useStopKeyEventsPropagation(shouldStopPropagation, exceptionKeys = []) 
             document.removeEventListener('keydown', stopPropagation, true);
             document.removeEventListener('keyup', stopPropagation, true);
         };
-    }, [shouldStopPropagation]);
+    }, [shouldStopPropagation, exceptionKeys]);
 }
 
 function useDebugOnClick() {
@@ -231,3 +211,4 @@ function useDebugOnClick() {
         }
     });
 }
+

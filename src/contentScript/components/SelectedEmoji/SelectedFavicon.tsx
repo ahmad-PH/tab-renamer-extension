@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from './SelectedFavicon.module.css';
-import PropTypes from 'prop-types';
-import { EMOJI_PICKER_IMAGE_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID } from '../../../config.js';
-import log from '../../../log';
+import { EMOJI_PICKER_IMAGE_ID, FAVICON_PICKER_ID, PICKED_EMOJI_ID } from '../../../config';
 import { Favicon } from '../../../favicon';
 
-/**
- * @param {{selectedFavicon: Favicon, handleSelectedFaviconClick: import('react').MouseEventHandler<HTMLDivElement>}} props
- */
-function SelectedFavicon({ selectedFavicon, handleSelectedFaviconClick }) {
+interface SelectedFaviconProps {
+    selectedFavicon: Favicon | null;
+    handleSelectedFaviconClick: React.MouseEventHandler<HTMLDivElement>;
+}
+
+function SelectedFavicon({ selectedFavicon, handleSelectedFaviconClick }: SelectedFaviconProps) {
     const emojiElement = (selectedFavicon ? 
         <img 
             id={PICKED_EMOJI_ID}
@@ -30,9 +30,5 @@ function SelectedFavicon({ selectedFavicon, handleSelectedFaviconClick }) {
     );
 }
 
-SelectedFavicon.propTypes = {
-    selectedFavicon: PropTypes.instanceOf(Favicon),
-    handleSelectedFaviconClick: PropTypes.func.isRequired,
-}
-
 export default SelectedFavicon;
+

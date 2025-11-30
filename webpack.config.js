@@ -6,10 +6,10 @@ module.exports = (_env, argv) => {
     const isProduction = argv.mode === 'production';
     const outputPath = isProduction ? 'dist/prod' : 'dist/dev';
     const entries =  {
-        contentScript: './src/contentScript/contentScript.js',
-        initializationContentScript: './src/contentScript/initializationContentScript.js',
-        background: './src/background/background.js',
-        settings: './src/settings/settings.js',
+        contentScript: './src/contentScript/contentScript.tsx',
+        initializationContentScript: './src/contentScript/initializationContentScript.ts',
+        background: './src/background/background.ts',
+        settings: './src/settings/settings.tsx',
     };
 
     // Marking certain entries as special, by marking their "chunk.name", and mapping to the folder
@@ -54,7 +54,7 @@ module.exports = (_env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(js|jsx|ts|tsx)$/,
                     exclude: /node_modules/,
                     use: {
                         loader: 'babel-loader',
@@ -91,7 +91,7 @@ module.exports = (_env, argv) => {
         },
         
         resolve: {
-            extensions: ['.js', '.jsx'],
+            extensions: ['.ts', '.tsx', '.js', '.jsx'],
         },
         
         plugins: [

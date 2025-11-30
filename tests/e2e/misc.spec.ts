@@ -4,7 +4,7 @@ import express from 'express';
 import { PromiseLock, sleep, startExpressServer, findAvailablePort, startExpressServerWithHTML } from './utils';
 import http from 'http';
 import testData from './testData';
-import { EMOJI_STYLE_TWEMOJI, FAVICON_PICKER_ID, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from '../../src/config.js';
+import { EMOJI_STYLE_TWEMOJI, FAVICON_PICKER_ID, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from '../../src/config';
 
 test.describe('Miscellaneous Tests', () => {
     let extensionUtils: ExtensionUtils;

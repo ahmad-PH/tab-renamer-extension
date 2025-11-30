@@ -1,9 +1,9 @@
-import { getAllTabs, storageSet } from '../utils.js';
-import { getLogger } from '../log.js';
+import { getAllTabs, storageSet } from '../utils';
+import { getLogger } from '../log';
 
 const log = getLogger('markAllOpenSignaturesAsClosed', 'warn');
 
-async function markAllOpenSignaturesAsClosed() {
+async function markAllOpenSignaturesAsClosed(): Promise<void> {
     log.debug('markAllOpenSignaturesAsClosed called ...');
     const storedTabs = await getAllTabs();
     log.debug('current tabs:', storedTabs);
@@ -18,3 +18,4 @@ async function markAllOpenSignaturesAsClosed() {
 }
 
 export { markAllOpenSignaturesAsClosed };
+

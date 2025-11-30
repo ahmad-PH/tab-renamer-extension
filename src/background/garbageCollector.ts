@@ -1,23 +1,18 @@
-import { getAllTabs, storageGet } from "../utils.js";
-import { TabInfo } from "../types.js";
+import { getAllTabs } from "../utils";
+import { TabInfo } from "../types";
+import { getLogger } from "../log";
 
-/** garbage collector (gc) logger */
-import { getLogger } from "../log.js";
 const log = getLogger("garbageCollector", "warn");
 const SECONDS = 1000, MINUTES = 60 * SECONDS;
 export const garbageCollectionThreshold = 2 * MINUTES;
 
-async function garbageCollector() {
-    const allTabs = await getAllTabs();  // Added await here
+async function garbageCollector(): Promise<void> {
+    const allTabs = await getAllTabs();
     const tabIdsToRemove = garabageCollectionFilter(Object.values(allTabs)).map(tabId => tabId.toString());
     await chrome.storage.sync.remove(tabIdsToRemove);
 }
 
-/**
- * @param {TabInfo[]} tabs - The list of tabs to filter.
- * @returns {number[]} - The tab ids to remove.
- */
-export function garabageCollectionFilter(tabs) {
+export function garabageCollectionFilter(tabs: TabInfo[]): number[] {
     log.debug('Retrieved all tab info:', JSON.stringify(tabs, null, 2));
     const currentTime = new Date();
 
@@ -26,7 +21,7 @@ export function garabageCollectionFilter(tabs) {
             log.debug(`Tab ${tab.id} is not closed, keeping...`);
             return false;
         } else {
-            const tabClosedAt = new Date(tab.closedAt);
+            const tabClosedAt = new Date(tab.closedAt!);
             log.debug(`Tab ${tab.id} closed at: ${tabClosedAt}`);
             log.debug('Current time:', currentTime, 'tabClosedAt:', tabClosedAt, 'Difference:', currentTime.valueOf() - tabClosedAt.valueOf());
             if ((currentTime.valueOf() - tabClosedAt.valueOf()) < garbageCollectionThreshold) {
@@ -40,7 +35,7 @@ export function garabageCollectionFilter(tabs) {
     }).map(tab => tab.id);
 }
 
-export function startTheGarbageCollector() {
+export function startTheGarbageCollector(): void {
     setInterval(garbageCollector, 5000);
 }
 

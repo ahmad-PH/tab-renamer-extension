@@ -1,42 +1,19 @@
-const { emojiToDataURL, getEmojiCodePoint } = require("./utils");
+import { emojiToDataURL, getEmojiCodePoint } from "./utils";
 import log from "./log";
 import { FaviconDTO } from "./types";
 
-export class Favicon {
+export abstract class Favicon {
     constructor() {
         if (new.target === Favicon) {
             throw new TypeError("Cannot construct Favicon instances directly");
         }
     }
 
-    /**
-     * @returns {string}
-     */
-    getId() {
-        throw new Error("Method 'getId()' must be implemented.");
-    }
+    abstract getId(): string;
+    abstract getUrl(): string;
+    abstract toDTO(): FaviconDTO;
 
-    /**
-     * @returns {string} returns the url that can be used as the src attribute of an img tag.
-     * If this is a system emoji, the url will be a data URL.
-     */
-    getUrl() {
-        throw new Error("Method 'getUrl()' must be implemented.");
-    }
-
-    /**
-     * @returns {FaviconDTO}
-     * @abstract
-     */   
-    toDTO() {
-        throw new Error("Method 'toDTO()' must be implemented.");
-    }
-
-    /**
-     * @param {FaviconDTO} obj
-     * @returns {Favicon}
-     */
-    static fromDTO(obj) {
+    static fromDTO(obj: FaviconDTO): Favicon {
         log.debug('Favicon.fromDTO called with obj:', obj);
         const subclasses = [SystemEmojiFavicon, TwemojiFavicon, UrlFavicon];
         for (const subclass of subclasses) {
@@ -47,31 +24,31 @@ export class Favicon {
         }
         throw new Error(`Unknown Favicon type: ${obj.type}`);
     }
-
 }
 
 export class SystemEmojiFavicon extends Favicon {
     static type = 'systemEmojiFavicon';
+    emoji: string;
+    private _url: string | null = null;
 
-    constructor(emoji) {
+    constructor(emoji: string) {
         super();
         this.emoji = emoji;
-        this._url = null;
     }
 
-    getId() {
+    getId(): string {
         return this.emoji;
     }
 
-    toDTO() {
+    toDTO(): FaviconDTO {
         return {'type': SystemEmojiFavicon.type, 'content': this.emoji };
     }
 
-    static fromDTO(obj) {
+    static fromDTO(obj: FaviconDTO): SystemEmojiFavicon {
         return new SystemEmojiFavicon(obj.content);
     }
 
-    getUrl() {
+    getUrl(): string {
         if (this._url === null) {
             this._url = emojiToDataURL(this.emoji);
         }
@@ -81,26 +58,27 @@ export class SystemEmojiFavicon extends Favicon {
 
 export class TwemojiFavicon extends Favicon {
     static type = 'twemojiFavicon';
+    emoji: string;
+    private _url: string | null = null;
 
-    constructor(emoji) {
+    constructor(emoji: string) {
         super();
         this.emoji = emoji;
-        this._url = null;
     }
 
-    getId() {
+    getId(): string {
         return this.emoji;
     }
 
-    toDTO() {
+    toDTO(): FaviconDTO {
         return {'type': TwemojiFavicon.type, 'content': this.emoji };
     }
 
-    static fromDTO(obj) {
+    static fromDTO(obj: FaviconDTO): TwemojiFavicon {
         return new TwemojiFavicon(obj.content);
     }
 
-    getUrl() {
+    getUrl(): string {
         if (this._url === null) {
             const codepoint = getEmojiCodePoint(this.emoji)
             this._url = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codepoint}.png`;
@@ -111,31 +89,27 @@ export class TwemojiFavicon extends Favicon {
 
 export class UrlFavicon extends Favicon {
     static type = 'urlFavicon';
+    private _url: string;
 
-    constructor(url) {
+    constructor(url: string) {
         super();
         this._url = url;
     }
 
-    /**
-     * getId() is not well-defined for URL favicons yet.
-     * In the future I plan on using the ID of the image on the backend to represent this. Something 
-     * like if the URL is a tabrenamer.com/{id}.png, then the ID would be {id}.');
-     */
-    // @ts-ignore
-    getId() {
+    getId(): string {
         return '';
     }
 
-    toDTO() {
+    toDTO(): FaviconDTO {
         return {'type': UrlFavicon.type, 'content': this._url };
     }
 
-    static fromDTO(obj) {
+    static fromDTO(obj: FaviconDTO): UrlFavicon {
         return new UrlFavicon(obj.content);
     }
 
-    getUrl() {
+    getUrl(): string {
         return this._url;
     }
 }
+

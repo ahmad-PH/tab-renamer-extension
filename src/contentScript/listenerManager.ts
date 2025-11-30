@@ -1,12 +1,21 @@
 import log from "../log";
 
-class ListenerManager {
-    constructor() {
-        this.domListeners = [];
-        this.chromeListeners = [];
-    }
+interface DOMListener {
+    element: EventTarget;
+    type: string;
+    handler: EventListener;
+}
 
-    addDOMListener(element, type, handler) {
+interface ChromeListener {
+    listenerContext: any;
+    handler: Function;
+}
+
+class ListenerManager {
+    domListeners: DOMListener[] = [];
+    chromeListeners: ChromeListener[] = [];
+
+    addDOMListener(element: EventTarget, type: string, handler: EventListener): void {
         if (!element) {
             log.debug('found null element in addDOMListener', element, type, handler);
             log.debug(new Error().stack);
@@ -15,15 +24,12 @@ class ListenerManager {
         this.domListeners.push({ element, type, handler });
     }
 
-    addChromeListener(listenerContext, handler) {
+    addChromeListener(listenerContext: any, handler: Function): void {
         listenerContext.addListener(handler);
         this.chromeListeners.push({listenerContext, handler});
     }
 
-    removeAllListeners() {
-        // for (const { element, type, handler } of this.domListeners) {
-        //     element.removeEventListener(type, handler);
-        // }
+    removeAllListeners(): void {
         this.domListeners = [];
 
         for (const {listenerContext, handler} of this.chromeListeners) {

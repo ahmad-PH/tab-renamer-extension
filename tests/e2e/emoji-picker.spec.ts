@@ -10,7 +10,7 @@ import {
     PICKED_EMOJI_ID,
     FAVICON_PICKER_ID,
     INPUT_BOX_ID
-} from '../../src/config.js';
+} from '../../src/config';
 
 test.describe('Emoji Picker', () => {
     let extensionUtils: ExtensionUtils;

@@ -1,23 +1,17 @@
 import { EMOJI_STYLE_DEFAULT, SETTINGS_KEY_EMOJI_STYLE } from "../config";
 
+type MigrationFunction = (data: any) => any;
 
 class StorageSchemaManager {
     currentSchemaVersion = '1.1.0';
 
-    /**
-     * Checks for existence of schemaVersion, and migrates the data if necessary.
-     * @param {Object} data 
-     * @returns {Object} - the migrated data
-     */
-    verifyCorrectSchemaVersion(data) {
-        data = JSON.parse(JSON.stringify(data)); // clone
+    verifyCorrectSchemaVersion(data: any): any {
+        data = JSON.parse(JSON.stringify(data));
 
         if (!data.schemaVersion) {
-            data.schemaVersion = "1.0.1" // Defaulting to the first ever schema version.
+            data.schemaVersion = "1.0.1"
         }
 
-        // Apply migrations in a sorted order, starting with the lowerst version that 
-        // is greater than the current version, and going all the way until the target version.
         if (data.schemaVersion != this.currentSchemaVersion) {
             const migrationVersions = Object.keys(this.migrations).sort();
             for (const version of migrationVersions) {
@@ -30,7 +24,7 @@ class StorageSchemaManager {
         return data;
     }
 
-    migrations = {
+    migrations: Record<string, MigrationFunction> = {
         '1.1.0': (data) => {
             for (const key of Object.keys(data)) {
                 const item = data[key];
@@ -45,7 +39,7 @@ class StorageSchemaManager {
             return data;
         }
     }
-
 }
 
 export { StorageSchemaManager };
+

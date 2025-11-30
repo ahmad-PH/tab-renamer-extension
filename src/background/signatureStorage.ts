@@ -4,20 +4,13 @@ import { getLogger } from "../log";
 
 const log = getLogger('signatureStorage.js', 'warn');
 
-/**
- * @param {Object.<number, TabInfo>} storedTabInfo
- * @param {number} tabId
- * @param {string} url
- * @param {number} index
- * @returns {TabInfo|null} The tab that matches the given information, or null if no match is found
- */
-function findMatchingTab(storedTabInfo, tabId, url, index) {
+function findMatchingTab(storedTabInfo: Record<number, TabInfo>, tabId: number, url: string, index: number): TabInfo | null {
     log.debug('findMatchingTab called with:', { storedTabInfo, tabId, url, index });
 
     if (storedTabInfo[tabId]) {
         log.debug('Tab found in storedTabInfo:', storedTabInfo[tabId]);
         return storedTabInfo[tabId];
-    } else { // the tab has been closed
+    } else {
         const candidateTabs = Object.values(storedTabInfo).filter(
             tabInfoValue => tabInfoValue.isClosed && tabInfoValue.url === url 
         );
@@ -33,9 +26,8 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
             if (tabMatchingURLAndIndex) {
                 return tabMatchingURLAndIndex;
             } else {
-                // find the most recent tab
                 candidateTabs.sort((tabInfo1, tabInfo2) => {
-                    return new Date(tabInfo2.closedAt).valueOf() - new Date(tabInfo1.closedAt).valueOf() 
+                    return new Date(tabInfo2.closedAt!).valueOf() - new Date(tabInfo1.closedAt!).valueOf() 
                 });
                 log.debug('Most recent tab:', candidateTabs[0]);
                 return candidateTabs[0];
@@ -47,13 +39,7 @@ function findMatchingTab(storedTabInfo, tabId, url, index) {
     return null;
 }
 
-/**
- * @param {Object.<number, TabInfo>} storedTabInfo
- * @param {string} url
- * @param {number} index
- * @returns {TabInfo|null} The old record that matched the information given.
- */
-export function findOldRecordOfFreshlyDiscardedTab(storedTabInfo, url, index) {
+export function findOldRecordOfFreshlyDiscardedTab(storedTabInfo: Record<number, TabInfo>, url: string, index: number): TabInfo | null {
     log.debug('findOldRecordOfFreshlyDiscardedTab called with:', { url, index, storedTabInfo});
 
     const candidateTabs = Object.values(storedTabInfo).filter(
@@ -71,17 +57,7 @@ export function findOldRecordOfFreshlyDiscardedTab(storedTabInfo, url, index) {
     }
 }
 
-
-/**
- * Load the tab with the given information, from chrome storage.
- * @param {number} tabId
- * @param {string} url
- * @param {number} index
- * @param {boolean} isBeingOpened
- * @returns {Promise<TabInfo|null>} The tab matching the given information.
- */
-async function loadTab(tabId, url, index, isBeingOpened) {
-    // Put a descriptive log logging everyhting with its name:
+async function loadTab(tabId: number, url: string, index: number, isBeingOpened: boolean): Promise<TabInfo | null> {
     log.debug('tabId:', tabId, 'url:', url, 'index:', index, 'isBeingOpened:', isBeingOpened);
     const storedTabInfo = await getAllTabs();
     log.debug('storedTabInfo:', storedTabInfo);
@@ -104,16 +80,12 @@ async function loadTab(tabId, url, index, isBeingOpened) {
     }
 }
 
-/**
- * @param {TabInfo} tab
- */
-async function saveTab(tab) {
+async function saveTab(tab: TabInfo): Promise<void> {
     log.debug('saveTab: called with:', tab);
-    /** @type {TabInfo} */
-    const result = await storageGet(tab.id);
+    const result: TabInfo = await storageGet(tab.id);
     log.debug('saveTab: seeing if a tab info already exists for this tab id:', result);
     let newSignature = Object.assign({}, tab.signature);
-    let isClosed = false, closedAt = null;
+    let isClosed = false, closedAt: string | null = null;
     if (result) {
         isClosed = result.isClosed;
         closedAt = result.closedAt;
@@ -124,5 +96,5 @@ async function saveTab(tab) {
     log.debug('Data saved to storage');
 }
 
-
 export { findMatchingTab, loadTab, saveTab };       
+

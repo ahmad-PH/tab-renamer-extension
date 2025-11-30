@@ -1,24 +1,29 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './FaviconPicker.module.css';
-import PropTypes from 'prop-types';
 import { 
     EMOJI_PICKER_ID,
     EMOJI_REMOVE_BUTTON_ID,
     SEARCH_BAR_ID,
     SEARCH_RESULTS_ID,
     ALL_EMOJIS_ID 
-} from '../../../config.js';
+} from '../../../config';
 import classNames from 'classnames';
 import { getLogger } from '../../../log';
 import { findMatchingEmojis } from '../../emojiSearch';
 import { Emoji } from './Emoji';
+import { Favicon } from '../../../favicon';
+import { Emoji as EmojiType } from '../../../types';
 
-// eslint-disable-next-line no-unused-vars
 export const log = getLogger('EmojiPicker', 'debug');
 
-const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
+interface FaviconPickerProps {
+    onFaviconClick: (favicon: Favicon) => void;
+    onRemoveEmoji: () => void;
+}
+
+const FaviconPicker: React.FC<FaviconPickerProps> = ({ onFaviconClick, onRemoveEmoji }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [allEmojis, setAllEmojis] = useState({});
+    const [allEmojis, setAllEmojis] = useState<Record<string, EmojiType[]>>({});
     const [isVisible, setIsVisible] = useState(false);
 
     const matchingEmojis = useMemo(
@@ -39,11 +44,11 @@ const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
         loadEmojis();
     }, []);
 
-    const formatEmojiCategoryTitle = (categoryTitle) => {
+    const formatEmojiCategoryTitle = (categoryTitle: string) => {
         return categoryTitle
-            .replace(/_/g, ' ')  // Replace underscores with spaces
-            .replace(/\band\b/gi, '&')  // Replace 'and' with '&'
-            .replace(/\b\w/g, (char) => char.toUpperCase());  // Capitalize first letter of each word
+            .replace(/_/g, ' ')
+            .replace(/\band\b/gi, '&')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
     };
 
     useEffect(() => {
@@ -82,7 +87,7 @@ const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
                 ) : (
                     <div id={SEARCH_RESULTS_ID} className={classNames(styles.searchResults, styles.emojiGrid)}>
                         {matchingEmojis.map(emoji => (
-                            <Emoji emoji={emoji} key={emoji.unicode} onClick={onFaviconClick}/>
+                            <Emoji emoji={emoji} key={emoji.unicode_code_point} onClick={onFaviconClick}/>
                         ))}
                     </div>
                 )}
@@ -91,16 +96,15 @@ const FaviconPicker = ({ onFaviconClick, onRemoveEmoji }) => {
     );
 }
 
-FaviconPicker.propTypes = {
-    onFaviconClick: PropTypes.func.isRequired,
-    onRemoveEmoji: PropTypes.func.isRequired,
+interface SearchBarProps {
+    onSearchBarChanged: (value: string) => void;
 }
 
-const SearchBar = ({ onSearchBarChanged }) => {
-    const searchBarRef = useRef(null);
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchBarChanged }) => {
+    const searchBarRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        searchBarRef.current.focus();
+        searchBarRef.current?.focus();
     }, []);
 
     return (
@@ -116,8 +120,5 @@ const SearchBar = ({ onSearchBarChanged }) => {
     );
 }
 
-SearchBar.propTypes = {
-    onSearchBarChanged: PropTypes.func.isRequired,
-}
-
 export default FaviconPicker;
+

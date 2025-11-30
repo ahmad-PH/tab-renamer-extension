@@ -1,22 +1,21 @@
 import React from 'react';
 import { log } from './FaviconPicker';
-import PropTypes from 'prop-types';
 import styles from './Emoji.module.css';
-import { SystemEmojiFavicon, TwemojiFavicon } from '../../../favicon';
-import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config.js';
+import { SystemEmojiFavicon, TwemojiFavicon, Favicon } from '../../../favicon';
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config';
 import { platform } from '../../../utils';
-// eslint-disable-next-line no-unused-vars
-import * as types from '../../../types';
+import { Emoji as EmojiType } from '../../../types';
 
-/**
- * @param {{emoji: types.Emoji, onClick: Function}} props
- */
-export const Emoji = ({ emoji, onClick }) => {
+interface EmojiProps {
+    emoji: EmojiType;
+    onClick: (favicon: Favicon) => void;
+}
+
+export const Emoji: React.FC<EmojiProps> = ({ emoji, onClick }) => {
     const strippedShortcode = emoji.shortcode.substring(1, emoji.shortcode.length - 1);
 
-    // ============== Twemoji approach: ==============
-    let emojiComponent = null;
-    let faviconToReturn = null;
+    let emojiComponent: JSX.Element | null = null;
+    let faviconToReturn: Favicon | null = null;
     if (getEmojiStyle() === EMOJI_STYLE_NATIVE) {
         faviconToReturn = new SystemEmojiFavicon(emoji.character);
         const styleObject = platform === 'win' ? {transform: 'translateX(-4.5px)'} : {};
@@ -47,7 +46,7 @@ export const Emoji = ({ emoji, onClick }) => {
             data-unicode={emoji.unicode_code_point}
             data-shortcode={emoji.shortcode}
             data-style={getEmojiStyle()}
-            onClick={() => onClick(faviconToReturn)}
+            onClick={() => onClick(faviconToReturn!)}
             title={strippedShortcode}
         >
             {emojiComponent}
@@ -55,8 +54,3 @@ export const Emoji = ({ emoji, onClick }) => {
     );
 };
 
-Emoji.propTypes = {
-    emoji: PropTypes.object,
-    // emoji: PropTypes.instanceOf(types.Emoji),
-    onClick: PropTypes.func.isRequired,
-}

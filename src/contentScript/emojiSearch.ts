@@ -1,14 +1,13 @@
 import { getLogger } from '../log';
+import { Emoji } from '../types';
 
-// eslint-disable-next-line no-unused-vars
 const log = getLogger('emojiSearch', 'debug');
 
-export const findMatchingEmojis = (searchTerm, emojis) => {
-    let allEmojis = [];
+export const findMatchingEmojis = (searchTerm: string, emojis: Record<string, Emoji[]>): Emoji[] => {
+    let allEmojis: Emoji[] = [];
     for (const category in emojis) {
         allEmojis = allEmojis.concat(emojis[category]);
     }
-    // log.debug('allEmojis:', allEmojis);
 
     const searchTerms = searchTerm.split(' ');
 
@@ -24,3 +23,4 @@ export const findMatchingEmojis = (searchTerm, emojis) => {
 
     return matchesShortcode.concat(matchesKeywords);
 };
+
