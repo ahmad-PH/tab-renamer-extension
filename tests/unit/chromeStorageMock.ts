@@ -1,6 +1,6 @@
-const chromeStorage = {};
+const chromeStorage: Record<string, any> = {};
 
-const chromeStorageMock = {
+export const chromeStorageMock = {
     runtime: {},
     storage: {
         sync: {
@@ -51,10 +51,7 @@ const chromeStorageMock = {
     }
 };
 
-function setChromeStorageMockData(data) {
+export function setChromeStorageMockData(data: Record<string, any>) {
     Object.assign(chromeStorage, data);
 }
 
-module.exports = {
-    chromeStorageMock, setChromeStorageMockData
-};

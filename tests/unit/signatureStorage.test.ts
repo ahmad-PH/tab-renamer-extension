@@ -1,8 +1,8 @@
-const { findMatchingTab, loadTab, saveTab } = require('src/background/signatureStorage');
-const { TabInfo, TabSignature } = require('src/types');
-const { storageSet, storageGet } = require('src/utils');
-const { chromeStorageMock } = require('./chromeStorageMock.js');
-const { getAllTabs } = require('../../src/utils');
+import { findMatchingTab, loadTab, saveTab } from 'src/background/signatureStorage';
+import { TabInfo, TabSignature } from 'src/types';
+import { storageSet, storageGet } from 'src/utils';
+import { chromeStorageMock } from './chromeStorageMock';
+import { getAllTabs } from '../../src/utils';
 
 
 describe('findMatchingTab', () => {
@@ -68,13 +68,13 @@ describe('findMatchingTab', () => {
 
 describe('save/loadTab', () => {
     beforeEach(() => {
-        global.chrome = chromeStorageMock;
-        chromeStorageMock.storage.sync.set.mockClear();
-        chromeStorageMock.storage.sync.get.mockClear();
+        global.chrome = chromeStorageMock as any;
+        (chromeStorageMock.storage.sync.set as jest.Mock).mockClear();
+        (chromeStorageMock.storage.sync.get as jest.Mock).mockClear();
     });
 
     afterEach(() => {
-        delete global.chrome;
+        delete (global as any).chrome;
     });
 
     it('loadTab updates isClosed after matching', async () => {
@@ -98,7 +98,6 @@ describe('save/loadTab', () => {
          new TabSignature('Google', '🔍'))});
         await loadTab(10, sharedURL, sharedIndex, true);
 
-        // Assert:
         const newStoredTabInfo = await getAllTabs();
         const keys = Object.keys(newStoredTabInfo);
         expect(keys.length).toBe(1);
@@ -106,3 +105,4 @@ describe('save/loadTab', () => {
         expect(newStoredTabInfo[keys[0]].id).toBe(10);
     });
 });
+

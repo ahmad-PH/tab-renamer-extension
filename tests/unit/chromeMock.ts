@@ -55,4 +55,5 @@ const chrome = {
   };
 
 
-module.exports = chrome;
+export default chrome;
+

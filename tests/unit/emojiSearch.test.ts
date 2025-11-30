@@ -1,15 +1,15 @@
-const appRoot = require('app-root-path');
-const { findMatchingEmojis } = require(`${appRoot}/src/contentScript/emojiSearch`);
-const fs = require('fs');
+import appRoot from 'app-root-path';
+import { findMatchingEmojis } from 'src/contentScript/emojiSearch';
+import * as fs from 'fs';
 
 describe('findMatchingEmojis', () => {
     const emojis = JSON.parse(fs.readFileSync(`${appRoot}/src/assets/emojis.json`, 'utf8'));
 
-    const findMatchingEmojiShotcodes = (searchTerm, emojis) => {
+    const findMatchingEmojiShotcodes = (searchTerm: string, emojis: any) => {
         return findMatchingEmojis(searchTerm, emojis).map(result => result.shortcode);
     }
 
-    const expectEmojiSearchToContain = (searchTerm, expectedResults) => {
+    const expectEmojiSearchToContain = (searchTerm: string, expectedResults: string[]) => {
         const results = findMatchingEmojiShotcodes(searchTerm, emojis);
         expect(results).toEqual(expect.arrayContaining(expectedResults));
     }
@@ -27,3 +27,4 @@ describe('findMatchingEmojis', () => {
         expectEmojiSearchToContain('evil horns', [":angry_face_with_horns:"]);
     });
 });
+

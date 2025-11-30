@@ -1,4 +1,3 @@
-/* global chrome */
 import { storageGet } from 'src/utils';
 import * as utils from 'src/utils';
 import { chromeStorageMock } from './chromeStorageMock';
@@ -7,12 +6,12 @@ import { getAllTabs } from '../../src/utils';
 
 describe('storageGet', () => {
     beforeEach(() => {
-        global.chrome = chromeStorageMock;
-        chrome.storage.sync.get.mockClear();
+        global.chrome = chromeStorageMock as any;
+        (chrome.storage.sync.get as jest.Mock).mockClear();
     });
 
     afterEach(() => {
-        delete global.chrome;
+        delete (global as any).chrome;
     });
 
     it('should pass null to chrome.storage.sync.get when called with null', async () => {
@@ -55,4 +54,5 @@ describe('getAllTabs', () => {
             '2': 'tab2',
         });
     });
-})
+});
+

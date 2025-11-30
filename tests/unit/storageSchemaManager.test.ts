@@ -1,12 +1,10 @@
-
-const { StorageSchemaManager } = require('src/background/storageSchemaManager');
-const { EMOJI_STYLE_DEFAULT } = require('../../src/config');
+import { StorageSchemaManager } from 'src/background/storageSchemaManager';
+import { EMOJI_STYLE_DEFAULT } from '../../src/config';
 
 describe('storageSchemaManager', () => {
-    let schemaManager;
+    let schemaManager: StorageSchemaManager;
 
     beforeEach(() => {
-        /** @type {StorageSchemaManager} */
         schemaManager = new StorageSchemaManager();
     })
 
@@ -85,49 +83,3 @@ const examples = {
     }
 }
 
-
-// For the next example:
-/*
-{
-    "920019340": {
-        "closedAt": null,
-        "id": 920019340,
-        "index": 1,
-        "isClosed": false,
-        "signature": {
-            "favicon": null,
-            "title": null
-        },
-        "url": "https://www.google.com/"
-    },
-    "920019367": {
-        "closedAt": null,
-        "id": 920019367,
-        "index": 2,
-        "isClosed": false,
-        "signature": {
-            "favicon": {
-                "content": "😁",
-                "type": "systemEmojiFavicon"
-            },
-            "title": "test2"
-        },
-        "url": "https://www.google.com/"
-    },
-    "920019377": {
-        "closedAt": null,
-        "id": 920019377,
-        "index": 3,
-        "isClosed": false,
-        "signature": {
-            "favicon": {
-                "content": "😅",
-                "type": "twemojiFavicon"
-            },
-            "title": "twemojiTitle"
-        },
-        "url": "https://ca.yahoo.com/?p=us"
-    },
-    "settings.emoji_style": "twemoji"
-}
-*/

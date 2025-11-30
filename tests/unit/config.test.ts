@@ -1,7 +1,7 @@
 describe('config.js', () => {
     describe('Default emoji style', () => {
         beforeEach(() => {
-            jest.resetModules(); // To reset utils from being cached.
+            jest.resetModules();
         });
 
         it ('should be native on mac', () => {
@@ -23,3 +23,4 @@ describe('config.js', () => {
         });
     });
 });
+
