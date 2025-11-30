@@ -21,10 +21,10 @@ import {
     SETTINGS_BUTTON_ID,
     SETTINGS_BUTTON_TRIGGER_AREA_ID,
     getEmojiStyle,
-} from '../../src/config.js';
+} from '../../src/config';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-import { getLogger } from '../../src/log.js';
+import { getLogger } from '../../src/log';
 import { getDebugAwareTimeout } from './utils.js';
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";

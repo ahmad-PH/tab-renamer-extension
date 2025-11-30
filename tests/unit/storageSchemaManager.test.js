@@ -1,5 +1,5 @@
 
-const { StorageSchemaManager } = require('src/background/storageSchemaManager.js');
+const { StorageSchemaManager } = require('src/background/storageSchemaManager');
 const { EMOJI_STYLE_DEFAULT } = require('../../src/config');
 
 describe('storageSchemaManager', () => {

@@ -11,11 +11,11 @@ const {
     COMMAND_CLOSE_WELCOME_TAB,
     SETTING_BUTTON_TEST_STUB_ID,
     getEmojiStyle,
-} = require('../../src/config.js');
-const { faviconLinksCSSQuery } = require('../../src/contentScript/tab.js');
-const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config.js');
-const { Favicon } = require('../../src/favicon.js');
-const { getLogger } = require('../../src/log.js');
+} = require('../../src/config');
+const { faviconLinksCSSQuery } = require('../../src/contentScript/tab');
+const { ROOT_TAG_NAME, EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI } = require('../../src/config');
+const { Favicon } = require('../../src/favicon');
+const { getLogger } = require('../../src/log');
 
 // eslint-disable-next-line no-unused-vars
 const log = getLogger('DriverUtils', 'warn');
