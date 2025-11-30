@@ -29,6 +29,29 @@ test.describe('Signature Retention', () => {
         expect(await extensionUtils.getFaviconInUI()).toBe(newFavicon);
     });
 
+    test('Retains tab signature when tab is re-opened after page-switch', async ({ page }) => {
+        const newTitle = 'New title';
+        const newFavicon = '🙃';
+
+        await extensionUtils.setSignature(newTitle, newFavicon);
+        await page.goto(testData.websites[1].url);
+
+        await expect(page).toHaveTitle(newTitle);
+        await extensionUtils.assertFaviconIsEmoji();
+
+        await page.pause()
+        page = await extensionUtils.closeAndReopenCurrentTab();
+        await page.pause()
+
+        await expect(page).toHaveTitle(newTitle);
+        await extensionUtils.assertFaviconIsEmoji();
+            
+        // Assert the name and emoji that we set in the UI
+        await extensionUtils.openRenameDialog();
+        expect(await extensionUtils.getTitleInUI()).toBe(newTitle);
+        expect(await extensionUtils.getFaviconInUI()).toBe(newFavicon);
+    });
+
     // DISCLAIMER: I was never able to replicate this test in playwright, due to the full-browser closure 
     // leading to extreme flakiness whenever I tried to have it. (That require user-profile setups too).
     // Not really sure if this is really needed honestly ...
