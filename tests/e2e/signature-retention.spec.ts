@@ -15,8 +15,7 @@ test.describe('Signature Retention', () => {
         const newTitle = 'New title';
         const newFavicon = '🙃';
 
-        await extensionUtils.renameTab(newTitle);
-        await extensionUtils.setFavicon(newFavicon);
+        await extensionUtils.setSignature(newTitle, newFavicon);
 
         page = await extensionUtils.closeAndReopenCurrentTab();
 
