@@ -1,3 +1,7 @@
+/**
+ * All the information about a tab that the extension cares about.
+ * This object gets directly stored/retrieved from the storage.
+ */
 export class TabInfo {
     id: number;
     url: string;
