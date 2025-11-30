@@ -28,10 +28,10 @@ const {
     EMOJI_STYLE_TWEMOJI,
     SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID,
     EMOJI_PICKER_ID
-} = require('../../src/config.js');
+} = require('../../src/config');
 // eslint-disable-next-line no-unused-vars
-const { sleep } = require('../../src/utils.js');
-const { getLogger } = require('../../src/log.js');
+const { sleep } = require('../../src/utils');
+const { getLogger } = require('../../src/log');
 const { startExpressServer, startExpressServerWithHTML } = require('./utils.js');
 let server;
             

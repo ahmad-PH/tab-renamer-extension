@@ -31,7 +31,7 @@ test.describe('Signature Restoration', () => {
 
     test('Title restoration with page-switch, regular websites', async ({ page }) => {
         await extensionUtils.renameTab('New title');
-        await page.waitForTimeout(20); // Give background script time to save the title
+        await page.waitForTimeout(40); // Give background script time to save the title
         await page.goto(testData.websites[0].url);
         await extensionUtils.restoreTitle();
         await expect(page).toHaveTitle(testData.websites[0].title);
