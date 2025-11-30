@@ -1,6 +1,6 @@
 import { storageGet } from 'src/utils';
 import * as utils from 'src/utils';
-import { chromeStorageMock } from './chromeStorageMock';
+import { chromeStorageMock } from './background/chromeStorageMock';
 import { getAllTabs } from '../../src/utils';
 
 

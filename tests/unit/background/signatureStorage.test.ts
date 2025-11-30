@@ -2,7 +2,7 @@ import { findMatchingTab, loadTab, saveTab } from 'src/background/signatureStora
 import { TabInfo, TabSignature } from 'src/types';
 import { storageSet, storageGet } from 'src/utils';
 import { chromeStorageMock } from './chromeStorageMock';
-import { getAllTabs } from '../../src/utils';
+import { getAllTabs } from 'src/utils';
 
 
 describe('findMatchingTab', () => {

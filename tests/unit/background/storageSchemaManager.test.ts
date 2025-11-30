@@ -1,5 +1,5 @@
 import { StorageSchemaManager } from 'src/background/storageSchemaManager';
-import { EMOJI_STYLE_DEFAULT } from '../../src/config';
+import { EMOJI_STYLE_DEFAULT } from 'src/config';
 
 describe('storageSchemaManager', () => {
     let schemaManager: StorageSchemaManager;
