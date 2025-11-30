@@ -167,7 +167,7 @@ chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
 
 if (!inProduction()) {
     chrome.runtime.onMessage.addListener((message, sender, _sendResponse) => {
-        log.debug('Received a message in background.js: ', message.toString());
+        log.debug('Received a message in background.js: ', message);
         switch (message.command) {
             case COMMAND_DISCARD_TAB: {
                 log.debug('Received discard tab command. sender tab id:', sender.tab!.id);

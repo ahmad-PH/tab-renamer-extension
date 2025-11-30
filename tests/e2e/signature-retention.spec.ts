@@ -39,9 +39,7 @@ test.describe('Signature Retention', () => {
     //     await expect(page).toHaveTitle(newTitle);
     //     await extensionUtils.assertFaviconIsEmoji();
 
-    //     await page.pause()
     //     page = await extensionUtils.closeAndReopenCurrentTab();
-    //     await page.pause()
 
     //     await expect(page).toHaveTitle(newTitle);
     //     await extensionUtils.assertFaviconIsEmoji();

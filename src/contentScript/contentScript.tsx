@@ -127,8 +127,8 @@ if (!inProduction()) {
     document.addEventListener(COMMAND_SET_EMOJI_STYLE, 
         (event: Event) => {
             log.debug('Emoji style change listener in content script called.');
-            const customEvent = event as CustomEvent;
-            bgScriptApi.setEmojiStyle(customEvent.detail.style);
+            const customEvent = event as MessageEvent;
+            bgScriptApi.setEmojiStyle(customEvent.data.style);
         });
 }
 

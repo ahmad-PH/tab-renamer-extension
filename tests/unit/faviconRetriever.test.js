@@ -1,5 +1,5 @@
 const { JSDOM } = require('jsdom');
-const { default: FaviconRetriever } = require('src/contentScript/faviconRetriever.js');
+const { default: FaviconRetriever } = require('src/contentScript/faviconRetriever');
 
 describe('FaviconRetriever', () => {
     let faviconRetriever;
