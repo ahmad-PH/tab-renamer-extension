@@ -31,7 +31,7 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
     switch (message.command) {
         case "get_tab_info":
             sendResponse({ id: sender.tab!.id, url: sender.tab!.url, index: sender.tab!.index });
@@ -46,13 +46,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         case "load_signature":
             loadTab(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!, message.isBeingOpened)
-                .then((tab) => {
-                    const signature = tab ? tab.signature : null;
-                    return sendResponse(signature);
-                }).catch(e => {
-                    log.error('Error while loading signature:', e);
-                    return sendResponse(null);
-                });
+            .then((tab) => {
+                const signature = tab ? tab.signature : null;
+                return sendResponse(signature);
+            }).catch(e => {
+                log.error('Error while loading signature:', e);
+                return sendResponse(null);
+            });
             return true;
 
         case "get_favicon_url":
@@ -69,6 +69,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse(result);
             break;
         }
+
+        // case "refresh_tab": {
+        //     storageGet(sender.tab!.id)
+        //     // loadTab(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!, message.isBeingOpened)
+        //     // .then((tab) => {
+        //     //     if (tab) {
+        //     //         saveTab
+
+        //     //     } else {
+        //     //         log.error(`refresh_tab command tried to load tab information with id: ${sender.tab!.id!}, but found no records.`)
+        //     //         return sendResponse(null);
+        //     //     }
+        //     // })
+        // }
     }
 });
 
