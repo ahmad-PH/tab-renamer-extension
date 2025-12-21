@@ -1,4 +1,4 @@
-import { platform, storageGet, storageSet } from "./utils";
+import { platform } from "./utils";
 
 const EXTENSION_PREFIX = "tab-renamer-extension";
 
