@@ -7,3 +7,5 @@ alwaysApply: true
 - I have unit tests in pure JS, and end-to-end browser tests that load the extension into the browser and run browser tests with Playwright. (I used to use Selenium)
 
 - Do NOT write documentation comments (JSDoc or TSDoc). I will ask for them if I need them.
+
+- Always prefer static ESM (Ecmascript Modules) imports over the others. Only use other forms if absolutely necessary.
