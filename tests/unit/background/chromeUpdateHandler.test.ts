@@ -1,6 +1,7 @@
 import * as markAllOpenSignaturesAsClosedModule from 'src/background/markAllOpenSignaturesAsClosed';
 const { markAllOpenSignaturesAsClosed } = markAllOpenSignaturesAsClosedModule;
 import * as utils from 'src/utils';
+import { TabInfo, TabSignature } from 'src/types';
 import { expect } from '@jest/globals';
 import chrome from './chromeMock';
 global.chrome = chrome as unknown;
@@ -30,8 +31,9 @@ describe('markAllOpenSignaturesAsClosed', () => {
     });
 
     it('marks all open tabs as closed with current time', async () => {
+        const tab1 = new TabInfo(1, 'https://example.com', 0, false, null, new TabSignature(null, null));
         utils.storageGet = jest.fn(() => ({
-            1: { isClosed: false, closedAt: null },
+            1: tab1,
         })) as any;
         const recordedTime = new Date().toISOString();
 
@@ -44,14 +46,19 @@ describe('markAllOpenSignaturesAsClosed', () => {
 
     it('doesn\'t modify already-closed tabs', async () => {
         const sampleClosureTime = '2022-03-14T11:22:33Z';
+        const tab1 = new TabInfo(1, 'https://example.com', 0, true, sampleClosureTime, new TabSignature(null, null));
         utils.storageGet = jest.fn(() => ({
-            1: { isClosed: true, closedAt: sampleClosureTime },
+            1: tab1,
         })) as any;
 
         await markAllOpenSignaturesAsClosed();
 
         expect(utils.storageSet).toHaveBeenCalledWith({
-            1: { isClosed: true, closedAt: sampleClosureTime },
+            1: expect.objectContaining({ 
+                id: 1,
+                isClosed: true, 
+                closedAt: sampleClosureTime 
+            }),
         });
     });
 });

@@ -53,12 +53,13 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
     console.log('Chrome storage API available, initializing emoji style sync');
 
     (async function initializeEmojiStyleFromStorage() {
-        const emojiStyle = await storageGet(SETTINGS_KEY_EMOJI_STYLE);
+        const { settingsRepository } = await import('./repositories/settingsRepository');
+        const emojiStyle = await settingsRepository.getEmojiStyle();
         if (emojiStyle) {
             cachedConfig.EMOJI_STYLE = emojiStyle;
         } else {
             cachedConfig.EMOJI_STYLE = EMOJI_STYLE_DEFAULT;
-            await storageSet({ [SETTINGS_KEY_EMOJI_STYLE]: EMOJI_STYLE_DEFAULT });
+            await settingsRepository.setEmojiStyle(EMOJI_STYLE_DEFAULT);
         }
     })();
 

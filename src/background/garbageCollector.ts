@@ -1,4 +1,4 @@
-import { getAllTabs } from "../utils";
+import { tabRepository } from "../repositories/tabRepository";
 import { TabInfo } from "../types";
 import { getLogger } from "../log";
 
@@ -7,9 +7,9 @@ const SECONDS = 1000, MINUTES = 60 * SECONDS;
 export const garbageCollectionThreshold = 2 * MINUTES;
 
 async function garbageCollector(): Promise<void> {
-    const allTabs = await getAllTabs();
-    const tabIdsToRemove = garabageCollectionFilter(Object.values(allTabs)).map(tabId => tabId.toString());
-    await chrome.storage.sync.remove(tabIdsToRemove);
+    const allTabs = await tabRepository.getAll();
+    const tabIdsToRemove = garabageCollectionFilter(allTabs);
+    await tabRepository.deleteMany(tabIdsToRemove);
 }
 
 export function garabageCollectionFilter(tabs: TabInfo[]): number[] {

@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 import styles from './settings.module.css';
 import SettingItem from './components/SettingItem/SettingItem';
 
-import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_KEY_EMOJI_STYLE, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, SETTINGS_PAGE_EMOJI_STYLE_SELECT_ID } from "../config";
+import { settingsRepository } from "../repositories/settingsRepository";
 import { getLogger } from "../log";
 import { Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
@@ -15,7 +16,7 @@ const SettingsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchEmojiStyle = async () => {
-      const emojiStyle = (await chrome.storage.sync.get(SETTINGS_KEY_EMOJI_STYLE))[SETTINGS_KEY_EMOJI_STYLE];
+      const emojiStyle = await settingsRepository.getEmojiStyle();
       log.debug("Emoji style fetched from storage:", emojiStyle);
       if (emojiStyle) {
         setEmojiStyle(emojiStyle);
@@ -27,7 +28,7 @@ const SettingsPage: React.FC = () => {
 
   const handleEmojiStyleChange = async (selectedStyle: string) => {
     log.debug("Emoji style change handler in SettingsPage called with value:", selectedStyle);
-    await chrome.storage.sync.set({[SETTINGS_KEY_EMOJI_STYLE]: selectedStyle});
+    await settingsRepository.setEmojiStyle(selectedStyle);
     setEmojiStyle(selectedStyle);
   };
 

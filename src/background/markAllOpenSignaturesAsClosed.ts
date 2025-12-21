@@ -1,20 +1,20 @@
-import { getAllTabs, storageSet } from '../utils';
+import { tabRepository } from '../repositories/tabRepository';
 import { getLogger } from '../log';
 
 const log = getLogger('markAllOpenSignaturesAsClosed', 'warn');
 
 async function markAllOpenSignaturesAsClosed(): Promise<void> {
     log.debug('markAllOpenSignaturesAsClosed called ...');
-    const storedTabs = await getAllTabs();
+    const storedTabs = await tabRepository.getAll();
     log.debug('current tabs:', storedTabs);
-    for (const tabId in storedTabs) {
-        if (!storedTabs[tabId].isClosed) {
-            storedTabs[tabId].isClosed = true;
-            storedTabs[tabId].closedAt = new Date().toISOString();
+    for (const tab of storedTabs) {
+        if (!tab.isClosed) {
+            tab.isClosed = true;
+            tab.closedAt = new Date().toISOString();
         }
     }
     log.debug('new tabs:', storedTabs);
-    await storageSet(storedTabs);
+    await tabRepository.updateMany(storedTabs);
 }
 
 export { markAllOpenSignaturesAsClosed };

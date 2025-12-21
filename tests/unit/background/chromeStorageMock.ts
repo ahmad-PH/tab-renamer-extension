@@ -55,3 +55,7 @@ export function setChromeStorageMockData(data: Record<string, any>) {
     Object.assign(chromeStorage, data);
 }
 
+export function clearChromeStorageMockData() {
+    Object.keys(chromeStorage).forEach(key => delete chromeStorage[key]);
+}
+

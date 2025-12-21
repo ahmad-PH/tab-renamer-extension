@@ -1,9 +1,10 @@
-import { getAllTabs, storageGet, storageSet } from "../utils";
+import { storageGet } from "../utils";
 import { TabInfo } from "../types";
-import { findOldRecordOfFreshlyDiscardedTab, loadTab, saveTab } from "./signatureStorage";
+import { tabRepository } from "../repositories/tabRepository";
+import { settingsRepository } from "../repositories/settingsRepository";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction, SETTINGS_KEY_EMOJI_STYLE } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config";
 import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
@@ -40,12 +41,12 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
         case "save_signature": {
             const tab = new TabInfo(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!,
                 false, null, message.signature);
-            saveTab(tab);
+            tabRepository.save(tab);
             break;
         }
 
         case "load_signature":
-            loadTab(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!, message.isBeingOpened)
+            tabRepository.loadTabAndUpdateId(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!, message.isBeingOpened)
             .then((tab) => {
                 const signature = tab ? tab.signature : null;
                 return sendResponse(signature);
@@ -87,25 +88,24 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
 });
 
 chrome.tabs.onRemoved.addListener(async function(tabId: number, _removeInfo: chrome.tabs.TabRemoveInfo) {
-    let tabInfo: TabInfo = await storageGet(tabId);
+    let tabInfo: TabInfo | null = await tabRepository.getById(tabId);
     if (tabInfo) {
         tabInfo.isClosed = true;
         tabInfo.closedAt = new Date().toISOString();
-        await storageSet({[tabId]: tabInfo});
+        await tabRepository.save(tabInfo);
     }
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
     if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
-        const storedTabInfo = await getAllTabs();
         log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
-        const matchingTab = findOldRecordOfFreshlyDiscardedTab(storedTabInfo, tab.url!, tab.index!);
+        const matchingTab = await tabRepository.findOldRecordOfFreshlyDiscardedTab(tab.url!, tab.index!);
         log.debug('Found matching tab:', matchingTab);
         if (matchingTab) {
             log.debug(`Removing tab with id ${matchingTab.id} from storage and replacing it with ${tab.id}`);
-            await chrome.storage.sync.remove(matchingTab.id.toString());
+            await tabRepository.delete(matchingTab.id);
             matchingTab.id = tab.id!;
-            await storageSet({[tab.id!]: matchingTab});
+            await tabRepository.save(matchingTab);
         } else {
             log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
         }
@@ -209,7 +209,7 @@ if (!inProduction()) {
 
             case COMMAND_SET_EMOJI_STYLE: {
                 log.debug("Received set emoji style command at background.js with value:", message.style);
-                chrome.storage.sync.set({[SETTINGS_KEY_EMOJI_STYLE]: message.style}).catch(reason => {
+                settingsRepository.setEmojiStyle(message.style).catch(reason => {
                     throw new Error(`Error while setting emoji style: ${reason}`);
                 });
                 break;
