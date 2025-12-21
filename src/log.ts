@@ -7,6 +7,15 @@ if (inProduction()) {
     log.setLevel('DEBUG');
 }
 
+function formatTimestamp(): string {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+    return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
 function isServiceWorker(): boolean {
     try {
         return typeof ServiceWorkerGlobalScope !== 'undefined' && self instanceof ServiceWorkerGlobalScope;
@@ -46,7 +55,6 @@ export function getLogger(name: string, level: log.LogLevelDesc = log.getLevel()
         logger.setLevel(level);
     }
 
-    const methods = ['trace', 'debug', 'log', 'info', 'warn', 'error'] as const;
     const isInServiceWorker = isServiceWorker();
     
     const methodLevels: Record<string, number> = {
@@ -58,17 +66,25 @@ export function getLogger(name: string, level: log.LogLevelDesc = log.getLevel()
         'error': log.levels.ERROR
     };
 
-    methods.forEach(method => {
-        const originalMethod = (logger as any)[method];
+    const originalFactory = logger.methodFactory;
+    logger.methodFactory = function (methodName, logLevel, loggerName) {
+        const rawMethod = originalFactory(methodName, logLevel, loggerName);
 
-        (logger as any)[method] = function (message: string, ...args: any[]) {
-            originalMethod.call(logger, `#${name}: ${message}`, ...args);
+        return function (...messages: any[]) {
+            const timestamp = formatTimestamp();
+            const firstMessage = messages[0];
+            const restArgs = messages.slice(1);
+            
+            // Add timestamp prefix to the first message
+            const formattedFirstMessage = `[${timestamp}] #${name}: ${firstMessage}`;
+            rawMethod(formattedFirstMessage, ...restArgs);
 
-            if (isInServiceWorker && methodLevels[method] >= logger.getLevel()) {
-                forwardLogToContentScript(method, name, message, args);
+            if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
+                forwardLogToContentScript(methodName, name, firstMessage, restArgs);
             }
         };
-    });
+    };
+    logger.setLevel(logger.getLevel());
 
     return logger;
 }
