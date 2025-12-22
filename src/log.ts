@@ -127,16 +127,19 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
             // Add timestamp prefix to the first message
             const formattedFirstMessage = `[${timestamp}] #${loggerName}: ${firstMessage}`;
             rawMethod(formattedFirstMessage, ...restArgs);
+            const concatenatedMessage = messages.map(msg => 
+                typeof msg === 'object' && msg !== null ? JSON.stringify(msg) : String(msg)
+            ).join('\n');
 
             if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
-                void forwardLogToContentScript(methodName, loggerName, firstMessage, restArgs);
+                void forwardLogToContentScript(methodName, loggerName, concatenatedMessage, []);
             }
 
             console.log(`Checking whether to call DD: logLevel: ${String(logLevel)}, methodLevels[logLevel]: ${methodLevels[logLevel]}, logger.getLevel(): ${logger.getLevel()}, methodName: ${methodName}, loggerName: ${String(loggerName)}, firstMessage:`, firstMessage)
 
             if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
                 console.log('[logger.methodFactory] Triggering forwardToDatadog');
-                void forwardToDatadog(methodName, loggerName, firstMessage);
+                void forwardToDatadog(methodName, loggerName, concatenatedMessage);
             }
         };
     };
