@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^6.25.1",
+    "@datadog/datadog-api-client": "^1.49.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^5.16.13",
