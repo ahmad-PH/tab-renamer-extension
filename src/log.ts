@@ -1,10 +1,14 @@
-import log from 'loglevel';
+import log, { LogLevelDesc } from 'loglevel';
 import { inProduction } from './config';
+import { client, v2 } from "@datadog/datadog-api-client";
+
+let apiInstance: v2.LogsApi | null = null;
 
 if (inProduction()) {
     log.setLevel('ERROR');
 } else {
     log.setLevel('DEBUG');
+    apiInstance = new v2.LogsApi(client.createConfiguration());
 }
 
 function formatTimestamp(): string {
@@ -24,7 +28,7 @@ function isServiceWorker(): boolean {
     }
 }
 
-async function forwardLogToContentScript(level: string, name: string, message: string, args: any[]): Promise<void> {
+async function forwardLogToContentScript(level: string, loggerName: string, message: string, args: any[]): Promise<void> {
     if (inProduction()) {
         return;
     }
@@ -35,7 +39,7 @@ async function forwardLogToContentScript(level: string, name: string, message: s
             chrome.tabs.sendMessage(activeTab.id, {
                 command: '__FORWARD_LOG__',
                 level,
-                name,
+                name: loggerName,
                 message,
                 args
             }).catch(() => {
@@ -47,8 +51,40 @@ async function forwardLogToContentScript(level: string, name: string, message: s
     }
 }
 
-export function getLogger(name: string, level: log.LogLevelDesc = log.getLevel()): log.Logger {
-    const logger = log.getLogger(name);
+async function forwardToDatadog(methodName: string, loggerName: string, message: string): Promise<void> {
+    if (inProduction()) {
+        return;
+    }
+
+    const params: v2.LogsApiSubmitLogRequest = {
+        body: [
+          {
+            ddsource: "nginx",
+            ddtags: "env:staging,version:5.1",
+            hostname: "i-012345678",
+            message: `#${loggerName}: ${message}`,
+            service: "payment",
+          },
+        ],
+        contentEncoding: "deflate",
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const data = await apiInstance!.submitLog(params);
+      console.log("DataDog API called successfully. Returned data: " + JSON.stringify(data))
+    //   apiInstance
+    //     .submitLog(params)
+    //     .then((data: any) => {
+    //       console.log(
+    //         "API called successfully. Returned data: " + JSON.stringify(data)
+    //       );
+    //     })
+    //     .catch((error: any) => console.error(error));
+
+}
+
+export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log.Logger {
+    const logger = log.getLogger(loggerName);
     if (inProduction()) {
         logger.setLevel('ERROR');
     } else {
@@ -76,11 +112,15 @@ export function getLogger(name: string, level: log.LogLevelDesc = log.getLevel()
             const restArgs = messages.slice(1);
             
             // Add timestamp prefix to the first message
-            const formattedFirstMessage = `[${timestamp}] #${name}: ${firstMessage}`;
+            const formattedFirstMessage = `[${timestamp}] #${loggerName}: ${firstMessage}`;
             rawMethod(formattedFirstMessage, ...restArgs);
 
-            if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
-                forwardLogToContentScript(methodName, name, firstMessage, restArgs);
+            if (isInServiceWorker && methodLevels[logLevel] >= logger.getLevel()) {
+                void forwardLogToContentScript(methodName, loggerName, firstMessage, restArgs);
+            }
+
+            if (methodLevels[logLevel] >= logger.getLevel()) {
+                void forwardToDatadog(methodName, loggerName, message);
             }
         };
     };
