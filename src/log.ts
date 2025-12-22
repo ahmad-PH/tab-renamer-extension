@@ -1,14 +1,10 @@
 import log, { LogLevelDesc } from 'loglevel';
 import { inProduction } from './config';
-import { client, v2 } from "@datadog/datadog-api-client";
-
-let apiInstance: v2.LogsApi | null = null;
 
 if (inProduction()) {
     log.setLevel('ERROR');
 } else {
     log.setLevel('DEBUG');
-    apiInstance = new v2.LogsApi(client.createConfiguration());
 }
 
 function formatTimestamp(): string {
@@ -52,35 +48,52 @@ async function forwardLogToContentScript(level: string, loggerName: string, mess
 }
 
 async function forwardToDatadog(methodName: string, loggerName: string, message: string): Promise<void> {
+    console.log('[forwardToDatadog] Called with:', { methodName, loggerName, message });
+    
     if (inProduction()) {
+        console.log('[forwardToDatadog] Skipping - in production mode');
         return;
     }
 
-    const params: v2.LogsApiSubmitLogRequest = {
-        body: [
-          {
-            ddsource: "nginx",
-            ddtags: "env:staging,version:5.1",
-            hostname: "i-012345678",
-            message: `#${loggerName}: ${message}`,
-            service: "payment",
-          },
-        ],
-        contentEncoding: "deflate",
-      };
+    const ddApiKey = process.env.DD_API_KEY;
+    const ddSite = process.env.DD_SITE || 'datadoghq.com';
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const data = await apiInstance!.submitLog(params);
-      console.log("DataDog API called successfully. Returned data: " + JSON.stringify(data))
-    //   apiInstance
-    //     .submitLog(params)
-    //     .then((data: any) => {
-    //       console.log(
-    //         "API called successfully. Returned data: " + JSON.stringify(data)
-    //       );
-    //     })
-    //     .catch((error: any) => console.error(error));
+    if (!ddApiKey) {
+        console.error('[forwardToDatadog] DD_API_KEY not configured - cannot submit log');
+        return;
+    }
 
+    const logPayload = {
+        ddsource: 'browser',
+        ddtags: 'env:development',
+        service: 'tab-renamer',
+        message: `#${loggerName}: ${message}`,
+        level: methodName,
+        logger: {
+            name: loggerName
+        }
+    };
+
+    console.log('[forwardToDatadog] Submitting log with payload:', JSON.stringify(logPayload, null, 2));
+      
+    try {
+        const response = await fetch(`https://http-intake.logs.datadoghq.com/api/v2/logs`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'DD-API-KEY': ddApiKey
+            },
+            body: JSON.stringify(logPayload)
+        });
+
+        if (response.ok) {
+            console.log('[forwardToDatadog] Log successfully sent to Datadog');
+        } else {
+            console.error('[forwardToDatadog] Failed to send log to Datadog:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('[forwardToDatadog] Failed to submit log to Datadog:', error);
+    }
 }
 
 export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log.Logger {
@@ -115,12 +128,15 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
             const formattedFirstMessage = `[${timestamp}] #${loggerName}: ${firstMessage}`;
             rawMethod(formattedFirstMessage, ...restArgs);
 
-            if (isInServiceWorker && methodLevels[logLevel] >= logger.getLevel()) {
+            if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
                 void forwardLogToContentScript(methodName, loggerName, firstMessage, restArgs);
             }
 
-            if (methodLevels[logLevel] >= logger.getLevel()) {
-                void forwardToDatadog(methodName, loggerName, message);
+            console.log(`Checking whether to call DD: logLevel: ${String(logLevel)}, methodLevels[logLevel]: ${methodLevels[logLevel]}, logger.getLevel(): ${logger.getLevel()}, methodName: ${methodName}, loggerName: ${String(loggerName)}, firstMessage:`, firstMessage)
+
+            if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
+                console.log('[logger.methodFactory] Triggering forwardToDatadog');
+                void forwardToDatadog(methodName, loggerName, firstMessage);
             }
         };
     };
