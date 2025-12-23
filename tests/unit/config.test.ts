@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import type * as ConfigType from '../../src/config';
 
 describe('config.js', () => {
