@@ -1,10 +1,44 @@
 import log, { LogLevelDesc } from 'loglevel';
+import { datadogLogs } from '@datadog/browser-logs';
 import { inProduction } from './config';
+
+// Type declaration for service worker detection
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const ServiceWorkerGlobalScope: any;
 
 if (inProduction()) {
     log.setLevel('ERROR');
 } else {
     log.setLevel('DEBUG');
+}
+
+let datadogInitialized = false;
+
+function initializeDatadogBrowserLogs(): void {
+    if (datadogInitialized || inProduction()) {
+        return;
+    }
+
+    const ddClientToken = process.env.DD_CLIENT_TOKEN;
+    const ddSite = process.env.DD_SITE || 'datadoghq.com';
+
+    if (!ddClientToken) {
+        console.warn('[initializeDatadogBrowserLogs] DD_CLIENT_TOKEN not configured - Datadog browser logging disabled');
+        return;
+    }
+
+    datadogLogs.init({
+        clientToken: ddClientToken,
+        site: ddSite,
+        forwardErrorsToLogs: true,
+        sessionSampleRate: 100,
+        service: 'tab-renamer',
+        env: 'development',
+        allowedTrackingOrigins: [() => true]
+    });
+
+    datadogInitialized = true;
+    console.log('[initializeDatadogBrowserLogs] Datadog browser logging initialized');
 }
 
 function formatTimestamp(): string {
@@ -19,12 +53,12 @@ function formatTimestamp(): string {
 function isServiceWorker(): boolean {
     try {
         return typeof ServiceWorkerGlobalScope !== 'undefined' && self instanceof ServiceWorkerGlobalScope;
-    } catch (e) {
+    } catch {
         return false;
     }
 }
 
-async function forwardLogToContentScript(level: string, loggerName: string, message: string, args: any[]): Promise<void> {
+async function forwardLogToContentScript(level: string, loggerName: string, message: string, args: unknown[]): Promise<void> {
     if (inProduction()) {
         return;
     }
@@ -42,7 +76,7 @@ async function forwardLogToContentScript(level: string, loggerName: string, mess
                 // Silently fail if content script isn't ready or doesn't exist
             });
         }
-    } catch (e) {
+    } catch {
         // Silently fail - we don't want logging to break the extension
     }
 }
@@ -56,7 +90,6 @@ async function forwardToDatadog(methodName: string, loggerName: string, message:
     }
 
     const ddApiKey = process.env.DD_API_KEY;
-    const ddSite = process.env.DD_SITE || 'datadoghq.com';
 
     if (!ddApiKey) {
         console.error('[forwardToDatadog] DD_API_KEY not configured - cannot submit log');
@@ -96,6 +129,34 @@ async function forwardToDatadog(methodName: string, loggerName: string, message:
     }
 }
 
+function forwardToBrowserDatadog(methodName: string, loggerName: string, message: string): void {
+    if (inProduction() || !datadogInitialized) {
+        console.log(`forwardToBrowserDatadog: skipping - in production mode or datadog not initialized`);
+        return;
+    }
+
+    const logMessage = `#${loggerName}: ${message}`;
+    const context = { logger: loggerName };
+
+    console.log("Switching on methodName: ", methodName);
+    switch (methodName) {
+        case 'trace':
+        case 'debug':
+        case 'log':
+            datadogLogs.logger.debug(logMessage, context);
+            break;
+        case 'info':
+            datadogLogs.logger.info(logMessage, context);
+            break;
+        case 'warn':
+            datadogLogs.logger.warn(logMessage, context);
+            break;
+        case 'error':
+            datadogLogs.logger.error(logMessage, context);
+            break;
+    }
+}
+
 export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log.Logger {
     const logger = log.getLogger(loggerName);
     if (inProduction()) {
@@ -105,6 +166,11 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
     }
 
     const isInServiceWorker = isServiceWorker();
+    
+    // Initialize Datadog browser logs if not in service worker
+    if (!isInServiceWorker) {
+        initializeDatadogBrowserLogs();
+    }
     
     const methodLevels: Record<string, number> = {
         'trace': log.levels.TRACE,
@@ -119,27 +185,35 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
     logger.methodFactory = function (methodName, logLevel, loggerName) {
         const rawMethod = originalFactory(methodName, logLevel, loggerName);
 
-        return function (...messages: any[]) {
+        return function (...messages: unknown[]) {
             const timestamp = formatTimestamp();
             const firstMessage = messages[0];
             const restArgs = messages.slice(1);
             
+            // Convert loggerName to string for safe usage
+            const loggerNameStr = String(loggerName);
+            
             // Add timestamp prefix to the first message
-            const formattedFirstMessage = `[${timestamp}] #${loggerName}: ${firstMessage}`;
+            const formattedFirstMessage = `[${timestamp}] #${loggerNameStr}: ${String(firstMessage)}`;
             rawMethod(formattedFirstMessage, ...restArgs);
             const concatenatedMessage = messages.map(msg => 
                 typeof msg === 'object' && msg !== null ? JSON.stringify(msg) : String(msg)
             ).join('\n');
 
             if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
-                void forwardLogToContentScript(methodName, loggerName, concatenatedMessage, []);
+                void forwardLogToContentScript(methodName, loggerNameStr, concatenatedMessage, []);
             }
 
-            console.log(`Checking whether to call DD: logLevel: ${String(logLevel)}, methodLevels[logLevel]: ${methodLevels[logLevel]}, logger.getLevel(): ${logger.getLevel()}, methodName: ${methodName}, loggerName: ${String(loggerName)}, firstMessage:`, firstMessage)
+            console.log(`Checking whether to call DD: logLevel: ${String(logLevel)}, methodLevels[logLevel]: ${methodLevels[logLevel]}, logger.getLevel(): ${logger.getLevel()}, methodName: ${methodName}, loggerName: ${loggerNameStr}, firstMessage:`, firstMessage)
 
-            if (isInServiceWorker && methodLevels[methodName] >= logger.getLevel()) {
-                console.log('[logger.methodFactory] Triggering forwardToDatadog');
-                void forwardToDatadog(methodName, loggerName, concatenatedMessage);
+            if (methodLevels[methodName] >= logger.getLevel()) {
+                if (isInServiceWorker) {
+                    console.log('[logger.methodFactory] Triggering forwardToDatadog (service worker)');
+                    void forwardToDatadog(methodName, loggerNameStr, concatenatedMessage);
+                } else {
+                    console.log('[logger.methodFactory] Triggering forwardToBrowserDatadog (content script)');
+                    forwardToBrowserDatadog(methodName, loggerNameStr, concatenatedMessage);
+                }
             }
         };
     };
