@@ -1,6 +1,6 @@
 import { getLogger } from "../log";
 
-const log = getLogger('FaviconRetriever', 'warn');
+const log = getLogger('FaviconRetriever');
 
 class FaviconRetriever {
     lastFetchedUrl: string | null = null;

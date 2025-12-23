@@ -9,7 +9,7 @@ import { getLogger } from "../log";
 import { Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
 
-const log = getLogger('settings', 'debug');
+const log = getLogger('settings');
 
 const SettingsPage: React.FC = () => {
   const [emojiStyle, setEmojiStyle] = useState(EMOJI_STYLE_NATIVE);

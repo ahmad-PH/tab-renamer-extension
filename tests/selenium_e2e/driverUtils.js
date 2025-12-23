@@ -18,7 +18,7 @@ const { Favicon } = require('../../src/favicon');
 const { getLogger } = require('../../src/log');
 
 // eslint-disable-next-line no-unused-vars
-const log = getLogger('DriverUtils', 'warn');
+const log = getLogger('DriverUtils');
 
 class DriverUtils {
     /**

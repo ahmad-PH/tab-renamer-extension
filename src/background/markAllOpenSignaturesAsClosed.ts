@@ -1,7 +1,7 @@
 import { tabRepository } from '../repositories/tabRepository';
 import { getLogger } from '../log';
 
-const log = getLogger('markAllOpenSignaturesAsClosed', 'warn');
+const log = getLogger('markAllOpenSignaturesAsClosed');
 
 async function markAllOpenSignaturesAsClosed(): Promise<void> {
     log.debug('markAllOpenSignaturesAsClosed called ...');

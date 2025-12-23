@@ -2,7 +2,7 @@ import { storageGet, storageSet } from "../utils";
 import { SETTINGS_KEY_EMOJI_STYLE } from "../config";
 import { getLogger } from "../log";
 
-const log = getLogger('SettingsRepository', 'warn');
+const log = getLogger('SettingsRepository');
 
 export interface ISettingsRepository {
     getEmojiStyle(): Promise<string>;

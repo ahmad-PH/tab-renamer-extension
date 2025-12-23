@@ -3,8 +3,8 @@ import { TabSignature } from '../types';
 import bgScriptApi from "../backgroundScriptApi";
 import tab from "./tab";
 
-const log = getLogger('InitializationContentScript', 'debug');
-const olog = getLogger('Title Observer', 'debug');
+const log = getLogger('InitializationContentScript');
+const olog = getLogger('Title Observer');
 
 (async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called from the initialization content script.');

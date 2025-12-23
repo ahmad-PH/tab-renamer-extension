@@ -2,7 +2,7 @@ import { getLogger } from "./log";
 import * as utils from './utils';
 import { platform } from "./config";
 
-const log = getLogger('utils', 'debug');
+const log = getLogger('utils');
 
 export function castType<T>(value: any, type: new (...args: any[]) => T): T {
     if (!(value instanceof type)) {

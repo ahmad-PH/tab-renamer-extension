@@ -2,7 +2,7 @@ import { getLogger } from "./log";
 import { TabSignature } from "./types";
 import { COMMAND_SET_EMOJI_STYLE } from "./config";
 
-let log = getLogger('BackgroundScriptAPI', 'debug');
+let log = getLogger('BackgroundScriptAPI');
 
 interface TabInfo {
     id: number;

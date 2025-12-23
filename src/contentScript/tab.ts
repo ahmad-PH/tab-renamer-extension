@@ -7,9 +7,9 @@ import { faviconRestorationStrategy } from "../config";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
-const log = getLogger('Tab', 'debug');
-const plog = getLogger('Preservers', 'debug');
-const olog = getLogger('Observer', 'warn');
+const log = getLogger('Tab');
+const plog = getLogger('Preservers');
+const olog = getLogger('Observer');
 
 export class Tab { 
     static instanceExists = false;

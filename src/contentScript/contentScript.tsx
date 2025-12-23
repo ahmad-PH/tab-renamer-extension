@@ -6,7 +6,7 @@ import React from 'react';
 import { getLogger } from "../log";
 import bgScriptApi from "../backgroundScriptApi";
 
-const log = getLogger('contentScript', 'debug');
+const log = getLogger('contentScript');
 
 let uiInsertedIntoDOM = false;
 let root: Root | null = null;

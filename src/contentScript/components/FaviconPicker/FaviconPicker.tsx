@@ -14,7 +14,7 @@ import { Emoji } from './Emoji';
 import { Favicon } from '../../../favicon';
 import { Emoji as EmojiType } from '../../../types';
 
-export const log = getLogger('EmojiPicker', 'debug');
+export const log = getLogger('EmojiPicker');
 
 interface FaviconPickerProps {
     onFaviconClick: (favicon: Favicon) => void;

@@ -2,7 +2,7 @@ import { tabRepository } from "../repositories/tabRepository";
 import { TabInfo } from "../types";
 import { getLogger } from "../log";
 
-const log = getLogger("garbageCollector", "warn");
+const log = getLogger("garbageCollector");
 const SECONDS = 1000, MINUTES = 60 * SECONDS;
 export const garbageCollectionThreshold = 2 * MINUTES;
 

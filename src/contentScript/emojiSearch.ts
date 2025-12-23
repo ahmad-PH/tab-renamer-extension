@@ -1,7 +1,7 @@
 import { getLogger } from '../log';
 import { Emoji } from '../types';
 
-const log = getLogger('emojiSearch', 'debug');
+const log = getLogger('emojiSearch');
 
 export const findMatchingEmojis = (searchTerm: string, emojis: Record<string, Emoji[]>): Emoji[] => {
     let allEmojis: Emoji[] = [];

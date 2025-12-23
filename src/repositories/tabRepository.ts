@@ -2,7 +2,7 @@ import { TabInfo } from "../types";
 import { storageGet, storageSet } from "../utils";
 import { getLogger } from "../log";
 
-const log = getLogger('TabRepository', 'warn');
+const log = getLogger('TabRepository');
 
 class TabRepository {
     async getById(id: number): Promise<TabInfo | null> {
