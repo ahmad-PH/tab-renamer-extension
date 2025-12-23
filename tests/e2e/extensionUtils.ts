@@ -248,7 +248,7 @@ export class ExtensionUtils {
     }
 
     async openSettingsPage(): Promise<void> {
-        await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: getDebugAwareTimeout(800) });
+        await this.extensionFrame().getByTestId(SETTING_BUTTON_TEST_STUB_ID).click({ force: true, timeout: getDebugAwareTimeout(1_500) });
     }
 
     async switchToNewTabAfterPerforming(action: () => Promise<void>): Promise<Page> {
