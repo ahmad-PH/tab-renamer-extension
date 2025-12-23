@@ -4,22 +4,10 @@ import { getLogger } from "../log";
 
 const log = getLogger('TabRepository', 'warn');
 
-export interface ITabRepository {
-    getById(id: number): Promise<TabInfo | null>;
-    getAll(): Promise<TabInfo[]>;
-    save(tab: TabInfo): Promise<void>;
-    delete(id: number): Promise<void>;
-    deleteMany(ids: number[]): Promise<void>;
-    updateMany(tabs: TabInfo[]): Promise<void>;
-    findMatchingTab(tabId: number, url: string, index: number): Promise<TabInfo | null>;
-    findByUrlAndClosed(url: string, isClosed: boolean): Promise<TabInfo[]>;
-    findOldRecordOfFreshlyDiscardedTab(url: string, index: number): Promise<TabInfo | null>;
-}
-
-class TabRepository implements ITabRepository {
+class TabRepository {
     async getById(id: number): Promise<TabInfo | null> {
         log.debug('getById called with id:', id);
-        const result = await storageGet(id);
+        const result = await storageGet(id) as TabInfo | undefined;
         return result || null;
     }
 
