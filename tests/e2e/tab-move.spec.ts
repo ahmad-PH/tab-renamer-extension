@@ -3,30 +3,39 @@ import { ExtensionUtils } from './extensionUtils';
 import testData from './testData';
 
 test.describe('Tab Move', () => {
-    let extensionUtils: ExtensionUtils;
+    test('Moving tabs around fully updates all tab indices', async ({ context }) => {
+        // Step1: Open page1 and rename it
+        const page1 = await context.newPage();
+        const extensionUtils1 = new ExtensionUtils(page1);
+        await page1.goto(testData.websites[0].url);
+        await extensionUtils1.closeWelcomeTab();
+        await extensionUtils1.renameTab('Initially on Index 1');
 
-    test.beforeEach(async ({ page }) => {
-        extensionUtils = new ExtensionUtils(page);
-        await extensionUtils.closeWelcomeTab();
-    });
+        // Step2: Open page2 to same URL and rename it
+        const page2 = await context.newPage();
+        await page2.goto(testData.websites[0].url);
+        const extensionUtils2 = new ExtensionUtils(page2);
+        await extensionUtils2.renameTab('Initially on Index 2');
 
-    test('Moves a renamed tab to index 0', async ({ page }) => {
-        // Open first tab
-        await page.goto(testData.websites[0].url);
+        // Step3: Move the two tabs around
+        await extensionUtils2.moveTabToIndex(1);
 
-        // Open second tab so we have something to move around
-        await extensionUtils.openTabToURL(testData.websites[1].url);
+        await page1.waitForTimeout(100); // A little time for index Updater to do its job.
 
-        // Rename the current (second) tab
-        const newTitle = 'Moved Tab';
-        await extensionUtils.renameTab(newTitle);
-        await expect(extensionUtils.page).toHaveTitle(newTitle);
+        await page1.close();
+        await page2.close();
 
-        // Move the tab to index 0
-        await extensionUtils.moveTabToIndex(0);
+        // Step4: Re-open tab to index 1
+        const page3 = await context.newPage();
+        await page3.goto(testData.websites[0].url);
+        await expect(page3).toHaveTitle("Initially on Index 2");
+        await page3.close(); // Closing this to make it available in the pool again.
 
-        // Wait here - you'll add assertions later
-        await page.waitForTimeout(2000);
+        // Step4: Re-open tab to index 2
+        await context.newPage(); // Create dummy page just to occupy index 1
+        const page4 = await context.newPage(); // So that this pagpe opens on index 2
+        await page4.goto(testData.websites[0].url);
+        await expect(page4).toHaveTitle("Initially on Index 1");
     });
 });
 
