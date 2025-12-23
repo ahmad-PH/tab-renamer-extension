@@ -73,8 +73,6 @@ export const inProduction = (): boolean => {
 }
 
 if (typeof chrome !== 'undefined' && chrome.storage) {
-    console.log('Chrome storage API available, initializing emoji style sync');
-
     (async function initializeEmojiStyleFromStorage() {
         const { settingsRepository } = await import('./repositories/settingsRepository');
         const emojiStyle = await settingsRepository.getEmojiStyle();

@@ -6,12 +6,6 @@ import { inProduction } from './config';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const ServiceWorkerGlobalScope: any;
 
-if (inProduction()) {
-    log.setLevel('ERROR');
-} else {
-    log.setLevel('DEBUG');
-}
-
 let datadogInitialized = false;
 
 function initializeDatadogBrowserLogs(): void {
@@ -39,7 +33,6 @@ function initializeDatadogBrowserLogs(): void {
     });
 
     datadogInitialized = true;
-    console.log('Datadog browser logging initialized');
 }
 
 function formatTimestamp(): string {
