@@ -22,6 +22,7 @@ import {
     SETTINGS_BUTTON_ID,
     SETTINGS_BUTTON_TRIGGER_AREA_ID,
     getEmojiStyle,
+    TEST_COMMAND,
 } from '../../src/config';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -44,8 +45,8 @@ export class ExtensionUtils {
     // =================== Dialog Operations ===================
 
     async openRenameDialog(): Promise<void> {
-        await this.page.evaluate((command) => {
-            document.dispatchEvent(new MessageEvent(command));
+        await this.page.evaluate((eventType) => {
+            document.dispatchEvent(new CustomEvent(eventType));
         }, COMMAND_OPEN_RENAME_DIALOG);
 
         await this.page.getByTestId(ROOT_ELEMENT_ID).waitFor({state: "attached"});
@@ -199,9 +200,7 @@ export class ExtensionUtils {
 
     async closeWelcomeTab(): Promise<void> {
         try {
-            await this.page.evaluate((command) => {
-                document.dispatchEvent(new MessageEvent(command));
-            }, COMMAND_CLOSE_WELCOME_TAB);
+            await this.dispatchTestCommand(COMMAND_CLOSE_WELCOME_TAB);
         } catch (error) {
             console.error('Error closing welcome tab:', error);
             // Welcome tab might not exist, ignore error
@@ -234,18 +233,20 @@ export class ExtensionUtils {
         return (await this.extensionFrame().locator('html').evaluateHandle(() => document.activeElement)).asElement();
     }
 
+    async dispatchTestCommand(command: string, data?: Record<string, unknown>): Promise<void> {
+        await this.page.evaluate(({ eventType, command, data }) => {
+            document.dispatchEvent(new CustomEvent(eventType, { 
+                detail: { command, ...data } 
+            }));
+        }, { eventType: TEST_COMMAND, command, data });
+    }
+
     async scheduleDiscardTabEvent(): Promise<void> {
-        await this.page.evaluate((command) => {
-            document.dispatchEvent(new MessageEvent(command));
-        }, COMMAND_DISCARD_TAB);
+        await this.dispatchTestCommand(COMMAND_DISCARD_TAB);
     }
 
     async setEmojiStyle(style: string): Promise<void> {
-        await this.page.evaluate(({ command, style }) => {
-            document.dispatchEvent(new MessageEvent(command, { 
-                data: { style } 
-            }));
-        }, { command: COMMAND_SET_EMOJI_STYLE, style });
+        await this.dispatchTestCommand(COMMAND_SET_EMOJI_STYLE, { style });
     }
 
     async openSettingsPage(): Promise<void> {
@@ -259,11 +260,6 @@ export class ExtensionUtils {
     }
 
     async moveTabToIndex(index: number): Promise<void> {
-        // logger.debug("Dispatching move tab command to contentScript with index:", index);
-        await this.page.evaluate(({ command, index }) => {
-            document.dispatchEvent(new MessageEvent(command, { 
-                data: { index } 
-            }));
-        }, { command: COMMAND_MOVE_TAB, index });
+        await this.dispatchTestCommand(COMMAND_MOVE_TAB, { index });
     }
 }
