@@ -130,10 +130,20 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
 chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
     log.debug(`Detected a tabs.onMoved event, tabId: ${tabId}, moveInfo: ${JSON.stringify(moveInfo)}`);
     void (async () => {
-        const tabInfo = await tabRepository.getById(tabId);
-        if (tabInfo) {
-            tabInfo.index = moveInfo.toIndex;
-            await tabRepository.save(tabInfo);
+        const windowTabs = await chrome.tabs.query({ windowId: moveInfo.windowId });
+        log.debug('onMoved, retrieved window tabs:', JSON.stringify(windowTabs));
+        
+        const tabsToUpdate: TabInfo[] = [];
+        for (const windowTab of windowTabs) {
+            const tabInfo = await tabRepository.getById(windowTab.id!);
+            if (tabInfo) {
+                tabInfo.index = windowTab.index;
+                tabsToUpdate.push(tabInfo);
+            }
+        }
+        
+        if (tabsToUpdate.length > 0) {
+            await tabRepository.updateMany(tabsToUpdate);
         }
     })();
 });
