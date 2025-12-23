@@ -4,7 +4,7 @@ import { tabRepository } from "../repositories/tabRepository";
 import { settingsRepository } from "../repositories/settingsRepository";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_MOVE_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config";
 import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
@@ -210,8 +210,8 @@ chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
 });
 
 if (!inProduction()) {
-    chrome.runtime.onMessage.addListener((message, sender, _sendResponse) => {
-        log.debug('Received a message in background.js: ', message);
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        log.debug('Received message in background.js: ', message);
         switch (message.command) {
             case COMMAND_DISCARD_TAB: {
                 log.debug('Received discard tab command. sender tab id:', sender.tab!.id);
@@ -253,6 +253,15 @@ if (!inProduction()) {
                     log.debug('Contents of chrome storage:', await chrome.storage.sync.get(null));
                 })();
                 break;
+            }
+
+            case COMMAND_MOVE_TAB: {
+                log.debug('Received move tab command at background.js with index:', message.index);
+                chrome.tabs.move(sender.tab!.id!, { index: message.index }, (movedTab) => {
+                    log.debug('Tab moved:', movedTab);
+                    sendResponse({ success: true, tab: movedTab });
+                });
+                return true;
             }
         }
     });

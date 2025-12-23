@@ -15,6 +15,7 @@ import {
     EMOJI_STYLE_NATIVE,
     EMOJI_STYLE_TWEMOJI,
     COMMAND_SET_EMOJI_STYLE,
+    COMMAND_MOVE_TAB,
     OVERLAY_ID,
     SEARCH_BAR_ID,
     SEARCH_RESULTS_ID,
@@ -255,5 +256,14 @@ export class ExtensionUtils {
         const newPagePromise = this.page.context().waitForEvent('page');
         await action();
         return await newPagePromise;
+    }
+
+    async moveTabToIndex(index: number): Promise<void> {
+        // logger.debug("Dispatching move tab command to contentScript with index:", index);
+        await this.page.evaluate(({ command, index }) => {
+            document.dispatchEvent(new MessageEvent(command, { 
+                data: { index } 
+            }));
+        }, { command: COMMAND_MOVE_TAB, index });
     }
 }

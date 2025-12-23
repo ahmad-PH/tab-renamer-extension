@@ -1,6 +1,6 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, ROOT_TAG_NAME, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_MOVE_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, ROOT_TAG_NAME, inProduction } from "../config";
 import { createRoot, Root } from 'react-dom/client';
 import React from 'react';
 import { getLogger } from "../log";
@@ -124,11 +124,16 @@ if (!inProduction()) {
     });
 
     log.debug('Adding Emoji style listener in content script.');
-    document.addEventListener(COMMAND_SET_EMOJI_STYLE, 
-        (event: Event) => {
+    document.addEventListener(COMMAND_SET_EMOJI_STYLE, (event: Event) => {
             log.debug('Emoji style change listener in content script called.');
             const customEvent = event as MessageEvent;
             bgScriptApi.setEmojiStyle(customEvent.data.style);
         });
+
+    document.addEventListener(COMMAND_MOVE_TAB, (event: Event) => {
+        log.debug('Move tab listener in content script called.');
+        const customEvent = event as MessageEvent;
+        bgScriptApi.moveTab(customEvent.data.index);
+    });
 }
 
