@@ -3,8 +3,8 @@ import { TabInfo } from "../types";
 import { getLogger } from "../log";
 
 const log = getLogger("garbageCollector");
-const SECONDS = 1000, MINUTES = 60 * SECONDS;
-export const garbageCollectionThreshold = 2 * MINUTES;
+const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES;
+export const garbageCollectionThreshold = 13 * HOURS;
 
 async function garbageCollector(): Promise<void> {
     const allTabs = await tabRepository.getAll();
