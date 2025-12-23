@@ -36,19 +36,8 @@ class TabRepository implements ITabRepository {
     async save(tab: TabInfo): Promise<void> {
         log.debug('save called with:', tab);
         const existingTab = await this.getById(tab.id);
-        log.debug('existing tab:', existingTab);
-        
-        let newSignature = Object.assign({}, tab.signature);
-        let isClosed = false;
-        let closedAt: string | null = null;
-        
-        if (existingTab) {
-            isClosed = existingTab.isClosed;
-            closedAt = existingTab.closedAt;
-        }
-        
-        log.debug('newSignature after possible overwrite:', newSignature);
-        await storageSet({[tab.id]: new TabInfo(tab.id, tab.url, tab.index, isClosed, closedAt, newSignature)});
+        log.debug('existing tab, which will get overridden:', existingTab);
+        await storageSet({[tab.id]: tab});
         log.debug('Data saved to storage');
     }
 
@@ -76,6 +65,7 @@ class TabRepository implements ITabRepository {
         log.debug('findMatchingTab called with:', { tabId, url, index });
         const allTabs = await this.getAll();
         const storedTabInfo = Object.fromEntries(allTabs.map(tab => [tab.id, tab]));
+        log.debug('findMatchingTab storedTabInfo: ', storedTabInfo);
         
         if (storedTabInfo[tabId]) {
             log.debug('Tab found in storedTabInfo:', storedTabInfo[tabId]);
