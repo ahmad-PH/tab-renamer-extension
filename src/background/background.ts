@@ -112,6 +112,17 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
             } else {
                 log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
             }
+        } else {
+            log.debug(`onUpdated called, with non-discard conditions, tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}`);
+            if (changeInfo.url) {
+                const tabInfo = await tabRepository.getById(tabId);
+                log.debug('retrieved tabInfo:', tabInfo);
+                if (tabInfo) { // Only if we are actually tracking the tab
+                    tabInfo.url = changeInfo.url;
+                    await tabRepository.save(tabInfo);
+                    log.debug("Storage after saving tabInfo:", await tabRepository.getAll());
+                }
+            }
         }
     })();
 });
