@@ -29,7 +29,7 @@ chrome.commands.onCommand.addListener((command) => {
 
 chrome.action.onClicked.addListener((tab) => {
     log.debug('Action clicked. Sending open rename dialog command to tab:', tab.id);
-    chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+    void chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
 });
 
 chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
         case "save_signature": {
             const tab = new TabInfo(sender.tab!.id!, sender.tab!.url!, sender.tab!.index!,
                 false, null, message.signature);
-            tabRepository.save(tab);
+            void tabRepository.save(tab);
             break;
         }
 
@@ -87,91 +87,99 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
     }
 });
 
-chrome.tabs.onRemoved.addListener(async function(tabId: number, _removeInfo: chrome.tabs.TabRemoveInfo) {
-    let tabInfo: TabInfo | null = await tabRepository.getById(tabId);
-    if (tabInfo) {
-        tabInfo.isClosed = true;
-        tabInfo.closedAt = new Date().toISOString();
-        await tabRepository.save(tabInfo);
-    }
-});
-
-chrome.tabs.onUpdated.addListener(async (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-    if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
-        log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
-        const matchingTab = await tabRepository.findOldRecordOfFreshlyDiscardedTab(tab.url!, tab.index!);
-        log.debug('Found matching tab:', matchingTab);
-        if (matchingTab) {
-            log.debug(`Removing tab with id ${matchingTab.id} from storage and replacing it with ${tab.id}`);
-            await tabRepository.delete(matchingTab.id);
-            matchingTab.id = tab.id!;
-            await tabRepository.save(matchingTab);
-        } else {
-            log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
+chrome.tabs.onRemoved.addListener((tabId: number, _removeInfo: chrome.tabs.TabRemoveInfo) => {
+    void (async () => {
+        let tabInfo = await tabRepository.getById(tabId);
+        if (tabInfo) {
+            tabInfo.isClosed = true;
+            tabInfo.closedAt = new Date().toISOString();
+            await tabRepository.save(tabInfo);
         }
-    }
+    })();
 });
 
-chrome.runtime.onStartup.addListener(async () => {
-    log.debug('onStartup listener called');
-    await markAllOpenSignaturesAsClosed();
-});
-
-chrome.runtime.onInstalled.addListener(async (details: chrome.runtime.InstalledDetails) => {
-    log.debug('onInstalled listener called with details:', details);
-    const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
-    allTabs.forEach(async (tab) => {
-        if (
-            (tab.url!.startsWith('http://') || tab.url!.startsWith('https://')) &&
-            !tab.url!.startsWith('https://chrome.google.com/webstore/devconsole') &&
-            !tab.url!.startsWith('https://chromewebstore.google.com/')
-        ) { 
-            log.debug('Injecting the extension into:', tab.url);
-            try {
-                await chrome.scripting.executeScript({
-                    target: {tabId: tab.id!},
-                    files: ['initializationContentScript.js']
-                });
-                await chrome.scripting.executeScript({
-                    target: {tabId: tab.id!},
-                    files: ['contentScript.js']
-                });
-            } catch (e) {
-                log.error('Error while injecting the extension into: ', tab.url, 'full tab info', JSON.stringify(tab), e);
+chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
+    void (async () => {
+        if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
+            log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
+            const matchingTab = await tabRepository.findOldRecordOfFreshlyDiscardedTab(tab.url!, tab.index!);
+            log.debug('Found matching tab:', matchingTab);
+            if (matchingTab) {
+                log.debug(`Removing tab with id ${matchingTab.id} from storage and replacing it with ${tab.id}`);
+                await tabRepository.delete(matchingTab.id);
+                matchingTab.id = tab.id!;
+                await tabRepository.save(matchingTab);
+            } else {
+                log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
             }
         }
-    });
+    })();
+});
 
-    chrome.contextMenus.create({
-        "id": "renameTab",
-        "title": "Rename Tab",
-        "contexts": ["page"]
-    });
+chrome.runtime.onStartup.addListener(() => {
+    void (async () => {
+        log.debug('onStartup listener called');
+        await markAllOpenSignaturesAsClosed();
+    })();
+});
 
-    chrome.contextMenus.create({
-        id: "onboardingPage",
-        title: "View Onboarding Page",
-        contexts: ["action"],
-    });
-
-    if (details.reason === "install") {
-        welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
-    } else if (details.reason === "update") {
-        const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
-        await chrome.storage.sync.clear();
-        for (const key of Object.keys(migratedData)) {
-            await chrome.storage.sync.set({[key]: migratedData[key]});
+chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails) => {
+    void (async () => {
+        log.debug('onInstalled listener called with details:', details);
+        const allTabs = await chrome.tabs.query({status: 'complete', discarded: false});
+        for (const tab of allTabs) {
+            if (
+                (tab.url!.startsWith('http://') || tab.url!.startsWith('https://')) &&
+                !tab.url!.startsWith('https://chrome.google.com/webstore/devconsole') &&
+                !tab.url!.startsWith('https://chromewebstore.google.com/')
+            ) { 
+                log.debug('Injecting the extension into:', tab.url);
+                try {
+                    await chrome.scripting.executeScript({
+                        target: {tabId: tab.id!},
+                        files: ['initializationContentScript.js']
+                    });
+                    await chrome.scripting.executeScript({
+                        target: {tabId: tab.id!},
+                        files: ['contentScript.js']
+                    });
+                } catch (e) {
+                    log.error('Error while injecting the extension into: ', tab.url, 'full tab info', JSON.stringify(tab), e);
+                }
+            }
         }
-    } 
-    await markAllOpenSignaturesAsClosed();
+
+        chrome.contextMenus.create({
+            "id": "renameTab",
+            "title": "Rename Tab",
+            "contexts": ["page"]
+        });
+
+        chrome.contextMenus.create({
+            id: "onboardingPage",
+            title: "View Onboarding Page",
+            contexts: ["action"],
+        });
+
+        if (details.reason === "install") {
+            welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
+        } else if (details.reason === "update") {
+            const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
+            await chrome.storage.sync.clear();
+            for (const key of Object.keys(migratedData)) {
+                await chrome.storage.sync.set({[key]: migratedData[key]});
+            }
+        } 
+        await markAllOpenSignaturesAsClosed();
+    })();
 });
 
 chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
     if (info.menuItemId === "renameTab") {
-        chrome.tabs.sendMessage(tab!.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+        void chrome.tabs.sendMessage(tab!.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
     }
     if (info.menuItemId === "onboardingPage") {
-        chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
+        void chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
     }
 });
 
@@ -185,23 +193,25 @@ if (!inProduction()) {
         switch (message.command) {
             case COMMAND_DISCARD_TAB: {
                 log.debug('Received discard tab command. sender tab id:', sender.tab!.id);
-                chrome.tabs.discard(sender.tab!.id!, async (discardedTab) => {
-                    log.debug('Tab discarded:', discardedTab);
-                    const tabs = await chrome.tabs.query({currentWindow: true});
-                    log.debug('List of tabs after discarding:', tabs);
-                    tabs.forEach(tab => {
-                        log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
-                    });
-                    setTimeout(async () => {
-                        chrome.tabs.reload(discardedTab!.id!);
-                    }, 500);
+                chrome.tabs.discard(sender.tab!.id!, (discardedTab) => {
+                    void (async () => {
+                        log.debug('Tab discarded:', discardedTab);
+                        const tabs = await chrome.tabs.query({currentWindow: true});
+                        log.debug('List of tabs after discarding:', tabs);
+                        tabs.forEach(tab => {
+                            log.debug(`Tab ID: ${tab.id}, URL: ${tab.url}, Title: ${tab.title}, Discarded: ${tab.discarded}`);
+                        });
+                        setTimeout(() => {
+                            void chrome.tabs.reload(discardedTab!.id!);
+                        }, 500);
+                    })();
                 });
                 break;
             }
 
             case COMMAND_CLOSE_WELCOME_TAB: {
                 if (welcomeTab) {
-                    chrome.tabs.remove(welcomeTab.id!);
+                    void chrome.tabs.remove(welcomeTab.id!);
                     welcomeTab = null;
                 }
                 break;
@@ -216,7 +226,7 @@ if (!inProduction()) {
             }
 
             case 'test': {
-                (async () => {
+                void (async () => {
                     log.debug('Received test command')
                     log.debug('Contents of chrome storage:', await chrome.storage.sync.get(null));
                 })();
