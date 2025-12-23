@@ -6,7 +6,7 @@ import tab from "./tab";
 const log = getLogger('InitializationContentScript');
 const olog = getLogger('Title Observer');
 
-(async function updateTabSignatureFromStorage() {
+void (async function updateTabSignatureFromStorage() {
     log.debug('updateTabSignatureFromStorage called from the initialization content script.');
     const signature = await bgScriptApi.loadSignature(false);
     let title: string | null;
@@ -18,11 +18,11 @@ const olog = getLogger('Title Observer');
         title = null;
     }
 
-    let originalTitle = document.title;
+    const originalTitle = document.title;
     let originalTitleIsStashed = false;
-    let titleElements = Array.from(document.querySelectorAll('head > title')).map(el => el.textContent);
+    const titleElements = Array.from(document.querySelectorAll('head > title')).map(el => el.textContent);
 
-    log.debug(`document.title: ${originalTitle}, retrieved title: ${title}, document.readyState: ${document.readyState}, title elements: ${titleElements}`);
+    log.debug(`document.title: ${originalTitle}, retrieved title: ${title}, document.readyState: ${document.readyState}, title elements: ${JSON.stringify(titleElements)}`);
 
     await tab.setSignature(title, null, false, false);
     if (originalTitle && originalTitle !== title) {
@@ -35,7 +35,7 @@ const olog = getLogger('Title Observer');
 
     let originalTitleContent: string | null = null;
 
-    let headMutationObserver = new MutationObserver((mutations) => {
+    const headMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.type === 'childList') {
                 mutation.removedNodes.forEach((node) => {
@@ -49,7 +49,7 @@ const olog = getLogger('Title Observer');
                     if (node.nodeName === 'TITLE') {
                         olog.debug('TITLE element added, text:', (node as HTMLTitleElement).textContent);
                         
-                        bgScriptApi.stashOriginalTitle((node as HTMLTitleElement).textContent!);
+                        void bgScriptApi.stashOriginalTitle((node as HTMLTitleElement).textContent!);
 
                         if (originalTitleContent && (node as HTMLTitleElement).textContent !== originalTitleContent) {
                             olog.debug('Preventing title change, restoring original:', originalTitleContent);
@@ -61,12 +61,12 @@ const olog = getLogger('Title Observer');
         });
     });
     
-    let headNode = document.querySelector('head');
+    const headNode = document.querySelector('head');
     if (headNode) {
         headMutationObserver.observe(headNode, { childList: true });
     }
 
-    let titleMutationObserver = new MutationObserver((mutations) => {
+    const titleMutationObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.target.nodeName === 'TITLE') {
                 const newTitle = document.title;
