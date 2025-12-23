@@ -31,10 +31,14 @@ function initializeDatadogBrowserLogs(): void {
         site: ddSite,
         forwardErrorsToLogs: true,
         sessionSampleRate: 100,
-        service: 'tab-renamer',
         env: 'development',
+        service: 'tab-renamer',
         allowedTrackingOrigins: [() => true],
-        silentMultipleInit: true
+        silentMultipleInit: true,
+        beforeSend: (event) => {
+            event.ddtags = 'component:contentscript';
+            return true;
+        }
     });
 
     datadogInitialized = true;
@@ -53,14 +57,11 @@ async function forwardToDatadog(methodName: string, loggerName: string, message:
     }
 
     const logPayload = {
-        ddsource: 'browser',
-        ddtags: 'env:development',
-        service: 'tab-renamer',
-        message: `#${loggerName}: ${message}`,
-        level: methodName,
-        logger: {
-            name: loggerName
-        }
+        ddtags: 'component:background, env:development',
+        message: `${message}`,
+        logger: loggerName,
+        status: methodName,
+        service: 'tab-renamer'
     };
 
     try {
@@ -86,7 +87,7 @@ function forwardToBrowserDatadog(methodName: string, loggerName: string, message
         return;
     }
 
-    const logMessage = `#${loggerName}: ${message}`;
+    const logMessage = `${message}`;
     const context = { logger: loggerName };
 
     switch (methodName) {
