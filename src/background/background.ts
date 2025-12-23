@@ -127,6 +127,17 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
     })();
 });
 
+chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
+    log.debug(`Detected a tabs.onMoved event, tabId: ${tabId}, moveInfo: ${JSON.stringify(moveInfo)}`);
+    void (async () => {
+        const tabInfo = await tabRepository.getById(tabId);
+        if (tabInfo) {
+            tabInfo.index = moveInfo.toIndex;
+            await tabRepository.save(tabInfo);
+        }
+    })();
+});
+
 chrome.runtime.onStartup.addListener(() => {
     void (async () => {
         log.debug('onStartup listener called');
