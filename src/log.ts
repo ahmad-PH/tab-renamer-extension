@@ -34,11 +34,12 @@ function initializeDatadogBrowserLogs(): void {
         sessionSampleRate: 100,
         service: 'tab-renamer',
         env: 'development',
-        allowedTrackingOrigins: [() => true]
+        allowedTrackingOrigins: [() => true],
+        silentMultipleInit: true
     });
 
     datadogInitialized = true;
-    console.log('[initializeDatadogBrowserLogs] Datadog browser logging initialized');
+    console.log('Datadog browser logging initialized');
 }
 
 function formatTimestamp(): string {
@@ -82,10 +83,7 @@ async function forwardLogToContentScript(level: string, loggerName: string, mess
 }
 
 async function forwardToDatadog(methodName: string, loggerName: string, message: string): Promise<void> {
-    console.log('[forwardToDatadog] Called with:', { methodName, loggerName, message });
-    
     if (inProduction()) {
-        console.log('[forwardToDatadog] Skipping - in production mode');
         return;
     }
 
@@ -107,8 +105,6 @@ async function forwardToDatadog(methodName: string, loggerName: string, message:
         }
     };
 
-    console.log('[forwardToDatadog] Submitting log with payload:', JSON.stringify(logPayload, null, 2));
-      
     try {
         const response = await fetch(`https://http-intake.logs.datadoghq.com/api/v2/logs`, {
             method: 'POST',
@@ -119,9 +115,7 @@ async function forwardToDatadog(methodName: string, loggerName: string, message:
             body: JSON.stringify(logPayload)
         });
 
-        if (response.ok) {
-            console.log('[forwardToDatadog] Log successfully sent to Datadog');
-        } else {
+        if (!response.ok) {
             console.error('[forwardToDatadog] Failed to send log to Datadog:', response.status, response.statusText);
         }
     } catch (error) {
@@ -138,7 +132,6 @@ function forwardToBrowserDatadog(methodName: string, loggerName: string, message
     const logMessage = `#${loggerName}: ${message}`;
     const context = { logger: loggerName };
 
-    console.log("Switching on methodName: ", methodName);
     switch (methodName) {
         case 'trace':
         case 'debug':
@@ -193,7 +186,6 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
             // Convert loggerName to string for safe usage
             const loggerNameStr = String(loggerName);
             
-            // Add timestamp prefix to the first message
             const formattedFirstMessage = `[${timestamp}] #${loggerNameStr}: ${String(firstMessage)}`;
             rawMethod(formattedFirstMessage, ...restArgs);
             const concatenatedMessage = messages.map(msg => 
@@ -204,14 +196,10 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
                 void forwardLogToContentScript(methodName, loggerNameStr, concatenatedMessage, []);
             }
 
-            console.log(`Checking whether to call DD: logLevel: ${String(logLevel)}, methodLevels[logLevel]: ${methodLevels[logLevel]}, logger.getLevel(): ${logger.getLevel()}, methodName: ${methodName}, loggerName: ${loggerNameStr}, firstMessage:`, firstMessage)
-
             if (methodLevels[methodName] >= logger.getLevel()) {
                 if (isInServiceWorker) {
-                    console.log('[logger.methodFactory] Triggering forwardToDatadog (service worker)');
                     void forwardToDatadog(methodName, loggerNameStr, concatenatedMessage);
                 } else {
-                    console.log('[logger.methodFactory] Triggering forwardToBrowserDatadog (content script)');
                     forwardToBrowserDatadog(methodName, loggerNameStr, concatenatedMessage);
                 }
             }
