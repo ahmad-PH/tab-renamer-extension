@@ -154,7 +154,7 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
     const isInServiceWorker = isServiceWorker();
     
     // Initialize Datadog browser logs if not in service worker
-    if (!isInServiceWorker) {
+    if (!isInServiceWorker && process.env.LOG_TO_DD === "true") {
         initializeDatadogBrowserLogs();
     }
     
@@ -189,7 +189,7 @@ export function getLogger(loggerName: string, level: LogLevelDesc = 'info'): log
                 void forwardLogToContentScript(methodName, loggerNameStr, concatenatedMessage, []);
             }
 
-            if (methodLevels[methodName] >= logger.getLevel()) {
+            if (process.env.LOG_TO_DD === "true" && methodLevels[methodName] >= logger.getLevel()) {
                 if (isInServiceWorker) {
                     void forwardToDatadog(methodName, loggerNameStr, concatenatedMessage);
                 } else {

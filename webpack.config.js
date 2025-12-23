@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-const dotenv = require('dotenv')
-dotenv.config()
+const dotenv = require('dotenv');
+dotenv.config();
 
 module.exports = (_env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -99,6 +99,7 @@ module.exports = (_env, argv) => {
         plugins: [
             new webpack.DefinePlugin({
                 'WEBPACK_MODE': JSON.stringify(argv.mode),
+                'process.env.LOG_TO_DD': JSON.stringify(process.env.LOG_TO_DD),
                 // Conditionally add env variables only for development
                 ...(isProduction ? {} : {
                     'process.env.DD_API_KEY': JSON.stringify(process.env.DD_API_KEY),
