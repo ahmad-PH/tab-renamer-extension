@@ -1,6 +1,6 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_TAG_NAME, TEST_COMMAND, inProduction } from "../config";
+import { COMMAND_DISCARD_TAB, COMMAND_FORCE_TITLE, COMMAND_OPEN_RENAME_DIALOG, ROOT_TAG_NAME, TEST_COMMAND, inProduction } from "../config";
 import { createRoot, Root } from 'react-dom/client';
 import React from 'react';
 import { getLogger } from "../log";
@@ -69,6 +69,15 @@ async function insertUIIntoDOM() {
     chrome.runtime.onMessage.addListener(chromeListener);
     document.addEventListener(COMMAND_OPEN_RENAME_DIALOG, domListener);
 })();
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message.command === COMMAND_FORCE_TITLE) {
+        const desiredTitle = message.title as string;
+        log.debug('Force title command received with title:', desiredTitle);
+        tab.forceTitle(desiredTitle);
+        sendResponse({ success: true });
+    }
+});
 
 if (!inProduction()) {
     chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {

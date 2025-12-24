@@ -25,6 +25,7 @@ export const COMMAND_DISCARD_TAB = `discard_tab`;
 export const COMMAND_CLOSE_WELCOME_TAB = `close_welcome_tab`;
 export const COMMAND_SET_EMOJI_STYLE = `set_emoji_style`;
 export const COMMAND_MOVE_TAB = `move_tab`;
+export const COMMAND_FORCE_TITLE = `force_title`;
 export const TEST_COMMAND = `__TEST_COMMAND__`;
 
 export const faviconRestorationStrategy: 'fetch_separately' | 'mutation_observer' = 'mutation_observer';

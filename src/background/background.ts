@@ -13,7 +13,7 @@ const log = getLogger('background');
 const originalTitleStash: Record<number, string> = {};
 const titleCorrectionState: Record<number, { lastTime: number; retriesUsed: number }> = {};
 const TITLE_CORRECTION_THRESHOLD_SECONDS = 1; 
-const TITLE_CORRECTION_MAX_RETRIES = 3; 
+const TITLE_CORRECTION_MAX_RETRIES = 4; 
 let welcomeTab: chrome.tabs.Tab | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
@@ -117,9 +117,8 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
             }
         } else {
             if (changeInfo.title) {
-                log.debug(`TitleUpdate: Detected a title change for tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
+                log.debug(`TitleUpdate: Detected a title change for tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getById(tabId));
                 const tabInfo = await tabRepository.getById(tabId);
-                // log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
                 if (tabInfo?.signature?.title != null &&
                     tabInfo.signature.title !== changeInfo.title && // Only if an actual change has happened
                     changeInfo.title != "" // Preventing self-recursion
@@ -134,25 +133,22 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
                         log.debug(`TitleUpdate: sending force title command. (thresholdPassed: ${thresholdPassed}, retriesUsed: ${state.retriesUsed})`)
                         setTimeout(() => {
                             void chrome.tabs.sendMessage(tabId, { command: COMMAND_FORCE_TITLE, title: tabInfo.signature.title });
-                        }, 200);
+                        }, 100);
                         if (thresholdPassed) {
                             titleCorrectionState[tabId] = { lastTime: now, retriesUsed: 0 };
                         } else {
                             titleCorrectionState[tabId] = { lastTime: state.lastTime, retriesUsed: state.retriesUsed + 1 };
                         }
-                        log.debug("TitleUpdate: force title command sent!")
                     } else {
                         log.debug(`TitleUpdate: Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need ${TITLE_CORRECTION_THRESHOLD_SECONDS}s) and no retries left`);
                     }
                 }
             }
             if (changeInfo.url) {
-                log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
+                log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getById(tabId));
                 const tabInfo = await tabRepository.getById(tabId);
-                log.debug('UrlUpdate: retrieved tabInfo:', tabInfo);
                 if (tabInfo) { // Only if we are actually tracking the tab
                     tabInfo.url = changeInfo.url;
-                    log.debug("UrlUpdate: Storage before saving tabInfo:", await tabRepository.getAll());
                     await tabRepository.save(tabInfo);
                     log.debug("UrlUpdate: Storage after saving tabInfo:", await tabRepository.getAll());
                 }
