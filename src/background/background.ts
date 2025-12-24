@@ -11,6 +11,7 @@ import { StorageSchemaManager } from "./storageSchemaManager";
 const log = getLogger('background');
 
 const originalTitleStash: Record<number, string> = {};
+const lastTitleCorrectionTime: Record<number, number> = {};
 let welcomeTab: chrome.tabs.Tab | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
@@ -115,18 +116,26 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
         } else {
             if (changeInfo.title) {
                 log.debug(`TitleUpdate: Detected a title change for tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
-                // const tabInfo = await tabRepository.getById(tabId);
-                // // We have a record, and our desired title is different from what this change does:
-                // log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
-                // if (tabInfo?.signature?.title != null && tabInfo.signature.title !== changeInfo.title) { 
-                //     log.debug(`TitleUpdate: executing script to set document.title to the desired title.`)
-                //     await chrome.scripting.executeScript({
-                //         target: { tabId },
-                //         func: (title: string) => { document.title = ""; },
-                //         args: [tabInfo.signature.title]
-                //     });
-                //     log.debug("TitleUpdate: Done running!")
-                // }
+                const tabInfo = await tabRepository.getById(tabId);
+                log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
+                if (tabInfo?.signature?.title != null && tabInfo.signature.title !== changeInfo.title) {
+                    const now = Date.now();
+                    const lastCorrectionTime = lastTitleCorrectionTime[tabId] ?? 0;
+                    const elapsedSeconds = (now - lastCorrectionTime) / 1000;
+                    
+                    if (elapsedSeconds > 0.5) {
+                        log.debug(`TitleUpdate: executing script to set document.title to the desired title.`)
+                        await chrome.scripting.executeScript({
+                            target: { tabId },
+                            func: (title: string) => { document.title = ""; },
+                            args: [tabInfo.signature.title]
+                        });
+                        lastTitleCorrectionTime[tabId] = now;
+                        log.debug("TitleUpdate: Done running!")
+                    } else {
+                        log.debug(`TitleUpdate: Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need 0.5s)`);
+                    }
+                }
             }
             if (changeInfo.url) {
                 log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
