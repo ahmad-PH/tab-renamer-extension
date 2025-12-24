@@ -4,7 +4,7 @@ import { tabRepository } from "../repositories/tabRepository";
 import { settingsRepository } from "../repositories/settingsRepository";
 import { getLogger } from "../log";
 import { startTheGarbageCollector } from "./garbageCollector";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_MOVE_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config";
+import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_FORCE_TITLE, COMMAND_MOVE_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, inProduction } from "../config";
 import { markAllOpenSignaturesAsClosed } from "./markAllOpenSignaturesAsClosed";
 import { StorageSchemaManager } from "./storageSchemaManager";
 
@@ -12,8 +12,8 @@ const log = getLogger('background');
 
 const originalTitleStash: Record<number, string> = {};
 const titleCorrectionState: Record<number, { lastTime: number; retriesUsed: number }> = {};
-const TITLE_CORRECTION_THRESHOLD_SECONDS = 0.5; 
-const TITLE_CORRECTION_MAX_RETRIES = 1; 
+const TITLE_CORRECTION_THRESHOLD_SECONDS = 1; 
+const TITLE_CORRECTION_MAX_RETRIES = 3; 
 let welcomeTab: chrome.tabs.Tab | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
@@ -131,17 +131,16 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
                     const hasRetriesLeft = state.retriesUsed < TITLE_CORRECTION_MAX_RETRIES;
                     
                     if (thresholdPassed || hasRetriesLeft) {
-                        log.debug(`TitleUpdate: executing script to set document.title to the desired title. (thresholdPassed: ${thresholdPassed}, retriesUsed: ${state.retriesUsed})`)
-                        await chrome.scripting.executeScript({
-                            target: { tabId },
-                            func: (title: string) => { document.title = ""; document.title = title; },
-                            args: [tabInfo.signature.title]
-                        });
+                        log.debug(`TitleUpdate: sending force title command. (thresholdPassed: ${thresholdPassed}, retriesUsed: ${state.retriesUsed})`)
+                        setTimeout(() => {
+                            void chrome.tabs.sendMessage(tabId, { command: COMMAND_FORCE_TITLE, title: tabInfo.signature.title });
+                        }, 200);
                         if (thresholdPassed) {
                             titleCorrectionState[tabId] = { lastTime: now, retriesUsed: 0 };
                         } else {
                             titleCorrectionState[tabId] = { lastTime: state.lastTime, retriesUsed: state.retriesUsed + 1 };
                         }
+                        log.debug("TitleUpdate: force title command sent!")
                     } else {
                         log.debug(`TitleUpdate: Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need ${TITLE_CORRECTION_THRESHOLD_SECONDS}s) and no retries left`);
                     }
