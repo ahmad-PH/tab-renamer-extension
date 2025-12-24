@@ -7,9 +7,11 @@ const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES;
 export const garbageCollectionThreshold = 13 * HOURS;
 
 async function garbageCollector(): Promise<void> {
-    const allTabs = await tabRepository.getAll();
-    const tabIdsToRemove = garabageCollectionFilter(allTabs);
-    await tabRepository.deleteMany(tabIdsToRemove);
+    await tabRepository.runExclusive(async () => {
+        const allTabs = await tabRepository.getAll();
+        const tabIdsToRemove = garabageCollectionFilter(allTabs);
+        await tabRepository.deleteMany(tabIdsToRemove);
+    });
 }
 
 export function garabageCollectionFilter(tabs: TabInfo[]): number[] {

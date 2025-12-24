@@ -1,10 +1,16 @@
 import { TabInfo } from "../types";
-import { storageGet, storageSet } from "../utils";
+import { storageGet, storageSet, Mutex } from "../utils";
 import { getLogger } from "../log";
 
 const log = getLogger('TabRepository');
 
 class TabRepository {
+    private mutex = new Mutex();
+
+    runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+        return this.mutex.runExclusive(fn);
+    }
+
     async getById(id: number): Promise<TabInfo | null> {
         log.debug('getById called with id:', id);
         const result = await storageGet(id) as TabInfo | undefined;
@@ -112,25 +118,29 @@ class TabRepository {
         }
     }
 
-    async loadTabAndUpdateId(tabId: number, url: string, index: number, isBeingOpened: boolean): Promise<TabInfo | null> {
-        log.debug('loadTabAndUpdateId called with:', { tabId, url, index, isBeingOpened });
-        
-        const matchedTab = await this.findMatchingTab(tabId, url, index);
+    loadTabAndUpdateId(tabId: number, url: string, index: number, isBeingOpened: boolean): Promise<TabInfo | null> {
+        return this.mutex.runExclusive(async () => {
+            log.debug('loadTabAndUpdateId called with:', { tabId, url, index, isBeingOpened });
+            
+            const matchedTab = await this.findMatchingTab(tabId, url, index);
 
-        if (matchedTab) {
-            log.debug('matchedTab:', matchedTab);
-            await chrome.storage.sync.remove(matchedTab.id.toString());
-            matchedTab.id = tabId;
-            if (isBeingOpened) {
-                matchedTab.isClosed = false;
-                matchedTab.closedAt = null;
+            if (matchedTab) {
+                log.debug('matchedTab:', matchedTab);
+                if (matchedTab.id !== tabId) { // No need to delete if the two are the same
+                    await chrome.storage.sync.remove(matchedTab.id.toString());
+                }
+                matchedTab.id = tabId;
+                if (isBeingOpened) {
+                    matchedTab.isClosed = false;
+                    matchedTab.closedAt = null;
+                }
+                await storageSet({[tabId]: matchedTab});
+                return matchedTab;
+            } else {
+                log.debug('No matched tab info found');
+                return null;
             }
-            await storageSet({[tabId]: matchedTab});
-            return matchedTab;
-        } else {
-            log.debug('No matched tab info found');
-            return null;
-        }
+        });
     }
 }
 

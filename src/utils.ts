@@ -87,3 +87,20 @@ export async function getAllTabs(): Promise<Record<string, any>> {
 export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export class Mutex {
+    private queue: Promise<void> = Promise.resolve();
+
+    async runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+        let release: () => void;
+        const waitForPrevious = this.queue;
+        this.queue = new Promise(resolve => { release = resolve; });
+        
+        await waitForPrevious;
+        try {
+            return await fn();
+        } finally {
+            release!();
+        }
+    }
+}

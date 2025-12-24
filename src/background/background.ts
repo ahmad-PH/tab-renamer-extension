@@ -88,18 +88,18 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
 });
 
 chrome.tabs.onRemoved.addListener((tabId: number, _removeInfo: chrome.tabs.TabRemoveInfo) => {
-    void (async () => {
+    void tabRepository.runExclusive(async () => {
         let tabInfo = await tabRepository.getById(tabId);
         if (tabInfo) {
             tabInfo.isClosed = true;
             tabInfo.closedAt = new Date().toISOString();
             await tabRepository.save(tabInfo);
         }
-    })();
+    });
 });
 
 chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-    void (async () => {
+    void tabRepository.runExclusive(async () => {
         if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
             log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
             const matchingTab = await tabRepository.findOldRecordOfFreshlyDiscardedTab(tab.url!, tab.index!);
@@ -113,25 +113,26 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
                 log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
             }
         } else {
-            log.debug(`onUpdated called, with non-discard conditions, tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}`);
             if (changeInfo.url) {
+                log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
                 const tabInfo = await tabRepository.getById(tabId);
-                log.debug('retrieved tabInfo:', tabInfo);
+                log.debug('UrlUpdate: retrieved tabInfo:', tabInfo);
                 if (tabInfo) { // Only if we are actually tracking the tab
                     tabInfo.url = changeInfo.url;
+                    log.debug("UrlUpdate: Storage before saving tabInfo:", await tabRepository.getAll());
                     await tabRepository.save(tabInfo);
-                    log.debug("Storage after saving tabInfo:", await tabRepository.getAll());
+                    log.debug("UrlUpdate: Storage after saving tabInfo:", await tabRepository.getAll());
                 }
             }
         }
-    })();
+    });
 });
 
 chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
     log.debug(`Detected a tabs.onMoved event, tabId: ${tabId}, moveInfo: ${JSON.stringify(moveInfo)}`);
-    void (async () => {
+    void tabRepository.runExclusive(async () => {
         const windowTabs = await chrome.tabs.query({ windowId: moveInfo.windowId });
-        log.debug('onMoved, retrieved window tabs:', JSON.stringify(windowTabs));
+        log.debug(`onMoved, retrieved window tabs: ${JSON.stringify(windowTabs)}, and the current stored tabs: ${JSON.stringify(await tabRepository.getAll())}`);
         
         const tabsToUpdate: TabInfo[] = [];
         for (const windowTab of windowTabs) {
@@ -145,7 +146,7 @@ chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInf
         if (tabsToUpdate.length > 0) {
             await tabRepository.updateMany(tabsToUpdate);
         }
-    })();
+    });
 });
 
 chrome.runtime.onStartup.addListener(() => {
@@ -194,8 +195,10 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
         });
 
         if (details.reason === "install") {
+            log.debug("onInstalled with reason = install triggered");
             welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
         } else if (details.reason === "update") {
+            log.debug("onInstalled with reason = update triggered");
             const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
             await chrome.storage.sync.clear();
             for (const key of Object.keys(migratedData)) {
