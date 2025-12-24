@@ -226,6 +226,8 @@ export class Tab {
         if (this.titleMutationObserver) {
             this.titleMutationObserver.disconnect();
         }
+    }
+
     forceTitle(desiredTitle: string): void {
         log.debug('forceTitle called with desiredTitle:', desiredTitle);
         this.disconnectTabTitlePreserver();
