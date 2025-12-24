@@ -20,7 +20,7 @@ test.describe('Tab Move', () => {
         // Step3: Move the two tabs around
         await extensionUtils2.moveTabToIndex(1);
 
-        await page1.waitForTimeout(100); // A little time for index Updater to do its job.
+        await page1.waitForTimeout(200); // A little time for index Updater to do its job.
 
         await page1.close();
         await page2.close();
