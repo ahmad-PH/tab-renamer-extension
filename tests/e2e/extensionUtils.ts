@@ -73,6 +73,18 @@ export class ExtensionUtils {
         return await titleBox.inputValue();
     }
 
+    async getChromeUITitle(): Promise<string> {
+        const serviceWorker = this.page.context().serviceWorkers()[0];
+        const url = this.page.url();
+
+        const title = await serviceWorker.evaluate<string, string>(async (pageUrl) => {
+            const [tab] = await chrome.tabs.query({ url: pageUrl });
+            return tab?.title ?? '';
+        }, url);
+
+        return title;
+    }
+
     // =================== Favicon Operations ===================
     
     async openFaviconPicker(): Promise<void> {
