@@ -11,7 +11,9 @@ import { StorageSchemaManager } from "./storageSchemaManager";
 const log = getLogger('background');
 
 const originalTitleStash: Record<number, string> = {};
-const lastTitleCorrectionTime: Record<number, number> = {};
+const titleCorrectionState: Record<number, { lastTime: number; retriesUsed: number }> = {};
+const TITLE_CORRECTION_THRESHOLD_SECONDS = 0.5; 
+const TITLE_CORRECTION_MAX_RETRIES = 1; 
 let welcomeTab: chrome.tabs.Tab | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
@@ -117,23 +119,31 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
             if (changeInfo.title) {
                 log.debug(`TitleUpdate: Detected a title change for tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
                 const tabInfo = await tabRepository.getById(tabId);
-                log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
-                if (tabInfo?.signature?.title != null && tabInfo.signature.title !== changeInfo.title) {
+                // log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
+                if (tabInfo?.signature?.title != null &&
+                    tabInfo.signature.title !== changeInfo.title && // Only if an actual change has happened
+                    changeInfo.title != "" // Preventing self-recursion
+                ) {
                     const now = Date.now();
-                    const lastCorrectionTime = lastTitleCorrectionTime[tabId] ?? 0;
-                    const elapsedSeconds = (now - lastCorrectionTime) / 1000;
+                    const state = titleCorrectionState[tabId] ?? { lastTime: 0, retriesUsed: 0 };
+                    const elapsedSeconds = (now - state.lastTime) / 1000;
+                    const thresholdPassed = elapsedSeconds > TITLE_CORRECTION_THRESHOLD_SECONDS;
+                    const hasRetriesLeft = state.retriesUsed < TITLE_CORRECTION_MAX_RETRIES;
                     
-                    if (elapsedSeconds > 0.5) {
-                        log.debug(`TitleUpdate: executing script to set document.title to the desired title.`)
+                    if (thresholdPassed || hasRetriesLeft) {
+                        log.debug(`TitleUpdate: executing script to set document.title to the desired title. (thresholdPassed: ${thresholdPassed}, retriesUsed: ${state.retriesUsed})`)
                         await chrome.scripting.executeScript({
                             target: { tabId },
-                            func: (title: string) => { document.title = ""; },
+                            func: (title: string) => { document.title = ""; document.title = title; },
                             args: [tabInfo.signature.title]
                         });
-                        lastTitleCorrectionTime[tabId] = now;
-                        log.debug("TitleUpdate: Done running!")
+                        if (thresholdPassed) {
+                            titleCorrectionState[tabId] = { lastTime: now, retriesUsed: 0 };
+                        } else {
+                            titleCorrectionState[tabId] = { lastTime: state.lastTime, retriesUsed: state.retriesUsed + 1 };
+                        }
                     } else {
-                        log.debug(`TitleUpdate: Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need 0.5s)`);
+                        log.debug(`TitleUpdate: Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need ${TITLE_CORRECTION_THRESHOLD_SECONDS}s) and no retries left`);
                     }
                 }
             }
