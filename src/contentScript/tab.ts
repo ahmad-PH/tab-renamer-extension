@@ -4,13 +4,12 @@ import { TabSignature, FaviconDTO } from "../types";
 import bgScriptApi from "../backgroundScriptApi";
 import FaviconRetriever from "./faviconRetriever";
 import { faviconRestorationStrategy } from "../config";
-import { getAllTabs } from "../utils";
 
 export const faviconLinksCSSQuery = "html > head link[rel~='icon']";
 
-const log = getLogger('Tab', 'debug');
-const plog = getLogger('Preservers', 'debug');
-const olog = getLogger('Observer', 'warn');
+const log = getLogger('Tab');
+const plog = getLogger('Preservers');
+const olog = getLogger('Observer');
 
 export class Tab { 
     static instanceExists = false;
@@ -49,7 +48,6 @@ export class Tab {
 
         log.debug('initializeForMainContentScript called');
         const signature = await bgScriptApi.loadSignature(true);
-        log.debug('These are all signatures:', await getAllTabs());
 
         log.debug('retrieved signature:', signature);
         log.debug('document.title:', document.title, 'faviconUrl:', await bgScriptApi.getFaviconUrl());

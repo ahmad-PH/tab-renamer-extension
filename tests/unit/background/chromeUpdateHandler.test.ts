@@ -1,14 +1,14 @@
-/* global chrome */
-const markAllOpenSignaturesAsClosedModule = require('src/background/markAllOpenSignaturesAsClosed');
+import * as markAllOpenSignaturesAsClosedModule from 'src/background/markAllOpenSignaturesAsClosed';
 const { markAllOpenSignaturesAsClosed } = markAllOpenSignaturesAsClosedModule;
-const utils = require('src/utils');
-const { expect } = require('@jest/globals');
-global.chrome = require('./chromeMock');
+import * as utils from 'src/utils';
+import { TabInfo, TabSignature } from 'src/types';
+import { expect } from '@jest/globals';
+import chrome from './chromeMock';
+global.chrome = chrome as unknown;
 jest.useFakeTimers();
 
-// Add custom matcher for comparing dates
 expect.extend({
-    toBeAfter(received, argument) {
+    toBeAfter(received: string, argument: string) {
       const pass = new Date(received) > new Date(argument);
       if (pass) {
         return {
@@ -31,28 +31,34 @@ describe('markAllOpenSignaturesAsClosed', () => {
     });
 
     it('marks all open tabs as closed with current time', async () => {
+        const tab1 = new TabInfo(1, 'https://example.com', 0, false, null, new TabSignature(null, null));
         utils.storageGet = jest.fn(() => ({
-            1: { isClosed: false, closedAt: null },
-        }));
+            1: tab1,
+        })) as any;
         const recordedTime = new Date().toISOString();
 
         await markAllOpenSignaturesAsClosed();
         
-        const updatedStoredTabs = utils.storageSet.mock.calls[0][0];
+        const updatedStoredTabs = (utils.storageSet as jest.Mock).mock.calls[0][0];
         expect(updatedStoredTabs[1].isClosed).toBe(true);
         expect(recordedTime).not.toBeAfter(updatedStoredTabs[1].closedAt);
     });
 
     it('doesn\'t modify already-closed tabs', async () => {
         const sampleClosureTime = '2022-03-14T11:22:33Z';
+        const tab1 = new TabInfo(1, 'https://example.com', 0, true, sampleClosureTime, new TabSignature(null, null));
         utils.storageGet = jest.fn(() => ({
-            1: { isClosed: true, closedAt: sampleClosureTime },
-        }));
+            1: tab1,
+        })) as any;
 
         await markAllOpenSignaturesAsClosed();
 
         expect(utils.storageSet).toHaveBeenCalledWith({
-            1: { isClosed: true, closedAt: sampleClosureTime },
+            1: expect.objectContaining({ 
+                id: 1,
+                isClosed: true, 
+                closedAt: sampleClosureTime 
+            }),
         });
     });
 });
@@ -61,16 +67,17 @@ describe('markAllOpenSignaturesAsClosed regisitered correctly in the listener', 
     
     it('', async () => {
         let originalMarkAllOpenSignaturesAsClosed = markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed;
-        markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed = jest.fn();
+        (markAllOpenSignaturesAsClosedModule as any).markAllOpenSignaturesAsClosed = jest.fn();
         require('src/background/background');
 
-        const listeners = chrome.runtime.onInstalled.addListener.mock.calls[0];
+        const listeners = (chrome.runtime.onInstalled.addListener as jest.Mock).mock.calls[0];
         expect(listeners).toHaveLength(1);
 
         const listener = listeners[0];
         await listener({reason: 'chrome_update'});
 
-        expect(markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed).toHaveBeenCalledTimes(1);
-        markAllOpenSignaturesAsClosedModule.markAllOpenSignaturesAsClosed = originalMarkAllOpenSignaturesAsClosed;
+        expect((markAllOpenSignaturesAsClosedModule as any).markAllOpenSignaturesAsClosed).toHaveBeenCalledTimes(1);
+        (markAllOpenSignaturesAsClosedModule as any).markAllOpenSignaturesAsClosed = originalMarkAllOpenSignaturesAsClosed;
     });
-})
+});
+

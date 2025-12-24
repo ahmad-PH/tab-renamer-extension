@@ -1,4 +1,4 @@
-const { garabageCollectionFilter, garbageCollectionThreshold } = require('src/background/garbageCollector');
+import { garabageCollectionFilter, garbageCollectionThreshold } from 'src/background/garbageCollector';
 
 describe('garabageCollectionFilter', () => {
     test('should keep the tab if it is not closed', () => {
@@ -29,3 +29,4 @@ describe('garabageCollectionFilter', () => {
         expect(result).toEqual(['1']);
     });
 });
+

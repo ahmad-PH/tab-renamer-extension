@@ -11,7 +11,7 @@ import SettingsButton from '../SettingsButton';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Tab } from '../../tab';
 
-const log = getLogger('App', 'debug');
+const log = getLogger('App');
 
 export const TabContext = React.createContext<Tab | null>(null);
 

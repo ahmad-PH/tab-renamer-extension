@@ -1,5 +1,3 @@
-import { platform, storageGet, storageSet } from "./utils";
-
 const EXTENSION_PREFIX = "tab-renamer-extension";
 
 export const ROOT_ELEMENT_ID = `${EXTENSION_PREFIX}-root`;
@@ -26,10 +24,37 @@ export const COMMAND_OPEN_RENAME_DIALOG = `open_rename_dialog`;
 export const COMMAND_DISCARD_TAB = `discard_tab`;
 export const COMMAND_CLOSE_WELCOME_TAB = `close_welcome_tab`;
 export const COMMAND_SET_EMOJI_STYLE = `set_emoji_style`;
+export const COMMAND_MOVE_TAB = `move_tab`;
+export const TEST_COMMAND = `__TEST_COMMAND__`;
 
 export const faviconRestorationStrategy: 'fetch_separately' | 'mutation_observer' = 'mutation_observer';
 
 export const SETTINGS_KEY_EMOJI_STYLE = 'settings.emoji_style';
+
+export const determinePlatform = (): 'mac' | 'win' | 'linux' | 'other' => {
+    if (typeof navigator !== 'undefined' && (navigator.platform || navigator.userAgent)) {
+        let platformString = '';
+        
+        if (navigator.userAgentData?.platform) {
+            platformString = navigator.userAgentData.platform.toLowerCase();
+        } else if (navigator.platform) {
+            platformString = navigator.platform.toLowerCase();
+        } else {
+            platformString = navigator.userAgent.toLowerCase();
+        }
+        
+        return platformString.includes('mac') ? 'mac' :
+            platformString.includes('win') ? 'win' : 
+            platformString.includes('linux') ? 'linux' : 'other';
+    } else {
+        const platformString = process.platform;
+        return platformString === 'darwin' ? 'mac' :
+            platformString === 'win32' ? 'win' :
+            platformString == 'linux' ? 'linux' : 'other';
+    }
+}
+
+export const platform = determinePlatform();
 
 export const EMOJI_STYLE_NATIVE = "native";
 export const EMOJI_STYLE_TWEMOJI = "twemoji";
@@ -50,15 +75,14 @@ export const inProduction = (): boolean => {
 }
 
 if (typeof chrome !== 'undefined' && chrome.storage) {
-    console.log('Chrome storage API available, initializing emoji style sync');
-
     (async function initializeEmojiStyleFromStorage() {
-        const emojiStyle = await storageGet(SETTINGS_KEY_EMOJI_STYLE);
+        const { settingsRepository } = await import('./repositories/settingsRepository');
+        const emojiStyle = await settingsRepository.getEmojiStyle();
         if (emojiStyle) {
             cachedConfig.EMOJI_STYLE = emojiStyle;
         } else {
             cachedConfig.EMOJI_STYLE = EMOJI_STYLE_DEFAULT;
-            await storageSet({ [SETTINGS_KEY_EMOJI_STYLE]: EMOJI_STYLE_DEFAULT });
+            await settingsRepository.setEmojiStyle(EMOJI_STYLE_DEFAULT);
         }
     })();
 
@@ -68,4 +92,3 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
         }
     });
 }
-

@@ -1,14 +1,8 @@
-import { getLogger } from "loglevel";
+import { getLogger } from "./log";
 import * as utils from './utils';
+import { platform } from "./config";
 
 const log = getLogger('utils');
-
-const inProduction = typeof WEBPACK_MODE !== 'undefined' && WEBPACK_MODE === 'production';
-if (inProduction) {
-    log.setLevel('ERROR');
-} else {
-    log.setLevel('DEBUG');
-}
 
 export function castType<T>(value: any, type: new (...args: any[]) => T): T {
     if (!(value instanceof type)) {
@@ -94,27 +88,19 @@ export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let platform: 'mac' | 'win' | 'linux' | 'other' = 'mac';
-if (typeof navigator !== 'undefined') {
-    let platformString = '';
-    
-    if (navigator.userAgentData?.platform) {
-        platformString = navigator.userAgentData.platform.toLowerCase();
-    } else if (navigator.platform) {
-        platformString = navigator.platform.toLowerCase();
-    } else {
-        platformString = navigator.userAgent.toLowerCase();
+export class Mutex {
+    private queue: Promise<void> = Promise.resolve();
+
+    async runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+        let release: () => void;
+        const waitForPrevious = this.queue;
+        this.queue = new Promise(resolve => { release = resolve; });
+        
+        await waitForPrevious;
+        try {
+            return await fn();
+        } finally {
+            release!();
+        }
     }
-    
-    platform = platformString.includes('mac') ? 'mac' :
-        platformString.includes('win') ? 'win' : 
-        platformString.includes('linux') ? 'linux' : 'other';
-} else {
-    const platformString = process.platform;
-    platform = platformString === 'darwin' ? 'mac' :
-        platformString === 'win32' ? 'win' :
-        platformString == 'linux' ? 'linux' : 'other';
 }
-
-export { platform };
-

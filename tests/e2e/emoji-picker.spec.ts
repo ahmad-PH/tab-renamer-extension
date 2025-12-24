@@ -4,7 +4,6 @@ import testData from './testData';
 import { 
     EMOJI_STYLE_NATIVE, 
     EMOJI_STYLE_TWEMOJI, 
-    COMMAND_SET_EMOJI_STYLE,
     SEARCH_BAR_ID,
     SEARCH_RESULTS_ID,
     PICKED_EMOJI_ID,
@@ -25,13 +24,9 @@ test.describe('Emoji Picker', () => {
     
     for (const emojiStyle of emojiStyles) {
         test.describe(`with emoji style: ${emojiStyle}`, () => {
-            test.beforeEach(async ({ page }) => {
+            test.beforeEach(async () => {
                 // Set emoji style before each test
-                await page.evaluate(({ command, style }) => {
-                    document.dispatchEvent(new MessageEvent(command, { 
-                        data: { style } 
-                    }));
-                }, { command: COMMAND_SET_EMOJI_STYLE, style: emojiStyle });
+                await extensionUtils.setEmojiStyle(emojiStyle);
             });
 
             test('Can set emojis', async () => {

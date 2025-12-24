@@ -1,8 +1,4 @@
-import { getLogger } from "./log";
 import { TabSignature } from "./types";
-import { COMMAND_SET_EMOJI_STYLE } from "./config";
-
-let log = getLogger('BackgroundScriptAPI', 'debug');
 
 interface TabInfo {
     id: number;
@@ -38,10 +34,6 @@ class BackgroundScriptAPI {
 
     async unstashOriginalTitle(): Promise<string> {
         return await chrome.runtime.sendMessage({ command: "unstash_original_title" });
-    }
-
-    async setEmojiStyle(style: string): Promise<void> {
-        return await chrome.runtime.sendMessage({ command: COMMAND_SET_EMOJI_STYLE, style });
     }
 }
 

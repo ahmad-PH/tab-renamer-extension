@@ -20,6 +20,9 @@ const chrome = {
       onUpdated: {
         addListener: jest.fn()
       },
+      onMoved: {
+        addListener: jest.fn()
+      },
       query: jest.fn(() => []),
       create: jest.fn(),
       remove: jest.fn(),
@@ -55,4 +58,5 @@ const chrome = {
   };
 
 
-module.exports = chrome;
+export default chrome;
+

@@ -1,15 +1,14 @@
-const { JSDOM } = require('jsdom');
-const { default: FaviconRetriever } = require('src/contentScript/faviconRetriever');
+import { JSDOM } from 'jsdom';
+import FaviconRetriever from 'src/contentScript/faviconRetriever';
 
 describe('FaviconRetriever', () => {
-    let faviconRetriever;
-    /** @type {JSDOM} */
-    let dom;
-    let url1, url2, mockResponse1, mockResponse2;
+    let faviconRetriever: FaviconRetriever;
+    let dom: JSDOM;
+    let url1: string, url2: string, mockResponse1: Response, mockResponse2: Response;
 
     beforeAll(() => {
         dom = new JSDOM();
-        global.DOMParser = dom.window.DOMParser;
+        global.DOMParser = dom.window.DOMParser as any;
     });
 
     beforeEach(() => {
@@ -26,7 +25,7 @@ describe('FaviconRetriever', () => {
             } else if (url === url2) { 
                 return Promise.resolve(mockResponse2);
             }
-        });
+        }) as any;
     });
 
     afterEach(() => {
@@ -52,7 +51,7 @@ describe('FaviconRetriever', () => {
     test('getFaviconLinks throws an error if the head element is not found', async () => {
         const url = 'https://example.com';
         const mockResponse = new Response('<html><body>No head element here</body></html>');
-        global.fetch.mockResolvedValue(mockResponse);
+        (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
         await expect(faviconRetriever.getFaviconLinks(url)).rejects.toThrow('Head element not found');
     });
@@ -97,3 +96,4 @@ describe('FaviconRetriever', () => {
         expect(global.fetch).toHaveBeenCalledTimes(2);
     });
 });
+

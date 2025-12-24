@@ -2,8 +2,7 @@ import React from 'react';
 import { log } from './FaviconPicker';
 import styles from './Emoji.module.css';
 import { SystemEmojiFavicon, TwemojiFavicon, Favicon } from '../../../favicon';
-import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle } from '../../../config';
-import { platform } from '../../../utils';
+import { EMOJI_STYLE_NATIVE, EMOJI_STYLE_TWEMOJI, getEmojiStyle, platform } from '../../../config';
 import { Emoji as EmojiType } from '../../../types';
 
 interface EmojiProps {

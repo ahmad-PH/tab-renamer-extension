@@ -1,12 +1,11 @@
 import tab from "./tab";
 import listenerManager from "./listenerManager";
-import { COMMAND_CLOSE_WELCOME_TAB, COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, COMMAND_SET_EMOJI_STYLE, ROOT_TAG_NAME, inProduction } from "../config";
+import { COMMAND_DISCARD_TAB, COMMAND_OPEN_RENAME_DIALOG, ROOT_TAG_NAME, TEST_COMMAND, inProduction } from "../config";
 import { createRoot, Root } from 'react-dom/client';
 import React from 'react';
 import { getLogger } from "../log";
-import bgScriptApi from "../backgroundScriptApi";
 
-const log = getLogger('contentScript', 'debug');
+const log = getLogger('contentScript');
 
 let uiInsertedIntoDOM = false;
 let root: Root | null = null;
@@ -102,33 +101,33 @@ runtimePort.onDisconnect.addListener(() => {
 
     delete (window as any).__tabRenamerContentScriptLoaded__;
 
-    if (!inProduction()) {
-        document.removeEventListener(COMMAND_OPEN_RENAME_DIALOG, discardTabListener);
+    if (!inProduction() && testCommandListener) {
+        document.removeEventListener(TEST_COMMAND, testCommandListener);
     }
 });
 
-const discardTabListener = () => {
-    log.debug('discard tab listener in content script called.');
-    setTimeout(() => {
-        chrome.runtime.sendMessage({command: COMMAND_DISCARD_TAB});
-    }, 500);
+interface TestCommandDetail {
+    command: string;
+    [key: string]: unknown;
 }
 
-if (!inProduction()) {
-    log.debug('Adding discard tab listener in content script.');
-    
-    document.addEventListener(COMMAND_DISCARD_TAB, discardTabListener);
-    document.addEventListener(COMMAND_CLOSE_WELCOME_TAB, () => {
-        log.debug('close welcome tab listener in content script called.');
-        chrome.runtime.sendMessage({command: COMMAND_CLOSE_WELCOME_TAB});
-    });
+let testCommandListener: ((event: Event) => void) | null = null;
 
-    log.debug('Adding Emoji style listener in content script.');
-    document.addEventListener(COMMAND_SET_EMOJI_STYLE, 
-        (event: Event) => {
-            log.debug('Emoji style change listener in content script called.');
-            const customEvent = event as MessageEvent;
-            bgScriptApi.setEmojiStyle(customEvent.data.style);
-        });
+if (!inProduction()) {
+    log.debug('Adding test command listener in content script.');
+    
+    testCommandListener = (event: Event) => {
+        const { command, ...data } = (event as CustomEvent<TestCommandDetail>).detail;
+        log.debug('Test command received:', command, data);
+        
+        if (command === COMMAND_DISCARD_TAB) {
+            setTimeout(() => {
+                void chrome.runtime.sendMessage({ command, ...data });
+            }, 500);
+        } else {
+            void chrome.runtime.sendMessage({ command, ...data });
+        }
+    };
+    document.addEventListener(TEST_COMMAND, testCommandListener);
 }
 
