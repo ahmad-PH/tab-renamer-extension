@@ -113,6 +113,21 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
                 log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
             }
         } else {
+            if (changeInfo.title) {
+                log.debug(`TitleUpdate: Detected a title change for tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
+                // const tabInfo = await tabRepository.getById(tabId);
+                // // We have a record, and our desired title is different from what this change does:
+                // log.debug(`TitleUpdate: tabInfo.signature.title: ${tabInfo?.signature?.title}, changeInfo.title: ${changeInfo.title}`);
+                // if (tabInfo?.signature?.title != null && tabInfo.signature.title !== changeInfo.title) { 
+                //     log.debug(`TitleUpdate: executing script to set document.title to the desired title.`)
+                //     await chrome.scripting.executeScript({
+                //         target: { tabId },
+                //         func: (title: string) => { document.title = ""; },
+                //         args: [tabInfo.signature.title]
+                //     });
+                //     log.debug("TitleUpdate: Done running!")
+                // }
+            }
             if (changeInfo.url) {
                 log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getAll());
                 const tabInfo = await tabRepository.getById(tabId);
