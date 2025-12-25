@@ -4,8 +4,8 @@ import { getLogger } from "../log";
 
 const log = getLogger("garbageCollector");
 
-const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES;
-export const garbageCollectionThreshold = 13 * HOURS;
+const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES, DAYS = 24 * HOURS;
+export const garbageCollectionThreshold = 14 * DAYS;
 
 async function garbageCollector(): Promise<void> {
     await tabRepository.runExclusive(async () => {
