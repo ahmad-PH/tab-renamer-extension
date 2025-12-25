@@ -100,8 +100,8 @@ chrome.tabs.onRemoved.addListener((tabId: number, _removeInfo: chrome.tabs.TabRe
 });
 
 chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-    void tabRepository.runExclusive(async () => {
-        if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
+    if (changeInfo.status === 'unloaded' && changeInfo.discarded === true) {
+        void tabRepository.runExclusive(async () => {
             log.debug('Detected update on unloaded and discarded tab:', JSON.stringify(tab));
             const matchingTab = await tabRepository.findOldRecordOfFreshlyDiscardedTab(tab.url!, tab.index!);
             log.debug('Found matching tab:', matchingTab);
@@ -113,24 +113,26 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
             } else {
                 log.debug('Nothing matched. Must have been a discarded tab that never had its signature modified.');
             }
-        } else {
-            if (changeInfo.title != null) {
-                // This portion is needed solely for the purpose of pdf pages that use Chrome's built-in PDF viewer.
-                // They act weird, in that they will change the title directly in the UI, without document.title being touched.
-                // As a result, the chane goes past my MutationObservers, but I can catch it here.
-                await handleTitleChange(tabId, changeInfo.title);
-            }
-            if (changeInfo.url != null) {
+        });
+    } else {
+        if (changeInfo.title != null) {
+            // This portion is needed solely for the purpose of pdf pages that use Chrome's built-in PDF viewer.
+            // They act weird, in that they will change the title directly in the UI, without document.title being touched.
+            // As a result, the chane goes past my MutationObservers, but I can catch it here.
+            void handleTitleChange(tabId, changeInfo.title);
+        }
+        if (changeInfo.url != null) {
+            void tabRepository.runExclusive(async () => {
                 log.debug(`UrlUpdate: change detected on tabId: ${tabId}, changeInfo: ${JSON.stringify(changeInfo)}, current tabInfo:`, await tabRepository.getById(tabId));
                 const tabInfo = await tabRepository.getById(tabId);
                 if (tabInfo) { // Only if we are actually tracking the tab
-                    tabInfo.url = changeInfo.url;
+                    tabInfo.url = changeInfo.url!;
                     await tabRepository.save(tabInfo);
                     log.debug("UrlUpdate: Storage after saving tabInfo:", await tabRepository.getAll());
                 }
-            }
+            });
         }
-    });
+    }
 });
 
 chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
