@@ -7,6 +7,16 @@ const log = getLogger('titleChangeHandler');
 const titleCorrectionState: Record<number, { lastTime: number; retriesUsed: number }> = {};
 const TITLE_CORRECTION_THRESHOLD_SECONDS = 1;
 const TITLE_CORRECTION_MAX_RETRIES = 4;
+export const STALE_ENTRY_THRESHOLD_MS = 5 * 60 * 1000;
+
+export function cleanupStaleEntries(state: Record<number, { lastTime: number }>): void {
+    const now = Date.now();
+    for (const tabId of Object.keys(state)) {
+        if (now - state[Number(tabId)].lastTime > STALE_ENTRY_THRESHOLD_MS) {
+            delete state[Number(tabId)];
+        }
+    }
+}
 
 export async function handleTitleChange(tabId: number, newTitle: string): Promise<void> {
     log.debug(`Detected a title change for tabId: ${tabId}, newTitle: ${newTitle}, current tabInfo:`, await tabRepository.getById(tabId));
@@ -45,5 +55,6 @@ export async function handleTitleChange(tabId: number, newTitle: string): Promis
             log.debug(`Skipping title correction, only ${elapsedSeconds.toFixed(1)}s elapsed (need ${TITLE_CORRECTION_THRESHOLD_SECONDS}s) and no retries left`);
         }
     }
+    cleanupStaleEntries(titleCorrectionState);
 }
 
