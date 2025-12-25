@@ -20,19 +20,14 @@ function getLogLevel(loggerName: string): LogLevelDesc {
 export function getLogger(loggerName: string, logLevel?: LogLevelDesc): log.Logger {
     const logger = log.getLogger(loggerName);
 
-    if (inProduction()) {
-        logger.setLevel('ERROR');
-    } else {
-        if (logLevel != null) {
-            logger.setLevel(logLevel);
-        } else {
-            logger.setLevel(getLogLevel(loggerName))
-        }
-    }
+    const level = inProduction() ? 'ERROR' : (logLevel ?? getLogLevel(loggerName));
+    logger.setLevel(level);
 
     prefixPlugin(logger);
-    datadogPlugin(logger);
     serviceWorkerForwardPlugin(logger);
+    if (!inProduction()) {
+        datadogPlugin(logger);
+    }
 
     return logger;
 }
