@@ -37,7 +37,7 @@ export async function handleTitleChange(tabId: number, newTitle: string): Promis
             setTimeout(() => {
                 void (async () => {
                     const tab = await chrome.tabs.get(tabId)
-                    log.debug(`From inside the timedout function, looking at tab: ${JSON.stringify(tab.title)} and comparing it against the desired title: ${tabInfo.signature.title}"`);
+                    log.debug(`From inside the timed-out function, looking at tab: ${JSON.stringify(tab.title)} and comparing it against the desired title: ${tabInfo.signature.title}"`);
                     // This check is important, because otherwise you can step on the MutationObserver's toes and cause problems.
                     // Essentially, because we've waited 100ms, which is needed to avoid infinite recursions with the chrome PDF extension,
                     // We want to double check our update is still needed, before we even do it.
