@@ -25,7 +25,13 @@ export async function handleTitleChange(tabId: number, newTitle: string): Promis
         if (thresholdPassed || hasRetriesLeft) {
             log.debug(`Sending force title command. (thresholdPassed: ${thresholdPassed}, retriesUsed: ${state.retriesUsed})`)
             setTimeout(() => {
-                void chrome.tabs.sendMessage(tabId, { command: COMMAND_FORCE_TITLE, title: tabInfo.signature.title });
+                void (async () => {
+                    const tab = await chrome.tabs.get(tabId)
+                    log.debug(`From inside the timedout function, looking at tab: ${JSON.stringify(tab.title)} and comparing it against the desired title: ${tabInfo.signature.title}"`);
+                    if (tab.title !== tabInfo.signature.title) {
+                        void chrome.tabs.sendMessage(tabId, { command: COMMAND_FORCE_TITLE, title: tabInfo.signature.title });
+                    }
+                })();
             }, 100);
             if (thresholdPassed) {
                 titleCorrectionState[tabId] = { lastTime: now, retriesUsed: 0 };
