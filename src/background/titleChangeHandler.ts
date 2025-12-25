@@ -1,4 +1,4 @@
-import { COMMAND_FORCE_TITLE } from "../config";
+import { COMMAND_REFRESH_CURRENT_TITLE } from "../config";
 import { getLogger } from "../log";
 import { tabRepository } from "../repositories/tabRepository";
 
@@ -42,7 +42,7 @@ export async function handleTitleChange(tabId: number, newTitle: string): Promis
                     // Essentially, because we've waited 100ms, which is needed to avoid infinite recursions with the chrome PDF extension,
                     // We want to double check our update is still needed, before we even do it.
                     if (tab.title !== tabInfo.signature.title) { 
-                        void chrome.tabs.sendMessage(tabId, { command: COMMAND_FORCE_TITLE, title: tabInfo.signature.title });
+                        void chrome.tabs.sendMessage(tabId, { command: COMMAND_REFRESH_CURRENT_TITLE });
                     }
                 })();
             }, 100);
