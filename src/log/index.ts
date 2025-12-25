@@ -17,19 +17,17 @@ function getLogLevel(loggerName: string): LogLevelDesc {
     return 'warn';
 }
 
-export function getLogger(loggerName: string): log.Logger {
+export function getLogger(loggerName: string, logLevel?: LogLevelDesc): log.Logger {
     const logger = log.getLogger(loggerName);
 
-    if (inProduction()) {
-        logger.setLevel('ERROR');
-    } else {
-        const level = getLogLevel(loggerName);
-        logger.setLevel(level);
-    }
+    const level = inProduction() ? 'ERROR' : (logLevel ?? getLogLevel(loggerName));
+    logger.setLevel(level);
 
     prefixPlugin(logger);
-    datadogPlugin(logger);
     serviceWorkerForwardPlugin(logger);
+    if (!inProduction()) {
+        datadogPlugin(logger);
+    }
 
     return logger;
 }

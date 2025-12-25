@@ -133,10 +133,10 @@ export function datadogPlugin(logger: log.Logger): void {
                     typeof msg === 'object' && msg !== null ? JSON.stringify(msg) : String(msg)
                 ).join('\n');
 
-                if (isInServiceWorker) {
-                    void forwardToDatadog(methodName, loggerNameStr, concatenatedMessage);
-                } else {
+                if (typeof document !== 'undefined') {
                     forwardToBrowserDatadog(methodName, loggerNameStr, concatenatedMessage);
+                } else {
+                    void forwardToDatadog(methodName, loggerNameStr, concatenatedMessage);
                 }
             }
         };

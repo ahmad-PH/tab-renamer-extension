@@ -206,9 +206,10 @@ export class Tab {
             mutations.forEach((mutation) => {
                 if (mutation.target.nodeName === 'TITLE') {
                     const newTitle = document.title;
-                    plog.debug('TITLE mutation detected', newTitle, 'while desriedTitle is:', desiredTitle);
+                    plog.debug('TITLE mutation detected', newTitle, 'while desiredTitle is:', desiredTitle);
                     if (newTitle !== desiredTitle) {
                         document.title = desiredTitle;
+                        plog.debug("Setting originalTitle to: ", newTitle);
                         this.originalTitle = newTitle;
                     }
                 }
@@ -226,6 +227,15 @@ export class Tab {
         if (this.titleMutationObserver) {
             this.titleMutationObserver.disconnect();
         }
+    }
+
+    resetCurrentTitle(): void {
+        log.debug('resetCurrentTitle called');
+        if (this.signature?.title != null) {
+            document.title = "";
+            document.title = this.signature?.title;
+        }
+        log.debug('resetCurrentTitle completed');
     }
 
     _preserveFavicon(_faviconUrl: string): void {

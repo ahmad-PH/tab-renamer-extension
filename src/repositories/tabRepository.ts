@@ -18,12 +18,11 @@ class TabRepository {
     }
 
     async getAll(): Promise<TabInfo[]> {
-        log.debug('getAll called');
         const allItems = await storageGet(null);
         const tabs = Object.entries(allItems)
             .filter(([key]) => Number.isInteger(parseInt(key)))
             .map(([_, value]) => value as TabInfo);
-        log.debug('getAll returning', tabs.length, 'tabs');
+        log.debug(`getAll called. returning ${tabs.length} tabs: ${JSON.stringify(tabs)}`);
         return tabs;
     }
 

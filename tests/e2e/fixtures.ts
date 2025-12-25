@@ -5,6 +5,9 @@ import os from 'os';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
+import { getLogger } from 'src/log';
+
+const log = getLogger("fixtures");
 
 // Load environment variables
 dotenv.config();
@@ -82,7 +85,9 @@ export const test = base.extend<{
   extensionId: string;
   page: Page;
 }>({
-  context: async ({ }, use) => {
+  context: async ({ }, use, testInfo) => {
+    log.info(`Commencing ${testInfo.title}`);
+    
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const { userAgent } = getPlatformUserAgent();
     
@@ -111,7 +116,7 @@ export const test = base.extend<{
     const extensionId = serviceWorker.url().split('/')[2];
     await use(extensionId);
   },
-  page: async ({ context }, use, testInfo) => {
+  page: async ({ context }, use) => {
     const page = await context.newPage();
     const consoleLogs: ConsoleMessage[] = [];
     
@@ -154,7 +159,9 @@ export const testWithPersistentContext = base.extend<{
     }
   },
   
-  context: async ({ userDataDir }, use) => {
+  context: async ({ userDataDir }, use, testInfo) => {
+    log.info(`Commencing ${testInfo.title}`);
+    
     const pathToExtension = path.join(appRootPath.path, 'dist/dev');
     const { userAgent } = getPlatformUserAgent();
     
@@ -203,7 +210,7 @@ export const testWithPersistentContext = base.extend<{
     await use(extensionId);
   },
   
-  page: async ({ context }, use, testInfo) => {
+  page: async ({ context }, use) => {
     const page = await context.newPage();
     const consoleLogs: ConsoleMessage[] = [];
     

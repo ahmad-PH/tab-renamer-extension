@@ -3,14 +3,17 @@ import { TabInfo } from "../types";
 import { getLogger } from "../log";
 
 const log = getLogger("garbageCollector");
-const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES;
-export const garbageCollectionThreshold = 13 * HOURS;
+
+const SECONDS = 1000, MINUTES = 60 * SECONDS, HOURS = 60 * MINUTES, DAYS = 24 * HOURS;
+export const garbageCollectionThreshold = 14 * DAYS;
 
 async function garbageCollector(): Promise<void> {
     await tabRepository.runExclusive(async () => {
         const allTabs = await tabRepository.getAll();
         const tabIdsToRemove = garabageCollectionFilter(allTabs);
-        await tabRepository.deleteMany(tabIdsToRemove);
+        if (tabIdsToRemove.length > 0) {
+            await tabRepository.deleteMany(tabIdsToRemove);
+        }
     });
 }
 
@@ -27,10 +30,10 @@ export function garabageCollectionFilter(tabs: TabInfo[]): number[] {
             log.debug(`Tab ${tab.id} closed at: ${tabClosedAt}`);
             log.debug('Current time:', currentTime, 'tabClosedAt:', tabClosedAt, 'Difference:', currentTime.valueOf() - tabClosedAt.valueOf());
             if ((currentTime.valueOf() - tabClosedAt.valueOf()) < garbageCollectionThreshold) {
-                log.debug(`Tab ${tab.id} was closed less than 2 minutes ago, keeping...`);
+                log.debug(`Tab ${tab.id} was closed more recently than the threshold, keeping.`);
                 return false;
             } else {
-                log.debug(`Tab ${tab.id} was closed more than 2 minutes ago, discarding...`);
+                log.debug(`Tab ${tab.id} was closed before the threshold, discarding...`);
                 return true;
             }
         }
@@ -38,6 +41,9 @@ export function garabageCollectionFilter(tabs: TabInfo[]): number[] {
 }
 
 export function startTheGarbageCollector(): void {
-    setInterval(garbageCollector, 5000);
+    log.debug("Starting the garbage collector.");
+    setInterval(() => {
+        void garbageCollector()
+    }, 1 * MINUTES);
 }
 

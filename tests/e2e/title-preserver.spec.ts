@@ -51,4 +51,19 @@ test.describe('Title Preserver', () => {
         
         await expect(page).toHaveTitle('New title');
     });
+
+    test('Maintains title after page refresh: arXiv PDF', async ({ page }) => {
+        await page.goto('https://arxiv.org/pdf/1706.03762');
+        
+        await extensionUtils.renameTab('Attention');
+        const chromeTitle = await extensionUtils.getChromeUITitle();
+        expect(chromeTitle).toBe("Attention")
+        
+        for (let i = 0; i < 4; i++) {
+            await page.reload();
+            await page.waitForTimeout(1000);
+            const chromeTitle = await extensionUtils.getChromeUITitle();
+            expect(chromeTitle).toBe("Attention")
+        }
+    });
 });

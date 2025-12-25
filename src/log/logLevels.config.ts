@@ -1,17 +1,16 @@
 import { LogLevelDesc } from 'loglevel';
 
 export const logLevels: Record<string, LogLevelDesc> = {
-    'TabRepository': 'debug',
+    'TabRepository': 'warn',
     'background': 'debug',
     'contentScript': 'debug',
-    'App': 'warn',
-    'Tab': 'warn',
-    'Preservers': 'warn',
+    'App': 'debug',
+    'Tab': 'debug',
+    'Preservers': 'debug',
     'Observer': 'warn',
     'BackgroundScriptAPI': 'warn',
     'utils': 'warn',
-    'InitializationContentScript': 'debug',
-    'Title Observer': 'warn',
+    'InitializationContentScript': 'warn',
     'SettingsRepository': 'warn',
     'settings': 'warn',
     'garbageCollector': 'warn',
@@ -22,5 +21,7 @@ export const logLevels: Record<string, LogLevelDesc> = {
     'emojiSearch': 'warn',
     'EmojiPicker': 'warn',
     'extensionUtils': 'warn',
+    'titleChangeHandler': 'debug',
+    'fixtures': 'info',
 };
 

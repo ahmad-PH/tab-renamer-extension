@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/ahmad-PH/tab-renamer-extension#readme",
   "devDependencies": {
+    "@datadog/browser-logs": "^6.25.1",
+    "@datadog/datadog-api-client": "^1.49.0",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-react": "^7.23.3",
@@ -60,8 +62,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@datadog/browser-logs": "^6.25.1",
-    "@datadog/datadog-api-client": "^1.49.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^5.16.13",
