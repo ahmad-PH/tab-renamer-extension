@@ -5,6 +5,9 @@ import os from 'os';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
+import { getLogger } from 'src/log';
+
+const log = getLogger("fixtures");
 
 // Load environment variables
 dotenv.config();
@@ -112,6 +115,8 @@ export const test = base.extend<{
     await use(extensionId);
   },
   page: async ({ context }, use, testInfo) => {
+    log.info(`Commencing ${testInfo.title}`);
+    
     const page = await context.newPage();
     const consoleLogs: ConsoleMessage[] = [];
     
@@ -204,6 +209,8 @@ export const testWithPersistentContext = base.extend<{
   },
   
   page: async ({ context }, use, testInfo) => {
+    log.info(`Commencing ${testInfo.title}`);
+    
     const page = await context.newPage();
     const consoleLogs: ConsoleMessage[] = [];
     

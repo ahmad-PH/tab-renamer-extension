@@ -17,14 +17,17 @@ function getLogLevel(loggerName: string): LogLevelDesc {
     return 'warn';
 }
 
-export function getLogger(loggerName: string): log.Logger {
+export function getLogger(loggerName: string, logLevel?: LogLevelDesc): log.Logger {
     const logger = log.getLogger(loggerName);
 
     if (inProduction()) {
         logger.setLevel('ERROR');
     } else {
-        const level = getLogLevel(loggerName);
-        logger.setLevel(level);
+        if (logLevel != null) {
+            logger.setLevel(logLevel);
+        } else {
+            logger.setLevel(getLogLevel(loggerName))
+        }
     }
 
     prefixPlugin(logger);
