@@ -72,7 +72,8 @@ def main():
     parser.add_argument("--to", dest="to_time", default="now",
                         help="End time (default: now, see format options below)")
     parser.add_argument("--query", default="",
-                        help="Datadog log query (default: empty)")
+                        help="Datadog log query (default: empty). Can be used to introduce various filters to narrow down results.\
+                            The most useful one is @logger:<logger_name> to filter for a specific logger. (or -@logger to ignore a logger.)")
     args = parser.parse_args()
 
     load_dotenv()
