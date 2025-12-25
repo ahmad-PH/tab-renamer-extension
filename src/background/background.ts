@@ -115,6 +115,9 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
             }
         } else {
             if (changeInfo.title != null) {
+                // This portion is needed solely for the purpose of pdf pages that use Chrome's built-in PDF viewer.
+                // They act weird, in that they will change the title directly in the UI, without document.title being touched.
+                // As a result, the chane goes past my MutationObservers, but I can catch it here.
                 await handleTitleChange(tabId, changeInfo.title);
             }
             if (changeInfo.url != null) {
