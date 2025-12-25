@@ -11,3 +11,5 @@ alwaysApply: true
 - Always prefer static ESM (Ecmascript Modules) imports over the others. Only use other forms if absolutely necessary.
 
 - When running end-to-end (e2e) playwright tests, usually you don't need to run `npm run dev` since I'm already running that in the background.
+
+- To search for datadog logs, use `uv run scripts/datadog.py`. Use --help to see how to use it.
