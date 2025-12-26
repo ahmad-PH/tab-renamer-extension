@@ -124,6 +124,7 @@ module.exports = (_env, argv) => {
                     },
                 },
                 { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings/settings.html' },
+                { from: path.resolve(__dirname, 'src/popup/popup.html'), to: 'popup/popup.html' },
             ],
         }),
         ],

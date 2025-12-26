@@ -14,6 +14,20 @@ const log = getLogger('background');
 const originalTitleStash: Record<number, string> = {};
 let welcomeTab: chrome.tabs.Tab | null = null;
 
+async function noContentScriptPopup() {
+    try {
+        await chrome.action.setPopup({ popup: 'popup/popup.html' });
+        await chrome.action.openPopup();
+        // Clear the popup after a short delay so normal icon clicks work again
+        setTimeout(() => {
+            void chrome.action.setPopup({ popup: '' });
+        }, 10);
+    } catch (error) {
+        log.debug("Could not open the popup in noContentScriptPopup() function:", error);
+        await chrome.action.setPopup({ popup: '' });
+    }
+}
+
 chrome.commands.onCommand.addListener((command) => {
     if (command === COMMAND_OPEN_RENAME_DIALOG) {
         log.debug('Received open rename dialog command.');
@@ -22,15 +36,24 @@ chrome.commands.onCommand.addListener((command) => {
                 command: COMMAND_OPEN_RENAME_DIALOG,
                 tabId: tabs[0].id
             });
-        }).catch(error => 
-            {log.error('query error', error);}
-        );
+        }).catch(error => {
+            void noContentScriptPopup();
+            log.error('query error', error);
+        });
     }
 });
 
 chrome.action.onClicked.addListener((tab) => {
-    log.debug('Action clicked. Sending open rename dialog command to tab:', tab.id);
-    void chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+    void (async () => {
+        try {
+            log.debug('COMMAND_OPEN_RENAME_DIALOG: Action clicked. Sending open rename dialog command to tab:', tab.id);
+            const result = await chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+            log.debug("COMMAND_OPEN_RENAME_DIALOG: Result from sending the command: ", result);
+        } catch (error) {
+            void noContentScriptPopup();
+            log.debug("COMMAND_OPEN_RENAME_DIALOG: Error: ", error);
+        }
+    })();
 });
 
 chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
@@ -218,7 +241,10 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
 
 chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
     if (info.menuItemId === "renameTab") {
-        void chrome.tabs.sendMessage(tab!.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+        chrome.tabs.sendMessage(tab!.id!, {command: COMMAND_OPEN_RENAME_DIALOG})
+        .catch(err => {
+            void noContentScriptPopup();
+        });
     }
     if (info.menuItemId === "onboardingPage") {
         void chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
