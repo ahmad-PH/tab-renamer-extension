@@ -42,7 +42,6 @@ export const Emoji: React.FC<EmojiProps> = ({ emoji, onClick }) => {
         <div
             className={styles.emojiItem}
             id={emoji.character}
-            data-unicode={emoji.unicode_code_point}
             data-shortcode={emoji.shortcode}
             data-style={getEmojiStyle()}
             onClick={() => onClick(faviconToReturn!)}

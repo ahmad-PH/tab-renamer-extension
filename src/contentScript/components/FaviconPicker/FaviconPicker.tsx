@@ -87,7 +87,7 @@ const FaviconPicker: React.FC<FaviconPickerProps> = ({ onFaviconClick, onRemoveE
                 ) : (
                     <div id={SEARCH_RESULTS_ID} className={classNames(styles.searchResults, styles.emojiGrid)}>
                         {matchingEmojis.map(emoji => (
-                            <Emoji emoji={emoji} key={emoji.unicode_code_point} onClick={onFaviconClick}/>
+                            <Emoji emoji={emoji} key={emoji.character} onClick={onFaviconClick}/>
                         ))}
                     </div>
                 )}

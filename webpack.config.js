@@ -108,20 +108,24 @@ module.exports = (_env, argv) => {
                     'process.env.DD_CLIENT_TOKEN': JSON.stringify(process.env.DD_CLIENT_TOKEN),
                 })
             }),
-            new CopyPlugin({
-                patterns: [
-                    { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
-                    { from: path.resolve(__dirname, 'src/assets/'), to: 'assets/' },
-                    { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings/settings.html' },
-                    // {
-                    //     from: path.resolve(__dirname, 'src/settings/'),
-                    //     to: 'settings/',
-                    //     globOptions: {
-                    //         ignore: ['**/settings.js', '**/settings.module.css'],
-                    //     },
-                    // },
-                ],
-            }),
+        new CopyPlugin({
+            patterns: [
+                { from: path.resolve(__dirname, 'manifest.json'), to: 'manifest.json' },
+                { 
+                    from: path.resolve(__dirname, 'src/assets/'),
+                    to: 'assets/',
+                    transform: {
+                        transformer(content, absoluteFrom) {
+                            if (absoluteFrom.endsWith('.json') && isProduction) {
+                                return JSON.stringify(JSON.parse(content.toString())); // minify
+                            }
+                            return content;
+                        },
+                    },
+                },
+                { from: path.resolve(__dirname, 'src/settings/settings.html'), to: 'settings/settings.html' },
+            ],
+        }),
         ],
     };
 };
