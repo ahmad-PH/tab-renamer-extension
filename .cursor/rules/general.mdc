@@ -13,3 +13,5 @@ alwaysApply: true
 - When running end-to-end (e2e) playwright tests, usually you don't need to run `npm run dev` since I'm already running that in the background.
 
 - To search for datadog logs, use `uv run scripts/datadog.py`. Use --help to see how to use it.
+
+- When designing new pages, look at shared.css for style-related standards. (Colors, fonts, etc.)

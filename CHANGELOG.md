@@ -10,6 +10,7 @@
 
 ### Improvements
 
+- Add a popup on pages where the extension is restricted by Chrome, to let the user know why they can't rename those tabs.
 - Reduced memory footprint of the emojis asset.
 
 ## [1.1.4] - 2025-05-05

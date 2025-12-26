@@ -1,7 +1,12 @@
 
 # Development
 
-# Datadog Logs
+## Pre-publication Checklist
+
+- Compile the `changelog.html` file, using the .md file.
+- `npm version`
+
+## Datadog Logs
 
 Running The Agent:
 ```

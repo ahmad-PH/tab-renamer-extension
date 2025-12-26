@@ -14,23 +14,43 @@ const log = getLogger('background');
 const originalTitleStash: Record<number, string> = {};
 let welcomeTab: chrome.tabs.Tab | null = null;
 
+async function showRenameUnavailablePopup() {
+    try {
+        await chrome.action.setPopup({ popup: 'popup/popup.html' });
+        await chrome.action.openPopup();
+        // Clear the popup after a short delay so normal icon clicks work again
+        setTimeout(() => {
+            void chrome.action.setPopup({ popup: '' });
+        }, 10);
+    } catch (error) {
+        log.debug("Could not open the popup in showRenameUnavailablePopup() function:", error);
+        await chrome.action.setPopup({ popup: '' });
+    }
+}
+
+async function openRenameDialogOnTab(tabId: number) {
+    try {
+        log.debug('Sending open rename dialog command to tab:', tabId);
+        await chrome.tabs.sendMessage(tabId, { command: COMMAND_OPEN_RENAME_DIALOG });
+    } catch (error) {
+        log.debug('Failed to open rename dialog, showing fallback popup:', error);
+        await showRenameUnavailablePopup();
+    }
+}
+
 chrome.commands.onCommand.addListener((command) => {
     if (command === COMMAND_OPEN_RENAME_DIALOG) {
         log.debug('Received open rename dialog command.');
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
-            return chrome.tabs.sendMessage(tabs[0].id!, {
-                command: COMMAND_OPEN_RENAME_DIALOG,
-                tabId: tabs[0].id
-            });
-        }).catch(error => 
-            {log.error('query error', error);}
-        );
+            void openRenameDialogOnTab(tabs[0].id!);
+        }).catch(error => {
+            log.error('Failed to query active tab:', error);
+        });
     }
 });
 
 chrome.action.onClicked.addListener((tab) => {
-    log.debug('Action clicked. Sending open rename dialog command to tab:', tab.id);
-    void chrome.tabs.sendMessage(tab.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+    void openRenameDialogOnTab(tab.id!);
 });
 
 chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
@@ -201,6 +221,12 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
             contexts: ["action"],
         });
 
+        chrome.contextMenus.create({
+            id: "changelogPage",
+            title: "View Changelog",
+            contexts: ["action"],
+        });
+
         if (details.reason === "install") {
             log.debug("onInstalled with reason = install triggered");
             welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
@@ -218,10 +244,13 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
 
 chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
     if (info.menuItemId === "renameTab") {
-        void chrome.tabs.sendMessage(tab!.id!, {command: COMMAND_OPEN_RENAME_DIALOG});
+        void openRenameDialogOnTab(tab!.id!);
     }
     if (info.menuItemId === "onboardingPage") {
         void chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
+    }
+    if (info.menuItemId === "changelogPage") {
+        void chrome.tabs.create({ url: chrome.runtime.getURL('assets/changelog.html') });
     }
 });
 

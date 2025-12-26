@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tab Renamer</title>
+    <link rel="stylesheet" type="text/css" href="../assets/shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 320px;
+            padding: var(--space-lg);
+            min-height: auto;
+            display: block;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .header img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            text-align: left;
+            margin: 0;
+        }
+        
+        .reasons {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-light);
+            margin-top: 12px;
+        }
+        
+        .reasons ul {
+            margin-top: 6px;
+            margin-left: var(--space-md);
+            padding-left: 0;
+        }
+        
+        .reasons li {
+            margin-bottom: var(--space-xs);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="../assets/icon48.png" alt="Tab Renamer">
+        <h1>Tab Renamer</h1>
+    </div>
+    
+    <div class="message">
+        <div class="message-title">
+            ⚠️ Cannot rename this tab 
+        </div>
+        <div class="message-text">
+            Sorry! But Tab Renamer can't run on this tab since Chrome restricts access to certain special pages. 😢
+        </div>
+        <div class="reasons">
+            Common restricted pages:
+            <ul>
+                <li>chrome:// pages, such as newtab, settings, extensions, etc. (chrome://newtab)</li>
+                <li>Chrome Web Store related pages</li>
+            </ul>
+        </div>
+        <div class="message-text">
+            Feel free to try the extension on other pages!
+        </div>
+    </div>
+    
+    <div class="actions">
+        <button id="closeBtn" class="btn">Close</button>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
