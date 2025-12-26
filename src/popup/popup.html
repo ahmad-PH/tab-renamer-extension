@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Tab Renamer</title>
+    <link rel="stylesheet" type="text/css" href="../assets/shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,20 +16,19 @@
         }
         
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             width: 320px;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #eee;
+            padding: var(--space-lg);
+            min-height: auto;
+            display: block;
         }
         
         .header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-border);
         }
         
         .header img {
@@ -34,67 +38,29 @@
         
         .header h1 {
             font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-        
-        .message {
-            background: rgba(255, 193, 7, 0.15);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 16px;
-        }
-        
-        .message-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #ffc107;
-            margin-bottom: 8px;
-        }
-        
-        .message-text {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #ccc;
+            text-align: left;
+            margin: 0;
         }
         
         .reasons {
-            font-size: 12px;
-            color: #999;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-light);
             margin-top: 12px;
         }
         
         .reasons ul {
             margin-top: 6px;
-            margin-left: 16px;
+            margin-left: var(--space-md);
+            padding-left: 0;
         }
         
         .reasons li {
-            margin-bottom: 4px;
+            margin-bottom: var(--space-xs);
         }
         
         .actions {
             display: flex;
             justify-content: center;
-        }
-        
-        button {
-            padding: 10px 32px;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            background: #4f46e5;
-            color: white;
-        }
-        
-        button:hover {
-            background: #4338ca;
         }
     </style>
 </head>
@@ -106,25 +72,27 @@
     
     <div class="message">
         <div class="message-title">
-            ⚠️ Cannot rename this tab
+            ⚠️ Cannot rename this tab 
         </div>
         <div class="message-text">
-            Tab Renamer can't run on this page, since extension access to this page is restricted by Chrome.
+            Sorry! But Tab Renamer can't run on this tab since Chrome restricts access to certain special pages. 😢
         </div>
         <div class="reasons">
             Common restricted pages:
             <ul>
-                <li>chrome:// pages (newtab, settings, extensions, etc.)</li>
+                <li>chrome:// pages, such as newtab, settings, extensions, etc. (chrome://newtab)</li>
                 <li>Chrome Web Store related pages</li>
             </ul>
+        </div>
+        <div class="message-text">
+            Feel free to try the extension on other pages!
         </div>
     </div>
     
     <div class="actions">
-        <button id="closeBtn">Close</button>
+        <button id="closeBtn" class="btn">Close</button>
     </div>
     
     <script src="popup.js"></script>
 </body>
 </html>
-
