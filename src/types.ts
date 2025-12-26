@@ -61,13 +61,11 @@ export class FaviconDTO {
 
 export class Emoji {
     character: string;
-    unicode_code_point: string;
     shortcode: string;
     keywords: string[];
 
-    constructor(character: string, unicode_code_point: string, shortcode: string, keywords: string[]) {
+    constructor(character: string, shortcode: string, keywords: string[]) {
         this.character = character;
-        this.unicode_code_point = unicode_code_point;  
         this.shortcode = shortcode;
         this.keywords = keywords;
     }
