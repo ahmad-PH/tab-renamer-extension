@@ -8,6 +8,10 @@
 - Fixed a bug with Arxiv PDFs using Chrome's built-in PDF viewer having titles overridden by Chrome. ([Issue #5 on GitHub](https://github.com/ahmad-PH/tab-renamer-extension/issues/5))
 - Fixed a dark-theme issue that would sometimes make the entire background of the extension be fully black (instead of transparent) when Chrome itself was put in Dark Mode.
 
+### Improvements
+
+- Reduced memory footprint of the emojis asset.
+
 ## [1.1.4] - 2025-05-05
 
 ### Fixed
