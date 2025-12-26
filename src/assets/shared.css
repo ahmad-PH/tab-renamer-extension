@@ -96,11 +96,12 @@ h1 {
     font-family: var(--font-heading-cursive);
     font-size: var(--font-size-2xl);
     font-weight: bold;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 h2 {
     font-size: var(--font-size-xl);
+    color: var(--color-primary);
 }
 
 h3 {
@@ -138,11 +139,19 @@ a:hover {
     transform: translateX(-50%);
 }
 
+/* Header Layout */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
 /* Logo */
 .logo {
-    display: block;
-    margin: var(--space-lg) auto var(--space-lg) auto;
-    width: 100px;
+    width: 64px;
+    height: 64px;
 }
 
 /* Lists */
