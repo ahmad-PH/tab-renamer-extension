@@ -224,6 +224,12 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
             contexts: ["action"],
         });
 
+        chrome.contextMenus.create({
+            id: "changelogPage",
+            title: "View Changelog",
+            contexts: ["action"],
+        });
+
         if (details.reason === "install") {
             log.debug("onInstalled with reason = install triggered");
             welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
@@ -248,6 +254,9 @@ chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData
     }
     if (info.menuItemId === "onboardingPage") {
         void chrome.tabs.create({ url: chrome.runtime.getURL('assets/welcome.html') });
+    }
+    if (info.menuItemId === "changelogPage") {
+        void chrome.tabs.create({ url: chrome.runtime.getURL('assets/changelog.html') });
     }
 });
 
