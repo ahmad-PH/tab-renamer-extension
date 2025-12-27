@@ -3,6 +3,7 @@
 
 ## Pre-publication Checklist
 
+- Check and update dates in the changelog.md.
 - Compile the `changelog.html` file, using the .md file.
 - `npm version`
 
