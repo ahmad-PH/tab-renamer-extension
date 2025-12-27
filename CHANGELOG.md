@@ -10,6 +10,7 @@
 
 ### Improvements
 
+- Increased the threshold after which the garbage collector would delete old tab rename records. The current threshold was very short and may have caused some data loss for users. Threshold is now at 2 weeks for deletion of stale records.
 - Add a popup on pages where the extension is restricted by Chrome, to let the user know why they can't rename those tabs.
 - Reduced memory footprint of the emojis asset.
 
