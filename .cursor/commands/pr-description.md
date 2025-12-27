@@ -2,4 +2,4 @@ Use the command `git diff --merge-base origin/main` to get the diff that this br
 
 Don't be overly verbose. Try to think first on which information is important, and which ones are way too low-level details. Then summarize the important information ONLY.
 
-Produce a markdown output so I can easily copy and paste.
+Produce a codeblock output so I can easily copy and paste.
