@@ -1,11 +1,11 @@
 # Changelog
 
-## [1.1.5] - 2025-12-25
+## [1.1.5] - 2025-12-27
 
 ### Fixed
 
 - Fixed a bug that would result in tabs losing their titles if you renamed a tab and switched URLs before closing and re-opening it.
-- Fixed a bug with Arxiv PDFs using Chrome's built-in PDF viewer having titles overridden by Chrome. ([Issue #5 on GitHub](https://github.com/ahmad-PH/tab-renamer-extension/issues/5))
+- Fixed a bug in the extension's interaction with Chrome's built-in PDF viewer. The titles set on these pages should no longer be overridden by Chrome. ([Issue #5 on GitHub](https://github.com/ahmad-PH/tab-renamer-extension/issues/5))
 - Fixed a dark-theme issue that would sometimes make the entire background of the extension be fully black (instead of transparent) when Chrome itself was put in Dark Mode.
 
 ### Improvements
