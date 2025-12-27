@@ -232,13 +232,16 @@ chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails
             welcomeTab = await chrome.tabs.create({url: chrome.runtime.getURL('assets/welcome.html')});
         } else if (details.reason === "update") {
             log.debug("onInstalled with reason = update triggered");
+            await chrome.tabs.create({url: chrome.runtime.getURL('assets/changelog.html')});
+            
             const migratedData = new StorageSchemaManager().verifyCorrectSchemaVersion(await storageGet(null));
             await chrome.storage.sync.clear();
             for (const key of Object.keys(migratedData)) {
                 await chrome.storage.sync.set({[key]: migratedData[key]});
             }
-        } 
-        await markAllOpenSignaturesAsClosed();
+        } else if (details.reason === "chrome_update") {
+            await markAllOpenSignaturesAsClosed();
+        }
     })();
 });
 
